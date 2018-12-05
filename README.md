@@ -1,2 +1,3 @@
 # dogma
-An API specification for implementing message-based applications in Go.
+
+An API specification for message-based applications in Go.
