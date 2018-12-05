@@ -53,7 +53,7 @@ type AggregateRoot interface {
 // AggregateScope is an interface used to access and manipulate an aggregate
 // when handling a command message.
 type AggregateScope interface {
-	// InstanceID is the ID the aggregate instance that the command message has
+	// InstanceID is the ID of the aggregate instance that the command message has
 	// been routed to.
 	InstanceID() string
 
