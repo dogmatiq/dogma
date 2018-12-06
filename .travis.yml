@@ -8,5 +8,8 @@ matrix:
   - go: 'tip'
 env:
   GO111MODULE: "on"
+before_install:
+  - export PATH=$PATH:$PWD/adr-tools/src
+  - git clone https://github.com/npryce/adr-tools
 install: go mod download
 script: make ci
