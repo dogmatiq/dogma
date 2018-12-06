@@ -20,9 +20,9 @@ type AggregateMessageHandler interface {
 	// message should be routed to this handler.
 	//
 	// If p is false, then m is a command message that has been sent to the
-	// application. If m should be routed to this handler the implementation sets
-	// ok to true, and id to a non-empty value indicating the ID of the aggregate
-	// instance that the command targets.
+	// application. If m should be routed to this handler, the implementation sets
+	// ok to true and id to the ID of the aggregate instance that the command
+	// targets. id must not be empty if ok is true.
 	//
 	// If p is true, then the engine is performing a "routing probe". In this case
 	// m is a non-nil, zero-value message. The implementation sets ok to true if
@@ -44,12 +44,12 @@ type AggregateMessageHandler interface {
 	// manipulations must be applied by the instance's ApplyEvent() method,
 	// which is called for each recorded event message.
 	//
-	// If m was not expected by the handler, as per the routes determined by calls
+	// If m was not expected by the handler as per the routes determined by calls
 	// to RouteCommand(), it must panic with an UnexpectedMessage error.
 	HandleCommand(s AggregateScope, m Message)
 }
 
-// AggregateRoot is an interface implemented by the application, and used by
+// AggregateRoot is an interface implemented by the application and used by
 // the engine to apply changes to an aggregate.
 type AggregateRoot interface {
 	// ApplyEvent updates the aggregate instance to reflect the fact that a
@@ -57,7 +57,7 @@ type AggregateRoot interface {
 	ApplyEvent(m Message)
 }
 
-// AggregateScope is an interface implemented by the engine, and used by the
+// AggregateScope is an interface implemented by the engine and used by the
 // application to perform operations within the context of handling a command
 // message.
 type AggregateScope interface {
