@@ -44,8 +44,8 @@ type AggregateMessageHandler interface {
 	// manipulations must be applied by the instance's ApplyEvent() method,
 	// which is called for each recorded event message.
 	//
-	// If m was not expected by the handler as per the routes determined by calls
-	// to RouteCommand(), it must panic with an UnexpectedMessage error.
+	// If m was not expected by the handler it must panic with an UnexpectedMessage
+	// value.
 	HandleCommand(s AggregateScope, m Message)
 }
 
