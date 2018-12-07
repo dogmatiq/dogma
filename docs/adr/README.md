@@ -5,7 +5,7 @@ decisions made about the design of the API. [adr-tools] is used to manipulate
 the ADR documents.
 
 <!-- references -->
-[Architecture Design Records]: https://github.com/joelparkerhenderson/architecture_decision_record#what-is-an-architecture-decision-record
+[Architecture Design Records]: http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions
 [adr-tools]: https://github.com/npryce/adr-tools
 
 ## Index
