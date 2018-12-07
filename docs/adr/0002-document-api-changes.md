@@ -4,7 +4,7 @@ Date: 2018-12-07
 
 ## Status
 
-Proposed
+Approved
 
 ## Context
 
@@ -22,7 +22,11 @@ special attention drawn to changes that are not backwards compatible.
 
 ## Decision
 
-Undecided
+A changelog will be maintained as per [Keep a Changelog]. Unreleased changes
+should be added to the changelog as they are made.
+
+Git tags will be named according to the rules of [semantic versioning].
+Additionally, tag names are to be prefixed with a `v` as required by [Go modules].
 
 ## Consequences
 
@@ -34,3 +38,4 @@ version number.
 <!-- references -->
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
+[Go modules]: https://github.com/golang/go/wiki/Modules#modules
