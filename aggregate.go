@@ -12,7 +12,7 @@ package dogma
 // message. The changes caused by the command, if any, are represented by domain
 // event messages. Each command message targets a single aggregate instance.
 type AggregateMessageHandler interface {
-	// New constructs a new aggregate instance, and returns its root.
+	// New constructs a new aggregate instance and returns its root.
 	New() AggregateRoot
 
 	// RouteCommand indicates whether a specific type or instance of a message
@@ -61,17 +61,44 @@ type AggregateRoot interface {
 // message.
 //
 // In the context of this interface, "the message" refers to the message being
-// handled, and "the instance" refers to the aggregate instance that is
-// targetted by that message.
+// handled and "the instance" refers to the aggregate instance that is targetted
+// by that message.
 type AggregateScope interface {
 	// InstanceID is the ID of the targetted aggregate instance.
 	InstanceID() string
 
+	// Create creates the targetted instance.
+	//
+	// It must be called before Root() or RecordEvent() can be called within this
+	// scope or the scope of any future command that targets the same instance.
+	//
+	// It may be called even if the targetted instance has already been created.
+	//
+	// RecordEvent() must be called at least once within the same scope.
+	Create()
+
+	// Destroy destroys the targetted instance.
+	//
+	// After it has been called neither Root() nor RecordEvent() can be called
+	// within this scope or the scope of any future command that targets the same
+	// instance.
+	//
+	// RecordEvent() must be called at least once within the same scope.
+	//
+	// The precise semantics of destroy are implementation defined.
+	Destroy()
+
 	// Root returns the root of the targetted aggregate instance.
+	//
+	// It panics if the instance has not been created, or was created but has
+	// subsequently been destroyed.
 	Root() AggregateRoot
 
 	// RecordEvent records the occurrence of an event as a result of the command
 	// being handled.
+	//
+	// It panics if the instance has not been created, or was created but has
+	// subsequently been destroyed.
 	//
 	// The engine must call Instance().ApplyEvent(m) before returning, such that
 	// the applied changes are visible to the handler.
