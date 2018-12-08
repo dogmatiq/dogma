@@ -13,3 +13,4 @@ before_install:
   - git clone https://github.com/npryce/adr-tools
 install: go mod download
 script: make ci
+after_success: bash <(curl -s https://codecov.io/bash)
