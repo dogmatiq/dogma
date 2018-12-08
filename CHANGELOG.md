@@ -11,11 +11,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-### Added
-
-- Added the `Message` interface
-- Added the `UnexpectedMessage` panic value
-- Added interfaces for implementing domain aggregates
+- Initial release
 
 <!-- references -->
 [Unreleased]: https://github.com/dogmatiq/dogma
