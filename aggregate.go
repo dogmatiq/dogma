@@ -76,11 +76,13 @@ type AggregateScope interface {
 	// It must be called before Root() or RecordEvent() can be called within this
 	// scope or the scope of any future command that targets the same instance.
 	//
-	// It may be called even if the targetted instance has already been created,
-	// in which case it is a no-op.
+	// It returns true if the targetted instance was created, or false if
+	// the instance already exists.
 	//
-	// RecordEvent() must be called at least once within the same scope.
-	Create()
+	// If it returns true, RecordEvent() must be called at least once within
+	// the same scope. This guarantees that the creation of every instance is
+	// represented by a domain event.
+	Create() bool
 
 	// Destroy destroys the targetted instance.
 	//
@@ -88,9 +90,14 @@ type AggregateScope interface {
 	// within this scope or the scope of any future command that targets the same
 	// instance, unless Create() is called again first.
 	//
-	// RecordEvent() must be called at least once within the same scope.
+	// It panics if the target instance does not currently exist.
 	//
-	// The precise semantics of destroy are implementation defined.
+	// RecordEvent() must be called at least once within the same scope. This
+	// guarantees that the destruction of every instance is represented by a domain
+	// event.
+	//
+	// The precise semantics of destroy are implementation defined. The aggregate
+	// data may be deleted or archived, for example.
 	Destroy()
 
 	// Root returns the root of the targetted aggregate instance.
