@@ -25,8 +25,9 @@ the ADR, or by rejecting it and reverting any associated code changes.
 
 ## Consequences
 
-This approach favours allows project maintaners to proceed with changes quickly,
-documenting their decisions, and giving us standard way to discuss those decisions.
+This approach allows project maintainers to proceed with changes quickly,
+documenting their decisions, and giving us a standard way to discuss those
+decisions.
 
 This comes at the cost of being potentially "expensive" at release time. We
 feel this is an compromise prior to the first major release.
