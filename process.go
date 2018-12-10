@@ -1,6 +1,9 @@
 package dogma
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 // ProcessMessageHandler is an interface implemented by the application and
 // used by the engine to model business processes.
@@ -32,7 +35,7 @@ type ProcessMessageHandler interface {
 	// m is a non-nil, zero-value message. The implementation sets ok to true if
 	// messages of the same type as m should be routed to this message handler when
 	// they occur. The id output parameter is unused.
-	RouteEvent(m Message, p bool) (id string, ok bool)
+	RouteEvent(ctx context.Context, m Message, p bool) (id string, ok bool, err error)
 
 	// HandleEvent handles an event message that has been routed to this
 	// handler.
@@ -48,7 +51,7 @@ type ProcessMessageHandler interface {
 	//
 	// If m was not expected by the handler the implementation must panic with an
 	// UnexpectedMessage value.
-	HandleEvent(s ProcessScope, m Message)
+	HandleEvent(ctx context.Context, s ProcessScope, m Message) error
 
 	// HandleTimeout handles a timeout message that has been scheduled with
 	// ProcessScope.ScheduleTimeout().
@@ -64,7 +67,7 @@ type ProcessMessageHandler interface {
 	//
 	// If m was not expected by the handler the implementation must panic with an
 	// UnexpectedMessage value.
-	HandleTimeout(s ProcessScope, m Message)
+	HandleTimeout(ctx context.Context, s ProcessScope, m Message) error
 }
 
 // ProcessRoot is an interface implemented by the application and used by
