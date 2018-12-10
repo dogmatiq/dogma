@@ -5,7 +5,7 @@ package dogma
 //
 // An aggregate is a collection of objects that represent some domain state
 // within the application. All manipulation of the aggregate is performed via
-// one of its constituent object, known as the "root", and represented by the
+// one of its constituent objects, known as the "root", and represented by the
 // AggregateRoot interface.
 //
 // A request to change the state of an aggregate is represented by a command
@@ -72,7 +72,8 @@ type AggregateScope interface {
 	// It must be called before Root() or RecordEvent() can be called within this
 	// scope or the scope of any future command that targets the same instance.
 	//
-	// It may be called even if the targetted instance has already been created.
+	// It may be called even if the targetted instance has already been created,
+	// in which case it is a no-op.
 	//
 	// RecordEvent() must be called at least once within the same scope.
 	Create()
@@ -81,7 +82,7 @@ type AggregateScope interface {
 	//
 	// After it has been called neither Root() nor RecordEvent() can be called
 	// within this scope or the scope of any future command that targets the same
-	// instance.
+	// instance, unless Create() is called again first.
 	//
 	// RecordEvent() must be called at least once within the same scope.
 	//
