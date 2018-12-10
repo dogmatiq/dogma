@@ -109,7 +109,7 @@ type AggregateScope interface {
 	// the applied changes are visible to the handler.
 	RecordEvent(m Message)
 
-	// Log logs an informational message within the context of the command being
+	// Log records an informational message within the context of the command being
 	// handled.
 	//
 	// The log message should be worded such that it makes sense to anyone familiar
