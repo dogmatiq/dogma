@@ -8,9 +8,11 @@ package dogma
 // one of its constituent objects, known as the "root", and represented by the
 // AggregateRoot interface.
 //
-// A request to change the state of an aggregate is represented by a command
-// message. The changes caused by the command, if any, are represented by domain
-// event messages. Each command message targets a single aggregate instance.
+// A request to change the state of an aggregate instance is represented by a
+// command message. The changes caused by the command, if any, are represented
+// by domain event messages. Each command message targets a single aggregate
+// instance. A command can cause the creation or destruction of its target
+// instance.
 type AggregateMessageHandler interface {
 	// New constructs a new aggregate instance and returns its root.
 	New() AggregateRoot
@@ -21,7 +23,8 @@ type AggregateMessageHandler interface {
 	// If p is false, then m is a command message that has been sent to the
 	// application. If m should be routed to this handler, the implementation sets
 	// ok to true and id to the ID of the aggregate instance that the command
-	// targets. id must not be empty if ok is true.
+	// targets. The aggregate instance need not already exist in order for a
+	// command to target it. id must not be empty if ok is true.
 	//
 	// If p is true, then the engine is performing a "routing probe". In this case
 	// m is a non-nil, zero-value message. The implementation sets ok to true if
@@ -37,7 +40,8 @@ type AggregateMessageHandler interface {
 	// change is indicated by recording an event message.
 	//
 	// s provides access to the operations available within the scope of handling
-	// m, such as accessing the targetted instance and recording event messages.
+	// m, such as creating or destroying the targetted instance, accessing its
+	// state, and recording event messages.
 	//
 	// This method must not modify the targetted instance directly. All
 	// modifications must be applied by the instance's ApplyEvent() method, which
