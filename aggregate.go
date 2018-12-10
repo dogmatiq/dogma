@@ -3,16 +3,17 @@ package dogma
 // AggregateMessageHandler is an interface implemented by the application and
 // used by the engine to cause changes to an aggregate via command messages.
 //
-// An aggregate is a collection of objects that represent some domain state
-// within the application. All manipulation of the aggregate is performed via
-// one of its constituent objects, known as the "root", and represented by the
+// Many instances of each aggregate type can be created. Each instance is a
+// collection of objects that represent some domain state within the
+// application. All manipulation of an aggregate instance is performed via one
+// of its constituent objects, known as the "root", and represented by the
 // AggregateRoot interface.
 //
 // A request to change the state of an aggregate instance is represented by a
 // command message. The changes caused by the command, if any, are represented
 // by domain event messages. Each command message targets a single aggregate
-// instance. A command can cause the creation or destruction of its target
-// instance.
+// instance of a specific type. A command can cause the creation or destruction
+// of its target instance.
 type AggregateMessageHandler interface {
 	// New constructs a new aggregate instance and returns its root.
 	New() AggregateRoot
