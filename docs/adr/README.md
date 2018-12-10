@@ -13,3 +13,4 @@ the ADR documents.
 * [1. Record architecture decisions](0001-record-architecture-decisions.md)
 * [2. Document API Changes](0002-document-api-changes.md)
 * [3. Aggregate Lifetime Control](0003-aggregate-lifetime-control.md)
+* [4. ADR Process](0004-adr-process.md)
