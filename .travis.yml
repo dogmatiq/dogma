@@ -1,6 +1,11 @@
 language: go
 go:
 - '1.11'
+- 'tip'
+matrix:
+  fast_finish: true
+  allowed_failures:
+  - go: 'tip'
 env:
   GO111MODULE: "on"
 before_install:
