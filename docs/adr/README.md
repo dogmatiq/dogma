@@ -15,3 +15,4 @@ the ADR documents.
 * [3. Aggregate Lifetime Control](0003-aggregate-lifetime-control.md)
 * [4. ADR Process](0004-adr-process.md)
 * [5. Routing of commands to processes](0005-routing-of-commands-to-processes.md)
+* [6. Stateless aggregates and processes](0006-stateless-aggregates-and-processes.md)
