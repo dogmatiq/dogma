@@ -41,10 +41,10 @@ type AggregateMessageHandler interface {
 	// change is indicated by recording an event message.
 	//
 	// s provides access to the operations available within the scope of handling
-	// m, such as creating or destroying the targetted instance, accessing its
+	// m, such as creating or destroying the targeted instance, accessing its
 	// state, and recording event messages.
 	//
-	// This method must not modify the targetted instance directly. All
+	// This method must not modify the targeted instance directly. All
 	// modifications must be applied by the instance's ApplyEvent() method, which
 	// is called for each recorded event message.
 	//
@@ -66,18 +66,18 @@ type AggregateRoot interface {
 // message.
 //
 // In the context of this interface, "the message" refers to the message being
-// handled and "the instance" refers to the aggregate instance that is targetted
+// handled and "the instance" refers to the aggregate instance that is targeted
 // by that message.
 type AggregateScope interface {
-	// InstanceID is the ID of the targetted aggregate instance.
+	// InstanceID is the ID of the targeted aggregate instance.
 	InstanceID() string
 
-	// Create creates the targetted instance.
+	// Create creates the targeted instance.
 	//
 	// It must be called before Root() or RecordEvent() can be called within this
 	// scope or the scope of any future command that targets the same instance.
 	//
-	// It returns true if the targetted instance was created, or false if
+	// It returns true if the targeted instance was created, or false if
 	// the instance already exists.
 	//
 	// If it returns true, RecordEvent() must be called at least once within
@@ -85,7 +85,7 @@ type AggregateScope interface {
 	// represented by a domain event.
 	Create() bool
 
-	// Destroy destroys the targetted instance.
+	// Destroy destroys the targeted instance.
 	//
 	// After it has been called neither Root() nor RecordEvent() can be called
 	// within this scope or the scope of any future command that targets the same
@@ -101,7 +101,7 @@ type AggregateScope interface {
 	// data may be deleted or archived, for example.
 	Destroy()
 
-	// Root returns the root of the targetted aggregate instance.
+	// Root returns the root of the targeted aggregate instance.
 	//
 	// It panics if the instance has not been created, or was created but has
 	// subsequently been destroyed.
