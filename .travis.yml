@@ -4,13 +4,13 @@ go:
 - 'tip'
 matrix:
   fast_finish: true
-  allowed_failures:
+  allow_failures:
   - go: 'tip'
 env:
-  GO111MODULE: "on"
+- GO111MODULE=on
 before_install:
-  - export PATH=$PATH:$PWD/adr-tools/src
-  - git clone https://github.com/npryce/adr-tools
+- export PATH=$PATH:$PWD/adr-tools/src
+- git clone https://github.com/npryce/adr-tools
 install: go mod download
 script: make ci
 after_success: bash <(curl -s https://codecov.io/bash)
