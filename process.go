@@ -125,7 +125,7 @@ type ProcessScope interface {
 	// ScheduleTimeout schedules a timeout message to be returned to the process
 	// at a specific time.
 	//
-	// Any pending timeout messages are cancelled with the instance is ended.
+	// Any pending timeout messages are cancelled when the instance is ended.
 	//
 	// It panics if the instance has not been begun, or was begun but has
 	// subsequently been ended.
