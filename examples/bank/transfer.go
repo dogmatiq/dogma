@@ -7,20 +7,20 @@ import (
 	"github.com/dogmatiq/dogma/examples/bank/messages"
 )
 
-// TransferProcess manages the process of transferring funds between accounts.
-var TransferProcess dogma.ProcessMessageHandler = transferProcess{}
+// TransferProcessHandler manages the process of transferring funds between accounts.
+var TransferProcessHandler dogma.ProcessMessageHandler = transferProcessHandler{}
 
 type transfer struct {
 	ToAccountID string
 }
 
-type transferProcess struct{}
+type transferProcessHandler struct{}
 
-func (transferProcess) New() dogma.ProcessRoot {
+func (transferProcessHandler) New() dogma.ProcessRoot {
 	return &transfer{}
 }
 
-func (transferProcess) RouteEvent(_ context.Context, m dogma.Message, _ bool) (string, bool, error) {
+func (transferProcessHandler) RouteEvent(_ context.Context, m dogma.Message, _ bool) (string, bool, error) {
 	switch x := m.(type) {
 	case messages.TransferStarted:
 		return x.TransactionID, true, nil
@@ -35,7 +35,7 @@ func (transferProcess) RouteEvent(_ context.Context, m dogma.Message, _ bool) (s
 	}
 }
 
-func (transferProcess) HandleEvent(
+func (transferProcessHandler) HandleEvent(
 	_ context.Context,
 	s dogma.ProcessScope,
 	m dogma.Message,
@@ -72,6 +72,6 @@ func (transferProcess) HandleEvent(
 	return nil
 }
 
-func (transferProcess) HandleTimeout(context.Context, dogma.ProcessScope, dogma.Message) error {
+func (transferProcessHandler) HandleTimeout(context.Context, dogma.ProcessScope, dogma.Message) error {
 	panic(dogma.UnexpectedMessage)
 }

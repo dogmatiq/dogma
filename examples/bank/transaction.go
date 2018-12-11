@@ -5,24 +5,24 @@ import (
 	"github.com/dogmatiq/dogma/examples/bank/messages"
 )
 
-// TransactionAggregate implements the domain logic for a transaction of any
+// TransactionHandler implements the domain logic for a transaction of any
 // kind against an account.
 //
 // It's sole purpose is to ensure the global uniqueness of transaction IDs.
-var TransactionAggregate dogma.AggregateMessageHandler = transactionAggregate{}
+var TransactionHandler dogma.AggregateMessageHandler = transactionHandler{}
 
 type transaction struct{}
 
 func (t *transaction) ApplyEvent(dogma.Message) {
 }
 
-type transactionAggregate struct{}
+type transactionHandler struct{}
 
-func (transactionAggregate) New() dogma.AggregateRoot {
+func (transactionHandler) New() dogma.AggregateRoot {
 	return &transaction{}
 }
 
-func (transactionAggregate) RouteCommand(m dogma.Message, _ bool) (string, bool) {
+func (transactionHandler) RouteCommand(m dogma.Message, _ bool) (string, bool) {
 	switch x := m.(type) {
 	case messages.Deposit:
 		return x.TransactionID, true
@@ -35,7 +35,7 @@ func (transactionAggregate) RouteCommand(m dogma.Message, _ bool) (string, bool)
 	}
 }
 
-func (transactionAggregate) HandleCommand(s dogma.AggregateScope, m dogma.Message) {
+func (transactionHandler) HandleCommand(s dogma.AggregateScope, m dogma.Message) {
 	if !s.Create() {
 		s.Log("transaction already exists")
 		return

@@ -7,16 +7,16 @@ import (
 	"github.com/dogmatiq/dogma/examples/bank/messages"
 )
 
-// WithdrawalProcess manages the process of withdrawing funds from an account.
-var WithdrawalProcess dogma.ProcessMessageHandler = withdrawalProcess{}
+// WithdrawalProcessHandler manages the process of withdrawing funds from an account.
+var WithdrawalProcessHandler dogma.ProcessMessageHandler = withdrawalProcessHandler{}
 
-type withdrawalProcess struct{}
+type withdrawalProcessHandler struct{}
 
-func (withdrawalProcess) New() dogma.ProcessRoot {
+func (withdrawalProcessHandler) New() dogma.ProcessRoot {
 	return nil
 }
 
-func (withdrawalProcess) RouteEvent(_ context.Context, m dogma.Message, _ bool) (string, bool, error) {
+func (withdrawalProcessHandler) RouteEvent(_ context.Context, m dogma.Message, _ bool) (string, bool, error) {
 	switch x := m.(type) {
 	case messages.WithdrawalStarted:
 		return x.TransactionID, true, nil
@@ -29,7 +29,7 @@ func (withdrawalProcess) RouteEvent(_ context.Context, m dogma.Message, _ bool) 
 	}
 }
 
-func (withdrawalProcess) HandleEvent(
+func (withdrawalProcessHandler) HandleEvent(
 	_ context.Context,
 	s dogma.ProcessScope,
 	m dogma.Message,
@@ -53,6 +53,6 @@ func (withdrawalProcess) HandleEvent(
 	return nil
 }
 
-func (withdrawalProcess) HandleTimeout(context.Context, dogma.ProcessScope, dogma.Message) error {
+func (withdrawalProcessHandler) HandleTimeout(context.Context, dogma.ProcessScope, dogma.Message) error {
 	panic(dogma.UnexpectedMessage)
 }

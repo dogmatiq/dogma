@@ -5,11 +5,11 @@ import (
 	"github.com/dogmatiq/dogma/examples/bank/messages"
 )
 
-// AccountAggregate implements the domain logic for a bank account.
+// AccountHandler implements the domain logic for a bank account.
 //
 // It centralizes all transactions that are applied to an account in order to
 // enforce a strict no-overdraw policy.
-var AccountAggregate dogma.AggregateMessageHandler = accountAggregate{}
+var AccountHandler dogma.AggregateMessageHandler = accountHandler{}
 
 type account struct {
 	Balance uint64
@@ -28,14 +28,14 @@ func (a *account) ApplyEvent(m dogma.Message) {
 	}
 }
 
-type accountAggregate struct{}
+type accountHandler struct{}
 
-func (accountAggregate) New() dogma.AggregateRoot {
+func (accountHandler) New() dogma.AggregateRoot {
 	return &account{}
 }
 
 // RouteCommand returns the ID of the aggregate that should receive m.
-func (accountAggregate) RouteCommand(m dogma.Message, _ bool) (string, bool) {
+func (accountHandler) RouteCommand(m dogma.Message, _ bool) (string, bool) {
 	switch x := m.(type) {
 	case messages.OpenAccount:
 		return x.AccountID, true
@@ -53,7 +53,7 @@ func (accountAggregate) RouteCommand(m dogma.Message, _ bool) (string, bool) {
 }
 
 // HandleCommand handles a domain command that has been routed to this aggregate.
-func (accountAggregate) HandleCommand(s dogma.AggregateScope, m dogma.Message) {
+func (accountHandler) HandleCommand(s dogma.AggregateScope, m dogma.Message) {
 	switch x := m.(type) {
 	case messages.OpenAccount:
 		openAccount(s, x)

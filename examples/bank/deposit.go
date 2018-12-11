@@ -7,16 +7,16 @@ import (
 	"github.com/dogmatiq/dogma/examples/bank/messages"
 )
 
-// DepositProcess manages the process of depositing funds into an account.
-var DepositProcess dogma.ProcessMessageHandler = depositProcess{}
+// DepositProcessHandler manages the process of depositing funds into an account.
+var DepositProcessHandler dogma.ProcessMessageHandler = depositProcessHandler{}
 
-type depositProcess struct{}
+type depositProcessHandler struct{}
 
-func (depositProcess) New() dogma.ProcessRoot {
+func (depositProcessHandler) New() dogma.ProcessRoot {
 	return nil
 }
 
-func (depositProcess) RouteEvent(_ context.Context, m dogma.Message, _ bool) (string, bool, error) {
+func (depositProcessHandler) RouteEvent(_ context.Context, m dogma.Message, _ bool) (string, bool, error) {
 	switch x := m.(type) {
 	case messages.DepositStarted:
 		return x.TransactionID, true, nil
@@ -27,7 +27,7 @@ func (depositProcess) RouteEvent(_ context.Context, m dogma.Message, _ bool) (st
 	}
 }
 
-func (depositProcess) HandleEvent(
+func (depositProcessHandler) HandleEvent(
 	_ context.Context,
 	s dogma.ProcessScope,
 	m dogma.Message,
@@ -51,6 +51,6 @@ func (depositProcess) HandleEvent(
 	return nil
 }
 
-func (depositProcess) HandleTimeout(context.Context, dogma.ProcessScope, dogma.Message) error {
+func (depositProcessHandler) HandleTimeout(context.Context, dogma.ProcessScope, dogma.Message) error {
 	panic(dogma.UnexpectedMessage)
 }
