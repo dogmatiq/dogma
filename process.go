@@ -57,7 +57,7 @@ type ProcessMessageHandler interface {
 	// ProcessScope.ScheduleTimeout().
 	//
 	// Timeouts can be used to model time within the domain. For example, an
-	// application might use a timeout mark an invoice as overdue after some
+	// application might use a timeout to mark an invoice as overdue after some
 	// period of non-payment.
 	//
 	// Handling a timeout is much like handling an event in that the same
