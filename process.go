@@ -44,7 +44,7 @@ type ProcessMessageHandler interface {
 	// process instance to determine what commands, if any, should be executed.
 	//
 	// s provides access to the operations available within the scope of handling
-	// m, such as beginning or ending the targetted instance, accessing its
+	// m, such as beginning or ending the targeted instance, accessing its
 	// state, executing commands or scheduling timeouts.
 	//
 	// This method may manipulate the process's state directly.
@@ -80,23 +80,23 @@ type ProcessRoot interface {
 // timeout message.
 //
 // In the context of this interface, "the message" refers to the message being
-// handled and "the instance" refers to the process instance that is targetted
+// handled and "the instance" refers to the process instance that is targeted
 // by that message. This message may either be an event, or a timeout message.
 type ProcessScope interface {
-	// InstanceID is the ID of the targetted process instance.
+	// InstanceID is the ID of the targeted process instance.
 	InstanceID() string
 
-	// Begin starts the targetted process instance.
+	// Begin starts the targeted process instance.
 	//
 	// It must be called before Root(), ExecuteCommand() or ScheduleTimeout() can
 	// be called within this scope or the scope of any future event or timeout that
 	// targets the same instance.
 	//
-	// It returns true if the targetted instance was begun, or false if
+	// It returns true if the targeted instance was begun, or false if
 	// the instance had already begun.
 	Begin() bool
 
-	// End terminates the targetted process instance.
+	// End terminates the targeted process instance.
 	//
 	// After it has been called none of Root(), ExecuteCommand() or
 	// ScheduleTimeout() can be called within this scope or the scope of any future
@@ -109,7 +109,7 @@ type ProcessScope interface {
 	// instance that has been ended.
 	End()
 
-	// Root returns the root of the targetted process instance.
+	// Root returns the root of the targeted process instance.
 	//
 	// It panics if the instance has not been begun, or was begun but has
 	// subsequently been ended.
