@@ -14,3 +14,4 @@ the ADR documents.
 * [2. Document API Changes](0002-document-api-changes.md)
 * [3. Aggregate Lifetime Control](0003-aggregate-lifetime-control.md)
 * [4. ADR Process](0004-adr-process.md)
+* [5. Routing of commands to processes](0005-routing-of-commands-to-processes.md)
