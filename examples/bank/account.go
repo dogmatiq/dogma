@@ -12,14 +12,11 @@ import (
 var AccountAggregate dogma.AggregateMessageHandler = accountAggregate{}
 
 type account struct {
-	IsOpen  bool
 	Balance uint64
 }
 
 func (a *account) ApplyEvent(m dogma.Message) {
 	switch x := m.(type) {
-	case messages.AccountOpened:
-		a.IsOpen = true
 	case messages.AccountCreditedForDeposit:
 		a.Balance += x.Amount
 	case messages.AccountCreditedForTransfer:
