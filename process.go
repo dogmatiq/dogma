@@ -102,7 +102,7 @@ type ProcessScope interface {
 	// ScheduleTimeout() can be called within this scope or the scope of any future
 	// event or timeout that targets the same instance.
 	//
-	// It panics if the target instance does has not been begun.
+	// It panics if the target instance has not been begun.
 	//
 	// The precise semantics of ending a process instance are implementation
 	// defined. The engine is not required to allow re-beginning a process
