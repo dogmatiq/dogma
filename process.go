@@ -16,26 +16,29 @@ import (
 //
 // Process instances are begun, updated and ended by domain event messages,
 // typically those recorded by an aggregate. The process can cause further
-// changes by executing new commands. Each event message can be routed to many
-// process types, but can target at most one instance of each type.
+// changes by executing new commands.
+//
+// Each event message can be routed to many process types, but can target at
+// most one instance of each type.
 type ProcessMessageHandler interface {
 	// New constructs a new process instance and returns its root.
 	New() ProcessRoot
 
-	// RouteEvent indicates whether a specific type or instance of a message
-	// should be routed to this handler as an event.
+	// Configure configures the behavior of the engine as it relates to this
+	// handler.
 	//
-	// If p is false, then m is an event message that has been made available to
-	// the application. If m should be routed to this handler, the implementation
-	// sets ok to true and id to the ID of the process instance that the event
-	// targets. The process instance need not already have begun in order for an
-	// event to target it. id must not be empty if ok is true.
+	// c provides access to the various configuration options, such as
+	// specifying which event types are routed to this handler.
+	Configure(c ProcessConfigurer)
+
+	// RouteEventToInstance returns the ID of the process instance that is
+	// targetted by m.
 	//
-	// If p is true, then the engine is performing a "routing probe". In this case
-	// m is a non-nil, zero-value message. The implementation sets ok to true if
-	// messages of the same type as m should be routed to this message handler when
-	// they occur. The id output parameter is unused.
-	RouteEvent(ctx context.Context, m Message, p bool) (id string, ok bool, err error)
+	// It panics with the UnexpectedMessage value if m is not one of the command
+	// types that is routed to this handler via Configure().
+	//
+	// If ok is false, the message is not routed to this handler at all.
+	RouteEventToInstance(ctx context.Context, m Message) (id string, ok bool, err error)
 
 	// HandleEvent handles an event message that has been routed to this
 	// handler.
@@ -73,6 +76,20 @@ type ProcessMessageHandler interface {
 // ProcessRoot is an interface implemented by the application and used by
 // the engine to represent the state of a process instance.
 type ProcessRoot interface {
+}
+
+// ProcessConfigurer is an interface implemented by the engine and used by
+// the application to configure options related to a ProcessMessageHandler.
+//
+// It is passed to ProcessMessageHandler.Configure(), typically upon
+// initialization of the engine.
+//
+// In the context of this interface, "the handler" refers to the handler on
+// which Configure() has been called.
+type ProcessConfigurer interface {
+	// RouteEventType configures the engine to route events of the same type as m
+	// to the handler.
+	RouteEventType(m Message)
 }
 
 // ProcessScope is an interface implemented by the engine and used by the

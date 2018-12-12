@@ -11,27 +11,27 @@ package dogma
 //
 // A request to change the state of an aggregate instance is represented by a
 // command message. The changes caused by the command, if any, are represented
-// by domain event messages. Each command message targets a single aggregate
-// instance of a specific type. A command can cause the creation or destruction
-// of its target instance.
+// by domain event messages.
+//
+// Each command message targets a single aggregate instance of a specific type.
+// A command can cause the creation or destruction of its target instance.
 type AggregateMessageHandler interface {
 	// New constructs a new aggregate instance and returns its root.
 	New() AggregateRoot
 
-	// RouteCommand indicates whether a specific type or instance of a message
-	// should be routed to this handler as a command.
+	// Configure configures the behavior of the engine as it relates to this
+	// handler.
 	//
-	// If p is false, then m is a command message that has been sent to the
-	// application. If m should be routed to this handler, the implementation sets
-	// ok to true and id to the ID of the aggregate instance that the command
-	// targets. The aggregate instance need not already exist in order for a
-	// command to target it. id must not be empty if ok is true.
+	// c provides access to the various configuration options, such as
+	// specifying which command types are routed to this handler.
+	Configure(c AggregateConfigurer)
+
+	// RouteCommandToInstance returns the ID of the aggregate instance that is
+	// targetted by m.
 	//
-	// If p is true, then the engine is performing a "routing probe". In this case
-	// m is a non-nil, zero-value message. The implementation sets ok to true if
-	// messages of the same type as m should be routed to this message handler when
-	// they occur. The id output parameter is unused.
-	RouteCommand(m Message, p bool) (id string, ok bool)
+	// It panics with the UnexpectedMessage value if m is not one of the command
+	// types that is routed to this handler via Configure().
+	RouteCommandToInstance(m Message) string
 
 	// HandleCommand handles a command message that has been routed to this
 	// handler.
@@ -48,8 +48,8 @@ type AggregateMessageHandler interface {
 	// modifications must be applied by the instance's ApplyEvent() method, which
 	// is called for each recorded event message.
 	//
-	// If m was not expected by the handler the implementation must panic with an
-	// UnexpectedMessage value.
+	// It panics with the UnexpectedMessage value if m is not one of the command
+	// types that is routed to this handler via Configure().
 	HandleCommand(s AggregateScope, m Message)
 }
 
@@ -59,6 +59,20 @@ type AggregateRoot interface {
 	// ApplyEvent updates the aggregate instance to reflect the fact that a
 	// particular event has occurred.
 	ApplyEvent(m Message)
+}
+
+// AggregateConfigurer is an interface implemented by the engine and used by
+// the application to configure options related to an AggregateMessageHandler.
+//
+// It is passed to AggregateMessageHandler.Configure(), typically upon
+// initialization of the engine.
+//
+// In the context of this interface, "the handler" refers to the handler on
+// which Configure() has been called.
+type AggregateConfigurer interface {
+	// RouteCommandType configures the engine to route commands of the same type as m
+	// to the handler.
+	RouteCommandType(m Message)
 }
 
 // AggregateScope is an interface implemented by the engine and used by the
