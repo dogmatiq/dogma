@@ -34,25 +34,31 @@ func (accountHandler) New() dogma.AggregateRoot {
 	return &account{}
 }
 
-// RouteCommand returns the ID of the aggregate that should receive m.
-func (accountHandler) RouteCommand(m dogma.Message, _ bool) (string, bool) {
+func (accountHandler) Configure(c dogma.AggregateConfigurer) {
+	c.RouteCommandType(messages.OpenAccount{})
+	c.RouteCommandType(messages.CreditAccountForDeposit{})
+	c.RouteCommandType(messages.CreditAccountForTransfer{})
+	c.RouteCommandType(messages.DebitAccountForWithdrawal{})
+	c.RouteCommandType(messages.DebitAccountForTransfer{})
+}
+
+func (accountHandler) RouteCommandToInstance(m dogma.Message) string {
 	switch x := m.(type) {
 	case messages.OpenAccount:
-		return x.AccountID, true
+		return x.AccountID
 	case messages.CreditAccountForDeposit:
-		return x.AccountID, true
+		return x.AccountID
 	case messages.CreditAccountForTransfer:
-		return x.AccountID, true
+		return x.AccountID
 	case messages.DebitAccountForWithdrawal:
-		return x.AccountID, true
+		return x.AccountID
 	case messages.DebitAccountForTransfer:
-		return x.AccountID, true
+		return x.AccountID
 	default:
-		return "", false
+		panic(dogma.UnexpectedMessage)
 	}
 }
 
-// HandleCommand handles a domain command that has been routed to this aggregate.
 func (accountHandler) HandleCommand(s dogma.AggregateScope, m dogma.Message) {
 	switch x := m.(type) {
 	case messages.OpenAccount:

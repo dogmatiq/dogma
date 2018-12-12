@@ -20,7 +20,14 @@ func (transferProcessHandler) New() dogma.ProcessRoot {
 	return &transfer{}
 }
 
-func (transferProcessHandler) RouteEvent(_ context.Context, m dogma.Message, _ bool) (string, bool, error) {
+func (transferProcessHandler) Configure(c dogma.ProcessConfigurer) {
+	c.RouteEventType(messages.TransferStarted{})
+	c.RouteEventType(messages.AccountDebitedForTransfer{})
+	c.RouteEventType(messages.AccountCreditedForTransfer{})
+	c.RouteEventType(messages.TransferDeclined{})
+}
+
+func (transferProcessHandler) RouteEventToInstance(_ context.Context, m dogma.Message) (string, bool, error) {
 	switch x := m.(type) {
 	case messages.TransferStarted:
 		return x.TransactionID, true, nil
@@ -31,7 +38,7 @@ func (transferProcessHandler) RouteEvent(_ context.Context, m dogma.Message, _ b
 	case messages.TransferDeclined:
 		return x.TransactionID, true, nil
 	default:
-		return "", false, nil
+		panic(dogma.UnexpectedMessage)
 	}
 }
 

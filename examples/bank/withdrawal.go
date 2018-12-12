@@ -16,7 +16,13 @@ func (withdrawalProcessHandler) New() dogma.ProcessRoot {
 	return nil
 }
 
-func (withdrawalProcessHandler) RouteEvent(_ context.Context, m dogma.Message, _ bool) (string, bool, error) {
+func (withdrawalProcessHandler) Configure(c dogma.ProcessConfigurer) {
+	c.RouteEventType(messages.WithdrawalStarted{})
+	c.RouteEventType(messages.AccountDebitedForWithdrawal{})
+	c.RouteEventType(messages.WithdrawalDeclined{})
+}
+
+func (withdrawalProcessHandler) RouteEventToInstance(_ context.Context, m dogma.Message) (string, bool, error) {
 	switch x := m.(type) {
 	case messages.WithdrawalStarted:
 		return x.TransactionID, true, nil

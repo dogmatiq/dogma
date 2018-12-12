@@ -16,14 +16,19 @@ func (depositProcessHandler) New() dogma.ProcessRoot {
 	return nil
 }
 
-func (depositProcessHandler) RouteEvent(_ context.Context, m dogma.Message, _ bool) (string, bool, error) {
+func (depositProcessHandler) Configure(c dogma.ProcessConfigurer) {
+	c.RouteEventType(messages.DepositStarted{})
+	c.RouteEventType(messages.AccountCreditedForDeposit{})
+}
+
+func (depositProcessHandler) RouteEventToInstance(_ context.Context, m dogma.Message) (string, bool, error) {
 	switch x := m.(type) {
 	case messages.DepositStarted:
 		return x.TransactionID, true, nil
 	case messages.AccountCreditedForDeposit:
 		return x.TransactionID, true, nil
 	default:
-		return "", false, nil
+		panic(dogma.UnexpectedMessage)
 	}
 }
 

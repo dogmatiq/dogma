@@ -22,16 +22,22 @@ func (transactionHandler) New() dogma.AggregateRoot {
 	return &transaction{}
 }
 
-func (transactionHandler) RouteCommand(m dogma.Message, _ bool) (string, bool) {
+func (transactionHandler) Configure(c dogma.AggregateConfigurer) {
+	c.RouteCommandType(messages.Deposit{})
+	c.RouteCommandType(messages.Withdraw{})
+	c.RouteCommandType(messages.Transfer{})
+}
+
+func (transactionHandler) RouteCommandToInstance(m dogma.Message) string {
 	switch x := m.(type) {
 	case messages.Deposit:
-		return x.TransactionID, true
+		return x.TransactionID
 	case messages.Withdraw:
-		return x.TransactionID, true
+		return x.TransactionID
 	case messages.Transfer:
-		return x.TransactionID, true
+		return x.TransactionID
 	default:
-		return "", false
+		panic(dogma.UnexpectedMessage)
 	}
 }
 
