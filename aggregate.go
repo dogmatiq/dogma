@@ -138,3 +138,14 @@ type AggregateScope interface {
 	// with the business domain.
 	Log(f string, v ...interface{})
 }
+
+// StatelessAggregate is an aggregate root with no state.
+//
+// It can be returned by an AggregateMessageHandler.New() implementation to
+// indicate that no domain state is required, beyond the existence/non-existence
+// of the aggregate instance.
+var StatelessAggregate AggregateRoot = statelessAggregate{}
+
+type statelessAggregate struct{}
+
+func (statelessAggregate) ApplyEvent(Message) {}
