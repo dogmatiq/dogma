@@ -11,6 +11,10 @@ package dogma
 // "events". Command messages represent a request to perform some action,
 // whereas event messages represent some occurrance which has already taken
 // place.
+//
+// These message categorizations are largely conceptual. Within Dogma, they are
+// all modeled by the Message interface, though engine implementations may
+// require messages to implement more specific interfaces for each category.
 type Message interface {
 }
 
