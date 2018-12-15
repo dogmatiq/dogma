@@ -148,4 +148,8 @@ var StatelessAggregate AggregateRoot = statelessAggregate{}
 
 type statelessAggregate struct{}
 
-func (statelessAggregate) ApplyEvent(Message) {}
+func (statelessAggregate) ApplyEvent(m Message) {
+	if m == nil {
+		panic("event must not be nil")
+	}
+}
