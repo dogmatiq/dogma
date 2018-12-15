@@ -159,7 +159,7 @@ type ProcessScope interface {
 // StatelessProcess is a process root with no state.
 //
 // It can be returned by a ProcessMessageHandler.New() implementation to
-// indicate that no domain state is required, beyond the existence/non-existence
+// indicate that no domain state is required beyond the existence/non-existence
 // of the process instance.
 var StatelessProcess ProcessRoot = statelessProcess{}
 

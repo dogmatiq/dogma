@@ -142,7 +142,7 @@ type AggregateScope interface {
 // StatelessAggregate is an aggregate root with no state.
 //
 // It can be returned by an AggregateMessageHandler.New() implementation to
-// indicate that no domain state is required, beyond the existence/non-existence
+// indicate that no domain state is required beyond the existence/non-existence
 // of the aggregate instance.
 var StatelessAggregate AggregateRoot = statelessAggregate{}
 
