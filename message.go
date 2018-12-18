@@ -2,19 +2,20 @@ package dogma
 
 // A Message is an application-defined unit of data.
 //
-// Messages are divided into two broad categories; "domain messages", which
+// Most messages fall into one of two broad categories; "domain messages", which
 // relate to the application's domain logic, and "integration messages" which
 // are used to integrate the domain with "non-domain concerns", such as
-// third-party APIs.
+// third-party APIs. There are other kinds of messages, such as process timeout
+// messages which do not clearly belong to one category or another.
 //
-// Within each category, messages are further divided into "commands" and
+// Within these categories, messages are further divided into "commands" and
 // "events". Command messages represent a request to perform some action,
 // whereas event messages represent some occurrance which has already taken
 // place.
 //
-// These message categorizations are largely conceptual. Within Dogma, they are
-// all modeled by the Message interface, though engine implementations may
-// require messages to implement more specific interfaces for each category.
+// These categorizations are largely conceptual. Within Dogma, they are all
+// modeled by the Message interface, though engine implementations may require
+// messages to implement more specific interfaces for each category.
 type Message interface {
 }
 

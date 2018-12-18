@@ -14,12 +14,15 @@ import (
 // of its constituent objects, known as the "root", and represented by the
 // ProcessRoot interface.
 //
-// Process instances are begun, updated and ended by domain event messages,
-// typically those recorded by an aggregate. The process can cause further
-// changes by executing new commands.
+// Process instances are begun, updated and ended by event messages. The process
+// can cause further changes by executing new commands.
 //
 // Each event message can be routed to many process types, but can target at
 // most one instance of each type.
+//
+// Processes are often use to integrate the domain layer with non-domain
+// concerns, and as such they often accept and produce both domain messages and
+// integration messages.
 type ProcessMessageHandler interface {
 	// New constructs a new process instance and returns its root.
 	New() ProcessRoot
@@ -28,13 +31,13 @@ type ProcessMessageHandler interface {
 	// handler.
 	//
 	// c provides access to the various configuration options, such as
-	// specifying which event types are routed to this handler.
+	// specifying which types of event messages are routed to this handler.
 	Configure(c ProcessConfigurer)
 
 	// RouteEventToInstance returns the ID of the process instance that is
 	// targetted by m.
 	//
-	// It panics with the UnexpectedMessage value if m is not one of the command
+	// It panics with the UnexpectedMessage value if m is not one of the event
 	// types that is routed to this handler via Configure().
 	//
 	// If ok is false, the message is not routed to this handler at all.
@@ -43,17 +46,18 @@ type ProcessMessageHandler interface {
 	// HandleEvent handles an event message that has been routed to this
 	// handler.
 	//
-	// Handling an event involves inspecting the state of the event's target
-	// process instance to determine what commands, if any, should be executed.
+	// Handling an event message involves inspecting the state of the target
+	// process instance to determine what command messages, if any, should be
+	// produced.
 	//
 	// s provides access to the operations available within the scope of handling
-	// m, such as beginning or ending the targeted instance, accessing its
-	// state, executing commands or scheduling timeouts.
+	// m, such as beginning or ending the targeted instance, accessing its state,
+	// sending command messages or scheduling timeouts.
 	//
 	// This method may manipulate the process's state directly.
 	//
-	// If m was not expected by the handler the implementation must panic with an
-	// UnexpectedMessage value.
+	// It panics with the UnexpectedMessage value if m is not one of the event
+	// types that is routed to this handler via Configure().
 	HandleEvent(ctx context.Context, s ProcessScope, m Message) error
 
 	// HandleTimeout handles a timeout message that has been scheduled with
