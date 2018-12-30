@@ -1,5 +1,7 @@
 package dogma
 
+import "context"
+
 // IntegrationMessageHandler is an interface implemented by the application and
 // used by the engine to integrate with non-message-based systems.
 type IntegrationMessageHandler interface {
@@ -46,4 +48,13 @@ type IntegrationCommandScope interface {
 	// Log records an informational message within the context of the integration
 	// command message that is being handled.
 	Log(f string, v ...interface{})
+}
+
+// IntegrationEventRecorder is an interface implemented by the engine and used
+// by the appliation to record integration events that occur outside an
+// integration message handler.
+type IntegrationEventRecorder interface {
+	// RecordEvent records the occurrence of an integration event that does not
+	// have a causal message.
+	RecordEvent(ctx context.Context, m Message) error
 }

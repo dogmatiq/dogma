@@ -1,5 +1,7 @@
 package dogma
 
+import "context"
+
 // AggregateMessageHandler is an interface implemented by the application and
 // used by the engine to cause changes to an aggregate via domain command
 // messages.
@@ -136,6 +138,13 @@ type AggregateCommandScope interface {
 	// The log message should be worded such that it makes sense to anyone familiar
 	// with the business domain.
 	Log(f string, v ...interface{})
+}
+
+// DomainCommandExecutor is an interface implemented by the engine and used by
+// the application to execute domain commands from outside the Dogma engine.
+type DomainCommandExecutor interface {
+	// ExecuteCommand executes a command that does not have a causal message.
+	ExecuteCommand(ctx context.Context, m Message) error
 }
 
 // StatelessAggregate is an aggregate root with no state.
