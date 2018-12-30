@@ -22,7 +22,8 @@ implementors are free to determine their own persistence semantics.
 ## Decision
 
 We've opted to name the methods used to create and destroy aggregate instances
-`AggregateCommandScope.Create()` and `Destroy()`, respectively.
+`AggregateScope.Create()` and `Destroy()`, respectively. Note that
+`AggregateScope` has since been renamed to `AggregateCommandScope`.
 
 `Create()` is a fairly self explanatory name. This is an idempotent operation.
 The method returns `true` if the call actually resulted in the creation of the
