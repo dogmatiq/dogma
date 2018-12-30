@@ -20,7 +20,7 @@ import (
 // Each event message can be routed to many process types, but can target at
 // most one instance of each type.
 //
-// Processes are often use to integrate the domain layer with non-domain
+// Processes are often used to integrate the domain layer with non-domain
 // concerns, and as such they often accept and produce both domain messages and
 // integration messages.
 type ProcessMessageHandler interface {
