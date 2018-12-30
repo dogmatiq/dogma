@@ -52,7 +52,7 @@ type AggregateMessageHandler interface {
 	//
 	// It panics with the UnexpectedMessage value if m is not one of the domain
 	// command types that is routed to this handler via Configure().
-	HandleCommand(s AggregateScope, m Message)
+	HandleCommand(s AggregateCommandScope, m Message)
 }
 
 // AggregateRoot is an interface implemented by the application and used by
@@ -77,10 +77,10 @@ type AggregateConfigurer interface {
 	RouteCommandType(m Message)
 }
 
-// AggregateScope is an interface implemented by the engine and used by the
+// AggregateCommandScope is an interface implemented by the engine and used by the
 // application to perform operations within the context of handling a specific
 // domain command message.
-type AggregateScope interface {
+type AggregateCommandScope interface {
 	// InstanceID is the ID of the targeted aggregate instance.
 	InstanceID() string
 
