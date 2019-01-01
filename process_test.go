@@ -7,6 +7,16 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
+func TestStatelessProcess_New_ReturnsStatelessProcessRoot(t *testing.T) {
+	var v StatelessProcess
+
+	r := v.New()
+
+	if r != StatelessProcessRoot {
+		t.Fatal("unexpected value returned")
+	}
+}
+
 func TestNoTimeouts_HandleTimeout_Panics(t *testing.T) {
 	var v NoTimeouts
 	ctx := context.Background()
