@@ -6,12 +6,22 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
-func TestStatelessAggregate_ApplyEvent_AcceptsAnyMessage(t *testing.T) {
-	type message struct{} // the message interface is currently empty
-	StatelessAggregate.ApplyEvent(message{})
+func TestStatelessAggregate_New_ReturnsStatelessAggregateRoot(t *testing.T) {
+	var v StatelessAggregate
+
+	r := v.New()
+
+	if r != StatelessAggregateRoot {
+		t.Fatal("unexpected value returned")
+	}
 }
 
-func TestStatelessAggregate_ApplyEvent_PanicsOnNil(t *testing.T) {
+func TestStatelessAggregateRoot_ApplyEvent_AcceptsAnyMessage(t *testing.T) {
+	type message struct{} // the message interface is currently empty
+	StatelessAggregateRoot.ApplyEvent(message{})
+}
+
+func TestStatelessAggregateRoot_ApplyEvent_PanicsOnNil(t *testing.T) {
 	defer func() {
 		r := recover()
 
@@ -24,5 +34,5 @@ func TestStatelessAggregate_ApplyEvent_PanicsOnNil(t *testing.T) {
 		}
 	}()
 
-	StatelessAggregate.ApplyEvent(nil)
+	StatelessAggregateRoot.ApplyEvent(nil)
 }

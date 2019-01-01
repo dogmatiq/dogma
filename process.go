@@ -203,11 +203,29 @@ type ProcessTimeoutScope interface {
 	Log(f string, v ...interface{})
 }
 
-// StatelessProcess is a process root with no state.
+// StatelessProcess is an embeddable type that provides an implementation of
+// ProcessMessageHandler.New() that always returns a StatelessProcessRoot.
+type StatelessProcess struct{}
+
+// New returns StatelessProcessRoot.
+func (StatelessProcess) New() ProcessRoot {
+	return StatelessProcessRoot
+}
+
+// StatelessProcessRoot is a process root with no state.
 //
 // It can be returned by a ProcessMessageHandler.New() implementation to
 // indicate that no domain state is required beyond the existence/non-existence
 // of the process instance.
-var StatelessProcess ProcessRoot = statelessProcess{}
+var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
 
-type statelessProcess struct{}
+type statelessProcessRoot struct{}
+
+// NoTimeouts is an embeddable type that provides an implementation of
+// Process.HandleTimeout() that always panics with the UnexpectedMessage value.
+type NoTimeouts struct{}
+
+// HandleTimeout panic with the UnexpectedMessage value.
+func (NoTimeouts) HandleTimeout(context.Context, ProcessTimeoutScope, Message) error {
+	panic(UnexpectedMessage)
+}
