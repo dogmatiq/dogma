@@ -200,9 +200,6 @@ type ProcessTimeoutScope interface {
 
 	// Log records an informational message within the context of the timeout being
 	// handled.
-	//
-	// The log message should be worded such that it makes sense to anyone familiar
-	// with the business domain.
 	Log(f string, v ...interface{})
 }
 
