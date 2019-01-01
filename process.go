@@ -211,3 +211,12 @@ type ProcessTimeoutScope interface {
 var StatelessProcess ProcessRoot = statelessProcess{}
 
 type statelessProcess struct{}
+
+// NoTimeouts is an embeddable type that provides an implementation of
+// Process.HandleTimeout that always panics with the UnexpectedMessage value.
+type NoTimeouts struct{}
+
+// HandleTimeout always panics.
+func (NoTimeouts) HandleTimeout(context.Context, ProcessTimeoutScope, Message) error {
+	panic(UnexpectedMessage)
+}
