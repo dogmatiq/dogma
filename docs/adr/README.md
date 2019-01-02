@@ -16,3 +16,5 @@ the ADR documents.
 * [4. ADR Process](0004-adr-process.md)
 * [5. Routing of commands to processes](0005-routing-of-commands-to-processes.md)
 * [6. Stateless aggregates and processes](0006-stateless-aggregates-and-processes.md)
+* [7. Location of Examples](0007-location-of-examples.md)
+* [8. Location of Testing Features](0008-location-of-testing-features.md)
