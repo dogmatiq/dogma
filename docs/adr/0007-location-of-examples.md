@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-We need to decide whether Dogma's testing features should reside in the `dogma`
+We need to decide whether Dogma's examples should reside in the `dogma`
 repository itself, or a separate `examples` repository.
 
 ## Decision
