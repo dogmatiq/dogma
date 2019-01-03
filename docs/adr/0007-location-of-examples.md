@@ -23,4 +23,4 @@ As always, introducing more repositories increases the overhead of dependency
 management for Dogmatiq maintainers. However, keeping any code that is not
 directly related to interoperability outside of `dogma` removes the possiblity
 of having to release a new major semver version due to a backwards-incompatible
-change that only affeced the ancillary code and not the Dogma API itself.
+change that only affected the ancillary code and not the Dogma API itself.
