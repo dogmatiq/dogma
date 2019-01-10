@@ -66,6 +66,9 @@ type AggregateRoot interface {
 
 	// IsEqual returns true if this aggregate root is equal to r.
 	IsEqual(r AggregateRoot) bool
+
+	// Clone returns a deep-copy of this aggregate root.
+	Clone() AggregateRoot
 }
 
 // AggregateConfigurer is an interface implemented by the engine and used by
@@ -193,4 +196,8 @@ func (statelessAggregateRoot) IsEqual(r AggregateRoot) bool {
 	}
 
 	return r == StatelessAggregateRoot
+}
+
+func (statelessAggregateRoot) Clone() AggregateRoot {
+	return StatelessAggregateRoot
 }

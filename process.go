@@ -82,6 +82,9 @@ type ProcessMessageHandler interface {
 type ProcessRoot interface {
 	// IsEqual returns true if this process root is equal to r.
 	IsEqual(r ProcessRoot) bool
+
+	// Clone returns a deep-copy of this process root.
+	Clone() ProcessRoot
 }
 
 // ProcessConfigurer is an interface implemented by the engine and used by
@@ -242,6 +245,10 @@ func (statelessProcessRoot) IsEqual(r ProcessRoot) bool {
 	}
 
 	return r == StatelessProcessRoot
+}
+
+func (statelessProcessRoot) Clone() ProcessRoot {
+	return StatelessProcessRoot
 }
 
 // NoTimeoutBehavior can be embedded in ProcessMessageHandler implementations to

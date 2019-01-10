@@ -17,6 +17,10 @@ func (testProcessRoot) IsEqual(r ProcessRoot) bool {
 	panic("not implemented")
 }
 
+func (testProcessRoot) Clone() ProcessRoot {
+	panic("not implemented")
+}
+
 func TestStatelessProcessBehavior_New_ReturnsStatelessProcessRoot(t *testing.T) {
 	var v StatelessProcessBehavior
 
@@ -66,4 +70,10 @@ func TestNoTimeoutBehavior_HandleTimeout_Panics(t *testing.T) {
 	}()
 
 	v.HandleTimeout(ctx, nil, nil)
+}
+
+func TestStatelessProcessRoot_Clone(t *testing.T) {
+	if !StatelessProcessRoot.Clone().IsEqual(StatelessProcessRoot) {
+		t.Fatal("clone is not StatelessProcessRoot")
+	}
 }

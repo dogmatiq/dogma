@@ -16,6 +16,10 @@ func (testAggregateRoot) IsEqual(r AggregateRoot) bool {
 	panic("not implemented")
 }
 
+func (testAggregateRoot) Clone() AggregateRoot {
+	panic("not implemented")
+}
+
 func TestStatelessAggregateBehavior_New_ReturnsStatelessAggregateRoot(t *testing.T) {
 	var v StatelessAggregateBehavior
 
@@ -71,4 +75,10 @@ func TestStatelessAggregateRoot_IsEqual_PanicsOnNil(t *testing.T) {
 	}()
 
 	StatelessAggregateRoot.IsEqual(nil)
+}
+
+func TestStatelessAggregateRoot_Clone(t *testing.T) {
+	if !StatelessAggregateRoot.Clone().IsEqual(StatelessAggregateRoot) {
+		t.Fatal("clone is not StatelessAggregateRoot")
+	}
 }
