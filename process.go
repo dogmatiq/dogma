@@ -230,11 +230,14 @@ var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
 
 type statelessProcessRoot struct{}
 
-// NoTimeouts is an embeddable type that provides an implementation of
-// Process.HandleTimeout() that always panics with the UnexpectedMessage value.
-type NoTimeouts struct{}
+// NoTimeoutBehavior can be embedded in ProcessMessageHandler implementations to
+// indicate that no timeout messages are used.
+//
+// It provides an implementation of ProcessMessageHandler.HandleTimeout() that always
+// panics with the UnexpectedMessage value.
+type NoTimeoutBehavior struct{}
 
 // HandleTimeout panic with the UnexpectedMessage value.
-func (NoTimeouts) HandleTimeout(context.Context, ProcessTimeoutScope, Message) error {
+func (NoTimeoutBehavior) HandleTimeout(context.Context, ProcessTimeoutScope, Message) error {
 	panic(UnexpectedMessage)
 }
