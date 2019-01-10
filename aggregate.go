@@ -74,6 +74,10 @@ type AggregateRoot interface {
 // In the context of this interface, "the handler" refers to the handler on
 // which Configure() has been called.
 type AggregateConfigurer interface {
+	// Name sets the name of the handler. Each handler within an application must
+	// have a unique name.
+	Name(n string)
+
 	// RouteCommandType configures the engine to route domain command messages of
 	// the same type as m to the handler.
 	RouteCommandType(m Message)
