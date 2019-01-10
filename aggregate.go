@@ -147,12 +147,15 @@ type DomainCommandExecutor interface {
 	ExecuteCommand(ctx context.Context, m Message) error
 }
 
-// StatelessAggregate is an embeddable type that provides an implementation of
-// AggregateMessageHandler.New() that always returns a StatelessAggregateRoot.
-type StatelessAggregate struct{}
+// StatelessAggregateBehavior can be embedded in AggregateMessageHandler
+// implementations to indicate that no state is kept between messages.
+//
+// It provides an implementation of AggregateMessageHandler.New() that always
+// returns a StatelessAggregateRoot.
+type StatelessAggregateBehavior struct{}
 
 // New returns StatelessAggregateRoot.
-func (StatelessAggregate) New() AggregateRoot {
+func (StatelessAggregateBehavior) New() AggregateRoot {
 	return StatelessAggregateRoot
 }
 
@@ -161,6 +164,12 @@ func (StatelessAggregate) New() AggregateRoot {
 // It can be returned by an AggregateMessageHandler.New() implementation to
 // indicate that no domain state is required beyond the existence/non-existence
 // of the aggregate instance.
+//
+// See also StatelessAggregateBehavior, which provides an implementation of
+// New() that returns this value.
+//
+// Engines may use this value as a sentinel, to provide an optimized code path
+// when no state is required.
 var StatelessAggregateRoot AggregateRoot = statelessAggregateRoot{}
 
 type statelessAggregateRoot struct{}
