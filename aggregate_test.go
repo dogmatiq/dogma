@@ -6,6 +6,20 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
+type testAggregateRoot struct{}
+
+func (testAggregateRoot) ApplyEvent(m Message) {
+	panic("not implemented")
+}
+
+func (testAggregateRoot) IsEqual(r AggregateRoot) bool {
+	panic("not implemented")
+}
+
+func (testAggregateRoot) Clone() AggregateRoot {
+	panic("not implemented")
+}
+
 func TestStatelessAggregateBehavior_New_ReturnsStatelessAggregateRoot(t *testing.T) {
 	var v StatelessAggregateBehavior
 
@@ -35,4 +49,36 @@ func TestStatelessAggregateRoot_ApplyEvent_PanicsOnNil(t *testing.T) {
 	}()
 
 	StatelessAggregateRoot.ApplyEvent(nil)
+}
+
+func TestStatelessAggregateRoot_IsEqual(t *testing.T) {
+	if !StatelessAggregateRoot.IsEqual(StatelessAggregateRoot) {
+		t.Fatal("StatelessAggregateRoot is not equal to itself")
+	}
+
+	if StatelessAggregateRoot.IsEqual(testAggregateRoot{}) {
+		t.Fatal("StatelessAggregateRoot is equal to a different aggregate root")
+	}
+}
+
+func TestStatelessAggregateRoot_IsEqual_PanicsOnNil(t *testing.T) {
+	defer func() {
+		r := recover()
+
+		if r == nil {
+			t.Fatal("did not panic")
+		}
+
+		if r != "aggregate root must not be nil" {
+			t.Fatal("did not panic with expected message")
+		}
+	}()
+
+	StatelessAggregateRoot.IsEqual(nil)
+}
+
+func TestStatelessAggregateRoot_Clone(t *testing.T) {
+	if !StatelessAggregateRoot.Clone().IsEqual(StatelessAggregateRoot) {
+		t.Fatal("clone is not StatelessAggregateRoot")
+	}
 }
