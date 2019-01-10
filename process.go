@@ -80,6 +80,8 @@ type ProcessMessageHandler interface {
 // ProcessRoot is an interface implemented by the application and used by
 // the engine to represent the state of a process instance.
 type ProcessRoot interface {
+	// IsEqual returns true if this process root is equal to r.
+	IsEqual(r ProcessRoot) bool
 }
 
 // ProcessConfigurer is an interface implemented by the engine and used by
@@ -233,6 +235,14 @@ func (StatelessProcessBehavior) New() ProcessRoot {
 var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
 
 type statelessProcessRoot struct{}
+
+func (statelessProcessRoot) IsEqual(r ProcessRoot) bool {
+	if r == nil {
+		panic("process root must not be nil")
+	}
+
+	return r == StatelessProcessRoot
+}
 
 // NoTimeoutBehavior can be embedded in ProcessMessageHandler implementations to
 // indicate that no timeout messages are used.
