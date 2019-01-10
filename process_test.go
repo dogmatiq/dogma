@@ -7,8 +7,8 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
-func TestStatelessProcess_New_ReturnsStatelessProcessRoot(t *testing.T) {
-	var v StatelessProcess
+func TestStatelessProcessBehavior_New_ReturnsStatelessProcessRoot(t *testing.T) {
+	var v StatelessProcessBehavior
 
 	r := v.New()
 
