@@ -6,8 +6,8 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
-func TestStatelessAggregate_New_ReturnsStatelessAggregateRoot(t *testing.T) {
-	var v StatelessAggregate
+func TestStatelessAggregateBehavior_New_ReturnsStatelessAggregateRoot(t *testing.T) {
+	var v StatelessAggregateBehavior
 
 	r := v.New()
 

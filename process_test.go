@@ -7,8 +7,8 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
-func TestStatelessProcess_New_ReturnsStatelessProcessRoot(t *testing.T) {
-	var v StatelessProcess
+func TestStatelessProcessBehavior_New_ReturnsStatelessProcessRoot(t *testing.T) {
+	var v StatelessProcessBehavior
 
 	r := v.New()
 
@@ -17,8 +17,8 @@ func TestStatelessProcess_New_ReturnsStatelessProcessRoot(t *testing.T) {
 	}
 }
 
-func TestNoTimeouts_HandleTimeout_Panics(t *testing.T) {
-	var v NoTimeouts
+func TestNoTimeoutBehavior_HandleTimeout_Panics(t *testing.T) {
+	var v NoTimeoutBehavior
 	ctx := context.Background()
 
 	defer func() {
