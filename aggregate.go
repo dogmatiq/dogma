@@ -63,12 +63,6 @@ type AggregateRoot interface {
 	// ApplyEvent updates the aggregate instance to reflect the fact that a
 	// particular domain event has occurred.
 	ApplyEvent(m Message)
-
-	// IsEqual returns true if this aggregate root is equal to r.
-	IsEqual(r AggregateRoot) bool
-
-	// Clone returns a deep-copy of this aggregate root.
-	Clone() AggregateRoot
 }
 
 // AggregateConfigurer is an interface implemented by the engine and used by
@@ -188,16 +182,4 @@ func (statelessAggregateRoot) ApplyEvent(m Message) {
 	if m == nil {
 		panic("event must not be nil")
 	}
-}
-
-func (statelessAggregateRoot) IsEqual(r AggregateRoot) bool {
-	if r == nil {
-		panic("aggregate root must not be nil")
-	}
-
-	return r == StatelessAggregateRoot
-}
-
-func (statelessAggregateRoot) Clone() AggregateRoot {
-	return StatelessAggregateRoot
 }
