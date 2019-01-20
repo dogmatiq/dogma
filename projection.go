@@ -1,5 +1,7 @@
 package dogma
 
+import "context"
+
 // ProjectionMessageHandler is an interface implemented by the application and
 // used by the engine to derive some state from domain event messages.
 type ProjectionMessageHandler interface {
@@ -18,7 +20,7 @@ type ProjectionMessageHandler interface {
 	//
 	// It panics with the UnexpectedMessage value if m is not one of the event
 	// types that is routed to this handler via Configure().
-	HandleEvent(s ProjectionEventScope, m Message)
+	HandleEvent(ctx context.Context, s ProjectionEventScope, m Message) error
 }
 
 // ProjectionConfigurer is an interface implemented by the engine and used
