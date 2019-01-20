@@ -20,7 +20,7 @@ type IntegrationMessageHandler interface {
 	//
 	// It panics with the UnexpectedMessage value if m is not one of the
 	// integration command types that is routed to this handler via Configure().
-	HandleCommand(s IntegrationCommandScope, m Message)
+	HandleCommand(ctx context.Context, s IntegrationCommandScope, m Message) error
 }
 
 // IntegrationConfigurer is an interface implemented by the engine and used
