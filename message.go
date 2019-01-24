@@ -1,26 +1,25 @@
 package dogma
 
-// A Message is an application-defined unit of data.
+// A Message is an application-defined unit of data that encapsulates a
+// "command" or "event" within a message-based application.
 //
-// Most messages fall into one of two broad categories; "domain messages", which
-// relate to the application's domain logic, and "integration messages" which
-// are used to integrate the domain with "non-domain concerns", such as
-// third-party APIs. There are other kinds of messages, such as process timeout
-// messages which do not clearly belong to one category or another.
+// Command messages represent a request for the application to perform some
+// action, whereas event messages indicate that some action has already
+// occurred.
 //
-// Within these categories, messages are further divided into "commands" and
-// "events". Command messages represent a request to perform some action,
-// whereas event messages represent some occurrance which has already taken
-// place.
+// Additionally, a "timeout" message can be used to perform actions within an
+// application at specific wall-clock times.
 //
-// These categorizations are largely conceptual. Within Dogma, they are all
-// modeled by the Message interface, though engine implementations may require
-// messages to implement more specific interfaces for each category.
+// The message implementations are provided by the application. The interface is
+// intentionally empty, allowing the use of any Go type as a message.
+//
+// Engine implementations MAY place further requirements upon message
+// implementations.
 type Message interface {
 }
 
 // UnexpectedMessage is a panic value used by a message handler when it receives
-// a message that should not have been routed to it.
+// a message of a type that it did not expect.
 var UnexpectedMessage unexpectedMessage
 
 type unexpectedMessage struct{}
