@@ -53,12 +53,3 @@ type IntegrationCommandScope interface {
 	// command message that is being handled.
 	Log(f string, v ...interface{})
 }
-
-// IntegrationEventRecorder is an interface implemented by the engine and used
-// by the appliation to record integration events that occur outside an
-// integration message handler.
-type IntegrationEventRecorder interface {
-	// RecordEvent records the occurrence of an integration event that does not
-	// have a causal message.
-	RecordEvent(ctx context.Context, m Message) error
-}
