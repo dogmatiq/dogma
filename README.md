@@ -77,7 +77,7 @@ atomically with the recording of the events about those state transitions.
 
 Aggregates can be quite a difficult concept to grasp. The book [Domain Driven
 Design Distilled], by Vaugn Vernon offers a suitable introduction to aggregates
-and the other elements of domain driven design. Additionally,
+and the other elements of domain driven design.
 
 Aggregates are represented by the [`dogma.AggregateMessageHandler`] interface.
 
