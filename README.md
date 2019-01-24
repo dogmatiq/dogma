@@ -13,6 +13,11 @@ Dogma attempts to define a practical standard for authoring message-based
 applications in a manner agnostic to the mechanisms by which messages are
 transported and application state is persisted.
 
+## Related Repositories
+
+- [dogmatiq/dogmatest] - utilities for blackbox testing of Dogma applications
+- [dogmatiq/example] - an example Dogma application that implements the features of a simple bank
+
 ## Concepts
 
 Dogma leans heavily on the concepts of [Domain Driven Design], and is intended
@@ -130,6 +135,9 @@ Projections are represented by the [`dogma.ProjectionMessageHandler`] interface.
 [Eventual Consistency]: https://en.wikipedia.org/wiki/Eventual_consistency
 [API documentation]: https://godoc.org/github.com/dogmatiq/dogma
 [RFC 2119]: https://tools.ietf.org/html/rfc2119
+
+[dogmatiq/dogmatest]: https://github.com/dogmatiq/dogmatest
+[dogmatiq/example]: https://github.com/dogmatiq/example
 
 [`dogma.App`]: https://godoc.org/github.com/dogmatiq/dogma#App
 [`dogma.AggregateMessageHandler`]: https://godoc.org/github.com/dogmatiq/dogma#AggregateMessageHandler
