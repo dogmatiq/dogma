@@ -1,4 +1,4 @@
-// Package dogma is an specification and API for message-based applications.
+// Package dogma is a specification and API for message-based applications.
 //
 // It attempts to define a practical standard for authoring message-based
 // applications in a manner agnostic to the mechanisms by which messages are
