@@ -72,14 +72,14 @@ An aggregate receives command messages in order to effect a change in a
 particular **instance** of that aggregate. Such state changes are represented
 by event messages.
 
-Aggregates are represented by the [`dogma.AggregateMessageHandler`] interface.
-
 Aggregate state is managed by the engine, ensuring that state transitions occur
 atomically with the recording of the events about those state transitions.
 
 Aggregates can be quite a difficult concept to grasp. The book [Domain Driven
 Design Distilled], by Vaugn Vernon offers a suitable introduction to aggregates
 and the other elements of domain driven design. Additionally,
+
+Aggregates are represented by the [`dogma.AggregateMessageHandler`] interface.
 
 ### Process
 
@@ -93,10 +93,10 @@ Additionally, processes can produce timeout messages, which are routed back to
 the same process instance at a specific time. Such messages are used to
 implement processes that incorporate some time-based component.
 
-Aggregates are represented by the [`dogma.ProcessMessageHandler`] interface.
-
 Process state is managed by the engine, ensuring that state transitions occur
 atomically with the enqueing of the commands the processes produce.
+
+Processes are represented by the [`dogma.ProcessMessageHandler`] interface.
 
 ### Integration
 
@@ -106,7 +106,7 @@ application with some non-message-based system.
 Integrations receive command messages and produce event messages. They do not
 have any state that is managed by the engine.
 
-Integrations are represented by the [`dogma.IntegrationsMessageHandler`] interface.
+Integrations are represented by the [`dogma.IntegrationMessageHandler`] interface.
 
 ### Projection
 
@@ -119,6 +119,8 @@ Projections recieve event messages and do not produce messages of any kind.
 They do not have any state that is modelled by the Dogma API, but engine
 implementations may provide mechanisms for persisting projection state in
 various data stores, such as SQL databases, document stores, flat files, etc.
+
+Projections are represented by the [`dogma.ProjectionMessageHandler`] interface.
 
 <!-- references -->
 [Domain Driven Design]: https://en.wikipedia.org/wiki/Domain-driven_design
