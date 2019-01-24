@@ -64,8 +64,10 @@ An **engine** is the platform upon which an application is executed. The engine 
 responsible for the delivery of messages and the persistence of application
 data.
 
-This module does not provide any engine implementation, but rather defines the
-API to be implemented by both application developers and engine developers.
+This module does not provide an engine implementation, but rather defines the
+API that sits between the application and the engine. Each interface is
+documented individually to indicate whether the implementation is to be
+provided by the engine or the application.
 
 ### Aggregate
 
