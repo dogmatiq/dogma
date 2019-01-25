@@ -24,11 +24,11 @@ type ApplicationConfigurer interface {
 	RegisterAggregate(h AggregateMessageHandler)
 
 	// RegisterProcess configures the engine to route messages to h.
-	RegisterProcess(ProcessMessageHandler)
+	RegisterProcess(h ProcessMessageHandler)
 
 	// RegisterIntegration configures the engine to route messages to h.
-	RegisterIntegration(IntegrationMessageHandler)
+	RegisterIntegration(h IntegrationMessageHandler)
 
 	// RegisterProjection configures the engine to route messages to h.
-	RegisterProjection(ProjectionMessageHandler)
+	RegisterProjection(h ProjectionMessageHandler)
 }
