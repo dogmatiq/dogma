@@ -121,7 +121,7 @@ A **projection** is a unit of application logic that derives some specific
 portion of application state from the events that occur. This state is often
 referred to as a "read model".
 
-Projections recieve event messages and do not produce messages of any kind.
+Projections receive event messages and do not produce messages of any kind.
 
 They do not have any state that is modelled by the Dogma API, but engine
 implementations may provide mechanisms for persisting projection state in
