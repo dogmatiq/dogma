@@ -56,7 +56,7 @@ below.
 ### Application
 
 An **application** is a set of message handlers that operate together as a unit.
-Applications are represented by the [`dogma.App`] struct.
+Applications are represented by the [`dogma.Application`] interface.
 
 ### Engine
 
@@ -141,7 +141,7 @@ Projections are represented by the [`dogma.ProjectionMessageHandler`] interface.
 [dogmatiq/dogmatest]: https://github.com/dogmatiq/dogmatest
 [dogmatiq/example]: https://github.com/dogmatiq/example
 
-[`dogma.App`]: https://godoc.org/github.com/dogmatiq/dogma#App
+[`dogma.Application`]: https://godoc.org/github.com/dogmatiq/dogma#App
 [`dogma.AggregateMessageHandler`]: https://godoc.org/github.com/dogmatiq/dogma#AggregateMessageHandler
 [`dogma.ProcessMessageHandler`]: https://godoc.org/github.com/dogmatiq/dogma#ProcessMessageHandler
 [`dogma.IntegrationMessageHandler`]: https://godoc.org/github.com/dogmatiq/dogma#IntegrationMessageHandler
