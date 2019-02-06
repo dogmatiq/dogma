@@ -88,10 +88,9 @@ of an aggregate instance are ["immediately consistent"][Immediate Consistency]
 against a given instance are always visible to subsequent commands for that
 instance.
 
-Aggregate state is managed by the [engine](#engine), ensuring that state
-transitions occur atomically with the recording of the events that describe
-those state
-transitions.
+Aggregate state is managed by the [engine](#engine), ensuring that changes to a
+specific instance and the recording of events that represent those changes occur
+atomically.
 
 Aggregates can be quite a difficult concept to grasp. The book [Domain Driven
 Design Distilled], by Vaugn Vernon offers a suitable introduction to aggregates
@@ -119,8 +118,9 @@ messages, and each message represents a single atomic change to the application'
 state, the changes made by a process are ["eventually consistent"][Eventual Consistency].
 The precise guarantees regarding process consistency are specific to the [engine](#Engine) implementation.
 
-Process state is managed by the engine, ensuring that state transitions occur
-atomically with the enqueing of the commands the processes produce.
+Process state is managed by the engine, ensuring that changes to a specific
+instance and the enqueuing of commands that result from those changes occur
+atomically.
 
 Processes are represented by the [`dogma.ProcessMessageHandler`] interface.
 
