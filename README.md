@@ -78,7 +78,10 @@ engine or the application.
 An **aggregate** is a unit of application logic with associated state that
 encodes the business invariants of a specific application. These invariants are
 the "rules" of the business domain that must not be violated, even temporarily.
-This concept is taken directly from [Domain Driven Design].
+
+The aggregate concept is taken directly from [Domain Driven Design]. When
+employing [CQRS], the aggregate forms what is sometimes referred to as the
+"write model", or "command model".
 
 An aggregate receives command [messages](#message-and-message-handler) in order
 to effect a change in a particular **instance** of that aggregate. Such state
@@ -139,7 +142,8 @@ Integrations are represented by the [`dogma.IntegrationMessageHandler`] interfac
 
 A **projection** is a unit of application logic that derives some specific
 portion of application state from the events that occur. This state is often
-referred to as a "read model".
+referred to as a "read model" or "query model", especially when employing the
+[CQRS] pattern.
 
 Projections receive event [messages](#message-and-message-handler) and do not
 produce messages of any kind.
