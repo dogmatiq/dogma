@@ -27,7 +27,7 @@ various design patterns such as [CQRS], [Event Sourcing] and [Eventual Consisten
 ### Message and Message Handler
 
 A **message** is an application-defined unit of data that encapsulates a
-**command** or **event** within a message-based application. A command messages
+**command** or **event** within a message-based application. A command message
 represents a request for the application to perform some action, whereas an
 event message indicates that some action has already occurred. A single command
 message can produce zero or more events.
