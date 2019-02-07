@@ -58,8 +58,8 @@ type AggregateMessageHandler interface {
 // AggregateRoot is an interface implemented by the application and used by
 // the engine to apply changes to an aggregate instance.
 type AggregateRoot interface {
-	// ApplyEvent updates the aggregate instance to reflect the fact that a
-	// particular domain event has occurred.
+	// ApplyEvent updates the aggregate instance to reflect the occurence of an
+	// event that was recorded against this instance.
 	ApplyEvent(m Message)
 }
 
