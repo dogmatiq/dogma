@@ -9,10 +9,10 @@ import "context"
 type CommandExecutor interface {
 	// ExecuteCommand enqueues a command for execution.
 	//
-	// If nil is returned, the engine MUST provide reasonable guarantees that the
-	// message will be dispatched to the appropriate handler. For example, the
-	// engine is responsible for retrying the message in the face of a transient
-	// error.
+	// If nil is returned, the engine MUST provide reasonable guarantees that
+	// the message will be dispatched to the appropriate handler. For example,
+	// the engine is responsible for retrying the message in the face of a
+	// transient error.
 	//
 	// If an error is returned, the command may not have been enqueued. The
 	// application SHOULD retry executing the command.
@@ -20,8 +20,8 @@ type CommandExecutor interface {
 	// The engine MAY handle the message synchronously, however the application
 	// SHOULD NOT assume that the message has been handled immediately.
 	//
-	// If ctx has a deadline, it MUST NOT be used by the engine as a mechanism for
-	// message expiration.
+	// If ctx has a deadline, it MUST NOT be used by the engine as a mechanism
+	// for message expiration.
 	ExecuteCommand(ctx context.Context, m Message) error
 }
 
@@ -32,10 +32,10 @@ type CommandExecutor interface {
 type EventRecorder interface {
 	// RecordEvent records the occurrence of an event.
 	//
-	// If nil is returned, the engine MUST provide reasonable guarantees that the
-	// message will be dispatched to the appropriate handler. For example, the
-	// engine is responsible for retrying the message in the face of a transient
-	// error.
+	// If nil is returned, the engine MUST provide reasonable guarantees that
+	// the message will be dispatched to the appropriate handler. For example,
+	// the engine is responsible for retrying the message in the face of a
+	// transient error.
 	//
 	// If an error is returned, the event may not have been recorded. The
 	// application SHOULD retry recording the event.
@@ -43,7 +43,7 @@ type EventRecorder interface {
 	// The engine MAY handle the message synchronously, however the application
 	// SHOULD NOT assume that the message has been handled immediately.
 	//
-	// If ctx has a deadline, it MUST NOT be used by the engine as a mechanism for
-	// message expiration.
+	// If ctx has a deadline, it MUST NOT be used by the engine as a mechanism
+	// for message expiration.
 	RecordEvent(ctx context.Context, m Message) error
 }
