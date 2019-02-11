@@ -24,7 +24,19 @@ Dogma leans heavily on the concepts of [Domain Driven Design], and is intended
 to provide a suitable platform for applications that may wish to make use of
 various design patterns such as [CQRS], [Event Sourcing] and [Eventual Consistency].
 
-### Message and Message Handler
+The following concepts are core to Dogma's design, and should be well understood
+by any developer wishing to build an application:
+
+- [Message](#message)
+- [Message Handler](#message-handler)
+- [Application](#application)
+- [Engine](#engine)
+- [Aggregate](#aggregate)
+- [Process](#process)
+- [Integration](#integration)
+- [Projection](#projection)
+
+### Message
 
 A **message** is an application-defined unit of data that encapsulates a
 **command** or **event** within a message-based application. A command message
@@ -37,6 +49,8 @@ application at specific wall-clock times.
 
 Messages are represented by the [`dogma.Message`](message.go) interface, which
 is deliberately empty, allowing applications to use any Go type as a message.
+
+### Message Handler
 
 A message **handler** is some portion of application-defined logic that acts
 upon messages that it receives.
@@ -58,9 +72,9 @@ below.
 
 ### Application
 
-An **application** is a set of [message handlers](#message-and-message-handler)
-that operate together as a unit. Applications are represented by the
-[`dogma.Application`] interface.
+An **application** is a set of [message handlers](#message-handler) that operate
+together as a unit. Applications are represented by the [`dogma.Application`]
+interface.
 
 ### Engine
 
@@ -83,13 +97,12 @@ The aggregate concept is taken directly from [Domain Driven Design]. When
 employing [CQRS], the aggregate forms what is sometimes referred to as the
 "write model", or "command model".
 
-An aggregate receives command [messages](#message-and-message-handler) in order
-to effect a change in a particular **instance** of that aggregate. Such state
-changes are represented by event messages. By definition, changes to the state
-of an aggregate instance are ["immediately consistent"][Immediate Consistency]
-(aka "transactionally consistent"). This means that the results of a command
-against a given instance are always visible to subsequent commands for that
-instance.
+An aggregate receives command [messages](#message) in order to effect a change
+in a particular **instance** of that aggregate. Such state changes are
+represented by event messages. By definition, changes to the state of an
+aggregate instance are ["immediately consistent"][Immediate Consistency] (aka
+"transactionally consistent"). This means that the results of a command against
+a given instance are always visible to subsequent commands for that instance.
 
 Aggregate state is managed by the [engine](#engine), ensuring that changes to a
 specific instance and the recording of events that represent those changes occur
@@ -108,18 +121,18 @@ to automate some long running business process. In particular, they can be used
 to coordinate changes across multiple [aggregate](#aggregate) instances, or
 between aggregates and [integrations](#integration).
 
-Processes receive event [messages](#message-and-message-handler) and produce
-command messages. Like aggregates, the received events are routed to a specific
-instance.
+Processes receive event [messages](#message) and produce command messages. Like
+aggregates, the received events are routed to a specific instance.
 
 Additionally, processes can produce timeout messages, which are routed back to
 the same process instance at a specific time. Such messages are used to
 implement processes that incorporate some time-based component.
 
 Because a process coordinates changes within the application using multiple
-messages, and each message represents a single atomic change to the application's
-state, the changes made by a process are ["eventually consistent"][Eventual Consistency].
-The precise guarantees regarding process consistency are specific to the [engine](#Engine) implementation.
+messages, and each message represents a single atomic change to the
+application's state, the changes made by a process are ["eventually consistent"][Eventual Consistency].
+The precise guarantees regarding process consistency are specific to the [engine](#engine)
+implementation.
 
 Process state is managed by the engine, ensuring that changes to a specific
 instance and the enqueuing of commands that result from those changes occur
@@ -132,9 +145,8 @@ Processes are represented by the [`dogma.ProcessMessageHandler`] interface.
 An **integration** is a unit of application logic that integrates an
 application with some non-message-based system.
 
-Integrations receive command [messages](#message-and-message-handler) and
-produce event messages. They do not have any state that is managed by the
-[engine](#Engine).
+Integrations receive command [messages](#message) and produce event messages.
+They do not have any state that is managed by the [engine](#engine).
 
 Integrations are represented by the [`dogma.IntegrationMessageHandler`] interface.
 
@@ -145,10 +157,10 @@ portion of application state from the events that occur. This state is often
 referred to as a "read model" or "query model", especially when employing the
 [CQRS] pattern.
 
-Projections receive event [messages](#message-and-message-handler) and do not
-produce messages of any kind.
+Projections receive event [messages](#message) and do not produce messages of
+any kind.
 
-They do not have any state that is modelled by the Dogma API, but [engine](#Engine)
+They do not have any state that is modelled by the Dogma API, but [engine](#engine)
 implementations may provide mechanisms for persisting projection state in
 various data stores, such as SQL databases, document stores, flat files, etc.
 
