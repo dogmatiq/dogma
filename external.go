@@ -5,7 +5,9 @@ import "context"
 // CommandExecutor is an interface implemented by the engine and used by the
 // application to execute commands outside of a Dogma message handler.
 //
-// It is RECOMMENDED that engines provide an implementation of this interface.
+// Engine implementations MUST provide mechanisms for executing commands outside
+// of any message handler. It is RECOMMENDED that one such mechanism adhere to
+// this interface.
 type CommandExecutor interface {
 	// ExecuteCommand enqueues a command for execution.
 	//
@@ -28,7 +30,9 @@ type CommandExecutor interface {
 // EventRecorder is an interface implemented by the engine and used by the
 // application to record events outside of a Dogma message handler.
 //
-// It is RECOMMENDED that engines provide an implementation of this interface.
+// Engine implementations MAY provide mechanisms for recording events outside of
+// any message handler, in which case it is RECOMMENDED that one such mechanism
+// adhere to this interface.
 type EventRecorder interface {
 	// RecordEvent records the occurrence of an event.
 	//
