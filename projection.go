@@ -26,7 +26,7 @@ type ProjectionMessageHandler interface {
 	//
 	// The engine SHOULD provide "at-least-once" delivery gaurantees to the
 	// handler. That is, the engine should call HandleEvent() with the same
-	// event message until it a nil error is returned.
+	// event message until a nil error is returned.
 	//
 	// The engine MUST NOT call HandleEvent() with any message of a type that
 	// has not been routed to this handler by a prior call to Configure(). If
