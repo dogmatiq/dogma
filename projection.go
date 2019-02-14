@@ -79,6 +79,20 @@ type ProjectionConfigurer interface {
 // the application to perform operations within the context of handling a
 // specific event message.
 type ProjectionEventScope interface {
+	// Key returns a value that uniquely identifies the event being handled.
+	//
+	// The engine SHOULD provide "at-least-once" delivery gaurantees to the
+	// projection messager handler. In this case, it is necessary to prevent
+	// re-application of an event that has already been applied to the
+	// projection. The projection handler SHOULD rely on the content of the event
+	// message itself to detect duplicates, but in cases where the message
+	// content is not adequate, this key can be used.
+	//
+	// The returned value MUST be unique to the specific event message within
+	// this projection. There is no guarantee that the returned value will be
+	// globally unique to this message.
+	Key() string
+
 	// Time returns the time at which the event being handled was recorded.
 	Time() time.Time
 
