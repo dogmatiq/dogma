@@ -1,6 +1,9 @@
 package dogma
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 // ProjectionMessageHandler is an interface implemented by the application and
 // used by the engine to build a "projection" (also known as a "read model", or
@@ -76,6 +79,9 @@ type ProjectionConfigurer interface {
 // the application to perform operations within the context of handling a
 // specific event message.
 type ProjectionEventScope interface {
+	// Time returns the time at which the event being handled was recorded.
+	Time() time.Time
+
 	// Log records an informational message within the context of the event
 	// message that is being handled.
 	Log(f string, v ...interface{})
