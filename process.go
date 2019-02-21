@@ -95,8 +95,8 @@ type ProcessConfigurer interface {
 	// have a unique name.
 	Name(n string)
 
-	// AcceptsEventType configures the engine to route events of the same type
-	// as m to the handler.
+	// AcceptsEventType configures the engine to route event messages of the
+	// same type as m to the handler.
 	AcceptsEventType(m Message)
 
 	// ExecutesCommandType instructs the engine that the handler executes
