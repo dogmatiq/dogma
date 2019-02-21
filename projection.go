@@ -61,8 +61,8 @@ type ProjectionConfigurer interface {
 	// Each handler within an application MUST have a unique, non-empty name.
 	Name(n string)
 
-	// RouteEventType configures the engine to route event messages of the same
-	// type as m to the handler.
+	// AcceptsEventType configures the engine to route event messages of the
+	// same type as m to the handler.
 	//
 	// It MUST be called at least once within a call to Configure(). It MUST NOT
 	// be called more than once with an event message of the same type.
@@ -72,7 +72,7 @@ type ProjectionConfigurer interface {
 	//
 	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information.
-	RouteEventType(m Message)
+	AcceptsEventType(m Message)
 }
 
 // ProjectionEventScope is an interface implemented by the engine and used by

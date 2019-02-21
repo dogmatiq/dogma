@@ -95,9 +95,13 @@ type ProcessConfigurer interface {
 	// have a unique name.
 	Name(n string)
 
-	// RouteEventType configures the engine to route events of the same type as m
-	// to the handler.
-	RouteEventType(m Message)
+	// AcceptsEventType configures the engine to route event messages of the
+	// same type as m to the handler.
+	AcceptsEventType(m Message)
+
+	// ExecutesCommandType instructs the engine that the handler executes
+	// commands of the same type as m.
+	ExecutesCommandType(m Message)
 }
 
 // ProcessEventScope is an interface implemented by the engine and used by the

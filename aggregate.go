@@ -76,9 +76,13 @@ type AggregateConfigurer interface {
 	// have a unique name.
 	Name(n string)
 
-	// RouteCommandType configures the engine to route domain command messages of
-	// the same type as m to the handler.
-	RouteCommandType(m Message)
+	// AcceptsCommandType configures the engine to route command messages of the
+	// same type as m to the handler.
+	AcceptsCommandType(m Message)
+
+	// RecordsEventType instructs the engine that the handler records events of
+	// the same type as m.
+	RecordsEventType(m Message)
 }
 
 // AggregateCommandScope is an interface implemented by the engine and used by the
