@@ -36,9 +36,9 @@ type IntegrationConfigurer interface {
 	// have a unique name.
 	Name(n string)
 
-	// RouteCommandType configures the engine to route integration command messages
-	// of the same type as m to the handler.
-	RouteCommandType(m Message)
+	// AcceptsCommandType configures the engine to route command messages of the
+	// same type as m to the handler.
+	AcceptsCommandType(m Message)
 }
 
 // IntegrationCommandScope is an interface implemented by the engine and used by
