@@ -18,7 +18,7 @@ type IntegrationMessageHandler interface {
 	// RECOMMENDED that the engine only call Configure() once per handler.
 	Configure(c IntegrationConfigurer)
 
-	// HandleEvent handles a command message.
+	// HandleCommand handles a command message.
 	//
 	// If nil is returned, the command has been handled successfully.
 	//
