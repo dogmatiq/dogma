@@ -172,8 +172,8 @@ type ProcessEventScope interface {
 	// The engine MUST discard any timeout messages associated with this
 	// instance.
 	//
-	// The engine MAY allow re-beginning a process instance that
-	// has ended. Callers SHOULD assume that such behavior is unavailable.
+	// The engine MAY allow re-beginning a process instance that has ended.
+	// Callers SHOULD assume that such behavior is unavailable.
 	End()
 
 	// Root returns the root of the targeted process instance.
@@ -221,8 +221,8 @@ type ProcessTimeoutScope interface {
 	// The engine MUST discard any timeout messages associated with this
 	// instance.
 	//
-	// The engine MAY allow re-beginning a process instance that
-	// has ended. Callers SHOULD assume that such behavior is unavailable.
+	// The engine MAY allow re-beginning a process instance that has ended.
+	// Callers SHOULD assume that such behavior is unavailable.
 	End()
 
 	// Root returns the root of the targeted process instance.
