@@ -60,7 +60,7 @@ type ProcessMessageHandler interface {
 	//
 	// The engine SHOULD provide "at-least-once" delivery guarantees to the
 	// handler. That is, the engine should call HandleEvent() with the same
-	// command message until a nil error is returned.
+	// event message until a nil error is returned.
 	//
 	// The engine MUST NOT call HandleEvent() with any message of a type that
 	// has not been configured for consumption by a prior call to Configure().
