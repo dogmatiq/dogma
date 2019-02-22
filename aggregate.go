@@ -80,7 +80,7 @@ type AggregateRoot interface {
 	// It MUST NOT be called with a message of any type that has not been
 	// configured for production by a prior call to Configure().
 	//
-	// It MUST accept all messages ofthe types  that have been configured for
+	// It MUST accept all messages of the types that have been configured for
 	// production, though any given call MAY be a no-op.
 	ApplyEvent(m Message)
 }
