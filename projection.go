@@ -22,8 +22,7 @@ type ProjectionMessageHandler interface {
 	// RECOMMENDED that the engine only call Configure() once per handler.
 	Configure(c ProjectionConfigurer)
 
-	// HandleEvent updates the projection to reflect the occurrence of event
-	// message m.
+	// HandleEvent updates the projection to reflect the occurrence of an event.
 	//
 	// If nil is returned, the projection has been updated successfully.
 	//
@@ -70,8 +69,8 @@ type ProjectionConfigurer interface {
 	// It MUST be called at least once within a call to Configure(). It MUST NOT
 	// be called more than once with an event message of the same type.
 	//
-	// Multiple handlers within a single application MAY consume event messages
-	// of the same type.
+	// Multiple handlers within an application MAY consume event messages of the
+	// same type.
 	//
 	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information.
