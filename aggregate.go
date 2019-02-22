@@ -1,7 +1,7 @@
 package dogma
 
 // AggregateMessageHandler is an interface implemented by the application and
-// used by the engine to cause changes to an aggregate via domain command
+// used by the engine to cause changes to an aggregate instance via command
 // messages.
 //
 // Many instances of each aggregate type can be created. Each instance is a
@@ -11,47 +11,63 @@ package dogma
 // AggregateRoot interface.
 //
 // A request to change the state of an aggregate instance is represented by a
-// domain command message. The changes caused by the domain command message, if
-// any, are represented by domain event messages.
+// command message. The changes caused by the command message, if any, are
+// represented by event messages.
 //
-// Each domain command message targets a single aggregate instance of a specific
-// type. A domain command message can cause the creation or destruction of its
-// target instance.
+// Each command message targets a single aggregate instance of a specific type.
+// A command message can cause the creation or destruction of its target
+// instance.
 type AggregateMessageHandler interface {
 	// New constructs a new aggregate instance and returns its root.
+	//
+	// The return value MUST NOT be nil.
 	New() AggregateRoot
 
-	// Configure configures the behavior of the engine as it relates to this
-	// handler.
+	// Configure produces a configuration for this handler by calling methods on
+	// the configurer c.
 	//
-	// c provides access to the various configuration options, such as specifying
-	// which types of domain command messages are routed to this handler.
+	// The implementation MUST allow for multiple calls to Configure(). Each
+	// call SHOULD produce the same configuration.
+	//
+	// The engine MUST call Configure() before calling HandleEvent(). It is
+	// RECOMMENDED that the engine only call Configure() once per handler.
 	Configure(c AggregateConfigurer)
 
 	// RouteCommandToInstance returns the ID of the aggregate instance that is
 	// targetted by m.
 	//
-	// It panics with the UnexpectedMessage value if m is not one of the domain
-	// command types that is routed to this handler via Configure().
+	// The return value MUST be a non-empty string. The use of UUIDs for
+	// instance identifiers is RECOMMENDED.
+	//
+	// The engine MUST NOT call RouteCommandToInstance() with any message of a
+	// type that has not been configured for consumption by a prior call to
+	// Configure(). If any such message is passed, the implementation MUST panic
+	// with the UnexpectedMessage value.
 	RouteCommandToInstance(m Message) string
 
-	// HandleCommand handles a domain command message that has been routed to this
-	// handler.
+	// HandleCommand handles a command message.
 	//
-	// Handling a domain command message involves inspecting the state of the
-	// target aggregate instance to determine what changes, if any, should occur.
-	// Each change is indicated by recording a domain event message.
+	// Handling a command message involves inspecting the state of the target
+	// aggregate instance to determine what changes, if any, should occur. Each
+	// change is indicated by recording an event message.
 	//
-	// s provides access to the operations available within the scope of handling
-	// m, such as creating or destroying the targeted instance, accessing its
-	// state, and recording domain event messages.
+	// The targeted instance MUST NOT be modified directly. All modifications
+	// must be applied by the instance's ApplyEvent() method, which is called
+	// for each event message that is recorded via s.
 	//
-	// This method must not modify the targeted instance directly. All
-	// modifications must be applied by the instance's ApplyEvent() method, which
-	// is called for each domain event message that is recorded via s.
+	// The engine SHOULD provide "at-least-once" delivery guarantees to the
+	// handler. That is, the engine should call HandleCommand() with the same
+	// command message until no panic occurs.
 	//
-	// It panics with the UnexpectedMessage value if m is not one of the domain
-	// command types that is routed to this handler via Configure().
+	// The engine MUST NOT call HandleCommand() with any message of a type that
+	// has not been configured for consumption by a prior call to Configure().
+	// If any such message is passed, the implementation MUST panic with the
+	// UnexpectedMessage value.
+	//
+	// The implementation MUST NOT assume that HandleCommand() will be called
+	// with commands in the same order that they were executed.
+	//
+	// The engine MAY call HandleCommand() from multiple goroutines concurrently.
 	HandleCommand(s AggregateCommandScope, m Message)
 }
 
@@ -60,6 +76,12 @@ type AggregateMessageHandler interface {
 type AggregateRoot interface {
 	// ApplyEvent updates the aggregate instance to reflect the occurence of an
 	// event that was recorded against this instance.
+	//
+	// It MUST NOT be called with a message of any type that has not been
+	// configured for production by a prior call to Configure().
+	//
+	// It MUST accept all messages ofthe types  that have been configured for
+	// production, though any given call MAY be a no-op.
 	ApplyEvent(m Message)
 }
 
@@ -72,77 +94,96 @@ type AggregateRoot interface {
 // In the context of this interface, "the handler" refers to the handler on
 // which Configure() has been called.
 type AggregateConfigurer interface {
-	// Name sets the name of the handler. Each handler within an application must
-	// have a unique name.
+	// Name sets the name of the handler.
+	//
+	// It MUST be called exactly once within a single call to Configure().
+	//
+	// Each handler within an application MUST have a unique, non-empty name.
 	Name(n string)
 
-	// AcceptsCommandType configures the engine to route command messages of the
-	// same type as m to the handler.
-	AcceptsCommandType(m Message)
+	// ConsumesCommandType configures the engine to route command messages of
+	// the same type as m to the handler.
+	//
+	// It MUST be called at least once within a call to Configure(). It MUST NOT
+	// be called more than once with a command message of the same type.
+	//
+	// A given command type MUST be routed to exactly one handler within an
+	// application.
+	//
+	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
+	// in any way, only its runtime type information.
+	ConsumesCommandType(m Message)
 
-	// RecordsEventType instructs the engine that the handler records events of
+	// ProducesEventType instructs the engine that the handler records events of
 	// the same type as m.
-	RecordsEventType(m Message)
+	//
+	// It MUST be called at least once within a call to Configure(). It MUST NOT
+	// be called more than once with an event message of the same type.
+	//
+	// A given event type MUST be produced by exactly one handler within an
+	// application.
+	//
+	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
+	// in any way, only its runtime type information.
+	ProducesEventType(m Message)
 }
 
 // AggregateCommandScope is an interface implemented by the engine and used by the
 // application to perform operations within the context of handling a specific
 // domain command message.
 type AggregateCommandScope interface {
-	// InstanceID is the ID of the targeted aggregate instance.
+	// InstanceID returns the ID of the targeted aggregate instance.
 	InstanceID() string
 
 	// Create creates the targeted instance.
 	//
-	// It must be called before Root() or RecordEvent() can be called within this
-	// scope or the scope of any future domain command message that targets the
-	// same instance.
+	// It MUST be called before Root() or RecordEvent() can be called within
+	// this scope or the scope of any future message that targets the same
+	// instance.
 	//
 	// It returns true if the targeted instance was created, or false if
 	// the instance already exists.
 	//
-	// If it returns true, RecordEvent() must be called at least once within
-	// the same scope. This guarantees that the creation of every instance is
-	// represented by a domain event.
+	// If it returns true, RecordEvent() MUST be called at least once within the
+	// same scope. This guarantees that the creation of every instance is
+	// represented by an application-defined event.
 	Create() bool
 
 	// Destroy destroys the targeted instance.
 	//
-	// After it has been called neither Root() nor RecordEvent() can be called
-	// within this scope or the scope of any future domain command message that
-	// targets the same instance, unless Create() is called again first.
+	// After it has been called, Root() and RecordEvent() MUST NOT be called
+	// within this scope or the scope of any future message that targets the
+	// same instance, unless Create() is called again first.
 	//
-	// It panics if the target instance does not currently exist.
+	// It MUST NOT be called if the instance does not currently exist.
 	//
-	// RecordEvent() must be called at least once within the same scope. This
-	// guarantees that the destruction of every instance is represented by a domain
-	// event.
+	// RecordEvent() MUST be called at least once within the same scope. This
+	// guarantees that the destruction of every instance is represented by an
+	// application-defined event.
 	//
-	// The precise semantics of destroy are implementation defined. The aggregate
-	// data may be deleted or archived, for example.
+	// The precise semantics of destroy are implementation defined. The
+	// aggregate data MAY be deleted or archived, for example.
 	Destroy()
 
 	// Root returns the root of the targeted aggregate instance.
 	//
-	// It panics if the instance has not been created, or was created but has
-	// subsequently been destroyed.
+	// It MUST NOT be called if the instance does not currently exist.
 	Root() AggregateRoot
 
-	// RecordEvent records the occurrence of a domain event as a result of the
-	// domain command message that is being handled.
+	// RecordEvent records the occurrence of an event as a result of the command
+	// message that is being handled.
 	//
-	// It panics if the instance has not been created, or was created but has
-	// subsequently been destroyed.
+	// It MUST NOT be called with a message of any type that has not been
+	// configured for production by a prior call to Configure().
 	//
-	// The engine must call Instance().ApplyEvent(m) before returning, such that
-	// the applied changes are visible to the handler.
+	// It MUST NOT be called if the instance does not currently exist.
+	//
+	// The engine MUST call Root().ApplyEvent(m) before returning, such that the
+	// applied changes are visible to the handler.
 	RecordEvent(m Message)
 
-	// Log records an informational message within the context of the domain
-	// command message that is being handled.
-	//
-	// The log message should be worded such that it makes sense to anyone familiar
-	// with the business domain.
+	// Log records an informational message within the context of the command
+	// message that is being handled.
 	Log(f string, v ...interface{})
 }
 
