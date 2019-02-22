@@ -182,8 +182,8 @@ type AggregateCommandScope interface {
 	// applied changes are visible to the handler.
 	RecordEvent(m Message)
 
-	// Log records an informational message within the context of the command
-	// message that is being handled.
+	// Log records an informational message within the context of the message
+	// that is being handled.
 	Log(f string, v ...interface{})
 }
 

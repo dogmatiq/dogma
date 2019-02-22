@@ -92,7 +92,7 @@ type IntegrationCommandScope interface {
 	// configured for production by a prior call to Configure().
 	RecordEvent(m Message)
 
-	// Log records an informational message within the context of the command
-	// message that is being handled.
+	// Log records an informational message within the context of the message
+	// that is being handled.
 	Log(f string, v ...interface{})
 }
