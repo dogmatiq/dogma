@@ -64,7 +64,7 @@ type IntegrationConfigurer interface {
 	// application.
 	//
 	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
-	// in any way, only its runtime type information.
+	// in any way, only its runtime type information may be used.
 	ConsumesCommandType(m Message)
 
 	// ProducesEventType instructs the engine that the handler records events of
@@ -77,7 +77,7 @@ type IntegrationConfigurer interface {
 	// application.
 	//
 	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
-	// in any way, only its runtime type information.
+	// in any way, only its runtime type information may be used.
 	ProducesEventType(m Message)
 }
 
