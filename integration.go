@@ -14,7 +14,7 @@ type IntegrationMessageHandler interface {
 	// The implementation MUST allow for multiple calls to Configure(). Each
 	// call SHOULD produce the same configuration.
 	//
-	// The engine MUST call Configure() before calling HandleEvent(). It is
+	// The engine MUST call Configure() before calling HandleCommand(). It is
 	// RECOMMENDED that the engine only call Configure() once per handler.
 	Configure(c IntegrationConfigurer)
 
