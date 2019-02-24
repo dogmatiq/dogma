@@ -8,6 +8,9 @@ import (
 // ProjectionMessageHandler is an interface implemented by the application and
 // used by the engine to build a "projection" (also known as a "read model", or
 // "query model") from events that occur within the application.
+//
+// Projection message handlers consume event messages, and do not produce
+// messages of any kind.
 type ProjectionMessageHandler interface {
 	// Configure produces a configuration for this handler by calling methods on
 	// the configurer c.
@@ -19,8 +22,7 @@ type ProjectionMessageHandler interface {
 	// RECOMMENDED that the engine only call Configure() once per handler.
 	Configure(c ProjectionConfigurer)
 
-	// HandleEvent updates the projection to reflect the occurrence of event
-	// message m.
+	// HandleEvent updates the projection to reflect the occurrence of an event.
 	//
 	// If nil is returned, the projection has been updated successfully.
 	//
@@ -32,8 +34,8 @@ type ProjectionMessageHandler interface {
 	// event message until a nil error is returned.
 	//
 	// The engine MUST NOT call HandleEvent() with any message of a type that
-	// has not been routed to this handler by a prior call to Configure(). If
-	// any such message is passed, the implementation MUST panic with the
+	// has not been configured for consumption by a prior call to Configure().
+	// If any such message is passed, the implementation MUST panic with the
 	// UnexpectedMessage value.
 	//
 	// The engine MAY provide guarantees about the order in which event messages
@@ -61,18 +63,18 @@ type ProjectionConfigurer interface {
 	// Each handler within an application MUST have a unique, non-empty name.
 	Name(n string)
 
-	// AcceptsEventType configures the engine to route event messages of the
+	// ConsumesEventType configures the engine to route event messages of the
 	// same type as m to the handler.
 	//
 	// It MUST be called at least once within a call to Configure(). It MUST NOT
 	// be called more than once with an event message of the same type.
 	//
-	// Multiple handlers within a single application MAY receive event messages
-	// of the same type.
+	// Multiple handlers within an application MAY consume event messages of the
+	// same type.
 	//
 	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
-	// in any way, only its runtime type information.
-	AcceptsEventType(m Message)
+	// in any way, only its runtime type information may be used.
+	ConsumesEventType(m Message)
 }
 
 // ProjectionEventScope is an interface implemented by the engine and used by
@@ -96,7 +98,7 @@ type ProjectionEventScope interface {
 	// Time returns the time at which the event being handled was recorded.
 	Time() time.Time
 
-	// Log records an informational message within the context of the event
-	// message that is being handled.
+	// Log records an informational message within the context of the message
+	// that is being handled.
 	Log(f string, v ...interface{})
 }
