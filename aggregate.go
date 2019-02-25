@@ -98,7 +98,12 @@ type AggregateConfigurer interface {
 	//
 	// It MUST be called exactly once within a single call to Configure().
 	//
-	// Each handler within an application MUST have a unique, non-empty name.
+	// The name MUST be a non-empty UTF-8 string consisting solely of printable
+	// unicode characters. A printable character is any character from the
+	// Letter, Mark, Number, Punctuation or Symbol categories.
+	//
+	// Each handler within an application MUST have a unique name. Although not
+	// recommended, a handler MAY share its name with the application itself.
 	Name(n string)
 
 	// ConsumesCommandType configures the engine to route command messages of
