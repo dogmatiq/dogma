@@ -99,8 +99,9 @@ type AggregateConfigurer interface {
 	// It MUST be called exactly once within a single call to Configure().
 	//
 	// The name MUST be a non-empty UTF-8 string consisting solely of printable
-	// Unicode characters. A printable character is any character from the
-	// Letter, Mark, Number, Punctuation or Symbol categories.
+	// Unicode characters, excluding whitespace. A printable character is any
+	// character from the Letter, Mark, Number, Punctuation or Symbol
+	// categories.
 	//
 	// Each handler within an application MUST have a unique name. Although not
 	// recommended, a handler MAY share its name with the application itself.

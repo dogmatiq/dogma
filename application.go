@@ -22,8 +22,9 @@ type ApplicationConfigurer interface {
 	// It MUST be called exactly once within a single call to Configure().
 	//
 	// The name MUST be a non-empty UTF-8 string consisting solely of printable
-	// Unicode characters. A printable character is any character from the
-	// Letter, Mark, Number, Punctuation or Symbol categories.
+	// Unicode characters, excluding whitespace. A printable character is any
+	// character from the Letter, Mark, Number, Punctuation or Symbol
+	// categories.
 	//
 	// Although not recommended, the application MAY share its name with one of
 	// its handlers.
