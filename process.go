@@ -39,7 +39,7 @@ type ProcessMessageHandler interface {
 	Configure(c ProcessConfigurer)
 
 	// RouteEventToInstance returns the ID of the process instance that is
-	// targetted by m.
+	// targeted by m.
 	//
 	// If ok is false, the engine MUST NOT call HandleEvent() with this message.
 	//
