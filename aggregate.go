@@ -34,7 +34,7 @@ type AggregateMessageHandler interface {
 	Configure(c AggregateConfigurer)
 
 	// RouteCommandToInstance returns the ID of the aggregate instance that is
-	// targetted by m.
+	// targeted by m.
 	//
 	// The return value MUST be a non-empty string. The use of UUIDs for
 	// instance identifiers is RECOMMENDED.
@@ -74,7 +74,7 @@ type AggregateMessageHandler interface {
 // AggregateRoot is an interface implemented by the application and used by
 // the engine to apply changes to an aggregate instance.
 type AggregateRoot interface {
-	// ApplyEvent updates the aggregate instance to reflect the occurence of an
+	// ApplyEvent updates the aggregate instance to reflect the occurrence of an
 	// event that was recorded against this instance.
 	//
 	// It MUST NOT be called with a message of any type that has not been
