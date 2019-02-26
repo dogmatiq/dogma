@@ -52,7 +52,7 @@ type IntegrationConfigurer interface {
 	// It MUST be called exactly once within a single call to Configure().
 	//
 	// The name MUST be a non-empty UTF-8 string consisting solely of printable
-	// unicode characters. A printable character is any character from the
+	// Unicode characters. A printable character is any character from the
 	// Letter, Mark, Number, Punctuation or Symbol categories.
 	//
 	// Each handler within an application MUST have a unique name. Although not
