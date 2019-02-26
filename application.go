@@ -18,6 +18,16 @@ type Application interface {
 // engine.
 type ApplicationConfigurer interface {
 	// Name sets the name of the application.
+	//
+	// It MUST be called exactly once within a single call to Configure().
+	//
+	// The name MUST be a non-empty UTF-8 string consisting solely of printable
+	// Unicode characters, excluding whitespace. A printable character is any
+	// character from the Letter, Mark, Number, Punctuation or Symbol
+	// categories.
+	//
+	// Although not recommended, the application MAY share its name with one of
+	// its handlers.
 	Name(n string)
 
 	// RegisterAggregate configures the engine to route messages to h.
