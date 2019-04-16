@@ -148,6 +148,19 @@ type ProcessConfigurer interface {
 	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information may be used.
 	ProducesCommandType(m Message)
+
+	// SchedulesTimeoutType instructs the engine that the handler produces and
+	// consumes timeouts of the same type as m.
+	//
+	// It MUST NOT be called more than once with a timeout message of the same
+	// type within a given call to Configure().
+	//
+	// Multiple handlers within an application MAY use timeout messages of the
+	// same type.
+	//
+	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
+	// in any way, only its runtime type information may be used.
+	SchedulesTimeoutType(m Message)
 }
 
 // ProcessEventScope is an interface implemented by the engine and used by the
