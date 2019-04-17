@@ -9,11 +9,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [Unreleased]
+## [0.4.0]
 
 ### Added
 
 - Document what strings consititute valid application and handler names
+- **[BC]** Add `ProcessConfigurer.SchedulesTimeoutType()`
 
 ## [0.3.0] - 2019-02-26
 
@@ -40,6 +41,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [0.1.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.1.0
 [0.2.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.2.0
 [0.3.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.3.0
+[0.4.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.4.0
 
 <!-- version template
 ## [0.0.1] - YYYY-MM-DD
