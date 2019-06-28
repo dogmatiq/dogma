@@ -14,9 +14,9 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### Added
 
 - Applications and handlers are now assigned an immutable "key"
-- **[BC]** Add `ProcessHandler.TimeoutHint()`
-- **[BC]** Add `IntegrationHandler.TimeoutHint()`
-- **[BC]** Add `ProjectionHandler.TimeoutHint()`
+- **[BC]** Add `ProcessMessageHandler.TimeoutHint()`
+- **[BC]** Add `IntegrationMessageHandler.TimeoutHint()`
+- **[BC]** Add `ProjectionMessageHandler.TimeoutHint()`
 - Add `NoTimeoutHintBehavior`
 
 ### Changed
