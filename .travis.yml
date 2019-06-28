@@ -1,11 +1,5 @@
 language: go
-go:
-- '1.12'
-- 'tip'
-matrix:
-  fast_finish: true
-  allow_failures:
-  - go: 'tip'
+go: '1.12'
 env:
 - GO111MODULE=on
 before_install:
