@@ -24,8 +24,8 @@ implementation changes.
 We've decided to add an additional identifier to applications and handlers
 called the "key".
 
-The key's express purpose is for identifying associated data, and as such as
-more stringent requirements on its immutability.
+The key's express purpose is for identifying associated data, and therefore has
+more stringent requirements on its immutability than the name.
 
 We further recommend the use of an [RFC 4122] UUID as the format of all keys.
 UUIDs can be generated at the time the application or handler is first
