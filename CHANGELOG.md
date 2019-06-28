@@ -18,12 +18,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### Changed
 
 - **[BC]** Replace configure `Name()` methods with `Identity()`
+- **[BC]** Renamed `NoTimeoutBehavior` to `NoTimeoutMessagesBehavior`
 
 ## [0.4.0]
 
 ### Added
 
-- Document what strings consititute valid application and handler names
+- Document what strings constitute valid application and handler names
 - **[BC]** Add `ProcessConfigurer.SchedulesTimeoutType()`
 
 ## [0.3.0] - 2019-02-26

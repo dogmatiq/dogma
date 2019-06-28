@@ -308,14 +308,14 @@ var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
 
 type statelessProcessRoot struct{}
 
-// NoTimeoutBehavior can be embedded in ProcessMessageHandler implementations to
-// indicate that no timeout messages are used.
+// NoTimeoutMessagesBehavior can be embedded in ProcessMessageHandler
+// implementations to indicate that no timeout messages are used.
 //
-// It provides an implementation of ProcessMessageHandler.HandleTimeout() that always
-// panics with the UnexpectedMessage value.
-type NoTimeoutBehavior struct{}
+// It provides an implementation of ProcessMessageHandler.HandleTimeout() that
+// always panics with the UnexpectedMessage value.
+type NoTimeoutMessagesBehavior struct{}
 
-// HandleTimeout panic with the UnexpectedMessage value.
-func (NoTimeoutBehavior) HandleTimeout(context.Context, ProcessTimeoutScope, Message) error {
+// HandleTimeout panics with the UnexpectedMessage value.
+func (NoTimeoutMessagesBehavior) HandleTimeout(context.Context, ProcessTimeoutScope, Message) error {
 	panic(UnexpectedMessage)
 }
