@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 - **[BC]** Add `ProcessHandler.TimeoutHint()`
 - **[BC]** Add `IntegrationHandler.TimeoutHint()`
 - **[BC]** Add `ProjectionHandler.TimeoutHint()`
+- Add `NoTimeoutHintBehavior`
 
 ### Changed
 
