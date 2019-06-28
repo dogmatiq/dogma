@@ -18,3 +18,4 @@ the ADR documents.
 * [6. Stateless aggregates and processes](0006-stateless-aggregates-and-processes.md)
 * [7. Location of Examples](0007-location-of-examples.md)
 * [8. Location of Testing Features](0008-location-of-testing-features.md)
+* [9. Immutable Application and Handler Keys](0009-immutable-keys.md)

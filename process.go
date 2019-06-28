@@ -110,18 +110,28 @@ type ProcessRoot interface {
 // In the context of this interface, "the handler" refers to the handler on
 // which Configure() has been called.
 type ProcessConfigurer interface {
-	// Name sets the name of the handler.
+	// Identity sets unique identifiers for the handler.
 	//
 	// It MUST be called exactly once within a single call to Configure().
 	//
-	// The name MUST be a non-empty UTF-8 string consisting solely of printable
-	// Unicode characters, excluding whitespace. A printable character is any
-	// character from the Letter, Mark, Number, Punctuation or Symbol
-	// categories.
+	// The name is a human-readable identifier for the handler. Each handler
+	// within an application MUST have a unique name. Handler names SHOULD be
+	// distinct from the application's name. The name MAY be changed over time
+	// to best reflect the purpose of the handler.
 	//
-	// Each handler within an application MUST have a unique name. Although not
-	// recommended, a handler MAY share its name with the application itself.
-	Name(n string)
+	// The key is an immutable identifier for the handler. Its purpose is to
+	// allow engine implementations to associate ancillary data with the
+	// handler, such as application state or message routing information.
+	//
+	// The application and the handlers within it MUST have distinct keys. The
+	// key MUST NOT be changed. The RECOMMENDED key format is RFC 4122 UUID,
+	// generated when the handler is first implemented.
+	//
+	// Both the name and the key MUST be non-empty UTF-8 strings consisting
+	// solely of printable Unicode characters, excluding whitespace. A printable
+	// character is any character from the Letter, Mark, Number, Punctuation or
+	// Symbol categories.
+	Identity(name string, key string)
 
 	// ConsumesEventType configures the engine to route event messages of the
 	// same type as m to the handler.

@@ -9,6 +9,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [Unreleased]
+
+### Added
+
+- Applications and handlers are now assigned an immutable "key"
+
+### Changed
+
+- **[BC]** Replace configure `Name()` methods with `Identity()`
+
 ## [0.4.0]
 
 ### Added
