@@ -14,11 +14,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### Added
 
 - Applications and handlers are now assigned an immutable "key"
+- **[BC]** Add `ProcessHandler.TimeoutHint()`
+- **[BC]** Add `IntegrationHandler.TimeoutHint()`
+- **[BC]** Add `ProjectionHandler.TimeoutHint()`
 
 ### Changed
 
 - **[BC]** Replace configure `Name()` methods with `Identity()`
-- **[BC]** Renamed `NoTimeoutBehavior` to `NoTimeoutMessagesBehavior`
+- **[BC]** Rename `NoTimeoutBehavior` to `NoTimeoutMessagesBehavior`
 
 ## [0.4.0]
 
