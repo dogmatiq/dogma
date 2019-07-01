@@ -33,6 +33,10 @@ type ProjectionMessageHandler interface {
 	// handler. That is, the engine should call HandleEvent() with the same
 	// event message until a nil error is returned.
 	//
+	// The supplied context parameter SHOULD have a deadline. The implementation
+	// SHOULD NOT impose its own deadline. Instead a suitable timeout duration
+	// can be suggested to the engine via the handler's TimeoutHint() method.
+	//
 	// The engine MUST NOT call HandleEvent() with any message of a type that
 	// has not been configured for consumption by a prior call to Configure().
 	// If any such message is passed, the implementation MUST panic with the
@@ -45,6 +49,17 @@ type ProjectionMessageHandler interface {
 	//
 	// The engine MAY call HandleEvent() from multiple goroutines concurrently.
 	HandleEvent(ctx context.Context, s ProjectionEventScope, m Message) error
+
+	// TimeoutHint returns a duration that is suitable for computing a deadline
+	// for the handling of the given message by this handler.
+	//
+	// The hint SHOULD be as short as possible. The implementation MAY return a
+	// zero-value to indicate that no hint can be made.
+	//
+	// The engine SHOULD use a duration as close as possible to the hint. Use of
+	// a duration shorter than the hint is NOT RECOMMENDED, as this will likely
+	// lead to repeated message handling failures.
+	TimeoutHint(m Message) time.Duration
 }
 
 // ProjectionConfigurer is an interface implemented by the engine and used by

@@ -62,6 +62,10 @@ type ProcessMessageHandler interface {
 	// handler. That is, the engine should call HandleEvent() with the same
 	// event message until a nil error is returned.
 	//
+	// The supplied context parameter SHOULD have a deadline. The implementation
+	// SHOULD NOT impose its own deadline. Instead a suitable timeout duration
+	// can be suggested to the engine via the handler's TimeoutHint() method.
+	//
 	// The engine MUST NOT call HandleEvent() with any message of a type that
 	// has not been configured for consumption by a prior call to Configure().
 	// If any such message is passed, the implementation MUST panic with the
@@ -82,6 +86,10 @@ type ProcessMessageHandler interface {
 	// example, an application might use a timeout to mark an invoice as overdue
 	// after some period of non-payment.
 	//
+	// The supplied context parameter SHOULD have a deadline. The implementation
+	// SHOULD NOT impose its own deadline. Instead a suitable timeout duration
+	// can be suggested to the engine via the handler's TimeoutHint() method.
+	//
 	// The engine MUST NOT call HandleTimeout() with any message that was not
 	// scheduled by this handler. If any such message is passed, the
 	// implementation MUST panic with the UnexpectedMessage value.
@@ -94,6 +102,17 @@ type ProcessMessageHandler interface {
 	// timeout message was scheduled. It SHOULD attempt to call HandleTimeout()
 	// as soon as the scheduled time is reached.
 	HandleTimeout(ctx context.Context, s ProcessTimeoutScope, m Message) error
+
+	// TimeoutHint returns a duration that is suitable for computing a deadline
+	// for the handling of the given message by this handler.
+	//
+	// The hint SHOULD be as short as possible. The implementation MAY return a
+	// zero-value to indicate that no hint can be made.
+	//
+	// The engine SHOULD use a duration as close as possible to the hint. Use of
+	// a duration shorter than the hint is NOT RECOMMENDED, as this will likely
+	// lead to repeated message handling failures.
+	TimeoutHint(m Message) time.Duration
 }
 
 // ProcessRoot is an interface implemented by the application and used by
@@ -308,14 +327,14 @@ var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
 
 type statelessProcessRoot struct{}
 
-// NoTimeoutBehavior can be embedded in ProcessMessageHandler implementations to
-// indicate that no timeout messages are used.
+// NoTimeoutMessagesBehavior can be embedded in ProcessMessageHandler
+// implementations to indicate that no timeout messages are used.
 //
-// It provides an implementation of ProcessMessageHandler.HandleTimeout() that always
-// panics with the UnexpectedMessage value.
-type NoTimeoutBehavior struct{}
+// It provides an implementation of ProcessMessageHandler.HandleTimeout() that
+// always panics with the UnexpectedMessage value.
+type NoTimeoutMessagesBehavior struct{}
 
-// HandleTimeout panic with the UnexpectedMessage value.
-func (NoTimeoutBehavior) HandleTimeout(context.Context, ProcessTimeoutScope, Message) error {
+// HandleTimeout panics with the UnexpectedMessage value.
+func (NoTimeoutMessagesBehavior) HandleTimeout(context.Context, ProcessTimeoutScope, Message) error {
 	panic(UnexpectedMessage)
 }
