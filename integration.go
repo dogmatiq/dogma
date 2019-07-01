@@ -31,7 +31,7 @@ type IntegrationMessageHandler interface {
 	//
 	// The supplied context parameter SHOULD have a deadline. The implementation
 	// SHOULD NOT impose its own deadline. Instead a suitable timeout duration
-	// can be suggested to the engine by via the handler's TimeoutHint() method.
+	// can be suggested to the engine via the handler's TimeoutHint() method.
 	//
 	// The engine MUST NOT call HandleCommand() with any message of a type that
 	// has not been configured for consumption by a prior call to Configure().
