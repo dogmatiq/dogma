@@ -20,3 +20,4 @@ the ADR documents.
 * [8. Location of Testing Features](0008-location-of-testing-features.md)
 * [9. Immutable Application and Handler Keys](0009-immutable-keys.md)
 * [10. Handler Timeout Hints](0010-handler-timeout-hints.md)
+* [11. Message Timing Information](0011-message-timing-information.md)
