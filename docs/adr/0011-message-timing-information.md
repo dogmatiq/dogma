@@ -37,9 +37,9 @@ The time at which an event is recorded is a fundamental property of the event
 itself. Put another way, every event occurs at some time regardless of whether
 the domain is time-based.
 
-Furthermore, the time at which event occurs may be relevant to some ancillary
-domain logic that is *triggered* by the event, even if the aggregate that
-*produced* the event has no time-based logic.
+Furthermore, the time at which the event occurs may be relevant to some
+ancillary domain logic that is *triggered* by the event, even if the aggregate
+that *produced* the event has no time-based logic.
 
 The inclusion of the "occurred time" as a fundamental property of the event is
 supported by [Implementing Domain Driven
