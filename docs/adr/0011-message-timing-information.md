@@ -67,6 +67,6 @@ developer to include the scheduled time in the message.
 As a result of this ADR it is easier for application developers to implement
 time-based logic.
 
-As a result, engine implementations must now record the time at which events
-occur. This was not necessarily true before but it is likely that most engines
-would have done so anyway.
+Engine implementations must now record the time at which events occur. This was
+not necessarily true before but it is likely that most engines would have done
+so anyway.
