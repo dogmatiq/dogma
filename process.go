@@ -238,13 +238,16 @@ type ProcessEventScope interface {
 	// It MUST NOT be called if the instance has not begun, or has ended.
 	ExecuteCommand(m Message)
 
-	// ScheduleTimeout schedules a timeout message to be returned to the process
-	// at a specific time.
+	// ScheduleTimeout schedules a timeout message to be handled by this process
+	// instance at a specific time.
 	//
 	// Any pending timeout messages are cancelled when the instance is ended.
 	//
 	// It MUST NOT be called if the instance has not begun, or has ended.
 	ScheduleTimeout(m Message, t time.Time)
+
+	// RecordedAt returns the time at which the event was recorded.
+	RecordedAt() time.Time
 
 	// Log records an informational message within the context of the message
 	// that is being handled.
@@ -287,13 +290,17 @@ type ProcessTimeoutScope interface {
 	// It MUST NOT be called if the instance has not begun, or has ended.
 	ExecuteCommand(m Message)
 
-	// ScheduleTimeout schedules a timeout message to be returned to the process
-	// at a specific time.
+	// ScheduleTimeout schedules a timeout message to be handled by this process
+	// instance at a specific time.
 	//
 	// Any pending timeout messages are cancelled when the instance is ended.
 	//
 	// It MUST NOT be called if the instance has not begun, or has ended.
 	ScheduleTimeout(m Message, t time.Time)
+
+	// ScheduledFor returns the time at which the timeout message was scheduled
+	// to be handled.
+	ScheduledFor() time.Time
 
 	// Log records an informational message within the context of the message
 	// that is being handled.

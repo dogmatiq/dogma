@@ -17,12 +17,15 @@ The format is based on [Keep a Changelog], and this project adheres to
 - **[BC]** Add `ProcessMessageHandler.TimeoutHint()`
 - **[BC]** Add `IntegrationMessageHandler.TimeoutHint()`
 - **[BC]** Add `ProjectionMessageHandler.TimeoutHint()`
+- **[BC]** Add `ProcessTimeoutScope.ScheduledFor()`
+- **[BC]** Add `ProcessEventScope.RecordedAt()`
 - Add `NoTimeoutHintBehavior`
 
 ### Changed
 
 - **[BC]** Replace configure `Name()` methods with `Identity()`
 - **[BC]** Rename `NoTimeoutBehavior` to `NoTimeoutMessagesBehavior`
+- **[BC]** Rename `ProjectionEventScope.Time()` to `RecordedAt()`
 
 ## [0.4.0]
 

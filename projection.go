@@ -126,8 +126,8 @@ type ProjectionEventScope interface {
 	// globally unique to this message.
 	Key() string
 
-	// Time returns the time at which the event being handled was recorded.
-	Time() time.Time
+	// RecordedAt returns the time at which the event was recorded.
+	RecordedAt() time.Time
 
 	// Log records an informational message within the context of the message
 	// that is being handled.
