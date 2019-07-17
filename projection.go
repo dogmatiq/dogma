@@ -62,6 +62,13 @@ type ProjectionMessageHandler interface {
 	TimeoutHint(m Message) time.Duration
 }
 
+// IdempotentProjectionMessageHandler is specialization of
+// ProjectionMessageHandler with additional features that allow the engine to
+// provide exactly-once delivery guarantees.
+type IdempotentProjectionMessageHandler interface {
+	ProjectionMessageHandler
+}
+
 // ProjectionConfigurer is an interface implemented by the engine and used by
 // the application to configure options related to a ProjectionMessageHandler.
 //
@@ -112,19 +119,16 @@ type ProjectionConfigurer interface {
 // the application to perform operations within the context of handling a
 // specific event message.
 type ProjectionEventScope interface {
-	// Key returns a value that uniquely identifies the event being handled.
+	// MessageIdentity returns a key-value pair that uniquely identify the event
+	// being handled.
 	//
-	// The engine SHOULD provide "at-least-once" delivery guarantees to the
-	// projection messager handler. In this case, it is necessary to prevent
-	// re-application of an event that has already been applied to the
-	// projection. The projection handler SHOULD rely on the content of the event
-	// message itself to detect duplicates, but in cases where the message
-	// content is not adequate, this key can be used.
+	// In combination, the returned values MUST be unique to the specific event
+	// message within this projection handler. There is no guarantee that the
+	// returned values will be globally unique.
 	//
-	// The returned value MUST be unique to the specific event message within
-	// this projection. There is no guarantee that the returned value will be
-	// globally unique to this message.
-	Key() string
+	// The returned values are engine-defined, and MUST be treated as opaque
+	// data structures by the handler.
+	MessageIdentity() (k, v []byte)
 
 	// RecordedAt returns the time at which the event was recorded.
 	RecordedAt() time.Time
