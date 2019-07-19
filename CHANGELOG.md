@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Changed
 
-- **[BC]** Replace configure `Name()` methods with `Identity()`
+- **[BC]** Replace configurer `Name()` methods with `Identity()`
 - **[BC]** Rename `NoTimeoutBehavior` to `NoTimeoutMessagesBehavior`
 - **[BC]** Rename `ProjectionEventScope.Time()` to `RecordedAt()`
 
