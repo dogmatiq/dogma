@@ -45,13 +45,13 @@ type ProjectionMessageHandler interface {
 	// portability the implementation SHOULD NOT assume that HandleEvent() will
 	// be called with events in the same order that they were recorded.
 	//
-	// The key/value association and the changes to the projection state SHOULD
-	// be persisted in a single atomic operation. If the implementation is not
-	// able to guarantee such atomicity the projection state MUST be updated
-	// before the association is persisted. This guarantees that no event is
-	// ever missed because due to the association existing without the relevant
-	// state update. Such implementations MUST provide their own message
-	// deduplication.
+	// The key/value association and effects of the event SHOULD be committed to
+	// the projection state atomically. If the implementation is not able to
+	// provide such atomicity then the projection state MUST be updated before
+	// the association is persisted, and the implementation MUST implement its
+	// own message deduplication. Coupled with an "at-least-once" guarantee from
+	// the engine implementation, this ensures all events are applied to the
+	// projection exactly once.
 	//
 	// The content of k and v are engine-defined and MUST be treated as opaque
 	// data structures. Nil and empty slices are valid and MUST NOT be handled
