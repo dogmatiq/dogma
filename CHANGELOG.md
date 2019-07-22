@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### Added
 
 - Applications and handlers are now assigned an immutable "key"
+- **[BC]** Add `k` and `v` parameters to `ProjectionMessageHandler.HandleEvent()`
+- **[BC]** Add `ProjectionMessageHandler.Recover()` and `Discard()`
 - **[BC]** Add `ProcessMessageHandler.TimeoutHint()`
 - **[BC]** Add `IntegrationMessageHandler.TimeoutHint()`
 - **[BC]** Add `ProjectionMessageHandler.TimeoutHint()`
@@ -23,7 +25,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Changed
 
-- **[BC]** Replace configure `Name()` methods with `Identity()`
+- **[BC]** Replace configurer `Name()` methods with `Identity()`
 - **[BC]** Rename `NoTimeoutBehavior` to `NoTimeoutMessagesBehavior`
 - **[BC]** Rename `ProjectionEventScope.Time()` to `RecordedAt()`
 

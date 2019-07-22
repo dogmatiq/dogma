@@ -24,7 +24,14 @@ type ProjectionMessageHandler interface {
 
 	// HandleEvent updates the projection to reflect the occurrence of an event.
 	//
-	// If nil is returned, the projection has been updated successfully.
+	// k and v are components of a key/value pair that is used by the engine to
+	// determine which events have already been applied to the projection. The
+	// implementation MUST persist an association between k and v such that
+	// future calls to Recover() with k return v. If k is already associated
+	// with a value it should be replaced with an assocation to v.
+	//
+	// If nil is returned, the projection state and the association have been
+	// persisted successfully.
 	//
 	// If an error is returned, the projection SHOULD be left in the state it
 	// was before HandleEvent() was called.
@@ -32,6 +39,23 @@ type ProjectionMessageHandler interface {
 	// The engine SHOULD provide "at-least-once" delivery guarantees to the
 	// handler. That is, the engine should call HandleEvent() with the same
 	// event message until a nil error is returned.
+	//
+	// The engine MAY provide guarantees about the order in which event messages
+	// will be passed to HandleEvent(), however in the interest of engine
+	// portability the implementation SHOULD NOT assume that HandleEvent() will
+	// be called with events in the same order that they were recorded.
+	//
+	// The key/value association and effects of the event SHOULD be committed to
+	// the projection state atomically. If the implementation is not able to
+	// provide such atomicity then the projection state MUST be updated before
+	// the association is persisted, and the implementation MUST implement its
+	// own message deduplication. Coupled with an "at-least-once" guarantee from
+	// the engine implementation, this ensures all events are applied to the
+	// projection exactly once.
+	//
+	// The content of k and v are engine-defined and MUST be treated as opaque
+	// data structures. Nil and empty slices are valid and MUST NOT be handled
+	// specially.
 	//
 	// The supplied context parameter SHOULD have a deadline. The implementation
 	// SHOULD NOT impose its own deadline. Instead a suitable timeout duration
@@ -42,13 +66,25 @@ type ProjectionMessageHandler interface {
 	// If any such message is passed, the implementation MUST panic with the
 	// UnexpectedMessage value.
 	//
-	// The engine MAY provide guarantees about the order in which event messages
-	// will be passed to HandleEvent(), however in the interest of engine
-	// portability the implementation SHOULD NOT assume that HandleEvent() will
-	// be called with events in the same order that they were recorded.
-	//
 	// The engine MAY call HandleEvent() from multiple goroutines concurrently.
-	HandleEvent(ctx context.Context, s ProjectionEventScope, m Message) error
+	HandleEvent(ctx context.Context, s ProjectionEventScope, m Message, k, v []byte) error
+
+	// Recover returns the value component of a key/value association persisted
+	// by a call to HandleEvent().
+	//
+	// If an association exists v is the associated value, which may be nil, and
+	// ok is true. If no such association exists, ok is false.
+	Recover(ctx context.Context, k []byte) (v []byte, ok bool, err error)
+
+	// Discard informs the projection that a specific key/value association is
+	// no longer required.
+	//
+	// The implementation SHOULD remove the persisted association for this key,
+	// if present.
+	//
+	// The engine MUST NOT call Recover() with any key that has been discarded
+	// as the results are undefined.
+	Discard(ctx context.Context, k []byte) error
 
 	// TimeoutHint returns a duration that is suitable for computing a deadline
 	// for the handling of the given message by this handler.
@@ -113,13 +149,6 @@ type ProjectionConfigurer interface {
 // specific event message.
 type ProjectionEventScope interface {
 	// Key returns a value that uniquely identifies the event being handled.
-	//
-	// The engine SHOULD provide "at-least-once" delivery guarantees to the
-	// projection messager handler. In this case, it is necessary to prevent
-	// re-application of an event that has already been applied to the
-	// projection. The projection handler SHOULD rely on the content of the event
-	// message itself to detect duplicates, but in cases where the message
-	// content is not adequate, this key can be used.
 	//
 	// The returned value MUST be unique to the specific event message within
 	// this projection. There is no guarantee that the returned value will be
