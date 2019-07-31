@@ -9,6 +9,16 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [Unreleased]
+
+### Changed
+
+- **[BC]** `ProjectionMessageHandler` now uses an OCC strategy for event deduplication
+
+### Removed
+
+- **[BC]** Remove `ProjectionEventScope.Key()`
+
 ## [0.5.0] - 2019-07-24
 
 ### Added
