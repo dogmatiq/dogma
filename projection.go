@@ -11,6 +11,18 @@ import (
 //
 // Projection message handlers consume event messages, and do not produce
 // messages of any kind.
+//
+// A version-based optimistic concurrency control (OCC) protocol is used to
+// ensure that each event is applied to the projection exactly once.
+//
+// For each event the engine must supply the current version of an "OCC
+// resource" which is compared against a version for that resource that is
+// persisted within the projection. If the supplied version and the persisted
+// versions match then the event is applied to the projection state, otherwise
+// the event is rejected.
+//
+// Both resources and versions are engine-defined binary values that are not
+// meaningful to the handler. They are represented as byte-slices. Empty and
 type ProjectionMessageHandler interface {
 	// Configure produces a configuration for this handler by calling methods on
 	// the configurer c.
@@ -24,17 +36,28 @@ type ProjectionMessageHandler interface {
 
 	// HandleEvent updates the projection to reflect the occurrence of an event.
 	//
-	// k and v are components of a key/value pair that is used by the engine to
-	// determine which events have already been applied to the projection. The
-	// implementation MUST persist an association between k and v such that
-	// future calls to Recover() with k return v. If k is already associated
-	// with a value it should be replaced with an assocation to v.
+	// r is an engine-defined OCC resource. c and n are the current and next
+	// versions of that resource, respectively. Each of these values is
+	// engine-defined and MUST be treated as an opaque data structure. Nil and
+	// empty byte-slices are valid and equivalent.
 	//
-	// If nil is returned, the projection state and the association have been
-	// persisted successfully.
+	// If c matches the current version of r persisted within the projection
+	// then the implementation MUST apply the event to the projection state and
+	// update the persisted version for r to n. ok is true, indicating that the
+	// event was applied.
 	//
-	// If an error is returned, the projection SHOULD be left in the state it
-	// was before HandleEvent() was called.
+	// If c does not match the current version of r the implementation MUST NOT
+	// update the projection state or the persisted version. ok is false,
+	// indicating that an OCC conflict occurred.
+	//
+	// The initial version of any previously unseen resource is always an
+	// empty-slice.
+	//
+	// If a nil error is returned, the projection state and the resource version
+	// have been persisted successfully.
+	//
+	// If a non-nil error is returned, the projection SHOULD be left in the
+	// state it was before HandleEvent() was called.
 	//
 	// The engine SHOULD provide "at-least-once" delivery guarantees to the
 	// handler. That is, the engine should call HandleEvent() with the same
@@ -44,18 +67,6 @@ type ProjectionMessageHandler interface {
 	// will be passed to HandleEvent(), however in the interest of engine
 	// portability the implementation SHOULD NOT assume that HandleEvent() will
 	// be called with events in the same order that they were recorded.
-	//
-	// The key/value association and effects of the event SHOULD be committed to
-	// the projection state atomically. If the implementation is not able to
-	// provide such atomicity then the projection state MUST be updated before
-	// the association is persisted, and the implementation MUST implement its
-	// own message deduplication. Coupled with an "at-least-once" guarantee from
-	// the engine implementation, this ensures all events are applied to the
-	// projection exactly once.
-	//
-	// The content of k and v are engine-defined and MUST be treated as opaque
-	// data structures. Nil and empty slices are valid and MUST NOT be handled
-	// specially.
 	//
 	// The supplied context parameter SHOULD have a deadline. The implementation
 	// SHOULD NOT impose its own deadline. Instead a suitable timeout duration
@@ -67,24 +78,30 @@ type ProjectionMessageHandler interface {
 	// UnexpectedMessage value.
 	//
 	// The engine MAY call HandleEvent() from multiple goroutines concurrently.
-	HandleEvent(ctx context.Context, s ProjectionEventScope, m Message, k, v []byte) error
+	HandleEvent(
+		ctx context.Context,
+		r, c, n []byte,
+		s ProjectionEventScope,
+		m Message,
+	) (ok bool, err error)
 
-	// Recover returns the value component of a key/value association persisted
-	// by a call to HandleEvent().
+	// ResourceVersion returns the version of the resource r.
 	//
-	// If an association exists v is the associated value, which may be nil, and
-	// ok is true. If no such association exists, ok is false.
-	Recover(ctx context.Context, k []byte) (v []byte, ok bool, err error)
+	// It returns an empty slice if HandleEvent() has never been called
+	// successfully with this resource.
+	//
+	// If r has previously been closed the behavior is undefined.
+	ResourceVersion(ctx context.Context, r []byte) ([]byte, error)
 
-	// Discard informs the projection that a specific key/value association is
-	// no longer required.
+	// CloseResource informs the projection that the resource r will not be
+	// used in any future calls to HandleEvent().
 	//
-	// The implementation SHOULD remove the persisted association for this key,
-	// if present.
+	// If the resource exists it SHOULD be removed. The implementation MUST
+	// return nil if the resource does not exist.
 	//
-	// The engine MUST NOT call Recover() with any key that has been discarded
-	// as the results are undefined.
-	Discard(ctx context.Context, k []byte) error
+	// The behavior of calling ResourceVersion() or HandleEvent() with a
+	// resource that has been closed is undefined.
+	CloseResource(ctx context.Context, r []byte) error
 
 	// TimeoutHint returns a duration that is suitable for computing a deadline
 	// for the handling of the given message by this handler.
@@ -148,13 +165,6 @@ type ProjectionConfigurer interface {
 // the application to perform operations within the context of handling a
 // specific event message.
 type ProjectionEventScope interface {
-	// Key returns a value that uniquely identifies the event being handled.
-	//
-	// The returned value MUST be unique to the specific event message within
-	// this projection. There is no guarantee that the returned value will be
-	// globally unique to this message.
-	Key() string
-
 	// RecordedAt returns the time at which the event was recorded.
 	RecordedAt() time.Time
 
