@@ -23,6 +23,7 @@ import (
 //
 // Both resources and versions are engine-defined binary values that are not
 // meaningful to the handler. They are represented as byte-slices. Empty and
+// nil slices are are valid and equivalent.
 type ProjectionMessageHandler interface {
 	// Configure produces a configuration for this handler by calling methods on
 	// the configurer c.
