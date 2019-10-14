@@ -1,5 +1,10 @@
--include artifacts/make/adr.mk
--include artifacts/make/go.mk
+GENERATED_FILES += docs/adr/README.md
 
-artifacts/make/%.mk:
-	curl -sf https://dogmatiq.io/makefiles/fetch | bash /dev/stdin $*
+-include .makefiles/Makefile
+-include .makefiles/pkg/go/v1/Makefile
+
+docs/adr/README.md: .adr-dir $(filter-out docs/adr/README.md,$(wildcard docs/adr/*.md))
+	adr generate toc -i docs/adr/README.intro.md > "$@"
+
+.makefiles/%:
+	@curl -sfL https://makefiles.dev/v1 | bash /dev/stdin "$@"
