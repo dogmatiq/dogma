@@ -1,6 +1,6 @@
 # Dogma
 
-[![Build Status](http://img.shields.io/travis/com/dogmatiq/dogma/master.svg)](https://travis-ci.com/dogmatiq/dogma)
+[![Build Status](https://github.com/dogmatiq/dogma/workflows/CI/badge.svg)](https://github.com/dogmatiq/dogma/actions?workflow=CI)
 [![Code Coverage](https://img.shields.io/codecov/c/github/dogmatiq/dogma/master.svg)](https://codecov.io/github/dogmatiq/dogma)
 [![Latest Version](https://img.shields.io/github/tag/dogmatiq/dogma.svg?label=semver)](https://semver.org)
 [![GoDoc](https://godoc.org/github.com/dogmatiq/dogma?status.svg)](https://godoc.org/github.com/dogmatiq/dogma)
