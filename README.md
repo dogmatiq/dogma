@@ -16,6 +16,7 @@ transported and application state is persisted.
 ## Related Repositories
 
 - [dogmatiq/testkit] - utilities for blackbox testing of Dogma applications
+- [dogmatiq/projectionkit] - utilities for building [projections](#projection) in various popular database systems
 - [dogmatiq/example] - an example Dogma application that implements the features of a simple bank
 
 ## Concepts
@@ -164,6 +165,9 @@ They do not have any state that is modelled by the Dogma API, but [engine](#engi
 implementations may provide mechanisms for persisting projection state in
 various data stores, such as SQL databases, document stores, flat files, etc.
 
+The [dogmatiq/projectionkit] module provides engine-agnostic tools for building
+projections in various popular database systems.
+
 Projections are represented by the [`dogma.ProjectionMessageHandler`] interface.
 
 <!-- references -->
@@ -177,6 +181,7 @@ Projections are represented by the [`dogma.ProjectionMessageHandler`] interface.
 [RFC 2119]: https://tools.ietf.org/html/rfc2119
 
 [dogmatiq/testkit]: https://github.com/dogmatiq/testkit
+[dogmatiq/projectionkit]: https://github.com/dogmatiq/projectionkit
 [dogmatiq/example]: https://github.com/dogmatiq/example
 
 [`dogma.Application`]: https://godoc.org/github.com/dogmatiq/dogma#Application
