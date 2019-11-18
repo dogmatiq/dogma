@@ -39,7 +39,7 @@ func (h *ProjectionMessageHandler) Configure(c dogma.ProjectionConfigurer) {
 // It panics with the UnexpectedMessage value if m is not one of the event
 // types that is routed to this handler via Configure().
 //
-// If h.HandleEventFunc is non-nil it calls h.HandleEventFunc(ctx, r,c,n, s, m).
+// If h.HandleEventFunc is non-nil it calls h.HandleEventFunc(ctx, r, c, n, s, m).
 func (h *ProjectionMessageHandler) HandleEvent(
 	ctx context.Context,
 	r, c, n []byte,
@@ -55,10 +55,10 @@ func (h *ProjectionMessageHandler) HandleEvent(
 
 // ResourceVersion returns the version of the resource r.
 //
-// If h.ResourceVersionFunc is non-nil it calls h.ResourceVersionFunc(ctx, k).
-func (h *ProjectionMessageHandler) ResourceVersion(ctx context.Context, k []byte) ([]byte, error) {
+// If h.ResourceVersionFunc is non-nil it calls h.ResourceVersionFunc(ctx, r).
+func (h *ProjectionMessageHandler) ResourceVersion(ctx context.Context, r []byte) ([]byte, error) {
 	if h.ResourceVersionFunc != nil {
-		return h.ResourceVersionFunc(ctx, k)
+		return h.ResourceVersionFunc(ctx, r)
 	}
 
 	return nil, nil
@@ -67,10 +67,10 @@ func (h *ProjectionMessageHandler) ResourceVersion(ctx context.Context, k []byte
 // CloseResource informs the projection that the resource r will not be used in
 // any future calls to HandleEvent().
 //
-// If h.CloseResourceFunc is non-nil it calls h.CloseResourceFunc(ctx, k).
-func (h *ProjectionMessageHandler) CloseResource(ctx context.Context, k []byte) error {
+// If h.CloseResourceFunc is non-nil it calls h.CloseResourceFunc(ctx, r).
+func (h *ProjectionMessageHandler) CloseResource(ctx context.Context, r []byte) error {
 	if h.CloseResourceFunc != nil {
-		return h.CloseResourceFunc(ctx, k)
+		return h.CloseResourceFunc(ctx, r)
 	}
 
 	return nil
