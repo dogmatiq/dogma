@@ -7,7 +7,8 @@ import (
 	"github.com/dogmatiq/dogma"
 )
 
-// ProjectionMessageHandler is a test implementation of dogma.ProjectionMessageHandler.
+// ProjectionMessageHandler is a test implementation of
+// dogma.ProjectionMessageHandler.
 type ProjectionMessageHandler struct {
 	ConfigureFunc       func(dogma.ProjectionConfigurer)
 	HandleEventFunc     func(context.Context, []byte, []byte, []byte, dogma.ProjectionEventScope, dogma.Message) (bool, error)
@@ -35,6 +36,9 @@ func (h *ProjectionMessageHandler) Configure(c dogma.ProjectionConfigurer) {
 // handler.
 //
 // s provides access to the operations available within the scope of handling m.
+//
+// r is an engine-defined OCC resource. c and n are the current and next
+// versions of that resource, respectively.
 //
 // It panics with the UnexpectedMessage value if m is not one of the event
 // types that is routed to this handler via Configure().
