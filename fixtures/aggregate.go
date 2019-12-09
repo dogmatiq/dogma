@@ -5,7 +5,7 @@ import "github.com/dogmatiq/dogma"
 // AggregateRoot is a test implementation of dogma.AggregateRoot.
 type AggregateRoot struct {
 	Value          interface{}
-	ApplyEventFunc func(dogma.Message, interface{})
+	ApplyEventFunc func(dogma.Message, interface{}) `json:"-"`
 }
 
 var _ dogma.AggregateRoot = &AggregateRoot{}
