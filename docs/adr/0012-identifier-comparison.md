@@ -27,8 +27,8 @@ semantics for identifiers.
 ## Consequences
 
 Existing tooling and engine implementations, such as `configkit` and the
-in-memory engine implementation in `testkit` do not require changed. Identifiers
-can be compared using Go's standard comparison operators.
+in-memory engine implementation in `testkit` do not need to be changed.
+Identifiers can be compared using Go's standard comparison operators.
 
 It is possible that two identifiers may appear to be equal but consist of
 different byte sequences. For example, when a character with a diacritic mark is
