@@ -79,13 +79,18 @@ type IntegrationConfigurer interface {
 	// handler, such as application state or message routing information.
 	//
 	// The application and the handlers within it MUST have distinct keys. The
-	// key MUST NOT be changed. The RECOMMENDED key format is RFC 4122 UUID,
-	// generated when the handler is first implemented.
+	// key MUST NOT be changed. The RECOMMENDED key format is an RFC 4122 UUID
+	// represented as a hyphen-separated, lowercase hexadecimal string, such as
+	// "5195fe85-eb3f-4121-84b0-be72cbc5722f".
 	//
-	// Both the name and the key MUST be non-empty UTF-8 strings consisting
-	// solely of printable Unicode characters, excluding whitespace. A printable
-	// character is any character from the Letter, Mark, Number, Punctuation or
-	// Symbol categories.
+	// Both identifiers MUST be non-empty UTF-8 strings consisting solely of
+	// printable Unicode characters, excluding whitespace. A printable character
+	// is any character from the Letter, Mark, Number, Punctuation or Symbol
+	// categories.
+	//
+	// The engine MUST NOT perform any case-folding or normalization of
+	// identifiers. Therefore, two identifiers compare as equivalent if and only
+	// if they consist of the same sequence of bytes.
 	Identity(name string, key string)
 
 	// ConsumesCommandType configures the engine to route command messages of
