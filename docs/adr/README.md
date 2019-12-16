@@ -21,3 +21,4 @@ the ADR documents.
 * [9. Immutable Application and Handler Keys](0009-immutable-keys.md)
 * [10. Handler Timeout Hints](0010-handler-timeout-hints.md)
 * [11. Message Timing Information](0011-message-timing-information.md)
+* [12. Comparison of Identifiers](0012-identifier-comparison.md)
