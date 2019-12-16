@@ -26,7 +26,7 @@ semantics for identifiers.
 
 ## Consequences
 
-Existing tooling and engine implementations, such as `configkit` and the the
+Existing tooling and engine implementations, such as `configkit` and the
 in-memory engine implementation in `testkit` do not require changed. Identifiers
 can be compared using Go's standard comparison operators.
 
