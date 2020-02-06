@@ -7,7 +7,8 @@ import (
 	"github.com/dogmatiq/dogma"
 )
 
-// IntegrationMessageHandler is a test implementation of dogma.IntegrationMessageHandler.
+// IntegrationMessageHandler is a test implementation of
+// dogma.IntegrationMessageHandler.
 type IntegrationMessageHandler struct {
 	ConfigureFunc     func(dogma.IntegrationConfigurer)
 	HandleCommandFunc func(context.Context, dogma.IntegrationCommandScope, dogma.Message) error
@@ -22,7 +23,7 @@ var _ dogma.IntegrationMessageHandler = &IntegrationMessageHandler{}
 // c provides access to the various configuration options, such as specifying
 // which types of integration command messages are routed to this handler.
 //
-// If h.ConfigureFunc is non-nil, it calls h.ConfigureFunc(c)
+// If h.ConfigureFunc is non-nil, it calls h.ConfigureFunc(c).
 func (h *IntegrationMessageHandler) Configure(c dogma.IntegrationConfigurer) {
 	if h.ConfigureFunc != nil {
 		h.ConfigureFunc(c)
@@ -32,13 +33,14 @@ func (h *IntegrationMessageHandler) Configure(c dogma.IntegrationConfigurer) {
 // HandleCommand handles an integration command message that has been routed to
 // this handler.
 //
-// s provides access to the operations available within the scope of handling
-// m, such as publishing integration event messages.
+// s provides access to the operations available within the scope of handling m,
+// such as publishing integration event messages.
 //
-// It panics with the UnexpectedMessage value if m is not one of the
-// integration command types that is routed to this handler via Configure().
+// It panics with the UnexpectedMessage value if m is not one of the integration
+// command types that is routed to this handler via Configure().
 //
-// If h.HandleCommandFunc is non-nil it calls h.HandleCommandFunc(s, m).
+// If h.HandleCommandFunc is non-nil it returns h.HandleCommandFunc(s, m),
+// otherwise it returns nil.
 func (h *IntegrationMessageHandler) HandleCommand(
 	ctx context.Context,
 	s dogma.IntegrationCommandScope,
@@ -51,10 +53,11 @@ func (h *IntegrationMessageHandler) HandleCommand(
 	return nil
 }
 
-// TimeoutHint returns a duration that is suitable for computing a deadline
-// for the handling of the given message by this handler.
+// TimeoutHint returns a duration that is suitable for computing a deadline for
+// the handling of the given message by this handler.
 //
-// If h.TimeoutHintFunc is non-nil it calls h.TimeoutHintFunc(m).
+// If h.TimeoutHintFunc is non-nil it returns h.TimeoutHintFunc(m), otherwise it
+// returns 0.
 func (h *IntegrationMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
 	if h.TimeoutHintFunc != nil {
 		return h.TimeoutHintFunc(m)

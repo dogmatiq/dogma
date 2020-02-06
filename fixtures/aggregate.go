@@ -13,14 +13,15 @@ var _ dogma.AggregateRoot = &AggregateRoot{}
 // ApplyEvent updates the aggregate instance to reflect the fact that a
 // particular domain event has occurred.
 //
-// It calls v.ApplyEventFunc(m, v.Value)
+// If v.ApplyEventFunc is non-nil, it calls v.ApplyEventFunc(m, v.Value).
 func (v *AggregateRoot) ApplyEvent(m dogma.Message) {
 	if v.ApplyEventFunc != nil {
 		v.ApplyEventFunc(m, v.Value)
 	}
 }
 
-// AggregateMessageHandler is a test implementation of dogma.AggregateMessageHandler.
+// AggregateMessageHandler is a test implementation of
+// dogma.AggregateMessageHandler.
 type AggregateMessageHandler struct {
 	NewFunc                    func() dogma.AggregateRoot
 	ConfigureFunc              func(dogma.AggregateConfigurer)
@@ -32,8 +33,8 @@ var _ dogma.AggregateMessageHandler = &AggregateMessageHandler{}
 
 // New constructs a new aggregate instance and returns its root.
 //
-// If h.NewFunc is nil, it returns a new empty fixtures.AggregateRoot, otherwise
-// it calls h.NewFunc().
+// If h.NewFunc is non-nil, it returns h.NewFunc(), otherwise it returns a new
+// empty new empty fixtures.AggregateRoot.
 func (h *AggregateMessageHandler) New() dogma.AggregateRoot {
 	if h.NewFunc != nil {
 		return h.NewFunc()
@@ -48,7 +49,7 @@ func (h *AggregateMessageHandler) New() dogma.AggregateRoot {
 // c provides access to the various configuration options, such as specifying
 // which types of domain command messages are routed to this handler.
 //
-// If h.ConfigureFunc is non-nil, it calls h.ConfigureFunc(c)
+// If h.ConfigureFunc is non-nil, it calls h.ConfigureFunc(c).
 func (h *AggregateMessageHandler) Configure(c dogma.AggregateConfigurer) {
 	if h.ConfigureFunc != nil {
 		h.ConfigureFunc(c)
@@ -61,7 +62,7 @@ func (h *AggregateMessageHandler) Configure(c dogma.AggregateConfigurer) {
 // It panics with the UnexpectedMessage value if m is not one of the domain
 // command types that is routed to this handler via Configure().
 //
-// If h.RouteCommandToInstanceFunc is non-nil it returns the result of
+// If h.RouteCommandToInstanceFunc is non-nil it returns
 // h.RouteCommandToInstanceFunc(m), otherwise it panics.
 func (h *AggregateMessageHandler) RouteCommandToInstance(m dogma.Message) string {
 	if h.RouteCommandToInstanceFunc == nil {

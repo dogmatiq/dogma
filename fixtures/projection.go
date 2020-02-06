@@ -25,7 +25,7 @@ var _ dogma.ProjectionMessageHandler = &ProjectionMessageHandler{}
 // c provides access to the various configuration options, such as specifying
 // which types of event messages are routed to this handler.
 //
-// If h.ConfigureFunc is non-nil, it calls h.ConfigureFunc(c)
+// If h.ConfigureFunc is non-nil, it calls h.ConfigureFunc(c).
 func (h *ProjectionMessageHandler) Configure(c dogma.ProjectionConfigurer) {
 	if h.ConfigureFunc != nil {
 		h.ConfigureFunc(c)
@@ -40,10 +40,11 @@ func (h *ProjectionMessageHandler) Configure(c dogma.ProjectionConfigurer) {
 // r is an engine-defined OCC resource. c and n are the current and next
 // versions of that resource, respectively.
 //
-// It panics with the UnexpectedMessage value if m is not one of the event
-// types that is routed to this handler via Configure().
+// It panics with the UnexpectedMessage value if m is not one of the event types
+// that is routed to this handler via Configure().
 //
-// If h.HandleEventFunc is non-nil it calls h.HandleEventFunc(ctx, r, c, n, s, m).
+// If h.HandleEventFunc is non-nil it returns h.HandleEventFunc(ctx, r, c, n, s, m),
+// otherwise it returns (nil, nil).
 func (h *ProjectionMessageHandler) HandleEvent(
 	ctx context.Context,
 	r, c, n []byte,
@@ -59,7 +60,8 @@ func (h *ProjectionMessageHandler) HandleEvent(
 
 // ResourceVersion returns the version of the resource r.
 //
-// If h.ResourceVersionFunc is non-nil it calls h.ResourceVersionFunc(ctx, r).
+// If h.ResourceVersionFunc is non-nil it returns h.ResourceVersionFunc(ctx, r),
+// otherwise it returns (nil, nil).
 func (h *ProjectionMessageHandler) ResourceVersion(ctx context.Context, r []byte) ([]byte, error) {
 	if h.ResourceVersionFunc != nil {
 		return h.ResourceVersionFunc(ctx, r)
@@ -71,7 +73,8 @@ func (h *ProjectionMessageHandler) ResourceVersion(ctx context.Context, r []byte
 // CloseResource informs the projection that the resource r will not be used in
 // any future calls to HandleEvent().
 //
-// If h.CloseResourceFunc is non-nil it calls h.CloseResourceFunc(ctx, r).
+// If h.CloseResourceFunc is non-nil it returns h.CloseResourceFunc(ctx, r),
+// otherwise it returns nil.
 func (h *ProjectionMessageHandler) CloseResource(ctx context.Context, r []byte) error {
 	if h.CloseResourceFunc != nil {
 		return h.CloseResourceFunc(ctx, r)
@@ -80,10 +83,11 @@ func (h *ProjectionMessageHandler) CloseResource(ctx context.Context, r []byte) 
 	return nil
 }
 
-// TimeoutHint returns a duration that is suitable for computing a deadline
-// for the handling of the given message by this handler.
+// TimeoutHint returns a duration that is suitable for computing a deadline for
+// the handling of the given message by this handler.
 //
-// If h.TimeoutHintFunc is non-nil it calls h.TimeoutHintFunc(m).
+// If h.TimeoutHintFunc is non-nil it returns h.TimeoutHintFunc(m), otherwise it
+// returns 0.
 func (h *ProjectionMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
 	if h.TimeoutHintFunc != nil {
 		return h.TimeoutHintFunc(m)
