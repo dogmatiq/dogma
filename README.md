@@ -3,9 +3,8 @@
 [![Build Status](https://github.com/dogmatiq/dogma/workflows/CI/badge.svg)](https://github.com/dogmatiq/dogma/actions?workflow=CI)
 [![Code Coverage](https://img.shields.io/codecov/c/github/dogmatiq/dogma/master.svg)](https://codecov.io/github/dogmatiq/dogma)
 [![Latest Version](https://img.shields.io/github/tag/dogmatiq/dogma.svg?label=semver)](https://semver.org)
-[![GoDoc](https://godoc.org/github.com/dogmatiq/dogma?status.svg)](https://godoc.org/github.com/dogmatiq/dogma)
+[![Documentation](https://img.shields.io/badge/go.dev-reference-007d9c)](https://pkg.go.dev/github.com/dogmatiq/dogma)
 [![Go Report Card](https://goreportcard.com/badge/github.com/dogmatiq/dogma)](https://goreportcard.com/report/github.com/dogmatiq/dogma)
-
 
 Dogma is a specification and API for building message-based applications in Go.
 
@@ -177,15 +176,15 @@ Projections are represented by the [`dogma.ProjectionMessageHandler`] interface.
 [Event Sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
 [Immediate Consistency]: http://www.informit.com/articles/article.aspx?p=2020371&seqNum=2
 [Eventual Consistency]: https://en.wikipedia.org/wiki/Eventual_consistency
-[API documentation]: https://godoc.org/github.com/dogmatiq/dogma
+[API documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [RFC 2119]: https://tools.ietf.org/html/rfc2119
 
 [dogmatiq/testkit]: https://github.com/dogmatiq/testkit
 [dogmatiq/projectionkit]: https://github.com/dogmatiq/projectionkit
 [dogmatiq/example]: https://github.com/dogmatiq/example
 
-[`dogma.Application`]: https://godoc.org/github.com/dogmatiq/dogma#Application
-[`dogma.AggregateMessageHandler`]: https://godoc.org/github.com/dogmatiq/dogma#AggregateMessageHandler
-[`dogma.ProcessMessageHandler`]: https://godoc.org/github.com/dogmatiq/dogma#ProcessMessageHandler
-[`dogma.IntegrationMessageHandler`]: https://godoc.org/github.com/dogmatiq/dogma#IntegrationMessageHandler
-[`dogma.ProjectionMessageHandler`]: https://godoc.org/github.com/dogmatiq/dogma#ProjectionMessageHandler
+[`dogma.Application`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Application
+[`dogma.AggregateMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#AggregateMessageHandler
+[`dogma.ProcessMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProcessMessageHandler
+[`dogma.IntegrationMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#IntegrationMessageHandler
+[`dogma.ProjectionMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProjectionMessageHandler
