@@ -15,8 +15,8 @@ import "fmt"
 // The message implementations are provided by the application. The interface is
 // intentionally empty, allowing the use of any Go type as a message.
 //
-// Message implementations SHOULD implement fmt.Stringer or DescriableMessage in
-// order to provide a human-readable description of every message.
+// Message implementations SHOULD implement fmt.Stringer or DescribableMessage
+// in order to provide a human-readable description of every message.
 //
 // Engine implementations MAY place further requirements upon message
 // implementations.
@@ -26,9 +26,10 @@ type Message interface {
 // DescribableMessage is a message that can provide a human-readable description
 // of itself.
 //
-// It can be implemented to provide a more specific message description for
-// message types that already implement fmt.Stringer, such as when the message
-// implementations are generated Protocol Buffers structs.
+// This interface can be implemented to provide a more specific message
+// description for message types that already implement fmt.Stringer in such a
+// way that does not provide a useful human-readable description, such as when
+// the message implementations are generated Protocol Buffers structs.
 type DescribableMessage interface {
 	Message
 
