@@ -32,6 +32,7 @@ type Message interface {
 type DescribableMessage interface {
 	Message
 
+	// MessageDescription returns a human-readable description of the message.
 	MessageDescription() string
 }
 
