@@ -26,9 +26,6 @@ jobs:
     - name: Make
       run: make ci
     - name: Upload Coverage Reports
-      if: success() && !github.head_ref
+      if: success()
       run: |
-        test ! -z "$TOKEN"
-        bash <(curl -s https://codecov.io/bash) -t "$TOKEN" -B "${{ github.ref }}"
-      env:
-        TOKEN: "${{ secrets.CODECOV_TOKEN }}"
+        [[ -z "${{ secrets.CODECOV_TOKEN }}" ]] || bash <(curl -s https://codecov.io/bash) -t "${{ secrets.CODECOV_TOKEN }}" -B "${{ github.ref }}"
