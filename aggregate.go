@@ -156,6 +156,13 @@ type AggregateCommandScope interface {
 	// InstanceID returns the ID of the targeted aggregate instance.
 	InstanceID() string
 
+	// Exists returns true if the aggregate instance exists.
+	//
+	// It returns true if Create() has been called and Destroy() has not yet
+	// been called in this scope or the scope of any previous message that
+	// targetted the same instance.
+	Exists() bool
+
 	// Create creates the targeted instance.
 	//
 	// It MUST be called before Root() or RecordEvent() can be called within
