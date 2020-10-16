@@ -169,12 +169,14 @@ type AggregateCommandScope interface {
 	// this scope or the scope of any future message that targets the same
 	// instance.
 	//
-	// It returns true if the targeted instance was created, or false if
-	// the instance already exists.
+	// It returns true if the targeted instance was created, or false if the
+	// instance already exists.
 	//
 	// If it returns true, RecordEvent() MUST be called at least once within the
 	// same scope. This guarantees that the creation of every instance is
 	// represented by an application-defined event.
+	//
+	// It MUST NOT be called within the same scope as a prior call to Destroy().
 	Create() bool
 
 	// Destroy destroys the targeted instance.
@@ -188,6 +190,8 @@ type AggregateCommandScope interface {
 	// RecordEvent() MUST be called at least once within the same scope. This
 	// guarantees that the destruction of every instance is represented by an
 	// application-defined event.
+	//
+	// It MAY be called within the same scope as a prior call to Create().
 	//
 	// The precise semantics of destroy are implementation defined. The
 	// aggregate data MAY be deleted or archived, for example.

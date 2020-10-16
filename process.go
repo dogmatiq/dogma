@@ -219,6 +219,9 @@ type ProcessEventScope interface {
 	//
 	// It returns true if the targeted instance was begun, or false if
 	// the instance had already begun.
+	//
+	// The engine MAY allow re-beginning a process instance that has ended.
+	// Callers SHOULD assume that such behavior is unavailable.
 	Begin() bool
 
 	// End terminates the targeted process instance.
@@ -231,6 +234,8 @@ type ProcessEventScope interface {
 	//
 	// The engine MUST discard any timeout messages associated with this
 	// instance.
+	//
+	// It MAY be called within the same scope as a prior call to Create().
 	//
 	// The engine MAY allow re-beginning a process instance that has ended.
 	// Callers SHOULD assume that such behavior is unavailable.
@@ -290,6 +295,8 @@ type ProcessTimeoutScope interface {
 	//
 	// The engine MUST discard any timeout messages associated with this
 	// instance.
+	//
+	// It MAY be called within the same scope as a prior call to Create().
 	//
 	// The engine MAY allow re-beginning a process instance that has ended.
 	// Callers SHOULD assume that such behavior is unavailable.
