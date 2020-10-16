@@ -22,6 +22,10 @@ import (
 //
 // Processes are used to coordinate changes to multiple aggregates, and to
 // integrate the domain layer with non-domain concerns.
+//
+// Processes SHOULD NOT perform any kind of "write" operation directly, such as
+// updating a database or invoking an API operation that causes a state change.
+// Any such state changes should be communicated via a command message instead.
 type ProcessMessageHandler interface {
 	// New constructs a new process instance and returns its root.
 	//
