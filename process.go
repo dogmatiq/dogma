@@ -273,6 +273,13 @@ type ProcessTimeoutScope interface {
 	// InstanceID returns the ID of the targeted process instance.
 	InstanceID() string
 
+	// HasBegun returns true if the process has begun.
+	//
+	// It returns true if Begin() has been called and End() has not yet been
+	// called in this scope or the scope of any previous message that targetted
+	// the same instance.
+	HasBegun() bool
+
 	// End terminates the targeted process instance.
 	//
 	// After it has been called Root(), ExecuteCommand() and ScheduleTimeout()
