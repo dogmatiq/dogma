@@ -22,3 +22,4 @@ the ADR documents.
 * [10. Handler Timeout Hints](0010-handler-timeout-hints.md)
 * [11. Message Timing Information](0011-message-timing-information.md)
 * [12. Comparison of Identifiers](0012-identifier-comparison.md)
+* [13. Aggregate and Process Instance Existance Checks](0013-instance-exists-check.md)
