@@ -18,9 +18,11 @@ package dogma
 // A command message can cause the creation or destruction of its target
 // instance.
 type AggregateMessageHandler interface {
-	// New constructs a new aggregate instance and returns its root.
+	// New constructs constructs new aggregate instance initialized with any
+	// default values and returns the aggregate root.
 	//
-	// The return value MUST NOT be nil.
+	// Repeated calls SHOULD return a value that is of the same type and
+	// initialized in the same way. The return value MUST NOT be nil.
 	New() AggregateRoot
 
 	// Configure produces a configuration for this handler by calling methods on
