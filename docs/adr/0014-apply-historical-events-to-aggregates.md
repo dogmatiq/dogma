@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-Event sourcing engines need to call `AggregateApplyEvent.ApplyEvent()` with
+Event sourcing engines need to call `AggregateRoot.ApplyEvent()` with
 "historical" event types. That is, event types that have already been recorded
 against the instance but are no longer configured for production by that
 aggregate.
