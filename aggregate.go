@@ -77,11 +77,13 @@ type AggregateRoot interface {
 	// ApplyEvent updates the aggregate instance to reflect the occurrence of an
 	// event that was recorded against this instance.
 	//
-	// It MUST NOT be called with a message of any type that has not been
-	// configured for production by a prior call to Configure().
+	// The engine MUST call ApplyEvent() for each newly recorded event. It MAY
+	// call ApplyEvent() with any event that has already been recorded against
+	// this instance, even if that event type is no longer configured for
+	// production by a prior call to Configure().
 	//
-	// It MUST accept all messages of the types that have been configured for
-	// production, though any given call MAY be a no-op.
+	// The implementation MUST panic with the UnexpectedMessage value if called
+	// with any other event type. Any given call MAY be a no-op.
 	ApplyEvent(m Message)
 }
 

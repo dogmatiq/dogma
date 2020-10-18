@@ -23,3 +23,4 @@ the ADR documents.
 * [11. Message Timing Information](0011-message-timing-information.md)
 * [12. Comparison of Identifiers](0012-identifier-comparison.md)
 * [13. Aggregate and Process Instance Existance Checks](0013-instance-exists-check.md)
+* [14. Applying Historical Events to Aggregate Instances](0014-apply-historical-events-to-aggregates.md)
