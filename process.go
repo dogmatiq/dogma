@@ -27,9 +27,11 @@ import (
 // updating a database or invoking an API operation that causes a state change.
 // Any such state changes should be communicated via a command message instead.
 type ProcessMessageHandler interface {
-	// New constructs a new process instance and returns its root.
+	// New constructs a new process instance initialized with any
+	// default values and returns the process root.
 	//
-	// The return value MUST NOT be nil.
+	// Repeated calls SHOULD return a value that is of the same type and
+	// initialized in the same way. The return value MUST NOT be nil.
 	New() ProcessRoot
 
 	// Configure produces a configuration for this handler by calling methods on
