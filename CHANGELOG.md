@@ -9,12 +9,19 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [Unreleased]
+## [1.0.0-rc.0]
 
 ### Added
 
 - **[BC]** Add `AggregateCommandScope.Exists()`
 - **[BC]** Add `ProcessEventScope.HasBegun()` and `ProcessTimeoutScope.HasBegun()`
+
+### Changed
+
+- Allow engines to call `AggregateRoot.ApplyEvent()` with historical events
+- Clarify semantics of `AggregateMessageHandler.New()` and `ProcessMessageHandler.New()`
+- Clarify semantics of surrounding creating an aggregate instance within the same scope as it was destroyed
+- Clarify semantics of surrounding re-beginning a process instance within the same scope as it was ended
 
 ## [0.6.3] - 2020-01-14
 
@@ -103,6 +110,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [0.6.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.6.1
 [0.6.2]: https://github.com/dogmatiq/dogma/releases/tag/v0.6.2
 [0.6.3]: https://github.com/dogmatiq/dogma/releases/tag/v0.6.3
+[1.0.0-rc.0]: https://github.com/dogmatiq/dogma/releases/tag/v1.0.0-rc.0
 
 <!-- version template
 ## [0.0.1] - YYYY-MM-DD
