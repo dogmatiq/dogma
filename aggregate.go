@@ -82,8 +82,11 @@ type AggregateRoot interface {
 	// this instance, even if that event type is no longer configured for
 	// production by a prior call to Configure().
 	//
+	// The implementation MUST accept the event types as described above, though
+	// any such call MAY be a no-op.
+	//
 	// The implementation MUST panic with the UnexpectedMessage value if called
-	// with any other event type. Any given call MAY be a no-op.
+	// with any event type other than those described above.
 	ApplyEvent(m Message)
 }
 
