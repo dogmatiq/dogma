@@ -54,8 +54,8 @@ type ProcessMessageHandler interface {
 	//
 	// The engine MUST NOT call RouteEventToInstance() with any message of a
 	// type that has not been configured for consumption by a prior call to
-	// Configure(). If any such message is passed, the implementation MUST panic
-	// with the UnexpectedMessage value.
+	// Configure(). If any such message is passed, the implementation SHOULD
+	// panic with the UnexpectedMessage value.
 	RouteEventToInstance(ctx context.Context, m Message) (id string, ok bool, err error)
 
 	// HandleEvent handles an event message.
@@ -74,7 +74,7 @@ type ProcessMessageHandler interface {
 	//
 	// The engine MUST NOT call HandleEvent() with any message of a type that
 	// has not been configured for consumption by a prior call to Configure().
-	// If any such message is passed, the implementation MUST panic with the
+	// If any such message is passed, the implementation SHOULD panic with the
 	// UnexpectedMessage value.
 	//
 	// The engine MAY provide guarantees about the order in which event messages
@@ -98,7 +98,7 @@ type ProcessMessageHandler interface {
 	//
 	// The engine MUST NOT call HandleTimeout() with any message that was not
 	// scheduled by this handler. If any such message is passed, the
-	// implementation MUST panic with the UnexpectedMessage value.
+	// implementation SHOULD panic with the UnexpectedMessage value.
 	//
 	// The engine SHOULD provide "at-least-once" delivery guarantees to the
 	// handler. That is, the engine should call HandleTimeout() with the same

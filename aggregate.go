@@ -43,8 +43,8 @@ type AggregateMessageHandler interface {
 	//
 	// The engine MUST NOT call RouteCommandToInstance() with any message of a
 	// type that has not been configured for consumption by a prior call to
-	// Configure(). If any such message is passed, the implementation MUST panic
-	// with the UnexpectedMessage value.
+	// Configure(). If any such message is passed, the implementation SHOULD
+	// panic with the UnexpectedMessage value.
 	RouteCommandToInstance(m Message) string
 
 	// HandleCommand handles a command message.
@@ -63,13 +63,14 @@ type AggregateMessageHandler interface {
 	//
 	// The engine MUST NOT call HandleCommand() with any message of a type that
 	// has not been configured for consumption by a prior call to Configure().
-	// If any such message is passed, the implementation MUST panic with the
+	// If any such message is passed, the implementation SHOULD panic with the
 	// UnexpectedMessage value.
 	//
 	// The implementation MUST NOT assume that HandleCommand() will be called
 	// with commands in the same order that they were executed.
 	//
-	// The engine MAY call HandleCommand() from multiple goroutines concurrently.
+	// The engine MAY call HandleCommand() from multiple goroutines
+	// concurrently.
 	HandleCommand(s AggregateCommandScope, m Message)
 }
 
@@ -87,8 +88,8 @@ type AggregateRoot interface {
 	// The implementation MUST accept the event types as described above, though
 	// any such call MAY be a no-op.
 	//
-	// The implementation MUST panic with the UnexpectedMessage value if called
-	// with any event type other than those described above.
+	// The implementation SHOULD panic with the UnexpectedMessage value if
+	// called with any event type other than those described above.
 	ApplyEvent(m Message)
 }
 
