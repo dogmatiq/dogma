@@ -35,13 +35,14 @@ type IntegrationMessageHandler interface {
 	//
 	// The engine MUST NOT call HandleCommand() with any message of a type that
 	// has not been configured for consumption by a prior call to Configure().
-	// If any such message is passed, the implementation MUST panic with the
+	// If any such message is passed, the implementation SHOULD panic with the
 	// UnexpectedMessage value.
 	//
 	// The implementation MUST NOT assume that HandleCommand() will be called
 	// with commands in the same order that they were executed.
 	//
-	// The engine MAY call HandleCommand() from multiple goroutines concurrently.
+	// The engine MAY call HandleCommand() from multiple goroutines
+	// concurrently.
 	HandleCommand(ctx context.Context, s IntegrationCommandScope, m Message) error
 
 	// TimeoutHint returns a duration that is suitable for computing a deadline
