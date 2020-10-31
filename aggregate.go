@@ -43,7 +43,7 @@ type AggregateMessageHandler interface {
 	//
 	// The engine MUST NOT call RouteCommandToInstance() with any message of a
 	// type that has not been configured for consumption by a prior call to
-	// Configure(). If any such message is passed, the implementation SHOULD
+	// Configure(). If any such message is passed, the implementation MUST
 	// panic with the UnexpectedMessage value.
 	RouteCommandToInstance(m Message) string
 
