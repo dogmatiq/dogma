@@ -60,7 +60,7 @@ type AggregateMessageHandler interface {
 	//
 	// The engine MUST NOT call HandleCommand() with any message of a type that
 	// has not been configured for consumption by a prior call to Configure().
-	// If any such message is passed, the implementation SHOULD panic with the
+	// If any such message is passed, the implementation MUST panic with the
 	// UnexpectedMessage value.
 	//
 	// The implementation MUST NOT assume that HandleCommand() will be called
