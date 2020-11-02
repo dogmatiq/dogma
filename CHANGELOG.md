@@ -9,6 +9,18 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [Unreleased]
+
+### Changed
+
+- `AggregateCommandScope.Root()` can now be called for non-existent aggregate instances
+- `AggregateCommandScope.Destroy()` is now a no-op for non-existent aggregate instances
+
+### Removed
+
+- **[BC]** Remove `AggregateCommandScope.Create()`
+- **[BC]** Remove `AggregateCommandScope.Exists()`
+
 ## [0.7.0] - 2020-11-03
 
 ### Added
