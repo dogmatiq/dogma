@@ -42,9 +42,6 @@ func (h *ProcessMessageHandler) New() dogma.ProcessRoot {
 // Configure configures the behavior of the engine as it relates to this
 // handler.
 //
-// c provides access to the various configuration options, such as specifying
-// which types of event messages are routed to this handler.
-//
 // If h.ConfigureFunc is non-nil, it calls h.ConfigureFunc(c).
 func (h *ProcessMessageHandler) Configure(c dogma.ProcessConfigurer) {
 	if h.ConfigureFunc != nil {
@@ -54,11 +51,6 @@ func (h *ProcessMessageHandler) Configure(c dogma.ProcessConfigurer) {
 
 // RouteEventToInstance returns the ID of the process instance that is targetted
 // by m.
-//
-// It panics with the UnexpectedMessage value if m is not one of the event types
-// that is routed to this handler via Configure().
-//
-// If ok is false, the message is not routed to this handler at all.
 //
 // If h.RouteEventToInstance is non-nil it returns h.RouteEventToInstance(ctx,
 // m), otherwise it panics.
@@ -74,18 +66,6 @@ func (h *ProcessMessageHandler) RouteEventToInstance(
 }
 
 // HandleEvent handles an event message that has been routed to this handler.
-//
-// Handling an event message involves inspecting the state of the target process
-// instance to determine what command messages, if any, should be produced.
-//
-// s provides access to the operations available within the scope of handling m,
-// such as beginning or ending the targeted instance, accessing its state,
-// sending command messages or scheduling timeouts.
-//
-// This method may manipulate the process's state directly.
-//
-// It panics with the UnexpectedMessage value if m is not one of the event types
-// that is routed to this handler via Configure().
 //
 // If h.HandleEventFunc is non-nil it returns h.HandleEventFunc(ctx, s, m),
 // otherwise it returns nil.
@@ -103,18 +83,6 @@ func (h *ProcessMessageHandler) HandleEvent(
 
 // HandleTimeout handles a timeout message that has been scheduled with
 // ProcessScope.ScheduleTimeout().
-//
-// Timeouts can be used to model time within the domain. For example, an
-// application might use a timeout to mark an invoice as overdue after some
-// period of non-payment.
-//
-// Handling a timeout is much like handling an event in that much the same
-// operations are available to the handler via s.
-//
-// This method may manipulate the process's state directly.
-//
-// If m was not expected by the handler the implementation must panic with an
-// UnexpectedMessage value.
 //
 // If h.HandleTimeoutFunc is non-nil it returns h.HandleTimeoutFunc(ctx, s, m),
 // otherwise it returns nil.

@@ -22,9 +22,6 @@ var _ dogma.ProjectionMessageHandler = &ProjectionMessageHandler{}
 // Configure configures the behavior of the engine as it relates to this
 // handler.
 //
-// c provides access to the various configuration options, such as specifying
-// which types of event messages are routed to this handler.
-//
 // If h.ConfigureFunc is non-nil, it calls h.ConfigureFunc(c).
 func (h *ProjectionMessageHandler) Configure(c dogma.ProjectionConfigurer) {
 	if h.ConfigureFunc != nil {
@@ -34,14 +31,6 @@ func (h *ProjectionMessageHandler) Configure(c dogma.ProjectionConfigurer) {
 
 // HandleEvent handles a domain event message that has been routed to this
 // handler.
-//
-// s provides access to the operations available within the scope of handling m.
-//
-// r is an engine-defined OCC resource. c and n are the current and next
-// versions of that resource, respectively.
-//
-// It panics with the UnexpectedMessage value if m is not one of the event types
-// that is routed to this handler via Configure().
 //
 // If h.HandleEventFunc is non-nil it returns h.HandleEventFunc(ctx, r, c, n, s, m),
 // otherwise it returns (nil, nil).
