@@ -25,7 +25,7 @@ before calling `Root()`. This means that the state of the aggregate root itself
 can not be used to determine which events should be recorded without first
 creating the instance. A less obvious problem is that when the domain logic is
 such that `RecordEvent()` is not called within the same scope as a call to
-create `Create()` the engine must panic.
+`Create()` the engine must panic.
 
 The net result of this is that the handler becomes equally concerned with the
 notion of whether the instance exists or not than it is with the actual business
