@@ -6,8 +6,6 @@ Date: 2020-10-19
 
 Accepted
 
-- Amended By [15. Routing Unrecognized Messages](0015-routing-unrecognized-messages.md)
-
 ## Context
 
 Event sourcing engines need to call `AggregateRoot.ApplyEvent()` with
