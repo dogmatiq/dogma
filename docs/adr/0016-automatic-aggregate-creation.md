@@ -65,6 +65,9 @@ constructing the in-memory root value.
   `Create()` should simplify the dispatching logic sufficiently such that no
   extra logic is required to produce the panic.
 
+In essence, the aggregate instance is "automatically created" the first time an
+event is recorded.
+
 ## Consequences
 
 Largely, this should simplify implementations of both `AggregateMessageHandler`
