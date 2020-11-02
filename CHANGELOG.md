@@ -15,11 +15,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - `AggregateCommandScope.Root()` can now be called for non-existent aggregate instances
 - `AggregateCommandScope.Destroy()` is now a no-op for non-existent aggregate instances
+- `AggregateRoot.ApplyEvent()` no longer has a hard requirement to panic with `UnexpectedMessage`
 
 ### Removed
 
 - **[BC]** Remove `AggregateCommandScope.Create()`
 - **[BC]** Remove `AggregateCommandScope.Exists()`
+- **[BC]** Remove `StatelessAggregateRoot` and `StatelessAggregateBehavior`
 
 ## [0.7.0] - 2020-11-03
 
