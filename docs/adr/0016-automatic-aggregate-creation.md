@@ -44,7 +44,7 @@ application code is using the scope correctly, even though the engine does not
 really benefit from this requirements.
 
 For example, event sourced engine implementations tend to call
-`AggregateMessageHandler.New()` to construct a new instance before apply
+`AggregateMessageHandler.New()` to construct a new instance before applying
 historical events via `ApplyEvent()`. This means that the root instance is
 constructed in memory before `HandleCommand()` is even invoked. The requirement
 that `Root()` panic if the instance does not exist does not save the engine from
