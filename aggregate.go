@@ -4,19 +4,16 @@ package dogma
 // used by the engine to cause changes to an aggregate instance via command
 // messages.
 //
-// Many instances of each aggregate type can be created. Each instance is a
-// collection of objects that represent some domain state within the
-// application. All manipulation of an aggregate instance is performed via one
-// of its constituent objects, known as the "root", and represented by the
-// AggregateRoot interface.
+// Each aggregate type can have many "instances". Each instance is a collection
+// of objects that represent some domain state within the application. All
+// manipulation of an aggregate instance is performed via one of its constituent
+// objects, known as the "root", and represented by the AggregateRoot interface.
 //
 // A request to change the state of an aggregate instance is represented by a
 // command message. The changes caused by the command message, if any, are
 // represented by event messages.
 //
 // Each command message targets a single aggregate instance of a specific type.
-// A command message can cause the creation or destruction of its target
-// instance.
 type AggregateMessageHandler interface {
 	// New constructs a new aggregate instance initialized with any
 	// default values and returns the aggregate root.
@@ -63,7 +60,7 @@ type AggregateMessageHandler interface {
 	//
 	// The engine MUST NOT call HandleCommand() with any message of a type that
 	// has not been configured for consumption by a prior call to Configure().
-	// If any such message is passed, the implementation SHOULD panic with the
+	// If any such message is passed, the implementation MUST panic with the
 	// UnexpectedMessage value.
 	//
 	// The implementation MUST NOT assume that HandleCommand() will be called
@@ -164,50 +161,7 @@ type AggregateCommandScope interface {
 	// InstanceID returns the ID of the targeted aggregate instance.
 	InstanceID() string
 
-	// Exists returns true if the aggregate instance exists.
-	//
-	// It returns true if Create() has been called and Destroy() has not yet
-	// been called in this scope or the scope of any previous message that
-	// targetted the same instance.
-	Exists() bool
-
-	// Create creates the targeted instance.
-	//
-	// It MUST be called before Root() or RecordEvent() can be called within
-	// this scope or the scope of any future message that targets the same
-	// instance.
-	//
-	// It returns true if the targeted instance was created, or false if the
-	// instance already exists.
-	//
-	// If it returns true, RecordEvent() MUST be called at least once within the
-	// same scope. This guarantees that the creation of every instance is
-	// represented by an application-defined event.
-	//
-	// It MUST NOT be called within the same scope as a prior call to Destroy().
-	Create() bool
-
-	// Destroy destroys the targeted instance.
-	//
-	// After it has been called, Root() and RecordEvent() MUST NOT be called
-	// within this scope or the scope of any future message that targets the
-	// same instance, unless Create() is called again first.
-	//
-	// It MUST NOT be called if the instance does not currently exist.
-	//
-	// RecordEvent() MUST be called at least once within the same scope. This
-	// guarantees that the destruction of every instance is represented by an
-	// application-defined event.
-	//
-	// It MAY be called within the same scope as a prior call to Create().
-	//
-	// The precise semantics of destroy are implementation defined. The
-	// aggregate data MAY be deleted or archived, for example.
-	Destroy()
-
 	// Root returns the root of the targeted aggregate instance.
-	//
-	// It MUST NOT be called if the instance does not currently exist.
 	Root() AggregateRoot
 
 	// RecordEvent records the occurrence of an event as a result of the command
@@ -216,46 +170,24 @@ type AggregateCommandScope interface {
 	// It MUST NOT be called with a message of any type that has not been
 	// configured for production by a prior call to Configure().
 	//
-	// It MUST NOT be called if the instance does not currently exist.
-	//
 	// The engine MUST call Root().ApplyEvent(m) before returning, such that the
 	// applied changes are visible to the handler.
 	RecordEvent(m Message)
 
+	// Destroy "forgets" the state of the targetted aggregate instance.
+	//
+	// Root() will return a newly initialized aggregate instance for the next
+	// command message that targets this instance.
+	//
+	// RecordEvent() MUST be called at least once within the same scope. This
+	// guarantees that the destruction of every instance is represented by an
+	// application-defined event.
+	//
+	// The precise semantics of destroy are implementation defined. The
+	// aggregate data MAY be deleted or archived, for example.
+	Destroy()
+
 	// Log records an informational message within the context of the message
 	// that is being handled.
 	Log(f string, v ...interface{})
-}
-
-// StatelessAggregateBehavior can be embedded in AggregateMessageHandler
-// implementations to indicate that no state is kept between messages.
-//
-// It provides an implementation of AggregateMessageHandler.New() that always
-// returns a StatelessAggregateRoot.
-type StatelessAggregateBehavior struct{}
-
-// New returns StatelessAggregateRoot.
-func (StatelessAggregateBehavior) New() AggregateRoot {
-	return StatelessAggregateRoot
-}
-
-// StatelessAggregateRoot is an aggregate root with no state.
-//
-// It can be returned by an AggregateMessageHandler.New() implementation to
-// indicate that no domain state is required beyond the existence/non-existence
-// of the aggregate instance.
-//
-// See also StatelessAggregateBehavior, which provides an implementation of
-// New() that returns this value.
-//
-// Engines may use this value as a sentinel, to provide an optimized code path
-// when no state is required.
-var StatelessAggregateRoot AggregateRoot = statelessAggregateRoot{}
-
-type statelessAggregateRoot struct{}
-
-func (statelessAggregateRoot) ApplyEvent(m Message) {
-	if m == nil {
-		panic("event must not be nil")
-	}
 }

@@ -6,6 +6,8 @@ Date: 2018-12-10
 
 Approved
 
+- Amended by [16. Automatic Aggregate Creation](0016-automatic-aggregate-creation.md)
+
 ## Context
 
 We need a way to control the lifetime of an aggregate from the domain layer.
@@ -54,7 +56,7 @@ have to lose those event arguments, breaking backwards compatibilty.
 
 ## Consequences
 
-The appraoch taken tends towards reducing the chance of BC breaks by giving
+The approach taken tends towards reducing the chance of BC breaks by giving
 each method a single responsibility and placing the onus on the domain
 implementor to combine their use correctly.
 

@@ -25,3 +25,4 @@ the ADR documents.
 * [13. Aggregate and Process Instance Existance Checks](0013-instance-exists-check.md)
 * [14. Applying Historical Events to Aggregate Instances](0014-apply-historical-events-to-aggregates.md)
 * [15. Routing Unrecognized Messages](0015-routing-unrecognized-messages.md)
+* [16. Automatic Aggregate Creation](0016-automatic-aggregate-creation.md)
