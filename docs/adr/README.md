@@ -26,3 +26,4 @@ the ADR documents.
 * [14. Applying Historical Events to Aggregate Instances](0014-apply-historical-events-to-aggregates.md)
 * [15. Routing Unrecognized Messages](0015-routing-unrecognized-messages.md)
 * [16. Automatic Aggregate Creation](0016-automatic-aggregate-creation.md)
+* [17. Recreation of Aggregate Instances After Destruction](0017-recreate-aggregate-after-destruction.md)

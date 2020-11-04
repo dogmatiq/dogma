@@ -174,17 +174,17 @@ type AggregateCommandScope interface {
 	// applied changes are visible to the handler.
 	RecordEvent(m Message)
 
-	// Destroy "forgets" the state of the targetted aggregate instance.
+	// Destroy indicates to the engine that the state of the aggregate root for
+	// the targetted instance is no longer meaningful.
 	//
-	// Root() will return a newly initialized aggregate instance for the next
-	// command message that targets this instance.
+	// A call to Destroy() is negated by a subsequent call to RecordEvent()
+	// within the same scope.
 	//
-	// RecordEvent() MUST be called at least once within the same scope. This
-	// guarantees that the destruction of every instance is represented by an
-	// application-defined event.
+	// Within scopes of future command messages that target this instance,
+	// Root() returns a newly initialized aggregate instance.
 	//
-	// The precise semantics of destroy are implementation defined. The
-	// aggregate data MAY be deleted or archived, for example.
+	// The precise semantics are implementation defined. The aggregate data MAY
+	// be deleted or archived, for example.
 	Destroy()
 
 	// Log records an informational message within the context of the message
