@@ -34,7 +34,7 @@ Calling `RecordEvent()` *after* `Destroy()` event should "negate" the call to
 The complex interplay between `RecordEvent()` and `Destroy()` is removed,
 allowing each to be understood and used in isolation.
 
-Changes to existing ingine implementations should be minimal, as they already
+Changes to existing engine implementations should be minimal, as they already
 handle destruction by setting an in-memory flag that is checked after
 `HandleCommand()` is invoked. Likely they can be changed to simply unset that
 flag in `RecordEvent()`.
