@@ -7,6 +7,7 @@ Date: 2018-12-10
 Approved
 
 - Amended by [16. Automatic Aggregate Creation](0016-automatic-aggregate-creation.md)
+- Amended by [17. Recreation of Aggregate Instances After Destruction](0017-recreate-aggregate-after-destruction.md)
 
 ## Context
 
