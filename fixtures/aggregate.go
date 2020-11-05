@@ -30,7 +30,7 @@ type AggregateMessageHandler struct {
 	NewFunc                    func() dogma.AggregateRoot
 	ConfigureFunc              func(dogma.AggregateConfigurer)
 	RouteCommandToInstanceFunc func(dogma.Message) string
-	HandleCommandFunc          func(dogma.AggregateCommandScope, dogma.Message)
+	HandleCommandFunc          func(dogma.AggregateRoot, dogma.AggregateCommandScope, dogma.Message)
 }
 
 var _ dogma.AggregateMessageHandler = &AggregateMessageHandler{}
@@ -73,9 +73,13 @@ func (h *AggregateMessageHandler) RouteCommandToInstance(m dogma.Message) string
 // HandleCommand handles a domain command message that has been routed to this
 // handler.
 //
-// If h.HandleCommandFunc is non-nil it calls h.HandleCommandFunc(s, m).
-func (h *AggregateMessageHandler) HandleCommand(s dogma.AggregateCommandScope, m dogma.Message) {
+// If h.HandleCommandFunc is non-nil it calls h.HandleCommandFunc(r, s, m).
+func (h *AggregateMessageHandler) HandleCommand(
+	r dogma.AggregateRoot,
+	s dogma.AggregateCommandScope,
+	m dogma.Message,
+) {
 	if h.HandleCommandFunc != nil {
-		h.HandleCommandFunc(s, m)
+		h.HandleCommandFunc(r, s, m)
 	}
 }
