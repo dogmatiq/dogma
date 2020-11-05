@@ -4,8 +4,8 @@ import "github.com/dogmatiq/dogma"
 
 // AggregateRoot is a test implementation of dogma.AggregateRoot.
 type AggregateRoot struct {
-	Value          interface{}
-	ApplyEventFunc func(dogma.Message, interface{}) `json:"-"`
+	AppliedEvents  []dogma.Message
+	ApplyEventFunc func(dogma.Message) `json:"-"`
 }
 
 var _ dogma.AggregateRoot = &AggregateRoot{}
@@ -13,10 +13,14 @@ var _ dogma.AggregateRoot = &AggregateRoot{}
 // ApplyEvent updates the aggregate instance to reflect the fact that a
 // particular domain event has occurred.
 //
+// It appends m to v.AppliedEvents.
+//
 // If v.ApplyEventFunc is non-nil, it calls v.ApplyEventFunc(m, v.Value).
 func (v *AggregateRoot) ApplyEvent(m dogma.Message) {
+	v.AppliedEvents = append(v.AppliedEvents, m)
+
 	if v.ApplyEventFunc != nil {
-		v.ApplyEventFunc(m, v.Value)
+		v.ApplyEventFunc(m)
 	}
 }
 

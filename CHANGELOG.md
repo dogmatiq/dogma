@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Changed
 
+- **[BC]** `fixtures.AggregateRoot` now stores all its historical events internally
 - `AggregateCommandScope.Destroy()` no longer requires a prior call to `RecordEvent()`
 - `AggregateCommandScope.RecordEvent()` can now be called after `Destroy()`
 
