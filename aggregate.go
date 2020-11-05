@@ -51,7 +51,7 @@ type AggregateMessageHandler interface {
 	// if any, should occur. Each change is indicated by recording an event
 	// message.
 	//
-	// The engine MUST provide an AggregateRoot, r, equivalent in value to the
+	// The engine MUST provide an AggregateRoot, r, equivalent in value to
 	// calling New(), then calling r.ApplyEvent() for each event message that
 	// has been recorded against the targetted instance since the last time the
 	// instance was destroyed via s.Destroy().
