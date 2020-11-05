@@ -13,9 +13,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Changed
 
+- **[BC]** `AggregateMessageHandler.HandleCommand()` now takes an `AggregateRoot` parameter
 - **[BC]** `fixtures.AggregateRoot` now stores all its historical events internally
 - `AggregateCommandScope.Destroy()` no longer requires a prior call to `RecordEvent()`
 - `AggregateCommandScope.RecordEvent()` can now be called after `Destroy()`
+
+### Removed
+
+- **[BC]** Remove `AggregateCommandScope.Root()`
 
 ## [0.8.0] - 2020-11-03
 

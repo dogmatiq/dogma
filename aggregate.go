@@ -47,12 +47,19 @@ type AggregateMessageHandler interface {
 	// HandleCommand handles a command message.
 	//
 	// Handling a command message involves inspecting the state of the target
-	// aggregate instance to determine what changes, if any, should occur. Each
-	// change is indicated by recording an event message.
+	// aggregate instance (via the aggregate root, r) to determine what changes,
+	// if any, should occur. Each change is indicated by recording an event
+	// message.
 	//
-	// The targeted instance MUST NOT be modified directly. All modifications
-	// must be applied by the instance's ApplyEvent() method, which is called
-	// for each event message that is recorded via s.
+	// The engine MUST provide an AggregateRoot, r, equivalent in value to the
+	// calling New(), then calling r.ApplyEvent() for each event message that
+	// has been recorded against the targetted instance since the last time the
+	// instance was destroyed via s.Destroy().
+	//
+	// The implementation MUST NOT modify the state of r directly. All
+	// modifications must be applied by the implementation of r.ApplyEvent(),
+	// which the engine calls for each event message that is recorded via
+	// s.RecordEvent().
 	//
 	// The engine SHOULD provide "at-least-once" delivery guarantees to the
 	// handler. That is, the engine should call HandleCommand() with the same
@@ -68,7 +75,7 @@ type AggregateMessageHandler interface {
 	//
 	// The engine MAY call HandleCommand() from multiple goroutines
 	// concurrently.
-	HandleCommand(s AggregateCommandScope, m Message)
+	HandleCommand(r AggregateRoot, s AggregateCommandScope, m Message)
 }
 
 // AggregateRoot is an interface implemented by the application and used by
@@ -161,17 +168,15 @@ type AggregateCommandScope interface {
 	// InstanceID returns the ID of the targeted aggregate instance.
 	InstanceID() string
 
-	// Root returns the root of the targeted aggregate instance.
-	Root() AggregateRoot
-
 	// RecordEvent records the occurrence of an event as a result of the command
 	// message that is being handled.
 	//
 	// It MUST NOT be called with a message of any type that has not been
 	// configured for production by a prior call to Configure().
 	//
-	// The engine MUST call Root().ApplyEvent(m) before returning, such that the
-	// applied changes are visible to the handler.
+	// The engine MUST call ApplyEvent(m) on the aggregate root that was passed
+	// to HandleCommand(), such that the applied changes are visible to the
+	// handler after RecordEvent() returns.
 	RecordEvent(m Message)
 
 	// Destroy indicates to the engine that the state of the aggregate root for
@@ -180,8 +185,8 @@ type AggregateCommandScope interface {
 	// A call to Destroy() is negated by a subsequent call to RecordEvent()
 	// within the same scope.
 	//
-	// Within scopes of future command messages that target this instance,
-	// Root() returns a newly initialized aggregate instance.
+	// The engine MUST pass a newly initialized aggregate root to the handler
+	// when the next command message is handled.
 	//
 	// The precise semantics are implementation defined. The aggregate data MAY
 	// be deleted or archived, for example.
