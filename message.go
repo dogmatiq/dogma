@@ -48,15 +48,14 @@ type DescribableMessage interface {
 // Engine implementations SHOULD use the message description in logging and
 // other tracing systems to provide contextual information to developers.
 func DescribeMessage(m Message) string {
-	if s, ok := m.(DescribableMessage); ok {
-		return s.MessageDescription()
+	switch m := m.(type) {
+	case DescribableMessage:
+		return m.MessageDescription()
+	case fmt.Stringer:
+		return m.String()
+	default:
+		return fmt.Sprintf("%v", m)
 	}
-
-	if s, ok := m.(fmt.Stringer); ok {
-		return s.String()
-	}
-
-	return fmt.Sprintf("%v", m)
 }
 
 // UnexpectedMessage is a panic value used by a message handler when it receives
