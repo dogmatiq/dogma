@@ -12,7 +12,7 @@ Many projections produce data that is only required for a limited period of
 time.
 
 An application developer needs to consider how long projection data will be
-retained and ideally implement measures to remove any unecessary data.
+retained and ideally implement measures to remove any unnecessary data.
 
 Often such data can be removed when some future event occurs. However, in some
 cases there is no future event that appropriately indicates the data is no
