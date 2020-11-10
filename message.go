@@ -1,6 +1,9 @@
 package dogma
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // A Message is an application-defined unit of data that encapsulates a
 // "command" or "event" within a message-based application.
@@ -17,6 +20,9 @@ import "fmt"
 //
 // Message implementations SHOULD implement fmt.Stringer or DescribableMessage
 // in order to provide a human-readable description of every message.
+//
+// Message implementations SHOULD implement ValidatableMessage in order to
+// allow the engine to validate messages before they enter the application.
 //
 // Engine implementations MAY place further requirements upon message
 // implementations.
@@ -55,6 +61,35 @@ func DescribeMessage(m Message) string {
 		return m.String()
 	default:
 		return fmt.Sprintf("%v", m)
+	}
+}
+
+// ValidatableMessage is a message that can validate itself.
+//
+// This interface can be implemented to perform fine-grained validation of
+// messages.
+//
+// Engine implementations SHOULD validate messages before allowing them to be
+// produced in order to prevent "poison" messages from entering the application.
+type ValidatableMessage interface {
+	Message
+
+	// Validate returns a non-nil error if the message is invalid.
+	Validate() error
+}
+
+// ValidateMessage returns an error if m implements ValidatableMessage and is
+// invalid.
+//
+// If m does not implement ValidatableMessage it returns nil.
+func ValidateMessage(m Message) error {
+	switch m := m.(type) {
+	case ValidatableMessage:
+		return m.Validate()
+	case nil:
+		return errors.New("message must not be nil")
+	default:
+		return nil
 	}
 }
 

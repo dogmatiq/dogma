@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	. "github.com/dogmatiq/dogma"
+	"github.com/dogmatiq/dogma/fixtures"
 )
 
 type describable struct{}
@@ -44,5 +45,34 @@ func TestDescribeMessage_default(t *testing.T) {
 	d := DescribeMessage(indescribable{100})
 	if d != "{100}" {
 		t.Fatal("unexpected message description")
+	}
+}
+
+func TestValidateMessage_validatable(t *testing.T) {
+	err := ValidateMessage(fixtures.InvalidMessage{})
+	if err == nil {
+		t.Fatal("expected an error to occur")
+	}
+
+	if err.Error() != "<invalid>" {
+		t.Fatalf("unexpected error message: %s", err.Error())
+	}
+}
+
+func TestValidateMessage_nil(t *testing.T) {
+	err := ValidateMessage(nil)
+	if err == nil {
+		t.Fatal("expected an error to occur")
+	}
+
+	if err.Error() != "message must not be nil" {
+		t.Fatalf("unexpected error message: %s", err.Error())
+	}
+}
+
+func TestValidateMessage_default(t *testing.T) {
+	err := ValidateMessage(struct{}{})
+	if err != nil {
+		t.Fatal("unexpected error")
 	}
 }

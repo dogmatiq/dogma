@@ -1,5 +1,16 @@
 package fixtures
 
+import "errors"
+
+// InvalidMessage is a dogma.ValidatableMessage that is always considered
+// invalid.
+type InvalidMessage struct{}
+
+// Validate always returns an error.
+func (InvalidMessage) Validate() error {
+	return errors.New("<invalid>")
+}
+
 // MessageA is type used as a dogma.Message in tests.
 type MessageA struct {
 	Value interface{}
