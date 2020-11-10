@@ -121,7 +121,7 @@ type ProjectionMessageHandler interface {
 	// projection's data by whatever means available. For example, it may delete
 	// any unused data, or collapse multiple data sets into one.
 	//
-	// The context MAY have deadline. The implementation SHOULD attempt to
+	// The context MAY have a deadline. The implementation SHOULD attempt to
 	// compact data in discrete units, such that if the deadline is reached a
 	// future call to Compact() does not need to compact the same data.
 	//
