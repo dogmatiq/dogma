@@ -121,14 +121,13 @@ type ProjectionMessageHandler interface {
 	// projection's data by whatever means available. For example, it may delete
 	// any unused data, or collapse multiple data sets into one.
 	//
+	// The context MAY have deadline. The implementation SHOULD attempt to
+	// compact data in discrete units, such that if the deadline is reached a
+	// future call to Compact() does not need to compact the same data.
+	//
 	// The engine SHOULD call Compact() repeatedly throughout the lifetime of
 	// the projection. The precise scheduling of calls to Compact() are
 	// engine-defined. It MAY be called concurrently with any other method.
-	//
-	// The engine MAY, of course, use a context deadline. The implementation
-	// SHOULD attempt to compact data in discrete units, such that if the
-	// deadline is reached a future call to Compact() does not need to compact
-	// the same data.
 	Compact(ctx context.Context, s ProjectionCompactScope) error
 }
 
