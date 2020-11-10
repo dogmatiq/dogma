@@ -66,7 +66,8 @@ func DescribeMessage(m Message) string {
 
 // ValidatableMessage is a message that can validate itself.
 //
-// This interface can be implemented to fine-grained validation of messages.
+// This interface can be implemented to perform fine-grained validation of
+// messages.
 //
 // Engine implementations SHOULD validate messages before allowing them to be
 // produced in order to prevent "poison" messages from entering the application.
