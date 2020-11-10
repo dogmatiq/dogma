@@ -114,6 +114,22 @@ type ProjectionMessageHandler interface {
 	// a duration shorter than the hint is NOT RECOMMENDED, as this will likely
 	// lead to repeated message handling failures.
 	TimeoutHint(m Message) time.Duration
+
+	// Compact reduces the size of the projection's data.
+	//
+	// The implementation SHOULD attempt to decrease the size of the
+	// projection's data by whatever means available. For example, it may delete
+	// any unused data, or collapse multiple data sets into one.
+	//
+	// The engine SHOULD call Compact() repeatedly throughout the lifetime of
+	// the projection. The precise scheduling of calls to Compact() are
+	// engine-defined. It MAY be called concurrently with any other method.
+	//
+	// The engine MAY, of course, use a context deadline. The implementation
+	// SHOULD attempt to compact data in discrete units, such that if the
+	// deadline is reached a future call to Compact() does not need to compact
+	// the same data.
+	Compact(ctx context.Context, s ProjectionCompactScope) error
 }
 
 // ProjectionConfigurer is an interface implemented by the engine and used by
@@ -177,4 +193,25 @@ type ProjectionEventScope interface {
 	// Log records an informational message within the context of the message
 	// that is being handled.
 	Log(f string, v ...interface{})
+}
+
+// ProjectionCompactScope is an interface implemented by the engine and used by
+// the application to perform operations within the context of compacting the
+// projection's data.
+type ProjectionCompactScope interface {
+	// Log records an informational message within the context of the message
+	// that is being handled.
+	Log(f string, v ...interface{})
+}
+
+// NoCompactBehavior can be embedded in ProjectionMessageHandler implementations
+// to indicate that the projection does not require its data to be compacted.
+//
+// It provides an implementation of ProjectionMessageHandler.Compact() that
+// always returns a nil error.
+type NoCompactBehavior struct{}
+
+// Compact returns nil.
+func (NoCompactBehavior) Compact(ctx context.Context, s ProjectionCompactScope) error {
+	return nil
 }

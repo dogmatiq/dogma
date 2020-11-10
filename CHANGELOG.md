@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Added
 
+- **[BC]** Add `ProjectionMessageHandler.Compact()` and `NoCompactBehavior`
 - Add `ValidatableMessage` interface and `ValidateMessage()`
 
 ## [0.9.0] - 2020-11-06

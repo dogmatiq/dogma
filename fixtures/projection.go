@@ -14,7 +14,8 @@ type ProjectionMessageHandler struct {
 	HandleEventFunc     func(context.Context, []byte, []byte, []byte, dogma.ProjectionEventScope, dogma.Message) (bool, error)
 	ResourceVersionFunc func(context.Context, []byte) ([]byte, error)
 	CloseResourceFunc   func(context.Context, []byte) error
-	TimeoutHintFunc     func(m dogma.Message) time.Duration
+	TimeoutHintFunc     func(dogma.Message) time.Duration
+	CompactFunc         func(context.Context, dogma.ProjectionCompactScope) error
 }
 
 var _ dogma.ProjectionMessageHandler = &ProjectionMessageHandler{}
@@ -83,4 +84,16 @@ func (h *ProjectionMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
 	}
 
 	return 0
+}
+
+// Compact attempts to reduce the size of the projection's data.
+//
+// If h.CompactFunc is non-nil it returns h.CompactFunc(ctx, s), otherwise it
+// returns nil.
+func (h *ProjectionMessageHandler) Compact(ctx context.Context, s dogma.ProjectionCompactScope) error {
+	if h.CompactFunc != nil {
+		return h.CompactFunc(ctx, s)
+	}
+
+	return nil
 }
