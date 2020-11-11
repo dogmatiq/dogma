@@ -1,19 +1,14 @@
 package fixtures
 
-import "errors"
-
-// InvalidMessage is a dogma.ValidatableMessage that is always considered
-// invalid.
-type InvalidMessage struct{}
-
-// Validate always returns an error.
-func (InvalidMessage) Validate() error {
-	return errors.New("<invalid>")
-}
-
 // MessageA is type used as a dogma.Message in tests.
 type MessageA struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageA) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -30,6 +25,12 @@ type MessageB struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageB) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageB1 is an instance of MessageB with a distinct value.
 	MessageB1 = MessageB{"B1"}
@@ -42,6 +43,12 @@ var (
 // MessageC is type used as a dogma.Message in tests.
 type MessageC struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageC) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -58,6 +65,12 @@ type MessageD struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageD) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageD1 is an instance of MessageD with a distinct value.
 	MessageD1 = MessageD{"D1"}
@@ -70,6 +83,12 @@ var (
 // MessageE is type used as a dogma.Message in tests.
 type MessageE struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageE) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -86,6 +105,12 @@ type MessageF struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageF) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageF1 is an instance of MessageF with a distinct value.
 	MessageF1 = MessageF{"F1"}
@@ -98,6 +123,12 @@ var (
 // MessageG is type used as a dogma.Message in tests.
 type MessageG struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageG) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -114,6 +145,12 @@ type MessageH struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageH) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageH1 is an instance of MessageH with a distinct value.
 	MessageH1 = MessageH{"H1"}
@@ -126,6 +163,12 @@ var (
 // MessageI is type used as a dogma.Message in tests.
 type MessageI struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageI) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -142,6 +185,12 @@ type MessageJ struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageJ) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageJ1 is an instance of MessageJ with a distinct value.
 	MessageJ1 = MessageJ{"J1"}
@@ -154,6 +203,12 @@ var (
 // MessageK is type used as a dogma.Message in tests.
 type MessageK struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageK) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -170,6 +225,12 @@ type MessageL struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageL) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageL1 is an instance of MessageL with a distinct value.
 	MessageL1 = MessageL{"L1"}
@@ -182,6 +243,12 @@ var (
 // MessageM is type used as a dogma.Message in tests.
 type MessageM struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageM) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -198,6 +265,12 @@ type MessageN struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageN) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageN1 is an instance of MessageN with a distinct value.
 	MessageN1 = MessageN{"N1"}
@@ -210,6 +283,12 @@ var (
 // MessageO is type used as a dogma.Message in tests.
 type MessageO struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageO) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -226,6 +305,12 @@ type MessageP struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageP) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageP1 is an instance of MessageP with a distinct value.
 	MessageP1 = MessageP{"P1"}
@@ -238,6 +323,12 @@ var (
 // MessageQ is type used as a dogma.Message in tests.
 type MessageQ struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageQ) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -254,6 +345,12 @@ type MessageR struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageR) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageR1 is an instance of MessageR with a distinct value.
 	MessageR1 = MessageR{"R1"}
@@ -266,6 +363,12 @@ var (
 // MessageS is type used as a dogma.Message in tests.
 type MessageS struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageS) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -282,6 +385,12 @@ type MessageT struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageT) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageT1 is an instance of MessageT with a distinct value.
 	MessageT1 = MessageT{"T1"}
@@ -294,6 +403,12 @@ var (
 // MessageU is type used as a dogma.Message in tests.
 type MessageU struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageU) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -310,6 +425,12 @@ type MessageV struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageV) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageV1 is an instance of MessageV with a distinct value.
 	MessageV1 = MessageV{"V1"}
@@ -322,6 +443,12 @@ var (
 // MessageW is type used as a dogma.Message in tests.
 type MessageW struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageW) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (
@@ -338,6 +465,12 @@ type MessageX struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageX) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageX1 is an instance of MessageX with a distinct value.
 	MessageX1 = MessageX{"X1"}
@@ -352,6 +485,12 @@ type MessageY struct {
 	Value interface{}
 }
 
+// Validate returns m.Value if it is an error.
+func (m MessageY) Validate() error {
+	err, _ := m.Value.(error)
+	return err
+}
+
 var (
 	// MessageY1 is an instance of MessageY with a distinct value.
 	MessageY1 = MessageY{"Y1"}
@@ -364,6 +503,12 @@ var (
 // MessageZ is type used as a dogma.Message in tests.
 type MessageZ struct {
 	Value interface{}
+}
+
+// Validate returns m.Value if it is an error.
+func (m MessageZ) Validate() error {
+	err, _ := m.Value.(error)
+	return err
 }
 
 var (

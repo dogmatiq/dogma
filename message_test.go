@@ -1,6 +1,7 @@
 package dogma_test
 
 import (
+	"errors"
 	"testing"
 
 	. "github.com/dogmatiq/dogma"
@@ -49,13 +50,17 @@ func TestDescribeMessage_default(t *testing.T) {
 }
 
 func TestValidateMessage_validatable(t *testing.T) {
-	err := ValidateMessage(fixtures.InvalidMessage{})
+	expect := errors.New("<error>")
+
+	err := ValidateMessage(fixtures.MessageA{
+		Value: expect,
+	})
 	if err == nil {
 		t.Fatal("expected an error to occur")
 	}
 
-	if err.Error() != "<invalid>" {
-		t.Fatalf("unexpected error message: %s", err.Error())
+	if err != expect {
+		t.Fatalf("unexpected error: %s", err)
 	}
 }
 
@@ -66,7 +71,7 @@ func TestValidateMessage_nil(t *testing.T) {
 	}
 
 	if err.Error() != "message must not be nil" {
-		t.Fatalf("unexpected error message: %s", err.Error())
+		t.Fatalf("unexpected error message: %s", err)
 	}
 }
 
