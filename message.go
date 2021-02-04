@@ -40,6 +40,9 @@ type DescribableMessage interface {
 	Message
 
 	// MessageDescription returns a human-readable description of the message.
+	//
+	// This method SHOULD NOT be called directly. Instead, obtain the
+	// description using the DescribeMessage() function.
 	MessageDescription() string
 }
 
@@ -52,7 +55,8 @@ type DescribableMessage interface {
 // standard Go "%v" representation of the message.
 //
 // Engine implementations SHOULD use the message description in logging and
-// other tracing systems to provide contextual information to developers.
+// other tracing systems to provide contextual information to developers. The
+// description SHOULD NOT be used by application code.
 func DescribeMessage(m Message) string {
 	switch m := m.(type) {
 	case DescribableMessage:
