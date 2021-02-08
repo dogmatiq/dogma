@@ -201,6 +201,17 @@ type ProjectionCompactScope interface {
 	// Log records an informational message within the context of the message
 	// that is being handled.
 	Log(f string, v ...interface{})
+
+	// Now returns the current engine time.
+	//
+	// The handler SHOULD use the returned time to implement compaction logic
+	// that has some time-based component, such as removing data that is older
+	// than a certain age.
+	//
+	// Under normal operating conditions the engine SHOULD return the current
+	// local time, equivalent to time.Now(). The engine MAY return a different
+	// time under special circumstances, such as when executing tests.
+	Now() time.Time
 }
 
 // NoCompactBehavior can be embedded in ProjectionMessageHandler implementations
