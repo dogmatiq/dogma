@@ -15,12 +15,12 @@ rejecting ADRs via pull requests.
 
 We have decided to adopt a process that favours rapid changes, at least while
 the project is in its infancy. To this end, we will allow ADRs in the `proposed`
-status to be merged to `master` via PRs. The PRs may contain related code changes.
+status to be merged to `main` via PRs. The PRs may contain related code changes.
 
-Whenever a `proposed` ADR is merged to `master`, a GitHub issue is created to
+Whenever a `proposed` ADR is merged to `main`, a GitHub issue is created to
 capture discussion about the ADR. Such issues are given the `adr` label.
 
-Any `proposed` ADRs remaining on `master` must be resolved either by approving
+Any `proposed` ADRs remaining on `main` must be resolved either by approving
 the ADR, or by rejecting it and reverting any associated code changes.
 
 ## Consequences
