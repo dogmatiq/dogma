@@ -41,7 +41,7 @@ implement their domain logic in a clear and concise way.
 From the engine implementors perspective it seems that a non-trivial amount of
 validation logic needs to be implemented within the scope to verify that the
 application code is using the scope correctly, even though the engine does not
-really benefit from this requirements.
+really benefit from these requirements.
 
 For example, event sourced engine implementations tend to call
 `AggregateMessageHandler.New()` to construct a new instance before applying
@@ -78,7 +78,7 @@ Note that along with the removal of `StatelessAggregateRoot`, some aggregates
 implementations will require an additional type declaration for their root
 value.
 
-The removal of `Create()` does mean that engines longer get an explicit request
-to create an instance. However, since all state changes must be done by
+The removal of `Create()` does mean that engines no longer get an explicit
+request to create an instance. However, since all state changes must be done by
 recording event we expect this to be a fairly trivial change to existing engine
 implementations.
