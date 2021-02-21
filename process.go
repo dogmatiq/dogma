@@ -52,10 +52,13 @@ type ProcessMessageHandler interface {
 	// If ok is true, id MUST be a non-empty string. The use of UUIDs for
 	// instance identifiers is RECOMMENDED.
 	//
+	// A process instance is considered to begin the first time an event is
+	// routed to it.
+	//
 	// The engine MUST NOT call RouteEventToInstance() with any message of a
 	// type that has not been configured for consumption by a prior call to
-	// Configure(). If any such message is passed, the implementation MUST
-	// panic with the UnexpectedMessage value.
+	// Configure(). If any such message is passed, the implementation MUST panic
+	// with the UnexpectedMessage value.
 	RouteEventToInstance(ctx context.Context, m Message) (id string, ok bool, err error)
 
 	// HandleEvent handles an event message.
