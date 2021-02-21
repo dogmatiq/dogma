@@ -53,7 +53,7 @@ type AggregateMessageHandler interface {
 	//
 	// The engine MUST provide an AggregateRoot, r, equivalent in value to
 	// calling New(), then calling r.ApplyEvent() for each event message that
-	// has been recorded against the targetted instance since the last time the
+	// has been recorded against the targeted instance since the last time the
 	// instance was destroyed via s.Destroy().
 	//
 	// The implementation MUST NOT modify the state of r directly. All
@@ -180,7 +180,7 @@ type AggregateCommandScope interface {
 	RecordEvent(m Message)
 
 	// Destroy indicates to the engine that the state of the aggregate root for
-	// the targetted instance is no longer meaningful.
+	// the targeted instance is no longer meaningful.
 	//
 	// A call to Destroy() is negated by a subsequent call to RecordEvent()
 	// within the same scope.

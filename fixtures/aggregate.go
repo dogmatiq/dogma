@@ -58,7 +58,7 @@ func (h *AggregateMessageHandler) Configure(c dogma.AggregateConfigurer) {
 }
 
 // RouteCommandToInstance returns the ID of the aggregate instance that is
-// targetted by m.
+// targeted by m.
 //
 // If h.RouteCommandToInstanceFunc is non-nil it returns
 // h.RouteCommandToInstanceFunc(m), otherwise it panics.

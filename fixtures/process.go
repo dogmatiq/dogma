@@ -49,7 +49,7 @@ func (h *ProcessMessageHandler) Configure(c dogma.ProcessConfigurer) {
 	}
 }
 
-// RouteEventToInstance returns the ID of the process instance that is targetted
+// RouteEventToInstance returns the ID of the process instance that is targeted
 // by m.
 //
 // If h.RouteEventToInstance is non-nil it returns h.RouteEventToInstance(ctx,
