@@ -222,13 +222,14 @@ type ProcessEventScope interface {
 	// InstanceID returns the ID of the targeted process instance.
 	InstanceID() string
 
-	// End terminates the targeted process instance.
+	// End indicates to the engine that the process has ended, and therefore the
+	// state of the process root is no longer meaningful.
 	//
-	// After it has been called ExecuteCommand() and ScheduleTimeout() MUST NOT
-	// be called within this scope or the scope of any future message that
-	// targets the same instance.
+	// A call to Destroy() is negated by a subsequent call to ExecuteCommand()
+	// or ScheduleTimeout() within the same scope.
 	//
-	// It MUST NOT be called if the instance has not begun.
+	// The engine MUST pass a newly initialized process root to the handler when
+	// the next event message is handled.
 	//
 	// The engine MUST discard any timeout messages associated with this
 	// instance.
@@ -243,7 +244,7 @@ type ProcessEventScope interface {
 	// It MUST NOT be called with a message of any type that has not been
 	// configured for production by a prior call to Configure().
 	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
+	// Any prior call to End() within the same scope is negated.
 	ExecuteCommand(m Message)
 
 	// ScheduleTimeout schedules a timeout message to be handled by this process
@@ -251,7 +252,10 @@ type ProcessEventScope interface {
 	//
 	// Any pending timeout messages are cancelled when the instance is ended.
 	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
+	// It MUST NOT be called with a message of any type that has not been
+	// configured for production by a prior call to Configure().
+	//
+	// Any prior call to End() within the same scope is negated.
 	ScheduleTimeout(m Message, t time.Time)
 
 	// RecordedAt returns the time at which the event was recorded.
@@ -269,13 +273,14 @@ type ProcessTimeoutScope interface {
 	// InstanceID returns the ID of the targeted process instance.
 	InstanceID() string
 
-	// End terminates the targeted process instance.
+	// End indicates to the engine that the process has ended, and therefore the
+	// state of the process root is no longer meaningful.
 	//
-	// After it has been called ExecuteCommand() and ScheduleTimeout() MUST NOT
-	// be called within this scope or the scope of any future message that
-	// targets the same instance.
+	// A call to Destroy() is negated by a subsequent call to ExecuteCommand()
+	// or ScheduleTimeout() within the same scope.
 	//
-	// It MUST NOT be called if the instance has not begun.
+	// The engine MUST pass a newly initialized process root to the handler when
+	// the next event message is handled.
 	//
 	// The engine MUST discard any timeout messages associated with this
 	// instance.
@@ -290,7 +295,7 @@ type ProcessTimeoutScope interface {
 	// It MUST NOT be called with a message of any type that has not been
 	// configured for production by a prior call to Configure().
 	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
+	// Any prior call to End() within the same scope is negated.
 	ExecuteCommand(m Message)
 
 	// ScheduleTimeout schedules a timeout message to be handled by this process
@@ -298,7 +303,10 @@ type ProcessTimeoutScope interface {
 	//
 	// Any pending timeout messages are cancelled when the instance is ended.
 	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
+	// It MUST NOT be called with a message of any type that has not been
+	// configured for production by a prior call to Configure().
+	//
+	// Any prior call to End() within the same scope is negated.
 	ScheduleTimeout(m Message, t time.Time)
 
 	// ScheduledFor returns the time at which the timeout message was scheduled

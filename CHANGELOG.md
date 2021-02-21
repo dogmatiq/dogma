@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - **[BC]** `ProcessMessageHandler.HandleEvent()` now takes an `ProcessRoot` parameter
 - **[BC]** `ProcessMessageHandler.HandleTimeout()` now takes an `ProcessRoot` parameter
+- `Process[Event|Timeout]Scope.ExecuteCommand()` and `ScheduleTimeout()` can now be called after `End()`
 
 ### Removed
 
