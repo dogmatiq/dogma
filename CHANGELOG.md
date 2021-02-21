@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Removed
 
+- **[BC]** Remove `ProcessEventScope.Begin()`
 - **[BC]** Remove `ProcessEventScope.HasBegun()` and `ProcessTimeoutScope.HasBegun()`
 - **[BC]** Remove `StatelessProcessRoot` and `StatelessProcessBehavior`
 

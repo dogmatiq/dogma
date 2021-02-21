@@ -210,19 +210,6 @@ type ProcessEventScope interface {
 	// InstanceID returns the ID of the targeted process instance.
 	InstanceID() string
 
-	// Begin starts the targeted process instance.
-	//
-	// It MUST be called before Root(), ExecuteCommand() or ScheduleTimeout()
-	// can be called within this scope or the scope of any future message that
-	// targets the same instance.
-	//
-	// It returns true if the targeted instance was begun, or false if
-	// the instance had already begun.
-	//
-	// The engine MAY allow re-beginning a process instance that has ended.
-	// Callers SHOULD assume that such behavior is unavailable.
-	Begin() bool
-
 	// End terminates the targeted process instance.
 	//
 	// After it has been called Root(), ExecuteCommand() and ScheduleTimeout()
@@ -233,8 +220,6 @@ type ProcessEventScope interface {
 	//
 	// The engine MUST discard any timeout messages associated with this
 	// instance.
-	//
-	// It MAY be called within the same scope as a prior call to Begin().
 	//
 	// The engine MAY allow re-beginning a process instance that has ended.
 	// Callers SHOULD assume that such behavior is unavailable.
@@ -287,8 +272,6 @@ type ProcessTimeoutScope interface {
 	//
 	// The engine MUST discard any timeout messages associated with this
 	// instance.
-	//
-	// It MAY be called within the same scope as a prior call to Begin().
 	//
 	// The engine MAY allow re-beginning a process instance that has ended.
 	// Callers SHOULD assume that such behavior is unavailable.
