@@ -11,6 +11,11 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- **[BC]** `ProcessMessageHandler.HandleEvent()` now takes an `ProcessRoot` parameter
+- **[BC]** `ProcessMessageHandler.HandleTimeout()` now takes an `ProcessRoot` parameter
+
 ### Removed
 
 - **[BC]** Remove `ProcessEventScope.Begin()`

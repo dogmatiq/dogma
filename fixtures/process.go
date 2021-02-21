@@ -20,8 +20,8 @@ type ProcessMessageHandler struct {
 	NewFunc                  func() dogma.ProcessRoot
 	ConfigureFunc            func(dogma.ProcessConfigurer)
 	RouteEventToInstanceFunc func(context.Context, dogma.Message) (string, bool, error)
-	HandleEventFunc          func(context.Context, dogma.ProcessEventScope, dogma.Message) error
-	HandleTimeoutFunc        func(context.Context, dogma.ProcessTimeoutScope, dogma.Message) error
+	HandleEventFunc          func(context.Context, dogma.ProcessRoot, dogma.ProcessEventScope, dogma.Message) error
+	HandleTimeoutFunc        func(context.Context, dogma.ProcessRoot, dogma.ProcessTimeoutScope, dogma.Message) error
 	TimeoutHintFunc          func(m dogma.Message) time.Duration
 }
 
@@ -67,15 +67,16 @@ func (h *ProcessMessageHandler) RouteEventToInstance(
 
 // HandleEvent handles an event message that has been routed to this handler.
 //
-// If h.HandleEventFunc is non-nil it returns h.HandleEventFunc(ctx, s, m),
+// If h.HandleEventFunc is non-nil it returns h.HandleEventFunc(ctx, r, s, m),
 // otherwise it returns nil.
 func (h *ProcessMessageHandler) HandleEvent(
 	ctx context.Context,
+	r dogma.ProcessRoot,
 	s dogma.ProcessEventScope,
 	m dogma.Message,
 ) error {
 	if h.HandleEventFunc != nil {
-		return h.HandleEventFunc(ctx, s, m)
+		return h.HandleEventFunc(ctx, r, s, m)
 	}
 
 	return nil
@@ -84,15 +85,16 @@ func (h *ProcessMessageHandler) HandleEvent(
 // HandleTimeout handles a timeout message that has been scheduled with
 // ProcessScope.ScheduleTimeout().
 //
-// If h.HandleTimeoutFunc is non-nil it returns h.HandleTimeoutFunc(ctx, s, m),
+// If h.HandleTimeoutFunc is non-nil it returns h.HandleTimeoutFunc(ctx, r, s, m),
 // otherwise it returns nil.
 func (h *ProcessMessageHandler) HandleTimeout(
 	ctx context.Context,
+	r dogma.ProcessRoot,
 	s dogma.ProcessTimeoutScope,
 	m dogma.Message,
 ) error {
 	if h.HandleTimeoutFunc != nil {
-		return h.HandleTimeoutFunc(ctx, s, m)
+		return h.HandleTimeoutFunc(ctx, r, s, m)
 	}
 
 	return nil

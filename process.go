@@ -61,8 +61,16 @@ type ProcessMessageHandler interface {
 	// HandleEvent handles an event message.
 	//
 	// Handling an event message involves inspecting the state of the target
-	// process instance to determine what command messages, if any, should be
-	// produced.
+	// process instance (via the process root r) to determine what command
+	// messages, if any, should be produced.
+	//
+	// The engine MUST provide a ProcessRoot, r, the value of which is
+	// equivalent to the value of r as it existed after the last call to
+	// HandleEvent() or HandleTimeout() for the targeted instance.
+	//
+	// If this is the first event to target this instance (or the first event to
+	// do so since s.End() was last used to end the instance), r MUST be
+	// equivalent to the result of New().
 	//
 	// The engine SHOULD provide "at-least-once" delivery guarantees to the
 	// handler. That is, the engine should call HandleEvent() with the same
@@ -83,10 +91,14 @@ type ProcessMessageHandler interface {
 	// be called with events in the same order that they were recorded.
 	//
 	// The engine MAY call HandleEvent() from multiple goroutines concurrently.
-	HandleEvent(ctx context.Context, s ProcessEventScope, m Message) error
+	HandleEvent(ctx context.Context, r ProcessRoot, s ProcessEventScope, m Message) error
 
 	// HandleTimeout handles a timeout message that has been scheduled with
 	// ProcessScope.ScheduleTimeout().
+	//
+	// The engine MUST provide a ProcessRoot, r, the value of which is
+	// equivalent to the value of r as it existed after the last call to
+	// HandleEvent() or HandleTimeout() for the targeted instance.
 	//
 	// Timeouts can be used to model time within the business domain. For
 	// example, an application might use a timeout to mark an invoice as overdue
@@ -107,7 +119,7 @@ type ProcessMessageHandler interface {
 	// The engine MUST NOT call HandleTimeout() before the time at which the
 	// timeout message was scheduled. It SHOULD attempt to call HandleTimeout()
 	// as soon as the scheduled time is reached.
-	HandleTimeout(ctx context.Context, s ProcessTimeoutScope, m Message) error
+	HandleTimeout(ctx context.Context, r ProcessRoot, s ProcessTimeoutScope, m Message) error
 
 	// TimeoutHint returns a duration that is suitable for computing a deadline
 	// for the handling of the given message by this handler.
