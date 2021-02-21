@@ -212,9 +212,9 @@ type ProcessEventScope interface {
 
 	// End terminates the targeted process instance.
 	//
-	// After it has been called Root(), ExecuteCommand() and ScheduleTimeout()
-	// MUST NOT be called within this scope or the scope of any future message
-	// that targets the same instance.
+	// After it has been called ExecuteCommand() and ScheduleTimeout() MUST NOT
+	// be called within this scope or the scope of any future message that
+	// targets the same instance.
 	//
 	// It MUST NOT be called if the instance has not begun.
 	//
@@ -224,11 +224,6 @@ type ProcessEventScope interface {
 	// The engine MAY allow re-beginning a process instance that has ended.
 	// Callers SHOULD assume that such behavior is unavailable.
 	End()
-
-	// Root returns the root of the targeted process instance.
-	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
-	Root() ProcessRoot
 
 	// ExecuteCommand executes a command as a result of the event or timeout
 	// message being handled.
@@ -264,9 +259,9 @@ type ProcessTimeoutScope interface {
 
 	// End terminates the targeted process instance.
 	//
-	// After it has been called Root(), ExecuteCommand() and ScheduleTimeout()
-	// MUST NOT be called within this scope or the scope of any future message
-	// that targets the same instance.
+	// After it has been called ExecuteCommand() and ScheduleTimeout() MUST NOT
+	// be called within this scope or the scope of any future message that
+	// targets the same instance.
 	//
 	// It MUST NOT be called if the instance has not begun.
 	//
@@ -276,11 +271,6 @@ type ProcessTimeoutScope interface {
 	// The engine MAY allow re-beginning a process instance that has ended.
 	// Callers SHOULD assume that such behavior is unavailable.
 	End()
-
-	// Root returns the root of the targeted process instance.
-	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
-	Root() ProcessRoot
 
 	// ExecuteCommand executes a command as a result of the event or timeout
 	// message being handled.
