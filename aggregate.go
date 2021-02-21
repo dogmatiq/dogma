@@ -177,6 +177,8 @@ type AggregateCommandScope interface {
 	// The engine MUST call ApplyEvent(m) on the aggregate root that was passed
 	// to HandleCommand(), such that the applied changes are visible to the
 	// handler after RecordEvent() returns.
+	//
+	// Any prior call to Destroy() within the same scope is negated.
 	RecordEvent(m Message)
 
 	// Destroy indicates to the engine that the state of the aggregate root for
