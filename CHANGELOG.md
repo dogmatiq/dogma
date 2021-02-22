@@ -9,6 +9,20 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [Unreleased]
+
+### Changed
+
+- **[BC]** `ProcessMessageHandler.HandleEvent()` now takes an `ProcessRoot` parameter
+- **[BC]** `ProcessMessageHandler.HandleTimeout()` now takes an `ProcessRoot` parameter
+- `Process[Event|Timeout]Scope.ExecuteCommand()` and `ScheduleTimeout()` can now be called after `End()`
+
+### Removed
+
+- **[BC]** Remove `ProcessEventScope.Begin()`
+- **[BC]** Remove `ProcessEventScope.HasBegun()` and `ProcessTimeoutScope.HasBegun()`
+- **[BC]** Remove `ProcessEventScope.Root()` and `ProcessTimeoutScope.Root()`
+
 ## [0.10.0] - 2020-11-11
 
 ### Added

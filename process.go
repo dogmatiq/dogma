@@ -52,17 +52,28 @@ type ProcessMessageHandler interface {
 	// If ok is true, id MUST be a non-empty string. The use of UUIDs for
 	// instance identifiers is RECOMMENDED.
 	//
+	// A process instance is considered to begin the first time an event is
+	// routed to it.
+	//
 	// The engine MUST NOT call RouteEventToInstance() with any message of a
 	// type that has not been configured for consumption by a prior call to
-	// Configure(). If any such message is passed, the implementation MUST
-	// panic with the UnexpectedMessage value.
+	// Configure(). If any such message is passed, the implementation MUST panic
+	// with the UnexpectedMessage value.
 	RouteEventToInstance(ctx context.Context, m Message) (id string, ok bool, err error)
 
 	// HandleEvent handles an event message.
 	//
 	// Handling an event message involves inspecting the state of the target
-	// process instance to determine what command messages, if any, should be
-	// produced.
+	// process instance (via the process root r) to determine what command
+	// messages, if any, should be produced.
+	//
+	// The engine MUST provide a ProcessRoot, r, the value of which is
+	// equivalent to the value of r as it existed after the last call to
+	// HandleEvent() or HandleTimeout() for the targeted instance.
+	//
+	// If this is the first event to target this instance (or the first event to
+	// do so since s.End() was last used to end the instance), r MUST be
+	// equivalent to the result of New().
 	//
 	// The engine SHOULD provide "at-least-once" delivery guarantees to the
 	// handler. That is, the engine should call HandleEvent() with the same
@@ -83,10 +94,14 @@ type ProcessMessageHandler interface {
 	// be called with events in the same order that they were recorded.
 	//
 	// The engine MAY call HandleEvent() from multiple goroutines concurrently.
-	HandleEvent(ctx context.Context, s ProcessEventScope, m Message) error
+	HandleEvent(ctx context.Context, r ProcessRoot, s ProcessEventScope, m Message) error
 
 	// HandleTimeout handles a timeout message that has been scheduled with
 	// ProcessScope.ScheduleTimeout().
+	//
+	// The engine MUST provide a ProcessRoot, r, the value of which is
+	// equivalent to the value of r as it existed after the last call to
+	// HandleEvent() or HandleTimeout() for the targeted instance.
 	//
 	// Timeouts can be used to model time within the business domain. For
 	// example, an application might use a timeout to mark an invoice as overdue
@@ -107,7 +122,7 @@ type ProcessMessageHandler interface {
 	// The engine MUST NOT call HandleTimeout() before the time at which the
 	// timeout message was scheduled. It SHOULD attempt to call HandleTimeout()
 	// as soon as the scheduled time is reached.
-	HandleTimeout(ctx context.Context, s ProcessTimeoutScope, m Message) error
+	HandleTimeout(ctx context.Context, r ProcessRoot, s ProcessTimeoutScope, m Message) error
 
 	// TimeoutHint returns a duration that is suitable for computing a deadline
 	// for the handling of the given message by this handler.
@@ -210,47 +225,21 @@ type ProcessEventScope interface {
 	// InstanceID returns the ID of the targeted process instance.
 	InstanceID() string
 
-	// HasBegun returns true if the process has begun.
+	// End indicates to the engine that the process has ended, and therefore the
+	// state of the process root is no longer meaningful.
 	//
-	// It returns true if Begin() has been called and End() has not yet been
-	// called in this scope or the scope of any previous message that targetted
-	// the same instance.
-	HasBegun() bool
-
-	// Begin starts the targeted process instance.
+	// A call to Destroy() is negated by a subsequent call to ExecuteCommand()
+	// or ScheduleTimeout() within the same scope.
 	//
-	// It MUST be called before Root(), ExecuteCommand() or ScheduleTimeout()
-	// can be called within this scope or the scope of any future message that
-	// targets the same instance.
-	//
-	// It returns true if the targeted instance was begun, or false if
-	// the instance had already begun.
-	//
-	// The engine MAY allow re-beginning a process instance that has ended.
-	// Callers SHOULD assume that such behavior is unavailable.
-	Begin() bool
-
-	// End terminates the targeted process instance.
-	//
-	// After it has been called Root(), ExecuteCommand() and ScheduleTimeout()
-	// MUST NOT be called within this scope or the scope of any future message
-	// that targets the same instance.
-	//
-	// It MUST NOT be called if the instance has not begun.
+	// The engine MUST pass a newly initialized process root to the handler when
+	// the next event message is handled.
 	//
 	// The engine MUST discard any timeout messages associated with this
 	// instance.
 	//
-	// It MAY be called within the same scope as a prior call to Begin().
-	//
 	// The engine MAY allow re-beginning a process instance that has ended.
 	// Callers SHOULD assume that such behavior is unavailable.
 	End()
-
-	// Root returns the root of the targeted process instance.
-	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
-	Root() ProcessRoot
 
 	// ExecuteCommand executes a command as a result of the event or timeout
 	// message being handled.
@@ -258,7 +247,7 @@ type ProcessEventScope interface {
 	// It MUST NOT be called with a message of any type that has not been
 	// configured for production by a prior call to Configure().
 	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
+	// Any prior call to End() within the same scope is negated.
 	ExecuteCommand(m Message)
 
 	// ScheduleTimeout schedules a timeout message to be handled by this process
@@ -266,7 +255,10 @@ type ProcessEventScope interface {
 	//
 	// Any pending timeout messages are cancelled when the instance is ended.
 	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
+	// It MUST NOT be called with a message of any type that has not been
+	// configured for production by a prior call to Configure().
+	//
+	// Any prior call to End() within the same scope is negated.
 	ScheduleTimeout(m Message, t time.Time)
 
 	// RecordedAt returns the time at which the event was recorded.
@@ -284,34 +276,21 @@ type ProcessTimeoutScope interface {
 	// InstanceID returns the ID of the targeted process instance.
 	InstanceID() string
 
-	// HasBegun returns true if the process has begun.
+	// End indicates to the engine that the process has ended, and therefore the
+	// state of the process root is no longer meaningful.
 	//
-	// It returns true if Begin() has been called and End() has not yet been
-	// called in this scope or the scope of any previous message that targetted
-	// the same instance.
-	HasBegun() bool
-
-	// End terminates the targeted process instance.
+	// A call to Destroy() is negated by a subsequent call to ExecuteCommand()
+	// or ScheduleTimeout() within the same scope.
 	//
-	// After it has been called Root(), ExecuteCommand() and ScheduleTimeout()
-	// MUST NOT be called within this scope or the scope of any future message
-	// that targets the same instance.
-	//
-	// It MUST NOT be called if the instance has not begun.
+	// The engine MUST pass a newly initialized process root to the handler when
+	// the next event message is handled.
 	//
 	// The engine MUST discard any timeout messages associated with this
 	// instance.
 	//
-	// It MAY be called within the same scope as a prior call to Begin().
-	//
 	// The engine MAY allow re-beginning a process instance that has ended.
 	// Callers SHOULD assume that such behavior is unavailable.
 	End()
-
-	// Root returns the root of the targeted process instance.
-	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
-	Root() ProcessRoot
 
 	// ExecuteCommand executes a command as a result of the event or timeout
 	// message being handled.
@@ -319,7 +298,7 @@ type ProcessTimeoutScope interface {
 	// It MUST NOT be called with a message of any type that has not been
 	// configured for production by a prior call to Configure().
 	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
+	// Any prior call to End() within the same scope is negated.
 	ExecuteCommand(m Message)
 
 	// ScheduleTimeout schedules a timeout message to be handled by this process
@@ -327,7 +306,10 @@ type ProcessTimeoutScope interface {
 	//
 	// Any pending timeout messages are cancelled when the instance is ended.
 	//
-	// It MUST NOT be called if the instance has not begun, or has ended.
+	// It MUST NOT be called with a message of any type that has not been
+	// configured for production by a prior call to Configure().
+	//
+	// Any prior call to End() within the same scope is negated.
 	ScheduleTimeout(m Message, t time.Time)
 
 	// ScheduledFor returns the time at which the timeout message was scheduled
