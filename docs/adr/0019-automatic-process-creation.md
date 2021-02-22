@@ -24,18 +24,12 @@ improve consistency between the aggregate and process APIs.
 - Allow `Process[EventTimeout]Scope.ExecuteCommand()` and `ScheduleTimeout()` to
   be called at any time. Doing so should "negate" any prior call to `End()` as
   though it were never called.
-- Remove `StatelessProcessRoot` and `StatelessProcessBehavior`. With the
-  notion of "existence" being removed from the public API a stateless process
-  becomes nonsensical.
 - Routing a command message to a process instance causes that instance to begin.
 
 ## Consequences
 
 Largely, this should simplify implementations of both `ProcessMessageHandler` by
 application developers and `Process[Event|Timeout]Scope` by engine developers.
-
-With the removal of `StatelessProcessRoot`, some process implementations will
-require an additional type declaration for their root value.
 
 The removal of `Begin()` does mean that engines no longer get an explicit
 request to start a process instance. However, we can avoid starting unwanted
