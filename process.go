@@ -133,6 +133,11 @@ type ProcessMessageHandler interface {
 	// The engine SHOULD use a duration as close as possible to the hint. Use of
 	// a duration shorter than the hint is NOT RECOMMENDED, as this will likely
 	// lead to repeated message handling failures.
+	//
+	// The engine MUST NOT call TimeoutHint() with any message of a type that
+	// has not been configured for consumption by a prior call to Configure().
+	// If any such message is passed, the implementation MUST panic with the
+	// UnexpectedMessage value.
 	TimeoutHint(m Message) time.Duration
 }
 
