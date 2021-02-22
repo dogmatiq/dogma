@@ -321,6 +321,33 @@ type ProcessTimeoutScope interface {
 	Log(f string, v ...interface{})
 }
 
+// StatelessProcessBehavior can be embedded in ProcessMessageHandler
+// implementations to indicate that no state is kept between messages.
+//
+// It provides an implementation of ProcessMessageHandler.New() that always
+// returns a StatelessProcessRoot.
+type StatelessProcessBehavior struct{}
+
+// New returns StatelessProcessRoot.
+func (StatelessProcessBehavior) New() ProcessRoot {
+	return StatelessProcessRoot
+}
+
+// StatelessProcessRoot is a process root with no state.
+//
+// It can be returned by a ProcessMessageHandler.New() implementation to
+// indicate that no domain state is required beyond the existence/non-existence
+// of the process instance.
+//
+// See also StatelessProcessBehavior, which provides an implementation of
+// New() that returns this value.
+//
+// Engines may use this value as a sentinel, to provide an optimized code path
+// when no state is required.
+var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
+
+type statelessProcessRoot struct{}
+
 // NoTimeoutMessagesBehavior can be embedded in ProcessMessageHandler
 // implementations to indicate that no timeout messages are used.
 //

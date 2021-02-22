@@ -22,7 +22,6 @@ The format is based on [Keep a Changelog], and this project adheres to
 - **[BC]** Remove `ProcessEventScope.Begin()`
 - **[BC]** Remove `ProcessEventScope.HasBegun()` and `ProcessTimeoutScope.HasBegun()`
 - **[BC]** Remove `ProcessEventScope.Root()` and `ProcessTimeoutScope.Root()`
-- **[BC]** Remove `StatelessProcessRoot` and `StatelessProcessBehavior`
 
 ## [0.10.0] - 2020-11-11
 
