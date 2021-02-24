@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [0.11.0] - 2021-02-23
 
+### Added
+
+- **[BC]** Add `ProjectionCompactScope.Now()`
+
 ### Changed
 
 - **[BC]** `ProcessMessageHandler.HandleEvent()` now takes an `ProcessRoot` parameter
