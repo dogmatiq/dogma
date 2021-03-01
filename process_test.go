@@ -29,5 +29,5 @@ func TestNoTimeoutMessagesBehavior_HandleTimeout_Panics(t *testing.T) {
 		}
 	}()
 
-	v.HandleTimeout(ctx, nil, nil)
+	v.HandleTimeout(ctx, nil, nil, nil)
 }

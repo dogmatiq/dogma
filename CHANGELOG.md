@@ -9,6 +9,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [0.11.1] - 2021-03-01
+
+### Fixed
+
+- Fix signature of `NoTimeoutMessagesBehavior.HandleTimeout()` to match `ProcessMessageHandler` interface
+
 ## [0.11.0] - 2021-02-23
 
 ### Added
@@ -167,6 +173,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [0.9.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.9.0
 [0.10.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.10.0
 [0.11.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.11.0
+[0.11.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.11.1
 
 <!-- version template
 ## [0.0.1] - YYYY-MM-DD

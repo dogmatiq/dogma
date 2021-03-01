@@ -361,6 +361,6 @@ type statelessProcessRoot struct{}
 type NoTimeoutMessagesBehavior struct{}
 
 // HandleTimeout panics with the UnexpectedMessage value.
-func (NoTimeoutMessagesBehavior) HandleTimeout(context.Context, ProcessTimeoutScope, Message) error {
+func (NoTimeoutMessagesBehavior) HandleTimeout(context.Context, ProcessRoot, ProcessTimeoutScope, Message) error {
 	panic(UnexpectedMessage)
 }
