@@ -1,29 +1,12 @@
 name: CI
+
 on:
   push:
-    branches:
-    - '*'
   pull_request:
   schedule:
-  - cron: 0 14 * * 0
+    - cron: 0 14 * * 0
+
 jobs:
   ci:
     name: Continuous Integration
-    runs-on: ubuntu-latest
-    steps:
-    - name: Set up Go
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.15
-      id: go
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Install ADR Tools
-      run: |
-        cd $(mktemp -d)
-        git clone https://github.com/npryce/adr-tools
-        sudo cp adr-tools/src/* /usr/local/bin
-    - name: Make
-      run: make ci
-    - name: Upload Coverage Reports
-      uses: codecov/codecov-action@v2
+    uses: dogmatiq/repos/.github/workflows/shared-go.yml@main
