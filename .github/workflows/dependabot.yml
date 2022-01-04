@@ -1,0 +1,10 @@
+# DO NOT EDIT! This file is managed by Terraform.
+name: CI
+
+on:
+  pull_request_target:
+
+jobs:
+  ci:
+    name: Dependabot
+    uses: dogmatiq/repos/.github/workflows/shared-dependabot.yml@main
