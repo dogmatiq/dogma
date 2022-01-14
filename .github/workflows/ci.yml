@@ -1,5 +1,5 @@
 # DO NOT EDIT! This file is managed by Terraform.
-name: CI
+name: Continuous Integration
 
 on:
   push:
@@ -9,5 +9,5 @@ on:
 
 jobs:
   ci:
-    name: Continuous Integration
+    name: Shared
     uses: dogmatiq/repos/.github/workflows/shared-go.yml@main
