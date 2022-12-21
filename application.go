@@ -8,6 +8,9 @@ type Application interface {
 	//
 	// c provides access to the various configuration options, such as specifying
 	// which message handlers the application contains.
+	//
+	// The implementation MUST allow for multiple calls to Configure(). Each
+	// call SHOULD produce the same configuration.
 	Configure(c ApplicationConfigurer)
 }
 
