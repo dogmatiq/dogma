@@ -1,12 +1,15 @@
+<div align="center">
+
 # Dogma
 
-[![Build Status](https://github.com/dogmatiq/dogma/workflows/CI/badge.svg)](https://github.com/dogmatiq/dogma/actions?workflow=CI)
-[![Code Coverage](https://img.shields.io/codecov/c/github/dogmatiq/dogma/main.svg)](https://codecov.io/github/dogmatiq/dogma)
-[![Latest Version](https://img.shields.io/github/tag/dogmatiq/dogma.svg?label=semver)](https://semver.org)
-[![Documentation](https://img.shields.io/badge/go.dev-reference-007d9c)](https://pkg.go.dev/github.com/dogmatiq/dogma)
-[![Go Report Card](https://goreportcard.com/badge/github.com/dogmatiq/dogma)](https://goreportcard.com/report/github.com/dogmatiq/dogma)
+Build message-based applications in Go.
 
-Dogma is a specification and API for building message-based applications in Go.
+[![Documentation](https://img.shields.io/badge/go.dev-documentation-007d9c?&style=for-the-badge)](https://pkg.go.dev/github.com/dogmatiq/dogma)
+[![Latest Version](https://img.shields.io/github/tag/dogmatiq/dogma.svg?&style=for-the-badge&label=semver)](https://github.com/dogmatiq/dogma/releases)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/dogmatiq/dogma/ci.yml?style=for-the-badge&branch=main)](https://github.com/dogmatiq/dogma/actions/workflows/ci.yml)
+[![Code Coverage](https://img.shields.io/codecov/c/github/dogmatiq/dogma/main.svg?style=for-the-badge)](https://codecov.io/github/dogmatiq/dogma)
+
+</div>
 
 Dogma attempts to define a practical standard for authoring message-based
 applications in a manner agnostic to the mechanisms by which messages are
@@ -100,7 +103,7 @@ employing [CQRS], the aggregate forms what is sometimes referred to as the
 An aggregate receives command [messages](#message) in order to effect a change
 in a particular **instance** of that aggregate. Such state changes are
 represented by event messages. By definition, changes to the state of an
-aggregate instance are ["immediately consistent"][Immediate Consistency] (aka
+aggregate instance are ["immediately consistent"][immediate consistency] (aka
 "transactionally consistent"). This means that the results of a command against
 a given instance are always visible to subsequent commands for that instance.
 
@@ -130,7 +133,7 @@ implement processes that incorporate some time-based component.
 
 Because a process coordinates changes within the application using multiple
 messages, and each message represents a single atomic change to the
-application's state, the changes made by a process are ["eventually consistent"][Eventual Consistency].
+application's state, the changes made by a process are ["eventually consistent"][eventual consistency].
 The precise guarantees regarding process consistency are specific to the [engine](#engine)
 implementation.
 
@@ -170,21 +173,20 @@ projections in various popular database systems.
 Projections are represented by the [`dogma.ProjectionMessageHandler`] interface.
 
 <!-- references -->
-[Domain Driven Design]: https://en.wikipedia.org/wiki/Domain-driven_design
-[Domain Driven Design Distilled]: https://www.amazon.com/Domain-Driven-Design-Distilled-Vaughn-Vernon/dp/0134434420
-[CQRS]: https://martinfowler.com/bliki/CQRS.html
-[Event Sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
-[Immediate Consistency]: http://www.informit.com/articles/article.aspx?p=2020371&seqNum=2
-[Eventual Consistency]: https://en.wikipedia.org/wiki/Eventual_consistency
-[API documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
-[RFC 2119]: https://tools.ietf.org/html/rfc2119
 
+[domain driven design]: https://en.wikipedia.org/wiki/Domain-driven_design
+[domain driven design distilled]: https://www.amazon.com/Domain-Driven-Design-Distilled-Vaughn-Vernon/dp/0134434420
+[cqrs]: https://martinfowler.com/bliki/CQRS.html
+[event sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
+[immediate consistency]: http://www.informit.com/articles/article.aspx?p=2020371&seqNum=2
+[eventual consistency]: https://en.wikipedia.org/wiki/Eventual_consistency
+[api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
+[rfc 2119]: https://tools.ietf.org/html/rfc2119
 [dogmatiq/testkit]: https://github.com/dogmatiq/testkit
 [dogmatiq/projectionkit]: https://github.com/dogmatiq/projectionkit
 [dogmatiq/example]: https://github.com/dogmatiq/example
-
-[`dogma.Application`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Application
-[`dogma.AggregateMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#AggregateMessageHandler
-[`dogma.ProcessMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProcessMessageHandler
-[`dogma.IntegrationMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#IntegrationMessageHandler
-[`dogma.ProjectionMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProjectionMessageHandler
+[`dogma.application`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Application
+[`dogma.aggregatemessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#AggregateMessageHandler
+[`dogma.processmessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProcessMessageHandler
+[`dogma.integrationmessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#IntegrationMessageHandler
+[`dogma.projectionmessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProjectionMessageHandler
