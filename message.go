@@ -2,7 +2,6 @@ package dogma
 
 import (
 	"errors"
-	"fmt"
 )
 
 // A Message is an application-defined unit of data that encapsulates a
@@ -10,15 +9,14 @@ import (
 //
 // The message implementations are provided by the application.
 //
-// Message implementations SHOULD implement fmt.Stringer or DescribableMessage
-// in order to provide a human-readable description of every message.
-//
-// Message implementations SHOULD implement ValidatableMessage in order to
-// allow the engine to validate messages before they enter the application.
+// Message implementations SHOULD implement ValidatableMessage in order to allow
+// the engine to validate messages before they enter the application.
 //
 // Engine implementations MAY place further requirements upon message
 // implementations.
 type Message interface {
+	// MessageDescription returns a human-readable description of the message.
+	MessageDescription() string
 }
 
 // A Command is a message that represents a request for a Dogma application to
@@ -36,40 +34,17 @@ type Timeout = Message
 // DescribableMessage is a message that can provide a human-readable description
 // of itself.
 //
-// This interface can be implemented to provide a more specific message
-// description for message types that already implement fmt.Stringer in such a
-// way that does not provide a useful human-readable description, such as when
-// the message implementations are generated Protocol Buffers structs.
+// Deprecated: All messages are now required to be describable.
 type DescribableMessage interface {
 	Message
-
-	// MessageDescription returns a human-readable description of the message.
-	//
-	// This method SHOULD NOT be called directly. Instead, obtain the
-	// description using the DescribeMessage() function.
-	MessageDescription() string
 }
 
 // DescribeMessage returns a human-readable string representation of m.
 //
-// If m implements DescribableMessage, it returns m.MessageDescription().
-// Otherwise, if m implements fmt.Stringer, it returns m.String().
-//
-// Finally, if m does not implement either of these interfaces, it returns the
-// standard Go "%v" representation of the message.
-//
-// Engine implementations SHOULD use the message description in logging and
-// other tracing systems to provide contextual information to developers. The
-// description SHOULD NOT be used by application code.
+// Deprecated: All messages are now required to be describable. Call
+// c.MessageDescription() directly.
 func DescribeMessage(m Message) string {
-	switch m := m.(type) {
-	case DescribableMessage:
-		return m.MessageDescription()
-	case fmt.Stringer:
-		return m.String()
-	default:
-		return fmt.Sprintf("%v", m)
-	}
+	return m.MessageDescription()
 }
 
 // ValidatableMessage is a message that can validate itself.

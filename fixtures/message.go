@@ -13,7 +13,16 @@ type Command[T any] struct {
 
 // MessageDescription returns a description of the command.
 func (c Command[T]) MessageDescription() string {
-	return fmt.Sprintf("%v", c)
+	validity := "valid"
+	if c.Invalid != "" {
+		validity = "invalid: " + c.Invalid
+	}
+	return fmt.Sprintf(
+		"command(%T:%v, %s)",
+		c.Content,
+		c.Content,
+		validity,
+	)
 }
 
 // Validate returns a non-nil error if c.Invalid is not empty.
@@ -32,7 +41,16 @@ type Event[T any] struct {
 
 // MessageDescription returns a description of the command.
 func (e Event[T]) MessageDescription() string {
-	return fmt.Sprintf("%v", e)
+	validity := "valid"
+	if e.Invalid != "" {
+		validity = "invalid: " + e.Invalid
+	}
+	return fmt.Sprintf(
+		"event(%T:%v, %s)",
+		e.Content,
+		e.Content,
+		validity,
+	)
 }
 
 // Validate returns a non-nil error if c.Invalid is not empty.
@@ -51,7 +69,16 @@ type Timeout[T any] struct {
 
 // MessageDescription returns a description of the command.
 func (t Timeout[T]) MessageDescription() string {
-	return fmt.Sprintf("%v", t)
+	validity := "valid"
+	if t.Invalid != "" {
+		validity = "invalid: " + t.Invalid
+	}
+	return fmt.Sprintf(
+		"timeout(%T:%v, %s)",
+		t.Content,
+		t.Content,
+		validity,
+	)
 }
 
 // Validate returns a non-nil error if c.Invalid is not empty.

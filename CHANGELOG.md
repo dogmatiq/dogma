@@ -15,6 +15,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### Added
 
 - Added `Command`, `Event` and `Timeout` as aliases for `Message` in preparation for string message typing
+- **[BC]** Added `MessageDescription()` method to `Message` interface
+
+### Deprecated
+
+- Deprecated `DescribableMessage` interface, as all messages are now describable
+- Deprecated `DescribeMessage()` function
 
 ## [0.11.1] - 2021-03-01
 

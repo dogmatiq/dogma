@@ -1,82 +1,70 @@
 package dogma_test
 
 import (
-	"errors"
 	"testing"
 
 	. "github.com/dogmatiq/dogma"
 	"github.com/dogmatiq/dogma/fixtures"
 )
 
-type describable struct{}
-
-func (describable) MessageDescription() string {
-	return "<description>"
-}
-
-func (describable) String() string {
-	panic("unexpected call")
-}
-
-type stringer struct{}
-
-func (stringer) String() string {
-	return "<string>"
-}
-
-type indescribable struct {
-	Value int
-}
-
-func TestDescribeMessage_describable(t *testing.T) {
-	d := DescribeMessage(describable{})
-	if d != "<description>" {
-		t.Fatal("unexpected message description")
-	}
-}
-
-func TestDescribeMessage_stringer(t *testing.T) {
-	d := DescribeMessage(stringer{})
-	if d != "<string>" {
-		t.Fatal("unexpected message description")
-	}
-}
-
-func TestDescribeMessage_default(t *testing.T) {
-	d := DescribeMessage(indescribable{100})
-	if d != "{100}" {
-		t.Fatal("unexpected message description")
+func TestDescribeMessage(t *testing.T) {
+	expect := "command(int:123, valid)"
+	actual := DescribeMessage(
+		fixtures.Command[int]{
+			Content: 123,
+		},
+	)
+	if actual != expect {
+		t.Fatalf(
+			"unexpected message description: want %q, got %q",
+			expect,
+			actual,
+		)
 	}
 }
 
 func TestValidateMessage_validatable(t *testing.T) {
-	expect := errors.New("<error>")
-
-	err := ValidateMessage(fixtures.MessageA{
-		Value: expect,
-	})
+	expect := "<error>"
+	err := ValidateMessage(
+		fixtures.Command[int]{
+			Invalid: expect,
+		},
+	)
 	if err == nil {
 		t.Fatal("expected an error to occur")
 	}
-
-	if err != expect {
-		t.Fatalf("unexpected error: %s", err)
+	if err.Error() != expect {
+		t.Fatalf(
+			"unexpected error: want %q, got %q",
+			expect,
+			err,
+		)
 	}
 }
 
 func TestValidateMessage_nil(t *testing.T) {
+	expect := "message must not be nil"
 	err := ValidateMessage(nil)
 	if err == nil {
 		t.Fatal("expected an error to occur")
 	}
-
-	if err.Error() != "message must not be nil" {
-		t.Fatalf("unexpected error message: %s", err)
+	if err.Error() != expect {
+		t.Fatalf(
+			"unexpected error message: want %q, got %q",
+			expect,
+			err,
+		)
 	}
 }
 
 func TestValidateMessage_default(t *testing.T) {
-	err := ValidateMessage(struct{}{})
+	type desc interface {
+		MessageDescription() string
+	}
+
+	err := ValidateMessage(
+		struct{ desc }{},
+	)
 	if err != nil {
 		t.Fatal("unexpected error")
 	}
