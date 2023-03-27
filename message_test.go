@@ -10,7 +10,7 @@ import (
 func TestDescribeMessage(t *testing.T) {
 	expect := "command(int:123, valid)"
 	actual := DescribeMessage(
-		fixtures.Command[int]{
+		fixtures.TestCommand[int]{
 			Content: 123,
 		},
 	)
@@ -26,7 +26,7 @@ func TestDescribeMessage(t *testing.T) {
 func TestValidateMessage_validatable(t *testing.T) {
 	expect := "<error>"
 	err := ValidateMessage(
-		fixtures.Command[int]{
+		fixtures.TestCommand[int]{
 			Invalid: expect,
 		},
 	)
