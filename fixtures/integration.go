@@ -11,8 +11,8 @@ import (
 // dogma.IntegrationMessageHandler.
 type IntegrationMessageHandler struct {
 	ConfigureFunc     func(dogma.IntegrationConfigurer)
-	HandleCommandFunc func(context.Context, dogma.IntegrationCommandScope, dogma.Message) error
-	TimeoutHintFunc   func(m dogma.Message) time.Duration
+	HandleCommandFunc func(context.Context, dogma.IntegrationCommandScope, dogma.Command) error
+	TimeoutHintFunc   func(dogma.XMessage) time.Duration
 }
 
 var _ dogma.IntegrationMessageHandler = &IntegrationMessageHandler{}
@@ -30,15 +30,15 @@ func (h *IntegrationMessageHandler) Configure(c dogma.IntegrationConfigurer) {
 // HandleCommand handles an integration command message that has been routed to
 // this handler.
 //
-// If h.HandleCommandFunc is non-nil it returns h.HandleCommandFunc(s, m),
+// If h.HandleCommandFunc is non-nil it returns h.HandleCommandFunc(s, c),
 // otherwise it returns nil.
 func (h *IntegrationMessageHandler) HandleCommand(
 	ctx context.Context,
 	s dogma.IntegrationCommandScope,
-	m dogma.Message,
+	c dogma.Command,
 ) error {
 	if h.HandleCommandFunc != nil {
-		return h.HandleCommandFunc(ctx, s, m)
+		return h.HandleCommandFunc(ctx, s, c)
 	}
 
 	return nil
@@ -49,7 +49,7 @@ func (h *IntegrationMessageHandler) HandleCommand(
 //
 // If h.TimeoutHintFunc is non-nil it returns h.TimeoutHintFunc(m), otherwise it
 // returns 0.
-func (h *IntegrationMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
+func (h *IntegrationMessageHandler) TimeoutHint(m dogma.XMessage) time.Duration {
 	if h.TimeoutHintFunc != nil {
 		return h.TimeoutHintFunc(m)
 	}

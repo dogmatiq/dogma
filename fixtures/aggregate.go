@@ -4,8 +4,8 @@ import "github.com/dogmatiq/dogma"
 
 // AggregateRoot is a test implementation of dogma.AggregateRoot.
 type AggregateRoot struct {
-	AppliedEvents  []dogma.Message
-	ApplyEventFunc func(dogma.Message) `json:"-"`
+	AppliedEvents  []dogma.Event
+	ApplyEventFunc func(dogma.Event) `json:"-"`
 }
 
 var _ dogma.AggregateRoot = &AggregateRoot{}
@@ -13,14 +13,14 @@ var _ dogma.AggregateRoot = &AggregateRoot{}
 // ApplyEvent updates the aggregate instance to reflect the fact that a
 // particular domain event has occurred.
 //
-// It appends m to v.AppliedEvents.
+// It appends e to v.AppliedEvents.
 //
-// If v.ApplyEventFunc is non-nil, it calls v.ApplyEventFunc(m, v.Value).
-func (v *AggregateRoot) ApplyEvent(m dogma.Message) {
-	v.AppliedEvents = append(v.AppliedEvents, m)
+// If v.ApplyEventFunc is non-nil, it calls v.ApplyEventFunc(e, v.Value).
+func (v *AggregateRoot) ApplyEvent(e dogma.Event) {
+	v.AppliedEvents = append(v.AppliedEvents, e)
 
 	if v.ApplyEventFunc != nil {
-		v.ApplyEventFunc(m)
+		v.ApplyEventFunc(e)
 	}
 }
 
@@ -29,8 +29,8 @@ func (v *AggregateRoot) ApplyEvent(m dogma.Message) {
 type AggregateMessageHandler struct {
 	NewFunc                    func() dogma.AggregateRoot
 	ConfigureFunc              func(dogma.AggregateConfigurer)
-	RouteCommandToInstanceFunc func(dogma.Message) string
-	HandleCommandFunc          func(dogma.AggregateRoot, dogma.AggregateCommandScope, dogma.Message)
+	RouteCommandToInstanceFunc func(dogma.Command) string
+	HandleCommandFunc          func(dogma.AggregateRoot, dogma.AggregateCommandScope, dogma.Command)
 }
 
 var _ dogma.AggregateMessageHandler = &AggregateMessageHandler{}
@@ -58,28 +58,28 @@ func (h *AggregateMessageHandler) Configure(c dogma.AggregateConfigurer) {
 }
 
 // RouteCommandToInstance returns the ID of the aggregate instance that is
-// targeted by m.
+// targeted by c.
 //
 // If h.RouteCommandToInstanceFunc is non-nil it returns
-// h.RouteCommandToInstanceFunc(m), otherwise it panics.
-func (h *AggregateMessageHandler) RouteCommandToInstance(m dogma.Message) string {
+// h.RouteCommandToInstanceFunc(c), otherwise it panics.
+func (h *AggregateMessageHandler) RouteCommandToInstance(c dogma.Command) string {
 	if h.RouteCommandToInstanceFunc == nil {
 		panic(dogma.UnexpectedMessage)
 	}
 
-	return h.RouteCommandToInstanceFunc(m)
+	return h.RouteCommandToInstanceFunc(c)
 }
 
 // HandleCommand handles a domain command message that has been routed to this
 // handler.
 //
-// If h.HandleCommandFunc is non-nil it calls h.HandleCommandFunc(r, s, m).
+// If h.HandleCommandFunc is non-nil it calls h.HandleCommandFunc(r, s, c).
 func (h *AggregateMessageHandler) HandleCommand(
 	r dogma.AggregateRoot,
 	s dogma.AggregateCommandScope,
-	m dogma.Message,
+	c dogma.Command,
 ) {
 	if h.HandleCommandFunc != nil {
-		h.HandleCommandFunc(r, s, m)
+		h.HandleCommandFunc(r, s, c)
 	}
 }

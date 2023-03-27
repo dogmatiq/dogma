@@ -43,7 +43,7 @@ type IntegrationMessageHandler interface {
 	//
 	// The engine MAY call HandleCommand() from multiple goroutines
 	// concurrently.
-	HandleCommand(ctx context.Context, s IntegrationCommandScope, m Message) error
+	HandleCommand(ctx context.Context, s IntegrationCommandScope, c Command) error
 
 	// TimeoutHint returns a duration that is suitable for computing a deadline
 	// for the handling of the given message by this handler.
@@ -59,7 +59,7 @@ type IntegrationMessageHandler interface {
 	// has not been configured for consumption by a prior call to Configure().
 	// If any such message is passed, the implementation MUST panic with the
 	// UnexpectedMessage value.
-	TimeoutHint(m Message) time.Duration
+	TimeoutHint(m XMessage) time.Duration
 }
 
 // IntegrationConfigurer is an interface implemented by the engine and used
@@ -100,7 +100,7 @@ type IntegrationConfigurer interface {
 	Identity(name string, key string)
 
 	// ConsumesCommandType configures the engine to route command messages of
-	// the same type as m to the handler.
+	// the same type as c to the handler.
 	//
 	// It MUST be called at least once within a call to Configure(). It MUST NOT
 	// be called more than once with a command message of the same type.
@@ -108,9 +108,9 @@ type IntegrationConfigurer interface {
 	// A given command type MUST be routed to exactly one handler within an
 	// application.
 	//
-	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
+	// The "content" of c MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information may be used.
-	ConsumesCommandType(m Message)
+	ConsumesCommandType(c Command)
 
 	// ProducesEventType instructs the engine that the handler records events of
 	// the same type as m.
@@ -123,7 +123,7 @@ type IntegrationConfigurer interface {
 	//
 	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information may be used.
-	ProducesEventType(m Message)
+	ProducesEventType(c Event)
 }
 
 // IntegrationCommandScope is an interface implemented by the engine and used by
@@ -135,7 +135,7 @@ type IntegrationCommandScope interface {
 	//
 	// It MUST NOT be called with a message of any type that has not been
 	// configured for production by a prior call to Configure().
-	RecordEvent(m Message)
+	RecordEvent(e Event)
 
 	// Log records an informational message within the context of the message
 	// that is being handled.

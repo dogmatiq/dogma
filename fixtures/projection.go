@@ -11,10 +11,10 @@ import (
 // dogma.ProjectionMessageHandler.
 type ProjectionMessageHandler struct {
 	ConfigureFunc       func(dogma.ProjectionConfigurer)
-	HandleEventFunc     func(context.Context, []byte, []byte, []byte, dogma.ProjectionEventScope, dogma.Message) (bool, error)
+	HandleEventFunc     func(context.Context, []byte, []byte, []byte, dogma.ProjectionEventScope, dogma.Event) (bool, error)
 	ResourceVersionFunc func(context.Context, []byte) ([]byte, error)
 	CloseResourceFunc   func(context.Context, []byte) error
-	TimeoutHintFunc     func(dogma.Message) time.Duration
+	TimeoutHintFunc     func(dogma.XMessage) time.Duration
 	CompactFunc         func(context.Context, dogma.ProjectionCompactScope) error
 }
 
@@ -33,16 +33,16 @@ func (h *ProjectionMessageHandler) Configure(c dogma.ProjectionConfigurer) {
 // HandleEvent handles a domain event message that has been routed to this
 // handler.
 //
-// If h.HandleEventFunc is non-nil it returns h.HandleEventFunc(ctx, r, c, n, s, m),
+// If h.HandleEventFunc is non-nil it returns h.HandleEventFunc(ctx, r, c, n, s, e),
 // otherwise it returns (nil, nil).
 func (h *ProjectionMessageHandler) HandleEvent(
 	ctx context.Context,
 	r, c, n []byte,
 	s dogma.ProjectionEventScope,
-	m dogma.Message,
+	e dogma.Event,
 ) (bool, error) {
 	if h.HandleEventFunc != nil {
-		return h.HandleEventFunc(ctx, r, c, n, s, m)
+		return h.HandleEventFunc(ctx, r, c, n, s, e)
 	}
 
 	return true, nil
@@ -78,7 +78,7 @@ func (h *ProjectionMessageHandler) CloseResource(ctx context.Context, r []byte) 
 //
 // If h.TimeoutHintFunc is non-nil it returns h.TimeoutHintFunc(m), otherwise it
 // returns 0.
-func (h *ProjectionMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
+func (h *ProjectionMessageHandler) TimeoutHint(m dogma.XMessage) time.Duration {
 	if h.TimeoutHintFunc != nil {
 		return h.TimeoutHintFunc(m)
 	}

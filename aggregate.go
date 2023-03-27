@@ -33,7 +33,7 @@ type AggregateMessageHandler interface {
 	Configure(c AggregateConfigurer)
 
 	// RouteCommandToInstance returns the ID of the aggregate instance that is
-	// targeted by m.
+	// targeted by c.
 	//
 	// The return value MUST be a non-empty string. The use of UUIDs for
 	// instance identifiers is RECOMMENDED.
@@ -42,7 +42,7 @@ type AggregateMessageHandler interface {
 	// type that has not been configured for consumption by a prior call to
 	// Configure(). If any such message is passed, the implementation MUST
 	// panic with the UnexpectedMessage value.
-	RouteCommandToInstance(m Message) string
+	RouteCommandToInstance(c Command) string
 
 	// HandleCommand handles a command message.
 	//
@@ -75,7 +75,7 @@ type AggregateMessageHandler interface {
 	//
 	// The engine MAY call HandleCommand() from multiple goroutines
 	// concurrently.
-	HandleCommand(r AggregateRoot, s AggregateCommandScope, m Message)
+	HandleCommand(r AggregateRoot, s AggregateCommandScope, c Command)
 }
 
 // AggregateRoot is an interface implemented by the application and used by
@@ -94,7 +94,7 @@ type AggregateRoot interface {
 	//
 	// The implementation SHOULD panic with the UnexpectedMessage value if
 	// called with any event type other than those described above.
-	ApplyEvent(m Message)
+	ApplyEvent(e Event)
 }
 
 // AggregateConfigurer is an interface implemented by the engine and used by
@@ -135,7 +135,7 @@ type AggregateConfigurer interface {
 	Identity(name string, key string)
 
 	// ConsumesCommandType configures the engine to route command messages of
-	// the same type as m to the handler.
+	// the same type as c to the handler.
 	//
 	// It MUST be called at least once within a call to Configure(). It MUST NOT
 	// be called more than once with a command message of the same type.
@@ -143,12 +143,12 @@ type AggregateConfigurer interface {
 	// A given command type MUST be routed to exactly one handler within an
 	// application.
 	//
-	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
+	// The "content" of c MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information may be used.
-	ConsumesCommandType(m Message)
+	ConsumesCommandType(c Command)
 
 	// ProducesEventType instructs the engine that the handler records events of
-	// the same type as m.
+	// the same type as e.
 	//
 	// It MUST be called at least once within a call to Configure(). It MUST NOT
 	// be called more than once with an event message of the same type.
@@ -156,9 +156,9 @@ type AggregateConfigurer interface {
 	// A given event type MUST be produced by exactly one handler within an
 	// application.
 	//
-	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
+	// The "content" of e MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information may be used.
-	ProducesEventType(m Message)
+	ProducesEventType(e Event)
 }
 
 // AggregateCommandScope is an interface implemented by the engine and used by the
@@ -174,12 +174,12 @@ type AggregateCommandScope interface {
 	// It MUST NOT be called with a message of any type that has not been
 	// configured for production by a prior call to Configure().
 	//
-	// The engine MUST call ApplyEvent(m) on the aggregate root that was passed
+	// The engine MUST call ApplyEvent(e) on the aggregate root that was passed
 	// to HandleCommand(), such that the applied changes are visible to the
 	// handler after RecordEvent() returns.
 	//
 	// Any prior call to Destroy() within the same scope is negated.
-	RecordEvent(m Message)
+	RecordEvent(e Event)
 
 	// Destroy indicates to the engine that the state of the aggregate root for
 	// the targeted instance is no longer meaningful.

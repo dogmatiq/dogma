@@ -83,7 +83,7 @@ type ProjectionMessageHandler interface {
 		ctx context.Context,
 		r, c, n []byte,
 		s ProjectionEventScope,
-		m Message,
+		e Event,
 	) (ok bool, err error)
 
 	// ResourceVersion returns the version of the resource r.
@@ -118,7 +118,7 @@ type ProjectionMessageHandler interface {
 	// has not been configured for consumption by a prior call to Configure().
 	// If any such message is passed, the implementation MUST panic with the
 	// UnexpectedMessage value.
-	TimeoutHint(m Message) time.Duration
+	TimeoutHint(m XMessage) time.Duration
 
 	// Compact reduces the size of the projection's data.
 	//
@@ -174,7 +174,7 @@ type ProjectionConfigurer interface {
 	Identity(name string, key string)
 
 	// ConsumesEventType configures the engine to route event messages of the
-	// same type as m to the handler.
+	// same type as e to the handler.
 	//
 	// It MUST be called at least once within a call to Configure(). It MUST NOT
 	// be called more than once with an event message of the same type.
@@ -182,9 +182,9 @@ type ProjectionConfigurer interface {
 	// Multiple handlers within an application MAY consume event messages of the
 	// same type.
 	//
-	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
+	// The "content" of e MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information may be used.
-	ConsumesEventType(m Message)
+	ConsumesEventType(e Event)
 }
 
 // ProjectionEventScope is an interface implemented by the engine and used by

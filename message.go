@@ -8,15 +8,7 @@ import (
 // A Message is an application-defined unit of data that encapsulates a
 // "command" or "event" within a message-based application.
 //
-// Command messages represent a request for the application to perform some
-// action, whereas event messages indicate that some action has already
-// occurred.
-//
-// Additionally, a "timeout" message can be used to perform actions within an
-// application at specific wall-clock times.
-//
-// The message implementations are provided by the application. The interface is
-// intentionally empty, allowing the use of any Go type as a message.
+// The message implementations are provided by the application.
 //
 // Message implementations SHOULD implement fmt.Stringer or DescribableMessage
 // in order to provide a human-readable description of every message.
@@ -26,8 +18,20 @@ import (
 //
 // Engine implementations MAY place further requirements upon message
 // implementations.
-type Message interface {
+type XMessage interface {
 }
+
+// A Command is a message that represents a request for a Dogma application to
+// perform some action.
+type Command = XMessage
+
+// An Event is a message that indicates that some action has occurred within a
+// Dogma application.
+type Event = XMessage
+
+// A Timeout is a message that encapsulates information about an action that was
+// scheduled to occur at a specific time.
+type Timeout = XMessage
 
 // DescribableMessage is a message that can provide a human-readable description
 // of itself.
@@ -37,7 +41,7 @@ type Message interface {
 // way that does not provide a useful human-readable description, such as when
 // the message implementations are generated Protocol Buffers structs.
 type DescribableMessage interface {
-	Message
+	XMessage
 
 	// MessageDescription returns a human-readable description of the message.
 	//
@@ -57,7 +61,7 @@ type DescribableMessage interface {
 // Engine implementations SHOULD use the message description in logging and
 // other tracing systems to provide contextual information to developers. The
 // description SHOULD NOT be used by application code.
-func DescribeMessage(m Message) string {
+func DescribeMessage(m XMessage) string {
 	switch m := m.(type) {
 	case DescribableMessage:
 		return m.MessageDescription()
@@ -76,7 +80,7 @@ func DescribeMessage(m Message) string {
 // Engine implementations SHOULD validate messages before allowing them to be
 // produced in order to prevent "poison" messages from entering the application.
 type ValidatableMessage interface {
-	Message
+	XMessage
 
 	// Validate returns a non-nil error if the message is invalid.
 	Validate() error
@@ -86,7 +90,7 @@ type ValidatableMessage interface {
 // invalid.
 //
 // If m does not implement ValidatableMessage it returns nil.
-func ValidateMessage(m Message) error {
+func ValidateMessage(m XMessage) error {
 	switch m := m.(type) {
 	case ValidatableMessage:
 		return m.Validate()

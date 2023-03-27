@@ -45,7 +45,7 @@ type ProcessMessageHandler interface {
 	Configure(c ProcessConfigurer)
 
 	// RouteEventToInstance returns the ID of the process instance that is
-	// targeted by m.
+	// targeted by e.
 	//
 	// If ok is false, the engine MUST NOT call HandleEvent() with this message.
 	//
@@ -59,7 +59,7 @@ type ProcessMessageHandler interface {
 	// type that has not been configured for consumption by a prior call to
 	// Configure(). If any such message is passed, the implementation MUST panic
 	// with the UnexpectedMessage value.
-	RouteEventToInstance(ctx context.Context, m Message) (id string, ok bool, err error)
+	RouteEventToInstance(ctx context.Context, e Event) (id string, ok bool, err error)
 
 	// HandleEvent handles an event message.
 	//
@@ -94,7 +94,7 @@ type ProcessMessageHandler interface {
 	// be called with events in the same order that they were recorded.
 	//
 	// The engine MAY call HandleEvent() from multiple goroutines concurrently.
-	HandleEvent(ctx context.Context, r ProcessRoot, s ProcessEventScope, m Message) error
+	HandleEvent(ctx context.Context, r ProcessRoot, s ProcessEventScope, e Event) error
 
 	// HandleTimeout handles a timeout message that has been scheduled with
 	// ProcessScope.ScheduleTimeout().
@@ -122,7 +122,7 @@ type ProcessMessageHandler interface {
 	// The engine MUST NOT call HandleTimeout() before the time at which the
 	// timeout message was scheduled. It SHOULD attempt to call HandleTimeout()
 	// as soon as the scheduled time is reached.
-	HandleTimeout(ctx context.Context, r ProcessRoot, s ProcessTimeoutScope, m Message) error
+	HandleTimeout(ctx context.Context, r ProcessRoot, s ProcessTimeoutScope, t Timeout) error
 
 	// TimeoutHint returns a duration that is suitable for computing a deadline
 	// for the handling of the given message by this handler.
@@ -138,7 +138,7 @@ type ProcessMessageHandler interface {
 	// has not been configured for consumption by a prior call to Configure().
 	// If any such message is passed, the implementation MUST panic with the
 	// UnexpectedMessage value.
-	TimeoutHint(m Message) time.Duration
+	TimeoutHint(m XMessage) time.Duration
 }
 
 // ProcessRoot is an interface implemented by the application and used by
@@ -184,7 +184,7 @@ type ProcessConfigurer interface {
 	Identity(name string, key string)
 
 	// ConsumesEventType configures the engine to route event messages of the
-	// same type as m to the handler.
+	// same type as e to the handler.
 	//
 	// It MUST be called at least once within a call to Configure(). It MUST NOT
 	// be called more than once with an event message of the same type.
@@ -192,12 +192,12 @@ type ProcessConfigurer interface {
 	// Multiple handlers within an application MAY consume event messages of the
 	// same type.
 	//
-	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
+	// The "content" of e MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information may be used.
-	ConsumesEventType(m Message)
+	ConsumesEventType(e Event)
 
 	// ProducesCommandType instructs the engine that the handler executes
-	// commands of the same type as m.
+	// commands of the same type as c.
 	//
 	// It MUST be called at least once within a call to Configure(). It MUST NOT
 	// be called more than once with a command message of the same type.
@@ -205,12 +205,12 @@ type ProcessConfigurer interface {
 	// Multiple handlers within an application MAY produce command messages of
 	// the same type.
 	//
-	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
+	// The "content" of c MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information may be used.
-	ProducesCommandType(m Message)
+	ProducesCommandType(c Command)
 
 	// SchedulesTimeoutType instructs the engine that the handler produces and
-	// consumes timeouts of the same type as m.
+	// consumes timeouts of the same type as t.
 	//
 	// It MUST NOT be called more than once with a timeout message of the same
 	// type within a given call to Configure().
@@ -218,9 +218,9 @@ type ProcessConfigurer interface {
 	// Multiple handlers within an application MAY use timeout messages of the
 	// same type.
 	//
-	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
+	// The "content" of t MUST NOT be used, inspected, or treated as meaningful
 	// in any way, only its runtime type information may be used.
-	SchedulesTimeoutType(m Message)
+	SchedulesTimeoutType(t Timeout)
 }
 
 // ProcessEventScope is an interface implemented by the engine and used by the
@@ -253,7 +253,7 @@ type ProcessEventScope interface {
 	// configured for production by a prior call to Configure().
 	//
 	// Any prior call to End() within the same scope is negated.
-	ExecuteCommand(m Message)
+	ExecuteCommand(c Command)
 
 	// ScheduleTimeout schedules a timeout message to be handled by this process
 	// instance at a specific time.
@@ -264,7 +264,7 @@ type ProcessEventScope interface {
 	// configured for production by a prior call to Configure().
 	//
 	// Any prior call to End() within the same scope is negated.
-	ScheduleTimeout(m Message, t time.Time)
+	ScheduleTimeout(t Timeout, at time.Time)
 
 	// RecordedAt returns the time at which the event was recorded.
 	RecordedAt() time.Time
@@ -304,7 +304,7 @@ type ProcessTimeoutScope interface {
 	// configured for production by a prior call to Configure().
 	//
 	// Any prior call to End() within the same scope is negated.
-	ExecuteCommand(m Message)
+	ExecuteCommand(c Command)
 
 	// ScheduleTimeout schedules a timeout message to be handled by this process
 	// instance at a specific time.
@@ -315,7 +315,7 @@ type ProcessTimeoutScope interface {
 	// configured for production by a prior call to Configure().
 	//
 	// Any prior call to End() within the same scope is negated.
-	ScheduleTimeout(m Message, t time.Time)
+	ScheduleTimeout(t Timeout, at time.Time)
 
 	// ScheduledFor returns the time at which the timeout message was scheduled
 	// to be handled.
@@ -361,6 +361,11 @@ type statelessProcessRoot struct{}
 type NoTimeoutMessagesBehavior struct{}
 
 // HandleTimeout panics with the UnexpectedMessage value.
-func (NoTimeoutMessagesBehavior) HandleTimeout(context.Context, ProcessRoot, ProcessTimeoutScope, Message) error {
+func (NoTimeoutMessagesBehavior) HandleTimeout(
+	context.Context,
+	ProcessRoot,
+	ProcessTimeoutScope,
+	Timeout,
+) error {
 	panic(UnexpectedMessage)
 }

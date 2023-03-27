@@ -24,7 +24,7 @@ type CommandExecutor interface {
 	//
 	// If ctx has a deadline, it MUST NOT be used by the engine as a mechanism
 	// for message expiration.
-	ExecuteCommand(ctx context.Context, m Message) error
+	ExecuteCommand(ctx context.Context, c Command) error
 }
 
 // EventRecorder is an interface implemented by the engine and used by the
@@ -49,5 +49,5 @@ type EventRecorder interface {
 	//
 	// If ctx has a deadline, it MUST NOT be used by the engine as a mechanism
 	// for message expiration.
-	RecordEvent(ctx context.Context, m Message) error
+	RecordEvent(ctx context.Context, e Event) error
 }

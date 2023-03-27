@@ -13,6 +13,6 @@ import "time"
 type NoTimeoutHintBehavior struct{}
 
 // TimeoutHint always returns a zero-value duration.
-func (NoTimeoutHintBehavior) TimeoutHint(Message) time.Duration {
+func (NoTimeoutHintBehavior) TimeoutHint(XMessage) time.Duration {
 	return 0
 }
