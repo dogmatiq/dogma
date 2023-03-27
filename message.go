@@ -18,20 +18,20 @@ import (
 //
 // Engine implementations MAY place further requirements upon message
 // implementations.
-type XMessage interface {
+type Message interface {
 }
 
 // A Command is a message that represents a request for a Dogma application to
 // perform some action.
-type Command = XMessage
+type Command = Message
 
 // An Event is a message that indicates that some action has occurred within a
 // Dogma application.
-type Event = XMessage
+type Event = Message
 
 // A Timeout is a message that encapsulates information about an action that was
 // scheduled to occur at a specific time.
-type Timeout = XMessage
+type Timeout = Message
 
 // DescribableMessage is a message that can provide a human-readable description
 // of itself.
@@ -41,7 +41,7 @@ type Timeout = XMessage
 // way that does not provide a useful human-readable description, such as when
 // the message implementations are generated Protocol Buffers structs.
 type DescribableMessage interface {
-	XMessage
+	Message
 
 	// MessageDescription returns a human-readable description of the message.
 	//
@@ -61,7 +61,7 @@ type DescribableMessage interface {
 // Engine implementations SHOULD use the message description in logging and
 // other tracing systems to provide contextual information to developers. The
 // description SHOULD NOT be used by application code.
-func DescribeMessage(m XMessage) string {
+func DescribeMessage(m Message) string {
 	switch m := m.(type) {
 	case DescribableMessage:
 		return m.MessageDescription()
@@ -80,7 +80,7 @@ func DescribeMessage(m XMessage) string {
 // Engine implementations SHOULD validate messages before allowing them to be
 // produced in order to prevent "poison" messages from entering the application.
 type ValidatableMessage interface {
-	XMessage
+	Message
 
 	// Validate returns a non-nil error if the message is invalid.
 	Validate() error
@@ -90,7 +90,7 @@ type ValidatableMessage interface {
 // invalid.
 //
 // If m does not implement ValidatableMessage it returns nil.
-func ValidateMessage(m XMessage) error {
+func ValidateMessage(m Message) error {
 	switch m := m.(type) {
 	case ValidatableMessage:
 		return m.Validate()

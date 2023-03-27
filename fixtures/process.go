@@ -22,7 +22,7 @@ type ProcessMessageHandler struct {
 	RouteEventToInstanceFunc func(context.Context, dogma.Event) (string, bool, error)
 	HandleEventFunc          func(context.Context, dogma.ProcessRoot, dogma.ProcessEventScope, dogma.Event) error
 	HandleTimeoutFunc        func(context.Context, dogma.ProcessRoot, dogma.ProcessTimeoutScope, dogma.Timeout) error
-	TimeoutHintFunc          func(dogma.XMessage) time.Duration
+	TimeoutHintFunc          func(dogma.Message) time.Duration
 }
 
 var _ dogma.ProcessMessageHandler = &ProcessMessageHandler{}
@@ -105,7 +105,7 @@ func (h *ProcessMessageHandler) HandleTimeout(
 //
 // If h.TimeoutHintFunc is non-nil it returns h.TimeoutHintFunc(m), otherwise it
 // returns 0.
-func (h *ProcessMessageHandler) TimeoutHint(m dogma.XMessage) time.Duration {
+func (h *ProcessMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
 	if h.TimeoutHintFunc != nil {
 		return h.TimeoutHintFunc(m)
 	}

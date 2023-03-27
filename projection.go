@@ -118,7 +118,7 @@ type ProjectionMessageHandler interface {
 	// has not been configured for consumption by a prior call to Configure().
 	// If any such message is passed, the implementation MUST panic with the
 	// UnexpectedMessage value.
-	TimeoutHint(m XMessage) time.Duration
+	TimeoutHint(m Message) time.Duration
 
 	// Compact reduces the size of the projection's data.
 	//

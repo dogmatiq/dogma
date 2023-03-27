@@ -12,7 +12,7 @@ import (
 type IntegrationMessageHandler struct {
 	ConfigureFunc     func(dogma.IntegrationConfigurer)
 	HandleCommandFunc func(context.Context, dogma.IntegrationCommandScope, dogma.Command) error
-	TimeoutHintFunc   func(dogma.XMessage) time.Duration
+	TimeoutHintFunc   func(dogma.Message) time.Duration
 }
 
 var _ dogma.IntegrationMessageHandler = &IntegrationMessageHandler{}
@@ -49,7 +49,7 @@ func (h *IntegrationMessageHandler) HandleCommand(
 //
 // If h.TimeoutHintFunc is non-nil it returns h.TimeoutHintFunc(m), otherwise it
 // returns 0.
-func (h *IntegrationMessageHandler) TimeoutHint(m dogma.XMessage) time.Duration {
+func (h *IntegrationMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
 	if h.TimeoutHintFunc != nil {
 		return h.TimeoutHintFunc(m)
 	}
