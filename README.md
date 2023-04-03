@@ -24,10 +24,14 @@ and produces messages. The application is strictly separated from the
 - **Built for [Domain Driven Design]** — The API uses DDD terminology to help
   developers align their understanding of the application's business logic with
   its implementation.
+  
 - **Flexible message format** — Supports any Go type that can be serialized to a
   byte slice, with built-in support for JSON and Protocol Buffers.
+  
 - **First-class testing** — Dogma's [testkit] module runs isolated behavioral tests of your application.
+
 - **Multiple engine implementations** — Choose the engine with the best messaging and persistence semantics for your application.
+
 - **Built-in introspection** — Analyze application code to visualize how messages traverse your applications.
 
 ## Related Repositories
