@@ -167,7 +167,7 @@ type ProjectionEventScope interface {
 	IsPrimaryDelivery() bool
 
 	// Log records an informational message.
-	Log(f string, v ...interface{})
+	Log(f string, v ...any)
 }
 
 // ProjectionCompactScope performs operations within the context of a call to
@@ -185,7 +185,7 @@ type ProjectionCompactScope interface {
 	Now() time.Time
 
 	// Log records an informational message.
-	Log(f string, v ...interface{})
+	Log(f string, v ...any)
 }
 
 // NoCompactBehavior can be embedded in [ProjectionMessageHandler]

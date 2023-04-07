@@ -5,10 +5,10 @@ import "fmt"
 // MessageA is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageA struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageA) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -31,10 +31,10 @@ var (
 // MessageB is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageB struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageB) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -57,10 +57,10 @@ var (
 // MessageC is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageC struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageC) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -83,10 +83,10 @@ var (
 // MessageD is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageD struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageD) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -109,10 +109,10 @@ var (
 // MessageE is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageE struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageE) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -135,10 +135,10 @@ var (
 // MessageF is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageF struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageF) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -161,10 +161,10 @@ var (
 // MessageG is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageG struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageG) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -187,10 +187,10 @@ var (
 // MessageH is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageH struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageH) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -213,10 +213,10 @@ var (
 // MessageI is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageI struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageI) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -239,10 +239,10 @@ var (
 // MessageJ is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageJ struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageJ) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -265,10 +265,10 @@ var (
 // MessageK is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageK struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageK) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -291,10 +291,10 @@ var (
 // MessageL is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageL struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageL) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -317,10 +317,10 @@ var (
 // MessageM is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageM struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageM) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -343,10 +343,10 @@ var (
 // MessageN is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageN struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageN) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -369,10 +369,10 @@ var (
 // MessageO is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageO struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageO) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -395,10 +395,10 @@ var (
 // MessageP is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageP struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageP) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -421,10 +421,10 @@ var (
 // MessageQ is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageQ struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageQ) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -447,10 +447,10 @@ var (
 // MessageR is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageR struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageR) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -473,10 +473,10 @@ var (
 // MessageS is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageS struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageS) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -499,10 +499,10 @@ var (
 // MessageT is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageT struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageT) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -525,10 +525,10 @@ var (
 // MessageU is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageU struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageU) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -551,10 +551,10 @@ var (
 // MessageV is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageV struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageV) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -577,10 +577,10 @@ var (
 // MessageW is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageW struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageW) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -603,10 +603,10 @@ var (
 // MessageX is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageX struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageX) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -629,10 +629,10 @@ var (
 // MessageY is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageY struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageY) Validate() error {
 	err, _ := m.Value.(error)
 	return err
@@ -655,10 +655,10 @@ var (
 // MessageZ is a type used as a dogma.Message in tests.
 // Deprecated: Use Command, Event or Timeout instead.
 type MessageZ struct {
-	Value interface{}
+	Value any
 }
 
-// Validate returns m.Value if it is an error.
+// Validate returns m.Value if it implements the error interface.
 func (m MessageZ) Validate() error {
 	err, _ := m.Value.(error)
 	return err

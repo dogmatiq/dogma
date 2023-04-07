@@ -234,7 +234,7 @@ type ProcessEventScope interface {
 	RecordedAt() time.Time
 
 	// Log records an informational message.
-	Log(f string, v ...interface{})
+	Log(f string, v ...any)
 }
 
 // ProcessTimeoutScope is an interface implemented by the engine and used by the
@@ -285,7 +285,7 @@ type ProcessTimeoutScope interface {
 	ScheduledFor() time.Time
 
 	// Log records an informational message.
-	Log(f string, v ...interface{})
+	Log(f string, v ...any)
 }
 
 // StatelessProcessBehavior can be embedded in ProcessMessageHandler

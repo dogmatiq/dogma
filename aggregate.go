@@ -177,5 +177,5 @@ type AggregateCommandScope interface {
 	Destroy()
 
 	// Log records an informational message.
-	Log(f string, v ...interface{})
+	Log(f string, v ...any)
 }

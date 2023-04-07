@@ -9,7 +9,7 @@ import (
 
 // ProcessRoot is a test implementation of dogma.ProcessRoot.
 type ProcessRoot struct {
-	Value interface{}
+	Value any
 }
 
 var _ dogma.ProcessRoot = &ProcessRoot{}

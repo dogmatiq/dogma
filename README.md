@@ -157,7 +157,7 @@ the other elements of domain driven design.
 ### Process
 
 A **process** automates a long running business process. In particular, they can
-coordinate changes across several [aggregate](#aggregate) instances, or between
+coordinate changes across multiple [aggregate](#aggregate) instances, or between
 aggregates and [integrations](#integration).
 
 Like aggregates, processes encapsulate related logic and state. Each

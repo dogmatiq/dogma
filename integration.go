@@ -112,5 +112,5 @@ type IntegrationCommandScope interface {
 	RecordEvent(e Event)
 
 	// Log records an informational message.
-	Log(f string, v ...interface{})
+	Log(f string, v ...any)
 }
