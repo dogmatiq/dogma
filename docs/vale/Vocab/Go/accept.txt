@@ -1,4 +1,2 @@
 goroutine
 ok
-implement
-whitespace

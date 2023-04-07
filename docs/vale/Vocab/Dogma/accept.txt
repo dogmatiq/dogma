@@ -4,11 +4,6 @@ application
 configurer
 CQRS
 DDD
-deduplication
-eventually
-execute
-execution
-immediately
 OCC
 projectionkit
 testkit
