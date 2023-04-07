@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
@@ -78,7 +78,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - `AggregateCommandScope.Root()` can now be called for non-existent aggregate instances
 - `AggregateCommandScope.Destroy()` is now a no-op for non-existent aggregate instances
-- `AggregateRoot.ApplyEvent()` no longer has a hard requirement to panic with `UnexpectedMessage`
+- `AggregateRoot.ApplyEvent()` no longer has a requires an `UnexpectedMessage` panic
 
 ### Removed
 
@@ -97,8 +97,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - Allow engines to call `AggregateRoot.ApplyEvent()` with historical events
 - Clarify semantics of `AggregateMessageHandler.New()` and `ProcessMessageHandler.New()`
-- Clarify semantics of surrounding creating an aggregate instance within the same scope as it was destroyed
-- Clarify semantics of surrounding re-beginning a process instance within the same scope as it was ended
+- Clarify semantics surrounding creating an aggregate instance within the same scope that destroyed it
+- Clarify semantics surrounding re-beginning a process instance within the same scope that ended it
 
 ## [0.6.3] - 2020-01-14
 
