@@ -15,7 +15,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### Added
 
 - Added `Command`, `Event` and `Timeout` as aliases for `Message` in preparation for string message typing
-- **[BC]** Added `MessageDescription()` method to `Message` interface
+- **[APP BC]** Added `MessageDescription()` method to `Message` interface
+- **[ENGINE BC]** Added `ProjectionConfigurer.DeliveryPolicy()`
+- **[ENGINE BC]** Added `ProjectionScope.IsPrimaryDelivery()`
+
+### Changed
+
+- **[APP BC]** Handler and application identity keys must now be an RFC 4122 UUID string
 
 ### Deprecated
 

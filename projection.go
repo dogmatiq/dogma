@@ -5,80 +5,55 @@ import (
 	"time"
 )
 
-// ProjectionMessageHandler is an interface implemented by the application and
-// used by the engine to build a "projection" (also known as a "read model", or
-// "query model") from events that occur within the application.
+// A ProjectionMessageHandler builds a projection from events.
 //
-// Projection message handlers consume event messages, and do not produce
-// messages of any kind.
+// The term "read-model" is often used interchangeably with "projection".
 //
-// A version-based optimistic concurrency control (OCC) protocol is used to
-// ensure that each event is applied to the projection exactly once.
+// Projections use an optimistic concurrency control (OCC) protocol to ensure
+// that the engine applies each event to the projection exactly once.
 //
-// For each event the engine must supply the current version of an "OCC
-// resource" which is compared against a version for that resource that is
-// persisted within the projection. If the supplied version and the persisted
-// versions match then the event is applied to the projection state, otherwise
-// the event is rejected.
+// The OCC protocol uses a key/value store that associates engine-defined
+// "resources" with their "version". These are they keys and values,
+// respectively.
 //
-// Both resources and versions are engine-defined binary values that are not
-// meaningful to the handler. They are represented as byte-slices. Empty and
-// nil slices are valid and equivalent.
+// The OCC store can be challenging to implement. The [projectionkit] module
+// provides adaptors that implement the OCC protocol using various popular
+// database systems.
+//
+// [projectionkit]: github.com/dogma/projectionkit
 type ProjectionMessageHandler interface {
-	// Configure produces a configuration for this handler by calling methods on
-	// the configurer c.
-	//
-	// The implementation MUST allow for multiple calls to Configure(). Each
-	// call SHOULD produce the same configuration.
-	//
-	// The engine MUST call Configure() before calling HandleEvent(). It is
-	// RECOMMENDED that the engine only call Configure() once per handler.
+	// Configure describes the projections' configuration to the engine.
 	Configure(c ProjectionConfigurer)
 
 	// HandleEvent updates the projection to reflect the occurrence of an event.
 	//
-	// r is an engine-defined OCC resource. c and n are the current and next
-	// versions of that resource, respectively. Each of these values is
-	// engine-defined and MUST be treated as an opaque data structure. Nil and
-	// empty byte-slices are valid and equivalent.
+	// r, c and n are the inputs to the OCC store.
 	//
-	// If c matches the current version of r persisted within the projection
-	// then the implementation MUST apply the event to the projection state and
-	// update the persisted version for r to n. ok is true, indicating that the
-	// event was applied.
+	//   - r is a key that identifies some engine-defined resource
+	//   - c is engine's perception of the current version of r
+	//   - n is the next version of r, made by handling this event
 	//
-	// If c does not match the current version of r the implementation MUST NOT
-	// update the projection state or the persisted version. ok is false,
-	// indicating that an OCC conflict occurred.
+	// If c is the current version of r in the OCC store, the method MUST
+	// attempt to atomically update the projection and the version of r to be n.
+	// On success, ok is true and err is nil.
 	//
-	// The initial version of any previously unseen resource is always an
-	// empty-slice.
+	// If c is not the current version of r an OCC conflict has occurred. The
+	// method MUST return with ok set to false and without updating the
+	// projection.
 	//
-	// If a nil error is returned, the projection state and the resource version
-	// have been persisted successfully.
+	// r, c and n are engine-defined; the application SHOULD NOT infer any
+	// meaning from their content. The "current" version of a new resource is
+	// the empty byte-slice. nil and empty slices are interchangeable.
 	//
-	// If a non-nil error is returned, the projection SHOULD be left in the
-	// state it was before HandleEvent() was called.
+	// The engine MAY provide specific guarantees about the order in which it
+	// supplies events to the handler. To maximize portability across engines,
+	// the handler SHOULD NOT assume any specific ordering. The engine MAY call
+	// HandleEvent() concurrently from separate goroutines or operating system
+	// processes.
 	//
-	// The engine SHOULD provide "at-least-once" delivery guarantees to the
-	// handler. That is, the engine should call HandleEvent() with the same
-	// event message until a nil error is returned.
-	//
-	// The engine MAY provide guarantees about the order in which event messages
-	// will be passed to HandleEvent(), however in the interest of engine
-	// portability the implementation SHOULD NOT assume that HandleEvent() will
-	// be called with events in the same order that they were recorded.
-	//
-	// The supplied context parameter SHOULD have a deadline. The implementation
-	// SHOULD NOT impose its own deadline. Instead a suitable timeout duration
-	// can be suggested to the engine via the handler's TimeoutHint() method.
-	//
-	// The engine MUST NOT call HandleEvent() with any message of a type that
-	// has not been configured for consumption by a prior call to Configure().
-	// If any such message is passed, the implementation MUST panic with the
-	// UnexpectedMessage value.
-	//
-	// The engine MAY call HandleEvent() from multiple goroutines concurrently.
+	// The implementation SHOULD NOT impose a context deadline. Instead, use the
+	// TimeoutHint() method to provide the engine with a suitable timeout
+	// duration.
 	HandleEvent(
 		ctx context.Context,
 		r, c, n []byte,
@@ -86,147 +61,140 @@ type ProjectionMessageHandler interface {
 		e Event,
 	) (ok bool, err error)
 
-	// ResourceVersion returns the version of the resource r.
+	// ResourceVersion returns the current version of a resource.
 	//
-	// It returns an empty slice if HandleEvent() has never been called
-	// successfully with this resource.
-	//
-	// If r has previously been closed the behavior is undefined.
+	// It returns an empty slice if r is not in the OCC store.
 	ResourceVersion(ctx context.Context, r []byte) ([]byte, error)
 
-	// CloseResource informs the projection that the resource r will not be
-	// used in any future calls to HandleEvent().
+	// CloseResource informs the handler that the engine has no further use for
+	// a resource.
 	//
-	// If the resource exists it SHOULD be removed. The implementation MUST
-	// return nil if the resource does not exist.
-	//
-	// The behavior of calling ResourceVersion() or HandleEvent() with a
-	// resource that has been closed is undefined.
+	// If r is present in the OCC store the handler SHOULD remove it.
 	CloseResource(ctx context.Context, r []byte) error
 
-	// TimeoutHint returns a duration that is suitable for computing a deadline
-	// for the handling of the given message by this handler.
+	// TimeoutHint returns a suitable duration for handling the given event.
 	//
-	// The hint SHOULD be as short as possible. The implementation MAY return a
-	// zero-value to indicate that no hint can be made.
+	// The duration SHOULD be as short as possible. If no hint is available it
+	// MUST be zero.
 	//
-	// The engine SHOULD use a duration as close as possible to the hint. Use of
-	// a duration shorter than the hint is NOT RECOMMENDED, as this will likely
-	// lead to repeated message handling failures.
-	//
-	// The engine MUST NOT call TimeoutHint() with any message of a type that
-	// has not been configured for consumption by a prior call to Configure().
-	// If any such message is passed, the implementation MUST panic with the
-	// UnexpectedMessage value.
+	// See [NoTimeoutHintBehavior].
 	TimeoutHint(m Message) time.Duration
 
-	// Compact reduces the size of the projection's data.
+	// Compact attempts to reduce the size of the projection.
 	//
-	// The implementation SHOULD attempt to decrease the size of the
-	// projection's data by whatever means available. For example, it may delete
-	// any unused data, or collapse multiple data sets into one.
+	// For example, it may delete unused data, or merge overly granular data.
 	//
-	// The context MAY have a deadline. The implementation SHOULD attempt to
-	// compact data in discrete units, such that if the deadline is reached a
-	// future call to Compact() does not need to compact the same data.
+	// The handler SHOULD compact the projection incrementally such that it
+	// makes some progress even if the context's deadline expires.
 	//
-	// The engine SHOULD call Compact() repeatedly throughout the lifetime of
-	// the projection. The precise scheduling of calls to Compact() are
-	// engine-defined. It MAY be called concurrently with any other method.
+	// See [NoCompactBehavior].
 	Compact(ctx context.Context, s ProjectionCompactScope) error
 }
 
-// ProjectionConfigurer is an interface implemented by the engine and used by
-// the application to configure options related to a ProjectionMessageHandler.
-//
-// It is passed to ProjectionMessageHandler.Configure(), typically upon
-// initialization of the engine.
-//
-// In the context of this interface, "the handler" refers to the handler on
-// which Configure() has been called.
+// A ProjectionConfigurer configures the engine for use with a specific
+// projection message handler.
 type ProjectionConfigurer interface {
-	// Identity sets unique identifiers for the handler.
+	// Identity configures how the engine identifies the handler.
 	//
-	// It MUST be called exactly once within a single call to Configure().
+	// The handler's MUST call Identity() exactly once.
 	//
-	// The name is a human-readable identifier for the handler. Each handler
-	// within an application MUST have a unique name. Handler names SHOULD be
-	// distinct from the application's name. The name MAY be changed over time
-	// to best reflect the purpose of the handler.
+	// name is a human-readable identifier for the handler. Each handler within
+	// an application MUST have a unique name. The name MAY change over time to
+	// best reflect the purpose of the handler.
 	//
-	// The key is an immutable identifier for the handler. Its purpose is to
-	// allow engine implementations to associate ancillary data with the
-	// handler, such as application state or message routing information.
-	//
-	// The application and the handlers within it MUST have distinct keys. The
-	// key MUST NOT be changed. The RECOMMENDED key format is an RFC 4122 UUID
-	// represented as a hyphen-separated, lowercase hexadecimal string, such as
-	// "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// Both identifiers MUST be non-empty UTF-8 strings consisting solely of
-	// printable Unicode characters, excluding whitespace. A printable character
-	// is any character from the Letter, Mark, Number, Punctuation or Symbol
+	// name MUST be a non-empty UTF-8 string consisting solely of printable
+	// Unicode characters, excluding whitespace. A printable character is any
+	// character from the Letter, Mark, Number, Punctuation or Symbol
 	// categories.
 	//
-	// The engine MUST NOT perform any case-folding or normalization of
-	// identifiers. Therefore, two identifiers compare as equivalent if and only
-	// if they consist of the same sequence of bytes.
+	// key is an unique identifier for the handler that's used by the engine to
+	// correlate its internal state with this handler. For that reason the key
+	// SHOULD NOT change once in use.
+	//
+	// key MUST be an [RFC 4122] UUID expressed as a hyphen-separated, lowercase
+	// hexadecimal string, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
+	//
+	// [RFC 4122]: https://www.rfc-editor.org/rfc/rfc4122
 	Identity(name string, key string)
 
-	// ConsumesEventType configures the engine to route event messages of the
-	// same type as e to the handler.
+	// ConsumesEventType configures the engine to route events of a specific
+	// type to the handler.
 	//
-	// It MUST be called at least once within a call to Configure(). It MUST NOT
-	// be called more than once with an event message of the same type.
+	// The the handler MUST call ConsumesEventType() at least once.
 	//
-	// Multiple handlers within an application MAY consume event messages of the
-	// same type.
-	//
-	// The "content" of e MUST NOT be used, inspected, or treated as meaningful
-	// in any way, only its runtime type information may be used.
+	// The event SHOULD be the zero-value of its type; the engine MUST NOT use
+	// its value, only the runtime type information.
 	ConsumesEventType(e Event)
+
+	// DeliveryPolicy configures how the engine delivers events to the handler.
+	//
+	// It accepts a list of candidate policies, in order of preference. It
+	// returns the first candidate that the engine supports.
+	//
+	// The default policy is UnicastProjectionDeliveryPolicy.
+	DeliveryPolicy(candidates ...ProjectionDeliveryPolicy) ProjectionDeliveryPolicy
 }
 
-// ProjectionEventScope is an interface implemented by the engine and used by
-// the application to perform operations within the context of handling a
-// specific event message.
+// A ProjectionDeliveryPolicy describes how to deliver events to a projection
+// message handler on engines that support concurrent or distributed execution
+// of a single Dogma application.
+type ProjectionDeliveryPolicy interface {
+	isProjectionDeliveryPolicy()
+}
+
+// UnicastProjectionDeliveryPolicy is the default ProjectionDeliveryPolicy. It
+// delivers each event to a single instance of the application.
+type UnicastProjectionDeliveryPolicy struct {
+}
+
+func (UnicastProjectionDeliveryPolicy) isProjectionDeliveryPolicy() {}
+
+// ProjectionEventScope performs operations within the context of a call to
+// [ProjectionMessageHandler.HandleEvent]().
 type ProjectionEventScope interface {
-	// RecordedAt returns the time at which the event was recorded.
+	// RecordedAt returns the time at which the event occurred.
 	RecordedAt() time.Time
 
-	// Log records an informational message within the context of the message
-	// that is being handled.
+	// IsPrimaryDelivery returns true on exactly one of the application
+	// instances that receive the event, regardless of the delivery
+	// policy.
+	//
+	// This method is useful when the projection must perform some specific
+	// operation once per event, such as updating a shared resource that's used
+	// by all applications, while still delivering the event to all instances of
+	// the application.
+	IsPrimaryDelivery() bool
+
+	// Log records an informational message.
 	Log(f string, v ...interface{})
 }
 
-// ProjectionCompactScope is an interface implemented by the engine and used by
-// the application to perform operations within the context of compacting the
-// projection's data.
+// ProjectionCompactScope performs operations within the context of a call to
+// [ProjectionMessageHandler.Compact]().
 type ProjectionCompactScope interface {
-	// Log records an informational message within the context of the message
-	// that is being handled.
-	Log(f string, v ...interface{})
-
 	// Now returns the current engine time.
 	//
 	// The handler SHOULD use the returned time to implement compaction logic
-	// that has some time-based component, such as removing data that is older
-	// than a certain age.
+	// that has some time-based component, such as removing data older than a
+	// certain age.
 	//
 	// Under normal operating conditions the engine SHOULD return the current
-	// local time, equivalent to time.Now(). The engine MAY return a different
-	// time under special circumstances, such as when executing tests.
+	// local time. The engine MAY return a different time under some
+	// circumstances, such as when executing tests.
 	Now() time.Time
+
+	// Log records an informational message.
+	Log(f string, v ...interface{})
 }
 
-// NoCompactBehavior can be embedded in ProjectionMessageHandler implementations
-// to indicate that the projection does not require its data to be compacted.
+// NoCompactBehavior can be embedded in [ProjectionMessageHandler]
+// implementations to denote that the projection does not require compaction.
 //
-// It provides an implementation of ProjectionMessageHandler.Compact() that
-// always returns a nil error.
+// It provides a no-op implementation of [ProjectionMessageHandler.Compact]()
+// that always returns a nil error.
 type NoCompactBehavior struct{}
 
-// Compact returns nil.
+// Compact does nothing.
 func (NoCompactBehavior) Compact(ctx context.Context, s ProjectionCompactScope) error {
 	return nil
 }

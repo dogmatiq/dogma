@@ -1,0 +1,9 @@
+RFC
+(?i)MAY
+(?i)MUST
+(?i)NOT
+(?i)OPTIONAL
+(?i)RECOMMENDED
+(?i)REQUIRED
+(?i)SHALL
+(?i)SHOULD
