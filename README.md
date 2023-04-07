@@ -39,9 +39,9 @@ which handles message delivery and data persistence.
 
 ## Related repositories
 
-- [dogmatiq/testkit]: Utilities for black-box testing of Dogma applications.
-- [dogmatiq/projectionkit]: Utilities for building [projections](#projection) in various popular database systems.
-- [dogmatiq/example]: An example Dogma application that implements basic banking features.
+- [testkit]: Utilities for black-box testing of Dogma applications.
+- [projectionkit]: Utilities for building [projections](#projection) in various popular database systems.
+- [example]: An example Dogma application that implements basic banking features.
 
 ## Concepts
 
@@ -198,7 +198,7 @@ interface. The [engine](#engine) routes event [messages](#message) to the
 handler which typically updates a read-optimized database of some kind. This
 view is often referred to as a "read model" or "query model".
 
-The [dogmatiq/projectionkit] module provides engine-agnostic tools for building
+The [projectionkit] module provides engine-agnostic tools for building
 projections in various popular database systems, such as PostgreSQL, MySQL,
 DynamoDB and others
 
@@ -211,14 +211,13 @@ DynamoDB and others
 [`dogma.projectionmessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProjectionMessageHandler
 [api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [cqrs]: https://martinfowler.com/bliki/CQRS.html
-[dogmatiq/example]: https://github.com/dogmatiq/example
-[dogmatiq/projectionkit]: https://github.com/dogmatiq/projectionkit
-[dogmatiq/testkit]: https://github.com/dogmatiq/testkit
 [domain driven design distilled]: https://www.amazon.com/Domain-Driven-Design-Distilled-Vaughn-Vernon/dp/0134434420
 [domain driven design]: https://en.wikipedia.org/wiki/Domain-driven_design
 [event sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
 [eventual consistency]: https://en.wikipedia.org/wiki/Eventual_consistency
+[example]: https://github.com/dogmatiq/example
 [immediate consistency]: http://www.informit.com/articles/article.aspx?p=2020371&seqNum=2
+[projectionkit]: https://github.com/dogmatiq/projectionkit
 [rfc 2119]: https://tools.ietf.org/html/rfc2119
 [testkit]: https://github.com/dogmatiq/testkit
 [veracity]: https://github.com/dogmatiq/veracity

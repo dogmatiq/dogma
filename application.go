@@ -3,50 +3,35 @@ package dogma
 // Application is an interface implemented by the application and used by the
 // engine to describe the structure of an application.
 type Application interface {
-	// Configure configures the behavior of the engine as it relates to this
-	// application.
-	//
-	// c provides access to the various configuration options, such as specifying
-	// which message handlers the application contains.
-	//
-	// The implementation MUST allow for multiple calls to Configure(). Each
-	// call SHOULD produce the same configuration.
+	// Configure describes the application's configuration to the engine.
 	Configure(c ApplicationConfigurer)
 }
 
-// ApplicationConfigurer is an interface implemented by the engine and used by
-// the application to configure options related to the application itself.
+// An ApplicationConfigurer configures the engine for use with a specific
+// application.
 //
-// It is passed to Application.Configure(), typically upon initialization of the
-// engine.
+// See [ApplicationMessageHandler.Configure]().
 type ApplicationConfigurer interface {
-	// Identity sets unique identifiers for the application.
+	// Identity configures how the engine identifies the application.
 	//
-	// It MUST be called exactly once within a single call to Configure().
+	// The application MUST call Identity().
 	//
-	// The name is a human-readable identifier for the application. The
-	// application name SHOULD be distinct from that of any handlers within the
-	// application. The name MAY be changed over time to best reflect the
-	// purpose of the application.
+	// name is a human-readable identifier for the application. The name MAY
+	// change over time to best reflect the purpose of the application.
 	//
-	// The key is an immutable identifier for the application. Its purpose is to
-	// allow engine implementations to uniquely identify the application in a
-	// multi-application environment, and to associate ancillary data with the
-	// application, such as message routing information.
-	//
-	// The application and the handlers within it MUST have distinct keys. The
-	// key MUST NOT be changed. The RECOMMENDED key format is an RFC 4122 UUID
-	// represented as a hyphen-separated, lowercase hexadecimal string, such as
-	// "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// Both identifiers MUST be non-empty UTF-8 strings consisting solely of
-	// printable Unicode characters, excluding whitespace. A printable character
-	// is any character from the Letter, Mark, Number, Punctuation or Symbol
+	// name MUST be a non-empty UTF-8 string consisting solely of printable
+	// Unicode characters, excluding whitespace. A printable character is any
+	// character from the Letter, Mark, Number, Punctuation or Symbol
 	// categories.
 	//
-	// The engine MUST NOT perform any case-folding or normalization of
-	// identifiers. Therefore, two identifiers compare as equivalent if and only
-	// if they consist of the same sequence of bytes.
+	// key is an unique identifier for the application that's used by the engine
+	// to correlate its internal state with this application. For that reason
+	// the key SHOULD NOT change once in use.
+	//
+	// key MUST be an [RFC 4122] UUID expressed as a hyphen-separated, lowercase
+	// hexadecimal string, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
+	//
+	// [RFC 4122]: https://www.rfc-editor.org/rfc/rfc4122
 	Identity(name string, key string)
 
 	// RegisterAggregate configures the engine to route messages to h.

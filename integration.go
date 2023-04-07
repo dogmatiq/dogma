@@ -11,14 +11,7 @@ import (
 // Integration message handlers consume command messages, and optionally produce
 // event messages.
 type IntegrationMessageHandler interface {
-	// Configure produces a configuration for this handler by calling methods on
-	// the configurer c.
-	//
-	// The implementation MUST allow for multiple calls to Configure(). Each
-	// call SHOULD produce the same configuration.
-	//
-	// The engine MUST call Configure() before calling HandleCommand(). It is
-	// RECOMMENDED that the engine only call Configure() once per handler.
+	// Configure describes the handler's configuration to the engine.
 	Configure(c IntegrationConfigurer)
 
 	// HandleCommand handles a command message.
@@ -45,85 +38,66 @@ type IntegrationMessageHandler interface {
 	// concurrently.
 	HandleCommand(ctx context.Context, s IntegrationCommandScope, c Command) error
 
-	// TimeoutHint returns a duration that is suitable for computing a deadline
-	// for the handling of the given message by this handler.
+	// TimeoutHint returns a suitable duration for handling the given message.
 	//
-	// The hint SHOULD be as short as possible. The implementation MAY return a
-	// zero-value to indicate that no hint can be made.
+	// The duration SHOULD be as short as possible. If no hint is available it
+	// MUST be zero.
 	//
-	// The engine SHOULD use a duration as close as possible to the hint. Use of
-	// a duration shorter than the hint is NOT RECOMMENDED, as this will likely
-	// lead to repeated message handling failures.
-	//
-	// The engine MUST NOT call TimeoutHint() with any message of a type that
-	// has not been configured for consumption by a prior call to Configure().
-	// If any such message is passed, the implementation MUST panic with the
-	// UnexpectedMessage value.
+	// See [NoTimeoutHintBehavior].
 	TimeoutHint(m Message) time.Duration
 }
 
-// IntegrationConfigurer is an interface implemented by the engine and used
-// by the application to configure options related to a IntegrationMessageHandler.
+// A IntegrationConfigurer configures the engine for use with a specific
+// integration message handler.
 //
-// It is passed to IntegrationMessageHandler.Configure(), typically upon
-// initialization of the engine.
-//
-// In the context of this interface, "the handler" refers to the handler on
-// which Configure() has been called.
+// See [IntegrationMessageHandler.Configure]().
 type IntegrationConfigurer interface {
-	// Identity sets unique identifiers for the handler.
+	// Identity configures how the engine identifies the handler.
 	//
-	// It MUST be called exactly once within a single call to Configure().
+	// The handler MUST call Identity().
 	//
-	// The name is a human-readable identifier for the handler. Each handler
-	// within an application MUST have a unique name. Handler names SHOULD be
-	// distinct from the application's name. The name MAY be changed over time
-	// to best reflect the purpose of the handler.
+	// name is a human-readable identifier for the handler. Each handler within
+	// an application MUST have a unique name. The name MAY change over time to
+	// best reflect the purpose of the handler.
 	//
-	// The key is an immutable identifier for the handler. Its purpose is to
-	// allow engine implementations to associate ancillary data with the
-	// handler, such as application state or message routing information.
-	//
-	// The application and the handlers within it MUST have distinct keys. The
-	// key MUST NOT be changed. The RECOMMENDED key format is an RFC 4122 UUID
-	// represented as a hyphen-separated, lowercase hexadecimal string, such as
-	// "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// Both identifiers MUST be non-empty UTF-8 strings consisting solely of
-	// printable Unicode characters, excluding whitespace. A printable character
-	// is any character from the Letter, Mark, Number, Punctuation or Symbol
+	// name MUST be a non-empty UTF-8 string consisting solely of printable
+	// Unicode characters, excluding whitespace. A printable character is any
+	// character from the Letter, Mark, Number, Punctuation or Symbol
 	// categories.
 	//
-	// The engine MUST NOT perform any case-folding or normalization of
-	// identifiers. Therefore, two identifiers compare as equivalent if and only
-	// if they consist of the same sequence of bytes.
+	// key is an unique identifier for the handler that's used by the engine to
+	// correlate its internal state with this handler. For that reason the key
+	// SHOULD NOT change once in use.
+	//
+	// key MUST be an [RFC 4122] UUID expressed as a hyphen-separated, lowercase
+	// hexadecimal string, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
+	//
+	// [RFC 4122]: https://www.rfc-editor.org/rfc/rfc4122
 	Identity(name string, key string)
 
-	// ConsumesCommandType configures the engine to route command messages of
-	// the same type as c to the handler.
+	// ConsumesCommandType configures the engine to route commands of a specific
+	// type to the handler.
 	//
-	// It MUST be called at least once within a call to Configure(). It MUST NOT
-	// be called more than once with a command message of the same type.
+	// The handler MUST call ConsumesCommandType() at least once.
 	//
-	// A given command type MUST be routed to exactly one handler within an
-	// application.
+	// The application's configuration MUST route each command type to a single
+	// handler.
 	//
-	// The "content" of c MUST NOT be used, inspected, or treated as meaningful
-	// in any way, only its runtime type information may be used.
+	// The command SHOULD be the zero-value of its type; the engine uses the
+	// type information, but not the value itself.
 	ConsumesCommandType(c Command)
 
-	// ProducesEventType instructs the engine that the handler records events of
-	// the same type as m.
+	// ProducesEventType configures the engine to use the handler as the source
+	// of events of a specific type.
 	//
-	// It MUST NOT be called more than once with an event message of the same
-	// type.
+	// The handler MUST call ProducesEventType() at least once.
 	//
-	// A given event type MUST be produced by exactly one handler within an
-	// application.
+	// The application's configuration MUST source each event type from a single
+	// handler.
 	//
-	// The "content" of m MUST NOT be used, inspected, or treated as meaningful
-	// in any way, only its runtime type information may be used.
-	ProducesEventType(c Event)
+	// The event SHOULD be the zero-value of its type; the engine uses the type
+	// information, but not the value itself.
+	ProducesEventType(e Event)
 }
 
 // IntegrationCommandScope is an interface implemented by the engine and used by
@@ -137,7 +111,6 @@ type IntegrationCommandScope interface {
 	// configured for production by a prior call to Configure().
 	RecordEvent(e Event)
 
-	// Log records an informational message within the context of the message
-	// that is being handled.
+	// Log records an informational message.
 	Log(f string, v ...interface{})
 }

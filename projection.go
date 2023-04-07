@@ -22,7 +22,7 @@ import (
 //
 // [projectionkit]: github.com/dogma/projectionkit
 type ProjectionMessageHandler interface {
-	// Configure describes the projections' configuration to the engine.
+	// Configure describes the handler's configuration to the engine.
 	Configure(c ProjectionConfigurer)
 
 	// HandleEvent updates the projection to reflect the occurrence of an event.
@@ -93,10 +93,12 @@ type ProjectionMessageHandler interface {
 
 // A ProjectionConfigurer configures the engine for use with a specific
 // projection message handler.
+//
+// See [ProjectionMessageHandler.Configure]().
 type ProjectionConfigurer interface {
 	// Identity configures how the engine identifies the handler.
 	//
-	// The handler's MUST call Identity() exactly once.
+	// The handler MUST call Identity().
 	//
 	// name is a human-readable identifier for the handler. Each handler within
 	// an application MUST have a unique name. The name MAY change over time to
@@ -120,10 +122,10 @@ type ProjectionConfigurer interface {
 	// ConsumesEventType configures the engine to route events of a specific
 	// type to the handler.
 	//
-	// The the handler MUST call ConsumesEventType() at least once.
+	// The handler MUST call ConsumesEventType() at least once.
 	//
-	// The event SHOULD be the zero-value of its type; the engine MUST NOT use
-	// its value, only the runtime type information.
+	// The event SHOULD be the zero-value of its type; the engine uses the type
+	// information, but not the value itself.
 	ConsumesEventType(e Event)
 
 	// DeliveryPolicy configures how the engine delivers events to the handler.
@@ -155,9 +157,8 @@ type ProjectionEventScope interface {
 	// RecordedAt returns the time at which the event occurred.
 	RecordedAt() time.Time
 
-	// IsPrimaryDelivery returns true on exactly one of the application
-	// instances that receive the event, regardless of the delivery
-	// policy.
+	// IsPrimaryDelivery returns true on one of the application instances that
+	// receive the event, and false on all other instances.
 	//
 	// This method is useful when the projection must perform some specific
 	// operation once per event, such as updating a shared resource that's used
