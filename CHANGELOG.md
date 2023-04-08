@@ -14,11 +14,22 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Added
 
-- Added `Command`, `Event` and `Timeout` as aliases for `Message` in preparation for string message typing
+- Added `Command`, `Event` and `Timeout` as aliases for `Message` in preparation for strict message typing
 - **[APP BC]** Added `MessageDescription()` method to `Message` interface
 - **[APP BC]** Added `Validate()` method to `Message` interface
-- **[ENGINE BC]** Added `ProjectionConfigurer.DeliveryPolicy()`
-- **[ENGINE BC]** Added `ProjectionScope.IsPrimaryDelivery()`
+- **[ENGINE BC]** Added `Routes()` methods to configurer interfaces:
+  - `AggregateConfigurer.Routes()`
+  - `IntegrationConfigurer.Routes()`
+  - `ProcessConfigurer.Routes()`
+  - `ProjectionConfigurer.Routes()`
+  - `ProjectionConfigurer.DeliveryPolicy()`
+  - `ProjectionScope.IsPrimaryDelivery()`
+- Added route functions for use with configurer `Route()` methods:
+  - `HandlesCommand()`
+  - `RecordsEvent()`
+  - `HandlesEvent()`
+  - `ExecutesCommand()`
+  - `SchedulesTimeout()`
 
 ### Changed
 
@@ -26,10 +37,21 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Removed
 
-- **[ENGINE BC]** Removed `DescribableMessage` interface, as all messages are now describable
-- **[ENGINE BC]** Removed `ValidatableMessage` interface, as all messages are now validatable
+- **[ENGINE BC]** Removed `DescribableMessage` interface
+- **[ENGINE BC]** Removed `ValidatableMessage` interface
 - **[ENGINE BC]** Removed `DescribeMessage()` function
-- **[ENGINE BC]** Removed `ValidateMessage()` function
+
+### Deprecated
+
+- Deprecated the `EventRecorder` interface
+- Deprecated `AggregateConfigurer.ConsumesCommandType()`
+- Deprecated `AggregateConfigurer.ProducesEventType()`
+- Deprecated `IntegrationConfigurer.ConsumesCommandType()`
+- Deprecated `IntegrationConfigurer.ProducesEventType()`
+- Deprecated `ProcessConfigurer.ConsumesEventType()`
+- Deprecated `ProcessConfigurer.ProducesCommandType()`
+- Deprecated `ProcessConfigurer.SchedulesTimeoutType()`
+- Deprecated `ProjectionConfigurer.ConsumesEventType()`
 
 ## [0.11.1] - 2021-03-01
 

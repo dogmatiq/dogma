@@ -1,5 +1,7 @@
 package dogma
 
+import "errors"
+
 // A Message is an application-defined unit of data that describes a [Command],
 // [Event], or [Timeout] within a message-based application.
 type Message interface {
@@ -27,3 +29,11 @@ type Timeout = Message
 var UnexpectedMessage unexpectedMessage
 
 type unexpectedMessage struct{}
+
+// ValidateMessage returns an error if m is invalid.
+func ValidateMessage(m Message) error {
+	if m == nil {
+		return errors.New("message must not be nil")
+	}
+	return m.Validate()
+}
