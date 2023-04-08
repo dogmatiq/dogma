@@ -195,6 +195,9 @@ func (BroadcastProjectionDeliveryPolicy) isProjectionDeliveryPolicy() {}
 
 // ProjectionRoute describes a message type that's routed to a
 // [ProjectionMessageHandler].
-type ProjectionRoute interface{ isProjectionRoute() }
+type ProjectionRoute interface {
+	Route
+	isProjectionRoute()
+}
 
 func (HandlesEventRoute) isProjectionRoute() {}

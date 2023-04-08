@@ -49,6 +49,7 @@ support for per-message routing configuration without further breaking changes.
 - Added `HandlesEvent()`
 - Added `ExecutesCommand()`
 - Added `SchedulesTimeout()`
+- Added `Route` interface
 - Added `AggregateRoute` interface
 - Added `ProcessRoute` interface
 - Added `IntegrationRoute` interface

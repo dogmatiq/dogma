@@ -93,7 +93,10 @@ type IntegrationCommandScope interface {
 
 // IntegrationRoute describes a message type that's routed to or from a
 // [IntegrationMessageHandler].
-type IntegrationRoute interface{ isIntegrationRoute() }
+type IntegrationRoute interface {
+	Route
+	isIntegrationRoute()
+}
 
 func (HandlesCommandRoute) isIntegrationRoute() {}
 func (RecordsEventRoute) isIntegrationRoute()   {}

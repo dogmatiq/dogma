@@ -52,6 +52,9 @@ func SchedulesTimeout[T Timeout]() SchedulesTimeoutRoute {
 }
 
 type (
+	// Route is an interface implemented by all route types.
+	Route interface{ isRoute() }
+
 	// HandlesCommandRoute describes a route for a handler that handles a
 	// [Command] of a specific type.
 	HandlesCommandRoute struct{ Type reflect.Type }
@@ -72,6 +75,12 @@ type (
 	// [Timeout] of a specific type.
 	SchedulesTimeoutRoute struct{ Type reflect.Type }
 )
+
+func (HandlesCommandRoute) isRoute()   {}
+func (ExecutesCommandRoute) isRoute()  {}
+func (HandlesEventRoute) isRoute()     {}
+func (RecordsEventRoute) isRoute()     {}
+func (SchedulesTimeoutRoute) isRoute() {}
 
 func typeOf[T any]() reflect.Type {
 	return reflect.TypeOf((*T)(nil)).Elem()

@@ -152,7 +152,10 @@ type AggregateCommandScope interface {
 
 // AggregateRoute describes a message type that's routed to or from a
 // [AggregateMessageHandler].
-type AggregateRoute interface{ isAggregateRoute() }
+type AggregateRoute interface {
+	Route
+	isAggregateRoute()
+}
 
 func (HandlesCommandRoute) isAggregateRoute() {}
 func (RecordsEventRoute) isAggregateRoute()   {}
