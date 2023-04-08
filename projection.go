@@ -112,11 +112,8 @@ type ProjectionConfigurer interface {
 
 	// DeliveryPolicy configures how the engine delivers events to the handler.
 	//
-	// It accepts a list of candidate policies, in order of preference. It
-	// returns the first candidate that the engine supports.
-	//
 	// The default policy is UnicastProjectionDeliveryPolicy.
-	DeliveryPolicy(...ProjectionDeliveryPolicy) ProjectionDeliveryPolicy
+	DeliveryPolicy(ProjectionDeliveryPolicy)
 
 	// ConsumesEventType configures the engine to route events of a specific
 	// type to the handler.
