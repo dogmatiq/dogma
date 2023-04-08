@@ -27,7 +27,7 @@ called the "key".
 The key's express purpose is for identifying associated data, and therefore has
 more stringent requirements on its immutability than the name.
 
-We further recommend the use of an [RFC 4122] UUID as the format of all keys.
+We further recommend the use of an RFC 4122 UUID as the format of all keys.
 UUIDs can be generated at the time the application or handler is first
 implemented. Many IDEs support generation of UUIDs.
 

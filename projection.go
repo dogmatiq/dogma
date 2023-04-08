@@ -52,7 +52,7 @@ type ProjectionMessageHandler interface {
 	// processes.
 	//
 	// The implementation SHOULD NOT impose a context deadline. Implement the
-	// [ProjectionMessageHandler.TimeoutHint] method instead.
+	// TimeoutHint() method instead.
 	HandleEvent(
 		ctx context.Context,
 		r, c, n []byte,
@@ -76,9 +76,7 @@ type ProjectionMessageHandler interface {
 	// The duration SHOULD be as short as possible. If no hint is available it
 	// MUST be zero.
 	//
-	// In this context, "timeout" refers to a deadline, not a [Timeout] message.
-	//
-	// See [NoTimeoutHintBehavior].
+	// In this context, "timeout" refers to a deadline, not a timeout message.
 	TimeoutHint(Message) time.Duration
 
 	// Compact attempts to reduce the size of the projection.
@@ -87,15 +85,11 @@ type ProjectionMessageHandler interface {
 	//
 	// The handler SHOULD compact the projection incrementally such that it
 	// makes some progress even if the context's deadline expires.
-	//
-	// See [NoCompactBehavior].
 	Compact(context.Context, ProjectionCompactScope) error
 }
 
 // A ProjectionConfigurer configures the engine for use with a specific
 // projection message handler.
-//
-// See [ProjectionMessageHandler.Configure].
 type ProjectionConfigurer interface {
 	// Identity configures the handler's identity.
 	//
@@ -104,8 +98,8 @@ type ProjectionConfigurer interface {
 	// contain solely printable, non-space UTF-8 characters.
 	//
 	// k is a unique key used to associate engine state with the handler. The
-	// key SHOULD NOT change over the handler's lifetime. k MUST be a an [RFC
-	// 4122] UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
+	// key SHOULD NOT change over the handler's lifetime. k MUST be an RFC 4122
+	// UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
 	//
 	// Use of hard-coded literals for both values is RECOMMENDED.
 	Identity(n string, k string)
@@ -113,7 +107,7 @@ type ProjectionConfigurer interface {
 	// Routes configures the engine to route certain message types to and from
 	// the handler.
 	//
-	// Projection handlers support the [HandlesEvent] route type.
+	// Projection handlers support the HandlesEvent() route type.
 	Routes(...ProjectionRoute)
 
 	// DeliveryPolicy configures how the engine delivers events to the handler.
@@ -130,12 +124,12 @@ type ProjectionConfigurer interface {
 	// The event SHOULD be the zero-value of its type; the engine uses the type
 	// information, but not the value itself.
 	//
-	// Deprecated: Use [ProjectionConfigurer.Routes] instead.
+	// Deprecated: Use ProjectionConfigurer.Routes() instead.
 	ConsumesEventType(Event)
 }
 
 // ProjectionEventScope performs engine operations within the context of a call
-// to [ProjectionMessageHandler.HandleEvent].
+// to the HandleEvent() method of a [ProjectionMessageHandler].
 type ProjectionEventScope interface {
 	// RecordedAt returns the time at which the event occurred.
 	RecordedAt() time.Time
@@ -149,12 +143,12 @@ type ProjectionEventScope interface {
 	// the application.
 	IsPrimaryDelivery() bool
 
-	// Log records an informational message using [fmt.Printf] formatting.
+	// Log records an informational message.
 	Log(format string, args ...any)
 }
 
 // ProjectionCompactScope performs engine operations within the context of a
-// call to [ProjectionMessageHandler.Compact].
+// call to the Compact() method of a [ProjectionMessageHandler].
 type ProjectionCompactScope interface {
 	// Now returns the current engine time.
 	//
@@ -167,14 +161,12 @@ type ProjectionCompactScope interface {
 	// circumstances, such as when executing tests.
 	Now() time.Time
 
-	// Log records an informational message using [fmt.Printf] formatting.
+	// Log records an informational message.
 	Log(format string, args ...any)
 }
 
 // NoCompactBehavior is an embeddable type for [ProjectionMessageHandler]
 // implementations that do not require compaction.
-//
-// It provides a no-op implementation of [ProjectionMessageHandler.Compact].
 type NoCompactBehavior struct{}
 
 // Compact does nothing.
@@ -205,9 +197,7 @@ type ProjectionRoute interface {
 // ProjectionRouteConfigurer configures the engine to route messages for a
 // [ProjectionMessageHandler].
 //
-// The engine uses this interface configure its internal routing system.
-// Projection handlers should use [ProjectionConfigurer.Routes] to configure
-// their routes.
+// This interface is for internal use by engines.
 type ProjectionRouteConfigurer interface {
 	HandlesEvent(HandlesEventRoute)
 }

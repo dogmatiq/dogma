@@ -43,20 +43,19 @@ type ProcessMessageHandler interface {
 	// specific event.
 	//
 	// If ok is false, the process ignores this event. Otherwise, id MUST not be
-	// empty. [RFC 4122] UUIDs are the RECOMMENDED format for instance IDs.
+	// empty. RFC 4122 UUIDs are the RECOMMENDED format for instance IDs.
 	//
 	// A process instance begins the first time it receives an event.
 	RouteEventToInstance(context.Context, Event) (id string, ok bool, err error)
 
 	// HandleEvent begins or continues the process in response to an event.
 	//
-	// The handler inspects the root to determine which [Command] messages to
-	// execute, if any. It may also schedule [Timeout] messages to "wake" the
-	// process at a later time.
+	// The handler inspects the root to determine which commands to execute, if
+	// any. It may also schedule timeouts to "wake" the process at a later time.
 	//
 	// If this is the first event routed to this instance, the root is the
-	// return value of [ProcessMessageHandler.New]. Otherwise, it's the value of
-	// the root as it existed after handling the last event or timeout.
+	// return value of New(). Otherwise, it's the value of the root as it
+	// existed after handling the last event or timeout.
 	//
 	// The engine MAY provide specific guarantees about the order in which it
 	// supplies events to the handler. To maximize portability across engines,
@@ -65,21 +64,21 @@ type ProcessMessageHandler interface {
 	// processes.
 	//
 	// The implementation SHOULD NOT impose a context deadline. Implement the
-	// [ProjectionMessageHandler.TimeoutHint] method instead.
+	// TimeoutHint() method instead.
 	HandleEvent(context.Context, ProcessRoot, ProcessEventScope, Event) error
 
 	// HandleTimeout continues the process in response to a timeout.
 	//
-	// The handler inspects the root to determine which [Command] messages to
-	// execute, if any. It may also schedule timeout messages to "wake" the
-	// process at a later time.
+	// The handler inspects the root to determine which commands to execute, if
+	// any. It may also schedule timeout messages to "wake" the process at a
+	// later time.
 	//
 	// The engine MUST NOT call this method before the timeout's scheduled time.
 	// The engine MAY call this method concurrently from separate goroutines or
 	// operating system processes.
 	//
 	// The implementation SHOULD NOT impose a context deadline. Implement the
-	// [ProjectionMessageHandler.TimeoutHint] method instead.
+	// TimeoutHint() method instead.
 	HandleTimeout(context.Context, ProcessRoot, ProcessTimeoutScope, Timeout) error
 
 	// TimeoutHint returns a suitable duration for handling the given message.
@@ -87,9 +86,7 @@ type ProcessMessageHandler interface {
 	// The duration SHOULD be as short as possible. If no hint is available it
 	// MUST be zero.
 	//
-	// In this context, "timeout" refers to a deadline, not a [Timeout] message.
-	//
-	// See [NoTimeoutHintBehavior].
+	// In this context, "timeout" refers to a deadline, not a timeout message.
 	TimeoutHint(Message) time.Duration
 }
 
@@ -101,8 +98,6 @@ type ProcessRoot interface{}
 
 // A ProcessConfigurer configures the engine for use with a specific process
 // message handler.
-//
-// See [ProcessMessageHandler.Configure].
 type ProcessConfigurer interface {
 	// Identity configures the handler's identity.
 	//
@@ -111,8 +106,8 @@ type ProcessConfigurer interface {
 	// contain solely printable, non-space UTF-8 characters.
 	//
 	// k is a unique key used to associate engine state with the handler. The
-	// key SHOULD NOT change over the handler's lifetime. k MUST be a an [RFC
-	// 4122] UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
+	// key SHOULD NOT change over the handler's lifetime. k MUST be an RFC 4122
+	// UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
 	//
 	// Use of hard-coded literals for both values is RECOMMENDED.
 	Identity(n string, k string)
@@ -120,8 +115,8 @@ type ProcessConfigurer interface {
 	// Routes configures the engine to route certain message types to and from
 	// the handler.
 	//
-	// Process handlers support the [HandlesEvent], [ExecutesCommand] and
-	// [SchedulesTimeout] route types.
+	// Process handlers support the HandlesEvent(), ExecutesCommand() and
+	// SchedulesTimeout() route types.
 	Routes(...ProcessRoute)
 
 	// ConsumesEventType configures the engine to route events of a specific
@@ -130,7 +125,7 @@ type ProcessConfigurer interface {
 	// The event SHOULD be the zero-value of its type; the engine uses the type
 	// information, but not the value itself.
 	//
-	// Deprecated: Use [ProcessConfigurer.Routes] instead.
+	// Deprecated: Use ProcessConfigurer.Routes() instead.
 	ConsumesEventType(Event)
 
 	// ProducesCommandType configures the engine to use the handler as the
@@ -139,7 +134,7 @@ type ProcessConfigurer interface {
 	// The command SHOULD be the zero-value of its type; the engine uses the
 	// type information, but not the value itself.
 	//
-	// Deprecated: Use [ProcessConfigurer.Routes] instead.
+	// Deprecated: Use ProcessConfigurer.Routes() instead.
 	ProducesCommandType(Command)
 
 	// SchedulesTimeoutType configures the engine to allow this handler to
@@ -148,12 +143,12 @@ type ProcessConfigurer interface {
 	// The timeout SHOULD be the zero-value of its type; the engine uses the
 	// type information, but not the value itself.
 	//
-	// Deprecated: Use [ProcessConfigurer.Routes] instead.
+	// Deprecated: Use ProcessConfigurer.Routes() instead.
 	SchedulesTimeoutType(Timeout)
 }
 
 // ProcessEventScope performs engine operations within the context of a call
-// to [ProcessMessageHandler.HandleEvent].
+// to the HandleEvent() method of a [ProcessMessageHandler].
 type ProcessEventScope interface {
 	// InstanceID returns the ID of the process instance.
 	InstanceID() string
@@ -163,9 +158,8 @@ type ProcessEventScope interface {
 	// Ending a process instance destroys its state and cancels any pending
 	// timeouts.
 	//
-	// The process instance ends once [ProcessMessageHandler.HandleEvent]
-	// returns. Any future call to [ProcessEventScope.ExecuteCommand] or
-	// [ProcessEventScope.ScheduleTimeout] on this scope prevents the process
+	// The process instance ends once HandleEvent() returns. Any future call to
+	// ExecuteCommand() or ScheduleTimeout() on this scope prevents the process
 	// from ending.
 	//
 	// "Re-beginning" a process instance that has ended has undefined behavior
@@ -174,25 +168,24 @@ type ProcessEventScope interface {
 
 	// ExecuteCommand executes a command as a result of the event.
 	//
-	// Executing a command cancels any prior call to [ProcessEventScope.End]
-	// on this scope.
+	// Executing a command cancels any prior call to End() on this scope.
 	ExecuteCommand(Command)
 
 	// ScheduleTimeout schedules a timeout to occur at a specific time.
 	//
 	// Ending the process cancels any pending timeouts. Scheduling a timeout
-	// cancels any prior call to [ProcessEventScope.End] on this scope.
+	// cancels any prior call to End() on this scope.
 	ScheduleTimeout(Timeout, time.Time)
 
 	// RecordedAt returns the time at which the event occurred.
 	RecordedAt() time.Time
 
-	// Log records an informational message using [fmt.Printf] formatting.
+	// Log records an informational message.
 	Log(format string, args ...any)
 }
 
 // ProcessTimeoutScope performs engine operations within the context of a call
-// to [ProcessMessageHandler.HandleTimeout].
+// to the HandleTimeout() method of a [ProcessMessageHandler].
 type ProcessTimeoutScope interface {
 	// InstanceID returns the ID of the process instance.
 	InstanceID() string
@@ -202,10 +195,9 @@ type ProcessTimeoutScope interface {
 	// Ending a process instance destroys its state and cancels any pending
 	// timeouts.
 	//
-	// The process instance ends once [ProcessMessageHandler.HandleTimeout]
-	// returns. Any future call to [ProcessTimeoutScope.ExecuteCommand] or
-	// [ProcessTimeoutScope.ScheduleTimeout] on this scope prevents the process
-	// from ending.
+	// The process instance ends once HandleTimeout() returns. Any future call
+	// to ExecuteCommand() or ScheduleTimeout() on this scope prevents the
+	// process from ending.
 	//
 	// "Re-beginning" a process instance that has ended has undefined behavior
 	// and is NOT RECOMMENDED.
@@ -213,14 +205,13 @@ type ProcessTimeoutScope interface {
 
 	// ExecuteCommand executes a command as a result of the timeout.
 	//
-	// Executing a command cancels any prior call to [ProcessTimeoutScope.End]
-	// on this scope.
+	// Executing a command cancels any prior call to End() on this scope.
 	ExecuteCommand(Command)
 
 	// ScheduleTimeout schedules a timeout to occur at a specific time.
 	//
 	// Ending the process cancels any pending timeouts. Scheduling a timeout
-	// cancels any prior call to [ProcessTimeoutScope.End] on this scope.
+	// cancels any prior call to End() on this scope.
 	ScheduleTimeout(Timeout, time.Time)
 
 	// ScheduledFor returns the time at which the timeout occured.
@@ -229,15 +220,15 @@ type ProcessTimeoutScope interface {
 	// deliver timeouts that were "missed" after recovering from downtime.
 	ScheduledFor() time.Time
 
-	// Log records an informational message using [fmt.Printf] formatting.
+	// Log records an informational message.
 	Log(format string, args ...any)
 }
 
 // StatelessProcessRoot is an implementation of [ProcessRoot] for processes that
 // do not require any domains-specific state.
 //
-// [StatelessProcessBehavior] provides an implementation of
-// [ProcessMessageHandler.New] that returns this value.
+// [StatelessProcessBehavior] provides a partial implementation of
+// [ProcessMessageHandler] that returns this value.
 //
 // Engines MAY use this value as a sentinel to provide an optimized code path
 // when no state is required.
@@ -247,9 +238,6 @@ type statelessProcessRoot struct{}
 
 // StatelessProcessBehavior is an embeddable type for [ProcessMessageHandler]
 // that do not have any domain-specific state.
-//
-// It provides an implementation of [ProcessMessageHandler.New] that
-// always returns [StatelessProcessRoot].
 type StatelessProcessBehavior struct{}
 
 // New returns [StatelessProcessRoot].
@@ -259,9 +247,6 @@ func (StatelessProcessBehavior) New() ProcessRoot {
 
 // NoTimeoutMessagesBehavior is an embeddable type for [ProcessMessageHandler]
 // implementations that do not use [Timeout] messages.
-//
-// It provides an implementation of [ProcessMessageHandler.HandleTimeout] that
-// always panics with the [UnexpectedMessage] value.
 type NoTimeoutMessagesBehavior struct{}
 
 // HandleTimeout panics with the [UnexpectedMessage] value.
@@ -283,8 +268,7 @@ type ProcessRoute interface {
 // ProcessRouteConfigurer configures the engine to route messages for a
 // [ProcessMessageHandler].
 //
-// The engine uses this interface configure its internal routing system. Process
-// handlers should use [ProcessConfigurer.Routes] to configure their routes.
+// This interface is for internal use by engines.
 type ProcessRouteConfigurer interface {
 	HandlesEvent(HandlesEventRoute)
 	ExecutesCommand(ExecutesCommandRoute)

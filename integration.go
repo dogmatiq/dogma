@@ -20,8 +20,8 @@ type IntegrationMessageHandler interface {
 	// The engine MAY call this method concurrently from separate goroutines or
 	// operating system processes.
 	//
-	// The implementation SHOULD NOT impose a context deadline. Implement the
-	// [IntegrationMessageHandler.TimeoutHint] method instead.
+	// The implementation SHOULD NOT impose a context deadline; implement the
+	// TimeoutHint() method instead.
 	HandleCommand(context.Context, IntegrationCommandScope, Command) error
 
 	// TimeoutHint returns a suitable duration for handling the given message.
@@ -29,16 +29,12 @@ type IntegrationMessageHandler interface {
 	// The duration SHOULD be as short as possible. If no hint is available it
 	// MUST be zero.
 	//
-	// In this context, "timeout" refers to a deadline, not a [Timeout] message.
-	//
-	// See [NoTimeoutHintBehavior].
+	// In this context, "timeout" refers to a deadline, not a timeout message.
 	TimeoutHint(Message) time.Duration
 }
 
 // A IntegrationConfigurer configures the engine for use with a specific
 // integration message handler.
-//
-// See [IntegrationMessageHandler.Configure]().
 type IntegrationConfigurer interface {
 	// Identity configures the handler's identity.
 	//
@@ -47,8 +43,8 @@ type IntegrationConfigurer interface {
 	// contain solely printable, non-space UTF-8 characters.
 	//
 	// k is a unique key used to associate engine state with the handler. The
-	// key SHOULD NOT change over the handler's lifetime. k MUST be a an [RFC
-	// 4122] UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
+	// key SHOULD NOT change over the handler's lifetime. k MUST be an RFC 4122
+	// UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
 	//
 	// Use of hard-coded literals for both values is RECOMMENDED.
 	Identity(n string, k string)
@@ -56,7 +52,7 @@ type IntegrationConfigurer interface {
 	// Routes configures the engine to route certain message types to and from
 	// the handler.
 	//
-	// Integration handlers support the [HandlesCommand] and [RecordsEvent]
+	// Integration handlers support the HandlesCommand() and RecordsEvent()
 	// route types.
 	Routes(...ProcessRoute)
 
@@ -69,7 +65,7 @@ type IntegrationConfigurer interface {
 	// The command SHOULD be the zero-value of its type; the engine uses the
 	// type information, but not the value itself.
 	//
-	// Deprecated: Use [IntegrationConfigurer.Routes] instead.
+	// Deprecated: Use IntegrationConfigurer.Routes() instead.
 	ConsumesCommandType(Command)
 
 	// ProducesEventType configures the engine to use the handler as the source
@@ -81,26 +77,24 @@ type IntegrationConfigurer interface {
 	// The event SHOULD be the zero-value of its type; the engine uses the type
 	// information, but not the value itself.
 	//
-	// Deprecated: Use [IntegrationConfigurer.Routes] instead.
+	// Deprecated: Use IntegrationConfigurer.Routes() instead.
 	ProducesEventType(Event)
 }
 
 // IntegrationCommandScope performs engine operations within the context of a
-// call to [IntegrationMessageHandler.HandleCommand].
+// call to the HandleCommand() method of an [IntegrationMessageHandler].
 type IntegrationCommandScope interface {
 	// RecordEvent records the occurrence of an event.
 	RecordEvent(Event)
 
-	// Log records an informational message using [fmt.Printf] formatting.
+	// Log records an informational message.
 	Log(format string, args ...any)
 }
 
 // IntegrationRouteConfigurer configures the engine to route messages for a
 // [IntegrationMessageHandler].
 //
-// The engine uses this interface configure its internal routing system.
-// Integration handlers should use [IntegrationConfigurer.Routes] to configure
-// their routes.
+// This interface is for internal use by engines.
 type IntegrationRouteConfigurer interface {
 	HandlesCommand(HandlesCommandRoute)
 	RecordsEvent(RecordsEventRoute)

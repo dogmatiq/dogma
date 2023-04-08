@@ -5,8 +5,8 @@ import "reflect"
 // HandlesCommand routes command messages to an [AggregateMessageHandler] or
 // [IntegrationMessageHandler].
 //
-// It's used as an argument to [AggregateConfigurer.Routes] or
-// [IntegrationConfigurer.Routes].
+// It's used as an argument to the Routes() method of [AggregateConfigurer] or
+// [IntegrationConfigurer].
 //
 // An application MUST NOT route a single command type to more than one handler.
 func HandlesCommand[T Command]() HandlesCommandRoute {
@@ -16,8 +16,8 @@ func HandlesCommand[T Command]() HandlesCommandRoute {
 // RecordsEvent routes event messages recorded by an [AggregateMessageHandler]
 // or [IntegrationMessageHandler].
 //
-// It's used as an argument to [AggregateConfigurer.Routes] or
-// [IntegrationConfigurer.Routes].
+// It's used as an argument to the Routes() method of [AggregateConfigurer] or
+// [IntegrationConfigurer].
 //
 // An application MUST NOT route a single event type from more than one handler.
 func RecordsEvent[T Event]() RecordsEventRoute {
@@ -27,8 +27,8 @@ func RecordsEvent[T Event]() RecordsEventRoute {
 // HandlesEvent routes event messages to a [ProcessMessageHandler] or
 // [ProjectionMessageHandler].
 //
-// It's used as an argument to [ProcessConfigurer.Routes] or
-// [ProjectionConfigurer.Routes].
+// It's used as an argument to the Routes() method of [ProcessConfigurer] or
+// [ProjectionConfigurer].
 func HandlesEvent[T Event]() HandlesEventRoute {
 	return HandlesEventRoute{typeOf[T]()}
 }
@@ -36,7 +36,7 @@ func HandlesEvent[T Event]() HandlesEventRoute {
 // ExecutesCommand routes command messages produced by a
 // [ProcessMessageHandler].
 //
-// It's used as an argument to [ProcessConfigurer.Routes].
+// It's used as an argument to the Routes() method of [ProcessConfigurer].
 func ExecutesCommand[T Command]() ExecutesCommandRoute {
 	return ExecutesCommandRoute{typeOf[T]()}
 }
@@ -44,7 +44,7 @@ func ExecutesCommand[T Command]() ExecutesCommandRoute {
 // SchedulesTimeout routes timeout messages scheduled by
 // [ProcessMessageHandler].
 //
-// It's used as an argument to [ProcessConfigurer.Routes].
+// It's used as an argument to the Routes() method of [ProcessConfigurer].
 //
 // An application MAY use a single timeout type with more than one process.
 func SchedulesTimeout[T Timeout]() SchedulesTimeoutRoute {

@@ -31,23 +31,23 @@ type AggregateMessageHandler interface {
 	// RouteCommandToInstance returns the ID of the instance that handles a
 	// specific command.
 	//
-	// The return value MUST not be empty. [RFC 4122] UUIDs are the RECOMMENDED
+	// The return value MUST not be empty. RFC 4122 UUIDs are the RECOMMENDED
 	// format for instance IDs.
 	RouteCommandToInstance(Command) string
 
 	// HandleCommand executes business logic in response to a command.
 	//
-	// The handler inspects the root to determine which [Event] messages to
-	// record, if any.
+	// The handler inspects the root to determine which events to record, if
+	// any.
 	//
-	// The handle SHOULD NOT have any side-effects beyond recording events.
+	// The handler SHOULD NOT have any side-effects beyond recording events.
 	// Specifically, the implementation MUST NOT modify the root directly. Use
-	// [AggregateCommandScope.RecordEvent] to record an event that represents
-	// the state change. See also [AggregateRoot.ApplyEvent].
+	// AggregateCommandScope.RecordEvent() to record an event that represents
+	// the state change. See also AggregateRoot.ApplyEvent().
 	//
 	// If this is the first command routed to this instance, the root is the
-	// return value of [AggregateMessageHandler.New]. Otherwise, it's the value
-	// of the root as it existed after handling the command.
+	// return value of New(). Otherwise, it's the value of the root as it
+	// existed after handling the command.
 	//
 	// While the engine MAY call this method concurrently from separate
 	// goroutines or operating system processes, the state changes and events
@@ -73,8 +73,6 @@ type AggregateRoot interface {
 
 // An AggregateConfigurer configures the engine for use with a specific
 // aggregate message handler.
-//
-// See [AggregateMessageHandler.Configure].
 type AggregateConfigurer interface {
 	// Identity configures the handler's identity.
 	//
@@ -83,8 +81,8 @@ type AggregateConfigurer interface {
 	// contain solely printable, non-space UTF-8 characters.
 	//
 	// k is a unique key used to associate engine state with the handler. The
-	// key SHOULD NOT change over the handler's lifetime. k MUST be a an [RFC
-	// 4122] UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
+	// key SHOULD NOT change over the handler's lifetime. k MUST be an RFC 4122
+	// UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
 	//
 	// Use of hard-coded literals for both values is RECOMMENDED.
 	Identity(n string, k string)
@@ -92,9 +90,9 @@ type AggregateConfigurer interface {
 	// Routes configures the engine to route certain message types to and from
 	// the handler.
 	//
-	// Aggregate handlers support the [HandlesCommand] and [RecordsEvent]
-	// route types.
-	Routes(...ProcessRoute)
+	// Aggregate handlers support the HandlesCommand() and RecordsEvent() route
+	// types.
+	Routes(...AggregateRoute)
 
 	// ConsumesCommandType configures the engine to route commands of a specific
 	// type to the handler.
@@ -105,7 +103,7 @@ type AggregateConfigurer interface {
 	// The command SHOULD be the zero-value of its type; the engine uses the
 	// type information, but not the value itself.
 	//
-	// Deprecated: Use [AggregateConfigurer.Routes] instead.
+	// Deprecated: Use AggregateConfigurer.Routes() instead.
 	ConsumesCommandType(Command)
 
 	// ProducesEventType configures the engine to use the handler as the source
@@ -117,51 +115,51 @@ type AggregateConfigurer interface {
 	// The event SHOULD be the zero-value of its type; the engine uses the type
 	// information, but not the value itself.
 	//
-	// Deprecated: Use [AggregateConfigurer.Routes] instead.
+	// Deprecated: Use AggregateConfigurer.Routes() instead.
 	ProducesEventType(Event)
 }
 
 // AggregateCommandScope performs engine operations within the context of a call
-// to [AggregateMessageHandler.HandleCommand].
+// to the HandleCommand() method of an [AggregateMessageHandler].
 type AggregateCommandScope interface {
 	// InstanceID returns the ID of the aggregate instance.
 	InstanceID() string
 
 	// RecordEvent records the occurrence of an event.
 	//
-	// It applies the event to the root via [AggregateRoot.ApplyEvent], such
-	// that the applied changes are visible to the handler after this method
-	// returns.
+	// It applies the event to the root such that the applied changes are
+	// visible to the handler after this method returns.
 	//
-	// Recording an event cancels any prior call to
-	// [AggregateCommandScope.Destroy] on this scope.
+	// Recording an event cancels any prior call to Destroy() on this scope.
 	RecordEvent(Event)
 
 	// Destroy signals destruction of the aggregate instance.
 	//
 	// Destroying a process discards its state. The first command to target a
-	// destroyed instance operates on a new root, as returned by
-	// [AggregateMessageHandler.New].
+	// destroyed instance operates on a new root.
 	//
-	// Destruction occurs once [AggregateCommandScope.HandleCommand] returns.
-	// Any future call to [AggregateCommandScope.RecordEvent] on this scope
-	// prevents destruction.
+	// Destruction occurs once the HandleCommand() method returns. Any future
+	// call to RecordEvent() on this scope prevents destruction.
 	//
 	// The precise destruction semantics are engine defined. For example,
 	// event-sourcing engines typically do not destroy the record of the
 	// aggregate's historical events.
 	Destroy()
 
-	// Log records an informational message using [fmt.Printf] formatting.
+	// Log records an informational message.
 	Log(format string, args ...any)
+}
+
+// AggregateRoute describes a message type that's routed to or from a
+// [AggregateMessageHandler].
+type AggregateRoute interface {
+	applyToAggregate(AggregateRouteConfigurer)
 }
 
 // AggregateRouteConfigurer configures the engine to route messages for a
 // [AggregateMessageHandler].
 //
-// The engine uses this interface configure its internal routing system.
-// Aggregate handlers should use [AggregateConfigurer.Routes] to configure
-// their routes.
+// This interface is for internal use by engines.
 type AggregateRouteConfigurer interface {
 	HandlesCommand(HandlesCommandRoute)
 	RecordsEvent(RecordsEventRoute)

@@ -9,8 +9,6 @@ type Application interface {
 
 // An ApplicationConfigurer configures the engine for use with a specific
 // application.
-//
-// See [ApplicationMessageHandler.Configure]().
 type ApplicationConfigurer interface {
 	// Identity configures the application's identity.
 	//
@@ -19,8 +17,8 @@ type ApplicationConfigurer interface {
 	// characters.
 	//
 	// k is a unique key used to associate engine state with the application.
-	// The key SHOULD NOT change over the application's lifetime. k MUST be a an
-	// [RFC 4122] UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
+	// The key SHOULD NOT change over the application's lifetime. k MUST be an
+	// RFC 4122 UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
 	//
 	// Use of hard-coded literals for both values is RECOMMENDED.
 	Identity(n string, k string)
