@@ -5,46 +5,34 @@ import (
 	"time"
 )
 
-// IntegrationMessageHandler is an interface implemented by the application and
-// used by the engine to integrate with non-message-based systems.
+// An IntegrationMessageHandler integrates a Dogma application with external and
+// non-message-based systems.
 //
-// Integration message handlers consume command messages, and optionally produce
-// event messages.
+// The engine does not keep any state for integration handlers.
 type IntegrationMessageHandler interface {
 	// Configure describes the handler's configuration to the engine.
-	Configure(c IntegrationConfigurer)
+	Configure(IntegrationConfigurer)
 
-	// HandleCommand handles a command message.
+	// HandleCommand handles a command, typically by invoking some external API.
 	//
-	// If nil is returned, the command has been handled successfully.
+	// It MAY optionally record events that describe the outcome of the command.
 	//
-	// The engine SHOULD provide "at-least-once" delivery guarantees to the
-	// handler. That is, the engine should call HandleCommand() with the same
-	// command message until a nil error is returned.
+	// The engine MAY call this method concurrently from separate goroutines or
+	// operating system processes.
 	//
-	// The supplied context parameter SHOULD have a deadline. The implementation
-	// SHOULD NOT impose its own deadline. Instead a suitable timeout duration
-	// can be suggested to the engine via the handler's TimeoutHint() method.
-	//
-	// The engine MUST NOT call HandleCommand() with any message of a type that
-	// has not been configured for consumption by a prior call to Configure().
-	// If any such message is passed, the implementation MUST panic with the
-	// UnexpectedMessage value.
-	//
-	// The implementation MUST NOT assume that HandleCommand() will be called
-	// with commands in the same order that they were executed.
-	//
-	// The engine MAY call HandleCommand() from multiple goroutines
-	// concurrently.
-	HandleCommand(ctx context.Context, s IntegrationCommandScope, c Command) error
+	// The implementation SHOULD NOT impose a context deadline. Implement the
+	// [IntegrationMessageHandler.TimeoutHint] method instead.
+	HandleCommand(context.Context, IntegrationCommandScope, Command) error
 
 	// TimeoutHint returns a suitable duration for handling the given message.
 	//
 	// The duration SHOULD be as short as possible. If no hint is available it
 	// MUST be zero.
 	//
+	// In this context, "timeout" refers to a deadline, not a [Timeout] message.
+	//
 	// See [NoTimeoutHintBehavior].
-	TimeoutHint(m Message) time.Duration
+	TimeoutHint(Message) time.Duration
 }
 
 // A IntegrationConfigurer configures the engine for use with a specific
@@ -52,65 +40,71 @@ type IntegrationMessageHandler interface {
 //
 // See [IntegrationMessageHandler.Configure]().
 type IntegrationConfigurer interface {
-	// Identity configures how the engine identifies the handler.
+	// Identity configures the handler's identity.
 	//
-	// The handler MUST call Identity().
+	// n is a short human-readable name. It MUST be unique within the
+	// application. The name MAY change over the handler's lifetime. n MUST
+	// contain solely printable, non-space UTF-8 characters.
 	//
-	// name is a human-readable identifier for the handler. Each handler within
-	// an application MUST have a unique name. The name MAY change over time to
-	// best reflect the purpose of the handler.
+	// k is a unique key used to associate engine state with the handler. The
+	// key SHOULD NOT change over the handler's lifetime. k MUST be a an [RFC
+	// 4122] UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
 	//
-	// name MUST be a non-empty UTF-8 string consisting solely of printable
-	// Unicode characters, excluding whitespace. A printable character is any
-	// character from the Letter, Mark, Number, Punctuation or Symbol
-	// categories.
+	// Use of hard-coded literals for both values is RECOMMENDED.
+	Identity(n string, k string)
+
+	// Routes configures the engine to route certain message types to and from
+	// the handler.
 	//
-	// key is an unique identifier for the handler that's used by the engine to
-	// correlate its internal state with this handler. For that reason the key
-	// SHOULD NOT change once in use.
-	//
-	// key MUST be an [RFC 4122] UUID expressed as a hyphen-separated, lowercase
-	// hexadecimal string, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// [RFC 4122]: https://www.rfc-editor.org/rfc/rfc4122
-	Identity(name string, key string)
+	// Integration handlers support the [HandlesCommand] and [RecordsEvent]
+	// route types.
+	Routes(...ProcessRoute)
 
 	// ConsumesCommandType configures the engine to route commands of a specific
 	// type to the handler.
-	//
-	// The handler MUST call ConsumesCommandType() at least once.
 	//
 	// The application's configuration MUST route each command type to a single
 	// handler.
 	//
 	// The command SHOULD be the zero-value of its type; the engine uses the
 	// type information, but not the value itself.
-	ConsumesCommandType(c Command)
+	//
+	// Deprecated: Use [IntegrationConfigurer.Routes] instead.
+	ConsumesCommandType(Command)
 
 	// ProducesEventType configures the engine to use the handler as the source
 	// of events of a specific type.
-	//
-	// The handler MUST call ProducesEventType() at least once.
 	//
 	// The application's configuration MUST source each event type from a single
 	// handler.
 	//
 	// The event SHOULD be the zero-value of its type; the engine uses the type
 	// information, but not the value itself.
-	ProducesEventType(e Event)
-}
-
-// IntegrationCommandScope is an interface implemented by the engine and used by
-// the application to perform operations within the context of handling a
-// specific integration command message.
-type IntegrationCommandScope interface {
-	// RecordEvent records the occurrence of an event as a result of the command
-	// message that is being handled.
 	//
-	// It MUST NOT be called with a message of any type that has not been
-	// configured for production by a prior call to Configure().
-	RecordEvent(e Event)
-
-	// Log records an informational message.
-	Log(f string, v ...any)
+	// Deprecated: Use [IntegrationConfigurer.Routes] instead.
+	ProducesEventType(Event)
 }
+
+// IntegrationCommandScope performs engine operations within the context of a
+// call to [IntegrationMessageHandler.HandleCommand].
+type IntegrationCommandScope interface {
+	// RecordEvent records the occurrence of an event.
+	RecordEvent(Event)
+
+	// Log records an informational message using [fmt.Printf] formatting.
+	Log(format string, args ...any)
+}
+
+// IntegrationRouteConfigurer configures the engine to route messages for a
+// [IntegrationMessageHandler].
+//
+// The engine uses this interface configure its internal routing system.
+// Integration handlers should use [IntegrationConfigurer.Routes] to configure
+// their routes.
+type IntegrationRouteConfigurer interface {
+	HandlesCommand(HandlesCommandRoute)
+	RecordsEvent(RecordsEventRoute)
+}
+
+func (r HandlesCommandRoute) applyToIntegration(v IntegrationRouteConfigurer) { v.HandlesCommand(r) }
+func (r RecordsEventRoute) applyToIntegration(v IntegrationRouteConfigurer)   { v.RecordsEvent(r) }

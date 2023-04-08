@@ -43,4 +43,5 @@ This does place some onus on the developer to generate a unique key and to
 maintain the same key for the lifetime of the handler implementation.
 
 <!-- references -->
-[RFC 4122]: https://tools.ietf.org/html/rfc4122
+
+[rfc 4122]: https://www.rfc-editor.org/rfc/rfc4122.html

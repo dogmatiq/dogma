@@ -4,15 +4,9 @@ import (
 	"time"
 )
 
-// NoTimeoutHintBehavior can be embedded in message handler implementations to
-// denote that the handler is unable to suggest a message handling timeout
-// duration.
-//
-// It provides an implementation of the TimeoutHint() method that always returns
-// zero.
-//
-// The TimeoutHint() method is present in the [ProcessMessageHandler],
-// [IntegrationMessageHandler] and [ProjectionMessageHandler] interfaces.
+// NoTimeoutHintBehavior is an embeddable type for [ProcessMessageHandler],
+// [IntegrationMessageHandler] and [ProjectionMessageHandler] implementations
+// that do not provide a message handling timeout hint.
 type NoTimeoutHintBehavior struct{}
 
 // TimeoutHint always returns zero.

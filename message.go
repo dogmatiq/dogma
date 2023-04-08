@@ -1,10 +1,7 @@
 package dogma
 
-// A Message is an application-defined unit of data that encapsulates a
-// "command", "event", or "timeout" within a message-based application.
-//
-// Engine implementations MAY place further requirements upon message
-// implementations.
+// A Message is an application-defined unit of data that describes a [Command],
+// [Event], or [Timeout] within a message-based application.
 type Message interface {
 	// MessageDescription returns a human-readable description of the message.
 	MessageDescription() string
@@ -21,8 +18,8 @@ type Command = Message
 // Dogma application.
 type Event = Message
 
-// A Timeout is a message that encapsulates information about an action that was
-// scheduled to occur at a specific time.
+// A Timeout is a message that represents a request for an action to be
+// performed at a specific time.
 type Timeout = Message
 
 // UnexpectedMessage is a panic value used by a message handler when it receives

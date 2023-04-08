@@ -1,181 +1,171 @@
 package dogma
 
-// AggregateMessageHandler is an interface implemented by the application and
-// used by the engine to cause changes to an aggregate instance via command
-// messages.
+// A AggregateMessageHandler models business logic and state.
 //
-// Each aggregate type can have many "instances". Each instance is a collection
-// of objects that represent some domain state within the application. All
-// manipulation of an aggregate instance is performed via one of its constituent
-// objects, known as the "root", and represented by the AggregateRoot interface.
+// Aggregates are the primary building blocks of an application's domain logic.
+// They enforce the domain's strict invariants.
 //
-// A request to change the state of an aggregate instance is represented by a
-// command message. The changes caused by the command message, if any, are
-// represented by event messages.
+// Aggregates use [Command] messages to represent requests to perform some
+// specific business logic and change the state of the application
+// accordingly. [Event] messages represent those changes.
 //
-// Each command message targets a single aggregate instance of a specific type.
+// Aggregates are stateful. An application typically uses multiple instances of
+// an aggregate, each with its own state. For example, a banking application may
+// use one instance of the "account" aggregate for each bank account.
+//
+// The state of each instance is application-defined. Often it's a tree of
+// related entities and values. The [AggregateRoot] interface represents the
+// "root" entity through which the handler accesses the instance's state.
 type AggregateMessageHandler interface {
-	// New constructs a new aggregate instance initialized with any
-	// default values and returns the aggregate root.
+	// Configure describes the handler's configuration to the engine.
+	Configure(AggregateConfigurer)
+
+	// New returns an aggregate root instance in its initial state.
 	//
-	// Repeated calls SHOULD return a value that is of the same type and
-	// initialized in the same way. The return value MUST NOT be nil.
+	// The return value MUST NOT be nil. It MAY be the zero-value of the root's
+	// underlying type.
+	//
+	// Each call SHOULD return the same type and initial state.
 	New() AggregateRoot
 
-	// Configure describes the handler's configuration to the engine.
-	Configure(c AggregateConfigurer)
+	// RouteCommandToInstance returns the ID of the instance that handles a
+	// specific command.
+	//
+	// The return value MUST not be empty. [RFC 4122] UUIDs are the RECOMMENDED
+	// format for instance IDs.
+	RouteCommandToInstance(Command) string
 
-	// RouteCommandToInstance returns the ID of the aggregate instance that is
-	// targeted by c.
+	// HandleCommand executes business logic in response to a command.
 	//
-	// The return value MUST be a non-empty string. The use of UUIDs for
-	// instance identifiers is RECOMMENDED.
+	// The handler inspects the root to determine which [Event] messages to
+	// record, if any.
 	//
-	// The engine MUST NOT call RouteCommandToInstance() with any message of a
-	// type that has not been configured for consumption by a prior call to
-	// Configure(). If any such message is passed, the implementation MUST
-	// panic with the UnexpectedMessage value.
-	RouteCommandToInstance(c Command) string
-
-	// HandleCommand handles a command message.
+	// The handle SHOULD NOT have any side-effects beyond recording events.
+	// Specifically, the implementation MUST NOT modify the root directly. Use
+	// [AggregateCommandScope.RecordEvent] to record an event that represents
+	// the state change. See also [AggregateRoot.ApplyEvent].
 	//
-	// Handling a command message involves inspecting the state of the target
-	// aggregate instance (via the aggregate root, r) to determine what changes,
-	// if any, should occur. Each change is indicated by recording an event
-	// message.
+	// If this is the first command routed to this instance, the root is the
+	// return value of [AggregateMessageHandler.New]. Otherwise, it's the value
+	// of the root as it existed after handling the command.
 	//
-	// The engine MUST provide an AggregateRoot, r, equivalent in value to
-	// calling New(), then calling r.ApplyEvent() for each event message that
-	// has been recorded against the targeted instance since the last time the
-	// instance was destroyed via s.Destroy().
-	//
-	// The implementation MUST NOT modify the state of r directly. All
-	// modifications must be applied by the implementation of r.ApplyEvent(),
-	// which the engine calls for each event message that is recorded via
-	// s.RecordEvent().
-	//
-	// The engine SHOULD provide "at-least-once" delivery guarantees to the
-	// handler. That is, the engine should call HandleCommand() with the same
-	// command message until no panic occurs.
-	//
-	// The engine MUST NOT call HandleCommand() with any message of a type that
-	// has not been configured for consumption by a prior call to Configure().
-	// If any such message is passed, the implementation MUST panic with the
-	// UnexpectedMessage value.
-	//
-	// The implementation MUST NOT assume that HandleCommand() will be called
-	// with commands in the same order that they were executed.
-	//
-	// The engine MAY call HandleCommand() from multiple goroutines
-	// concurrently.
-	HandleCommand(r AggregateRoot, s AggregateCommandScope, c Command)
+	// While the engine MAY call this method concurrently from separate
+	// goroutines or operating system processes, the state changes and events
+	// that represent them always appear to have occurred sequentially.
+	HandleCommand(AggregateRoot, AggregateCommandScope, Command)
 }
 
-// AggregateRoot is an interface implemented by the application and used by
-// the engine to apply changes to an aggregate instance.
+// AggregateRoot is an interface for the domain-specific state of a specific
+// aggregate instance.
 type AggregateRoot interface {
-	// ApplyEvent updates the aggregate instance to reflect the occurrence of an
-	// event that was recorded against this instance.
+	// ApplyEvent updates aggregate instance to reflect the occurrence of an
+	// event.
 	//
-	// The engine MUST call ApplyEvent() for each newly recorded event. It MAY
-	// call ApplyEvent() with any event that has already been recorded against
-	// this instance, even if that event type is no longer configured for
-	// production by a prior call to Configure().
+	// This implementation of this method is the only code permitted to
+	// modify the instance's state.
 	//
-	// The implementation MUST accept the event types as described above, though
-	// any such call MAY be a no-op.
-	//
-	// The implementation SHOULD panic with the UnexpectedMessage value if
-	// called with any event type other than those described above.
-	ApplyEvent(e Event)
+	// The method SHOULD accept historical events that are no longer routed to
+	// this aggregate type. This is typically required by event-sourcing engines
+	// that sometimes load aggregates into memory by applying their entire
+	// history.
+	ApplyEvent(Event)
 }
 
 // An AggregateConfigurer configures the engine for use with a specific
 // aggregate message handler.
 //
-// See [AggregateMessageHandler.Configure]().
+// See [AggregateMessageHandler.Configure].
 type AggregateConfigurer interface {
-	// Identity configures how the engine identifies the handler.
+	// Identity configures the handler's identity.
 	//
-	// The handler MUST call Identity().
+	// n is a short human-readable name. It MUST be unique within the
+	// application. The name MAY change over the handler's lifetime. n MUST
+	// contain solely printable, non-space UTF-8 characters.
 	//
-	// name is a human-readable identifier for the handler. Each handler within
-	// an application MUST have a unique name. The name MAY change over time to
-	// best reflect the purpose of the handler.
+	// k is a unique key used to associate engine state with the handler. The
+	// key SHOULD NOT change over the handler's lifetime. k MUST be a an [RFC
+	// 4122] UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
 	//
-	// name MUST be a non-empty UTF-8 string consisting solely of printable
-	// Unicode characters, excluding whitespace. A printable character is any
-	// character from the Letter, Mark, Number, Punctuation or Symbol
-	// categories.
+	// Use of hard-coded literals for both values is RECOMMENDED.
+	Identity(n string, k string)
+
+	// Routes configures the engine to route certain message types to and from
+	// the handler.
 	//
-	// key is an unique identifier for the handler that's used by the engine to
-	// correlate its internal state with this handler. For that reason the key
-	// SHOULD NOT change once in use.
-	//
-	// key MUST be an [RFC 4122] UUID expressed as a hyphen-separated, lowercase
-	// hexadecimal string, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// [RFC 4122]: https://www.rfc-editor.org/rfc/rfc4122
-	Identity(name string, key string)
+	// Aggregate handlers support the [HandlesCommand] and [RecordsEvent]
+	// route types.
+	Routes(...ProcessRoute)
 
 	// ConsumesCommandType configures the engine to route commands of a specific
 	// type to the handler.
-	//
-	// The handler MUST call ConsumesCommandType() at least once.
 	//
 	// The application's configuration MUST route each command type to a single
 	// handler.
 	//
 	// The command SHOULD be the zero-value of its type; the engine uses the
 	// type information, but not the value itself.
-	ConsumesCommandType(c Command)
+	//
+	// Deprecated: Use [AggregateConfigurer.Routes] instead.
+	ConsumesCommandType(Command)
 
 	// ProducesEventType configures the engine to use the handler as the source
 	// of events of a specific type.
-	//
-	// The handler MUST call ProducesEventType() at least once.
 	//
 	// The application's configuration MUST source each event type from a single
 	// handler.
 	//
 	// The event SHOULD be the zero-value of its type; the engine uses the type
 	// information, but not the value itself.
-	ProducesEventType(e Event)
+	//
+	// Deprecated: Use [AggregateConfigurer.Routes] instead.
+	ProducesEventType(Event)
 }
 
-// AggregateCommandScope is an interface implemented by the engine and used by the
-// application to perform operations within the context of handling a specific
-// domain command message.
+// AggregateCommandScope performs engine operations within the context of a call
+// to [AggregateMessageHandler.HandleCommand].
 type AggregateCommandScope interface {
-	// InstanceID returns the ID of the targeted aggregate instance.
+	// InstanceID returns the ID of the aggregate instance.
 	InstanceID() string
 
-	// RecordEvent records the occurrence of an event as a result of the command
-	// message that is being handled.
+	// RecordEvent records the occurrence of an event.
 	//
-	// It MUST NOT be called with a message of any type that has not been
-	// configured for production by a prior call to Configure().
+	// It applies the event to the root via [AggregateRoot.ApplyEvent], such
+	// that the applied changes are visible to the handler after this method
+	// returns.
 	//
-	// The engine MUST call ApplyEvent(e) on the aggregate root that was passed
-	// to HandleCommand(), such that the applied changes are visible to the
-	// handler after RecordEvent() returns.
-	//
-	// Any prior call to Destroy() within the same scope is negated.
-	RecordEvent(e Event)
+	// Recording an event cancels any prior call to
+	// [AggregateCommandScope.Destroy] on this scope.
+	RecordEvent(Event)
 
-	// Destroy indicates to the engine that the state of the aggregate root for
-	// the targeted instance is no longer meaningful.
+	// Destroy signals destruction of the aggregate instance.
 	//
-	// A call to Destroy() is negated by a subsequent call to RecordEvent()
-	// within the same scope.
+	// Destroying a process discards its state. The first command to target a
+	// destroyed instance operates on a new root, as returned by
+	// [AggregateMessageHandler.New].
 	//
-	// The engine MUST pass a newly initialized aggregate root to the handler
-	// when the next command message is handled.
+	// Destruction occurs once [AggregateCommandScope.HandleCommand] returns.
+	// Any future call to [AggregateCommandScope.RecordEvent] on this scope
+	// prevents destruction.
 	//
-	// The precise semantics are implementation defined. The aggregate data MAY
-	// be deleted or archived, for example.
+	// The precise destruction semantics are engine defined. For example,
+	// event-sourcing engines typically do not destroy the record of the
+	// aggregate's historical events.
 	Destroy()
 
-	// Log records an informational message.
-	Log(f string, v ...any)
+	// Log records an informational message using [fmt.Printf] formatting.
+	Log(format string, args ...any)
 }
+
+// AggregateRouteConfigurer configures the engine to route messages for a
+// [AggregateMessageHandler].
+//
+// The engine uses this interface configure its internal routing system.
+// Aggregate handlers should use [AggregateConfigurer.Routes] to configure
+// their routes.
+type AggregateRouteConfigurer interface {
+	HandlesCommand(HandlesCommandRoute)
+	RecordsEvent(RecordsEventRoute)
+}
+
+func (r HandlesCommandRoute) applyToAggregate(v AggregateRouteConfigurer) { v.HandlesCommand(r) }
+func (r RecordsEventRoute) applyToAggregate(v AggregateRouteConfigurer)   { v.RecordsEvent(r) }

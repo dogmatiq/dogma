@@ -23,7 +23,7 @@ import (
 // [projectionkit]: github.com/dogma/projectionkit
 type ProjectionMessageHandler interface {
 	// Configure describes the handler's configuration to the engine.
-	Configure(c ProjectionConfigurer)
+	Configure(ProjectionConfigurer)
 
 	// HandleEvent updates the projection to reflect the occurrence of an event.
 	//
@@ -48,12 +48,11 @@ type ProjectionMessageHandler interface {
 	// The engine MAY provide specific guarantees about the order in which it
 	// supplies events to the handler. To maximize portability across engines,
 	// the handler SHOULD NOT assume any specific ordering. The engine MAY call
-	// HandleEvent() concurrently from separate goroutines or operating system
+	// this method concurrently from separate goroutines or operating system
 	// processes.
 	//
-	// The implementation SHOULD NOT impose a context deadline. Instead, use the
-	// TimeoutHint() method to provide the engine with a suitable timeout
-	// duration.
+	// The implementation SHOULD NOT impose a context deadline. Implement the
+	// [ProjectionMessageHandler.TimeoutHint] method instead.
 	HandleEvent(
 		ctx context.Context,
 		r, c, n []byte,
@@ -77,8 +76,10 @@ type ProjectionMessageHandler interface {
 	// The duration SHOULD be as short as possible. If no hint is available it
 	// MUST be zero.
 	//
+	// In this context, "timeout" refers to a deadline, not a [Timeout] message.
+	//
 	// See [NoTimeoutHintBehavior].
-	TimeoutHint(m Message) time.Duration
+	TimeoutHint(Message) time.Duration
 
 	// Compact attempts to reduce the size of the projection.
 	//
@@ -88,45 +89,32 @@ type ProjectionMessageHandler interface {
 	// makes some progress even if the context's deadline expires.
 	//
 	// See [NoCompactBehavior].
-	Compact(ctx context.Context, s ProjectionCompactScope) error
+	Compact(context.Context, ProjectionCompactScope) error
 }
 
 // A ProjectionConfigurer configures the engine for use with a specific
 // projection message handler.
 //
-// See [ProjectionMessageHandler.Configure]().
+// See [ProjectionMessageHandler.Configure].
 type ProjectionConfigurer interface {
-	// Identity configures how the engine identifies the handler.
+	// Identity configures the handler's identity.
 	//
-	// The handler MUST call Identity().
+	// n is a short human-readable name. It MUST be unique within the
+	// application. The name MAY change over the handler's lifetime. n MUST
+	// contain solely printable, non-space UTF-8 characters.
 	//
-	// name is a human-readable identifier for the handler. Each handler within
-	// an application MUST have a unique name. The name MAY change over time to
-	// best reflect the purpose of the handler.
+	// k is a unique key used to associate engine state with the handler. The
+	// key SHOULD NOT change over the handler's lifetime. k MUST be a an [RFC
+	// 4122] UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
 	//
-	// name MUST be a non-empty UTF-8 string consisting solely of printable
-	// Unicode characters, excluding whitespace. A printable character is any
-	// character from the Letter, Mark, Number, Punctuation or Symbol
-	// categories.
-	//
-	// key is an unique identifier for the handler that's used by the engine to
-	// correlate its internal state with this handler. For that reason the key
-	// SHOULD NOT change once in use.
-	//
-	// key MUST be an [RFC 4122] UUID expressed as a hyphen-separated, lowercase
-	// hexadecimal string, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// [RFC 4122]: https://www.rfc-editor.org/rfc/rfc4122
-	Identity(name string, key string)
+	// Use of hard-coded literals for both values is RECOMMENDED.
+	Identity(n string, k string)
 
-	// ConsumesEventType configures the engine to route events of a specific
-	// type to the handler.
+	// Routes configures the engine to route certain message types to and from
+	// the handler.
 	//
-	// The handler MUST call ConsumesEventType() at least once.
-	//
-	// The event SHOULD be the zero-value of its type; the engine uses the type
-	// information, but not the value itself.
-	ConsumesEventType(e Event)
+	// Projection handlers support the [HandlesEvent] route type.
+	Routes(...ProjectionRoute)
 
 	// DeliveryPolicy configures how the engine delivers events to the handler.
 	//
@@ -134,25 +122,20 @@ type ProjectionConfigurer interface {
 	// returns the first candidate that the engine supports.
 	//
 	// The default policy is UnicastProjectionDeliveryPolicy.
-	DeliveryPolicy(candidates ...ProjectionDeliveryPolicy) ProjectionDeliveryPolicy
+	DeliveryPolicy(...ProjectionDeliveryPolicy) ProjectionDeliveryPolicy
+
+	// ConsumesEventType configures the engine to route events of a specific
+	// type to the handler.
+	//
+	// The event SHOULD be the zero-value of its type; the engine uses the type
+	// information, but not the value itself.
+	//
+	// Deprecated: Use [ProjectionConfigurer.Routes] instead.
+	ConsumesEventType(Event)
 }
 
-// A ProjectionDeliveryPolicy describes how to deliver events to a projection
-// message handler on engines that support concurrent or distributed execution
-// of a single Dogma application.
-type ProjectionDeliveryPolicy interface {
-	isProjectionDeliveryPolicy()
-}
-
-// UnicastProjectionDeliveryPolicy is the default ProjectionDeliveryPolicy. It
-// delivers each event to a single instance of the application.
-type UnicastProjectionDeliveryPolicy struct {
-}
-
-func (UnicastProjectionDeliveryPolicy) isProjectionDeliveryPolicy() {}
-
-// ProjectionEventScope performs operations within the context of a call to
-// [ProjectionMessageHandler.HandleEvent]().
+// ProjectionEventScope performs engine operations within the context of a call
+// to [ProjectionMessageHandler.HandleEvent].
 type ProjectionEventScope interface {
 	// RecordedAt returns the time at which the event occurred.
 	RecordedAt() time.Time
@@ -166,12 +149,12 @@ type ProjectionEventScope interface {
 	// the application.
 	IsPrimaryDelivery() bool
 
-	// Log records an informational message.
-	Log(f string, v ...any)
+	// Log records an informational message using [fmt.Printf] formatting.
+	Log(format string, args ...any)
 }
 
-// ProjectionCompactScope performs operations within the context of a call to
-// [ProjectionMessageHandler.Compact]().
+// ProjectionCompactScope performs engine operations within the context of a
+// call to [ProjectionMessageHandler.Compact].
 type ProjectionCompactScope interface {
 	// Now returns the current engine time.
 	//
@@ -184,18 +167,49 @@ type ProjectionCompactScope interface {
 	// circumstances, such as when executing tests.
 	Now() time.Time
 
-	// Log records an informational message.
-	Log(f string, v ...any)
+	// Log records an informational message using [fmt.Printf] formatting.
+	Log(format string, args ...any)
 }
 
-// NoCompactBehavior can be embedded in [ProjectionMessageHandler]
-// implementations to denote that the projection does not require compaction.
+// NoCompactBehavior is an embeddable type for [ProjectionMessageHandler]
+// implementations that do not require compaction.
 //
-// It provides a no-op implementation of [ProjectionMessageHandler.Compact]()
-// that always returns a nil error.
+// It provides a no-op implementation of [ProjectionMessageHandler.Compact].
 type NoCompactBehavior struct{}
 
 // Compact does nothing.
 func (NoCompactBehavior) Compact(ctx context.Context, s ProjectionCompactScope) error {
 	return nil
 }
+
+// A ProjectionDeliveryPolicy describes how to deliver events to a projection
+// message handler on engines that support concurrent or distributed execution
+// of a single Dogma application.
+type ProjectionDeliveryPolicy interface {
+	isProjectionDeliveryPolicy()
+}
+
+// UnicastProjectionDeliveryPolicy is the default [ProjectionDeliveryPolicy]. It
+// delivers each event to a single instance of the application.
+type UnicastProjectionDeliveryPolicy struct {
+}
+
+func (UnicastProjectionDeliveryPolicy) isProjectionDeliveryPolicy() {}
+
+// ProjectionRoute describes a message type that's routed to a
+// [ProjectionMessageHandler].
+type ProjectionRoute interface {
+	applyToProjection(ProjectionRouteConfigurer)
+}
+
+// ProjectionRouteConfigurer configures the engine to route messages for a
+// [ProjectionMessageHandler].
+//
+// The engine uses this interface configure its internal routing system.
+// Projection handlers should use [ProjectionConfigurer.Routes] to configure
+// their routes.
+type ProjectionRouteConfigurer interface {
+	HandlesEvent(HandlesEventRoute)
+}
+
+func (r HandlesEventRoute) applyToProjection(v ProjectionRouteConfigurer) { v.HandlesEvent(r) }
