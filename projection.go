@@ -191,7 +191,7 @@ func (UnicastProjectionDeliveryPolicy) isProjectionDeliveryPolicy() {}
 // ProjectionRoute describes a message type that's routed to a
 // [ProjectionMessageHandler].
 type ProjectionRoute interface {
-	applyToProjection(ProjectionRouteConfigurer)
+	ConfigureProjectionRoutes(ProjectionRouteConfigurer)
 }
 
 // ProjectionRouteConfigurer configures the engine to route messages for a
@@ -202,4 +202,8 @@ type ProjectionRouteConfigurer interface {
 	HandlesEvent(HandlesEventRoute)
 }
 
-func (r HandlesEventRoute) applyToProjection(v ProjectionRouteConfigurer) { v.HandlesEvent(r) }
+// ConfigureProjectionRoutes configures the engine to route messages as described
+// by this route.
+func (r HandlesEventRoute) ConfigureProjectionRoutes(v ProjectionRouteConfigurer) {
+	v.HandlesEvent(r)
+}

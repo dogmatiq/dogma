@@ -54,7 +54,7 @@ type IntegrationConfigurer interface {
 	//
 	// Integration handlers support the HandlesCommand() and RecordsEvent()
 	// route types.
-	Routes(...ProcessRoute)
+	Routes(...IntegrationRoute)
 
 	// ConsumesCommandType configures the engine to route commands of a specific
 	// type to the handler.
@@ -91,6 +91,12 @@ type IntegrationCommandScope interface {
 	Log(format string, args ...any)
 }
 
+// IntegrationRoute describes a message type that's routed to or from a
+// [IntegrationMessageHandler].
+type IntegrationRoute interface {
+	ConfigureIntegrationRoutes(IntegrationRouteConfigurer)
+}
+
 // IntegrationRouteConfigurer configures the engine to route messages for a
 // [IntegrationMessageHandler].
 //
@@ -100,5 +106,14 @@ type IntegrationRouteConfigurer interface {
 	RecordsEvent(RecordsEventRoute)
 }
 
-func (r HandlesCommandRoute) applyToIntegration(v IntegrationRouteConfigurer) { v.HandlesCommand(r) }
-func (r RecordsEventRoute) applyToIntegration(v IntegrationRouteConfigurer)   { v.RecordsEvent(r) }
+// ConfigureIntegrationRoutes configures the engine to route messages as
+// described by this route.
+func (r HandlesCommandRoute) ConfigureIntegrationRoutes(v IntegrationRouteConfigurer) {
+	v.HandlesCommand(r)
+}
+
+// ConfigureIntegrationRoutes configures the engine to route messages as
+// described by this route.
+func (r RecordsEventRoute) ConfigureIntegrationRoutes(v IntegrationRouteConfigurer) {
+	v.RecordsEvent(r)
+}

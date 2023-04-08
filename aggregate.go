@@ -153,7 +153,7 @@ type AggregateCommandScope interface {
 // AggregateRoute describes a message type that's routed to or from a
 // [AggregateMessageHandler].
 type AggregateRoute interface {
-	applyToAggregate(AggregateRouteConfigurer)
+	ConfigureAggregateRoutes(AggregateRouteConfigurer)
 }
 
 // AggregateRouteConfigurer configures the engine to route messages for a
@@ -165,5 +165,14 @@ type AggregateRouteConfigurer interface {
 	RecordsEvent(RecordsEventRoute)
 }
 
-func (r HandlesCommandRoute) applyToAggregate(v AggregateRouteConfigurer) { v.HandlesCommand(r) }
-func (r RecordsEventRoute) applyToAggregate(v AggregateRouteConfigurer)   { v.RecordsEvent(r) }
+// ConfigureAggregateRoutes configures the engine to route messages as described
+// by this route.
+func (r HandlesCommandRoute) ConfigureAggregateRoutes(v AggregateRouteConfigurer) {
+	v.HandlesCommand(r)
+}
+
+// ConfigureAggregateRoutes configures the engine to route messages as described
+// by this route.
+func (r RecordsEventRoute) ConfigureAggregateRoutes(v AggregateRouteConfigurer) {
+	v.RecordsEvent(r)
+}
