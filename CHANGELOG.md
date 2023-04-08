@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project are documented in this file.
+All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog], and this project adheres to
 [Semantic Versioning].
@@ -12,46 +12,84 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## Unreleased
 
+This release aligns the Dogma API with several best practices that have emerged
+since the last release.
+
+**Although this release includes a large number of changes there should be no
+breaking changes to applications that are already following these best
+practices.**
+
+- Use [RFC 4122] UUIDs for identity keys
+- Implement `MessageDescription()` on message types
+- Implement `Validate()` methods on message types
+
+Otherwise, most significant change is the introduction of `Routes()` methods to
+handler configurer interfaces. Implementors should use `Routes()` in preference
+to the existing `Consumes*Type()` and `Produces*Type()` methods, which are now
+deprecated.
+
+The `Routes()` API accepts arguments that use [type parameters] to communicate
+message types. It also offers more extensible interface that allows future
+support for per-message routing configuration without further breaking changes.
+
+[type parameters]: https://go.dev/tour/generics/1
+[rfc 4122]: https://www.rfc-editor.org/rfc/rfc4122.html
+
 ### Added
 
-- Added `Command`, `Event` and `Timeout` as aliases for `Message` in preparation for strict message typing
 - **[APP BC]** Added `MessageDescription()` method to `Message` interface
 - **[APP BC]** Added `Validate()` method to `Message` interface
-- **[ENGINE BC]** Added `Routes()` methods to configurer interfaces:
-  - `AggregateConfigurer.Routes()`
-  - `IntegrationConfigurer.Routes()`
-  - `ProcessConfigurer.Routes()`
-  - `ProjectionConfigurer.Routes()`
-  - `ProjectionConfigurer.DeliveryPolicy()`
-  - `ProjectionScope.IsPrimaryDelivery()`
-- Added route functions for use with configurer `Route()` methods:
-  - `HandlesCommand()`
-  - `RecordsEvent()`
-  - `HandlesEvent()`
-  - `ExecutesCommand()`
-  - `SchedulesTimeout()`
+- Added `Command`, `Event` and `Timeout` as aliases for `Message` in preparation for stricter static message typing
+
+#### Routing API
+
+- **[ENGINE BC]** Added `Routes()` methods to handler configurer interfaces
+- Added `HandlesCommand()`
+- Added `RecordsEvent()`
+- Added `HandlesEvent()`
+- Added `ExecutesCommand()`
+- Added `SchedulesTimeout()`
+- Added `AggregateRoute` interface
+- Added `ProcessRoute` interface
+- Added `IntegrationRoute` interface
+- Added `ProjectionRoute` interface
+
+#### Projection delivery policies
+
+- Added `ProjectionConfigurer.DeliveryPolicy()`
+- Added `ProjectionScope.IsPrimaryDelivery()`
+- Added `ProjectionDeliveryPolicy`
+- Added `UnicastProjectionDeliveryPolicy`
+- Added `BroadcastProjectionDeliveryPolicy`
 
 ### Changed
 
 - **[APP BC]** Handler and application identity keys must now be an RFC 4122 UUID string
 
-### Removed
-
-- **[ENGINE BC]** Removed `DescribableMessage` interface
-- **[ENGINE BC]** Removed `ValidatableMessage` interface
-- **[ENGINE BC]** Removed `DescribeMessage()` function
-
 ### Deprecated
 
-- Deprecated the `EventRecorder` interface
-- Deprecated `AggregateConfigurer.ConsumesCommandType()`
-- Deprecated `AggregateConfigurer.ProducesEventType()`
-- Deprecated `IntegrationConfigurer.ConsumesCommandType()`
-- Deprecated `IntegrationConfigurer.ProducesEventType()`
-- Deprecated `ProcessConfigurer.ConsumesEventType()`
-- Deprecated `ProcessConfigurer.ProducesCommandType()`
-- Deprecated `ProcessConfigurer.SchedulesTimeoutType()`
-- Deprecated `ProjectionConfigurer.ConsumesEventType()`
+The new `Routes()` API supersedes the following methods:
+
+- Deprecated `ConsumesCommandType()` methods, use `Routes()` with `HandlesCommand[T]()` instead
+- Deprecated `ProducesCommandType()` methods, use `Routes()` with `ExecutesCommand[T]()` instead
+- Deprecated `ConsumesEventType()` methods, use `Routes()` with `HandlesEvent[T]()` instead
+- Deprecated `ProducesEventType()` methods, use `Routes()` with `RecordsEvent[T]()` instead
+- Deprecated `SchedulesTimeoutType()` methods, use `Routes()` with `SchedulesTimeout[T]()` instead
+
+Because `Message` now has `MessageDescription()` and `Validate()` methods, the
+following elements are no longer necessary:
+
+- Deprecated `DescribableMessage`
+- Deprecated `DescribeMessage()`
+- Deprecated `ValidatableMessage`
+- Deprecated `ValidateMessage()`
+
+No engines except [testkit] are able to provide a meaningful implementation of
+`EventRecorder` without fundamental changes to the definition of an application.
+
+- Deprecated `EventRecorder`, use an `IntegrationMessageHandler` instead
+
+[testkit]: https://github.com/dogmatiq/testkit
 
 ## [0.11.1] - 2021-03-01
 
@@ -69,7 +107,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 - **[BC]** `ProcessMessageHandler.HandleEvent()` now takes an `ProcessRoot` parameter
 - **[BC]** `ProcessMessageHandler.HandleTimeout()` now takes an `ProcessRoot` parameter
-- `Process[Event|Timeout]Scope.ExecuteCommand()` and `ScheduleTimeout()` can now be called after `End()`
+- Handlers can now call `Process[Event|Timeout]Scope.ExecuteCommand()` and `ScheduleTimeout()` after `End()`
 
 ### Removed
 
@@ -91,7 +129,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 - **[BC]** `AggregateMessageHandler.HandleCommand()` now takes an `AggregateRoot` parameter
 - **[BC]** `fixtures.AggregateRoot` now stores all its historical events internally
 - `AggregateCommandScope.Destroy()` no longer requires a prior call to `RecordEvent()`
-- `AggregateCommandScope.RecordEvent()` can now be called after `Destroy()`
+- Handlers can now call `AggregateCommandScope.RecordEvent()` after `Destroy()`
 
 ### Removed
 
@@ -101,7 +139,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Changed
 
-- `AggregateCommandScope.Root()` can now be called for non-existent aggregate instances
+- Handlers can now call `AggregateCommandScope.Root()` for non-existent aggregate instances
 - `AggregateCommandScope.Destroy()` is now a no-op for non-existent aggregate instances
 - `AggregateRoot.ApplyEvent()` no longer has a requires an `UnexpectedMessage` panic
 

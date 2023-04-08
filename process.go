@@ -261,34 +261,8 @@ func (NoTimeoutMessagesBehavior) HandleTimeout(
 
 // ProcessRoute describes a message type that's routed to or from a
 // [ProcessMessageHandler].
-type ProcessRoute interface {
-	ConfigureProcessRoutes(ProcessRouteConfigurer)
-}
+type ProcessRoute interface{ isProcessRoute() }
 
-// ProcessRouteConfigurer configures the engine to route messages for a
-// [ProcessMessageHandler].
-//
-// This interface is for internal use by engines.
-type ProcessRouteConfigurer interface {
-	HandlesEvent(HandlesEventRoute)
-	ExecutesCommand(ExecutesCommandRoute)
-	SchedulesTimeout(SchedulesTimeoutRoute)
-}
-
-// ConfigureProcessRoutes configures the engine to route messages as described
-// by this route.
-func (r HandlesEventRoute) ConfigureProcessRoutes(v ProcessRouteConfigurer) {
-	v.HandlesEvent(r)
-}
-
-// ConfigureProcessRoutes configures the engine to route messages as described
-// by this route.
-func (r ExecutesCommandRoute) ConfigureProcessRoutes(v ProcessRouteConfigurer) {
-	v.ExecutesCommand(r)
-}
-
-// ConfigureProcessRoutes configures the engine to route messages as described
-// by this route.
-func (r SchedulesTimeoutRoute) ConfigureProcessRoutes(v ProcessRouteConfigurer) {
-	v.SchedulesTimeout(r)
-}
+func (HandlesEventRoute) isProcessRoute()     {}
+func (ExecutesCommandRoute) isProcessRoute()  {}
+func (SchedulesTimeoutRoute) isProcessRoute() {}

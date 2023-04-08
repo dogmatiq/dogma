@@ -93,27 +93,7 @@ type IntegrationCommandScope interface {
 
 // IntegrationRoute describes a message type that's routed to or from a
 // [IntegrationMessageHandler].
-type IntegrationRoute interface {
-	ConfigureIntegrationRoutes(IntegrationRouteConfigurer)
-}
+type IntegrationRoute interface{ isIntegrationRoute() }
 
-// IntegrationRouteConfigurer configures the engine to route messages for a
-// [IntegrationMessageHandler].
-//
-// This interface is for internal use by engines.
-type IntegrationRouteConfigurer interface {
-	HandlesCommand(HandlesCommandRoute)
-	RecordsEvent(RecordsEventRoute)
-}
-
-// ConfigureIntegrationRoutes configures the engine to route messages as
-// described by this route.
-func (r HandlesCommandRoute) ConfigureIntegrationRoutes(v IntegrationRouteConfigurer) {
-	v.HandlesCommand(r)
-}
-
-// ConfigureIntegrationRoutes configures the engine to route messages as
-// described by this route.
-func (r RecordsEventRoute) ConfigureIntegrationRoutes(v IntegrationRouteConfigurer) {
-	v.RecordsEvent(r)
-}
+func (HandlesCommandRoute) isIntegrationRoute() {}
+func (RecordsEventRoute) isIntegrationRoute()   {}

@@ -30,7 +30,30 @@ var UnexpectedMessage unexpectedMessage
 
 type unexpectedMessage struct{}
 
+// DescribableMessage is a message that can provide its own description.
+//
+// Deprecated: All messages are now describable.
+type DescribableMessage interface {
+	Message
+}
+
+// DescribeMessage returns a human-readable description of m.
+//
+// Deprecated: use [Message.MessageDescription] directly.
+func DescribeMessage(m Message) string {
+	return m.MessageDescription()
+}
+
+// ValidateableMessage is a message that provides its own validation logic.
+//
+// Deprecated: All messages are now validateable.
+type ValidateableMessage interface {
+	Message
+}
+
 // ValidateMessage returns an error if m is invalid.
+//
+// Deprecated: Use [Message.Validate] directly.
 func ValidateMessage(m Message) error {
 	if m == nil {
 		return errors.New("message must not be nil")

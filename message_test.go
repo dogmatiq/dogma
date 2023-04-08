@@ -7,6 +7,17 @@ import (
 	"github.com/dogmatiq/dogma/fixtures"
 )
 
+func TestDescribeMessage(t *testing.T) {
+	d := DescribeMessage(
+		fixtures.TestCommand[fixtures.TypeA]{
+			Content: "<value>",
+		},
+	)
+	if d != "command(fixtures.TypeA:<value>, valid)" {
+		t.Fatal("unexpected message description")
+	}
+}
+
 func TestValidateMessage(t *testing.T) {
 	err := ValidateMessage(
 		fixtures.TestCommand[fixtures.TypeA]{

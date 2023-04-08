@@ -171,36 +171,30 @@ func (NoCompactBehavior) Compact(ctx context.Context, s ProjectionCompactScope) 
 	return nil
 }
 
-// A ProjectionDeliveryPolicy describes how to deliver events to a projection
-// message handler on engines that support concurrent or distributed execution
-// of a single Dogma application.
-type ProjectionDeliveryPolicy interface {
-	isProjectionDeliveryPolicy()
-}
+type (
+	// A ProjectionDeliveryPolicy describes how to deliver events to a projection
+	// message handler on engines that support concurrent or distributed execution
+	// of a single Dogma application.
+	ProjectionDeliveryPolicy interface{ isProjectionDeliveryPolicy() }
 
-// UnicastProjectionDeliveryPolicy is the default [ProjectionDeliveryPolicy]. It
-// delivers each event to a single instance of the application.
-type UnicastProjectionDeliveryPolicy struct {
-}
+	// UnicastProjectionDeliveryPolicy is the default [ProjectionDeliveryPolicy]. It
+	// delivers each event to a single instance of the application.
+	UnicastProjectionDeliveryPolicy struct{}
 
-func (UnicastProjectionDeliveryPolicy) isProjectionDeliveryPolicy() {}
+	// BroadcastProjectionDeliveryPolicy is a [ProjectionDeliveryPolicy] that
+	// delivers each event to a all instance of the application.
+	BroadcastProjectionDeliveryPolicy struct {
+		// PrimaryFirst defers "secondary delivery" of events until after the
+		// "primary delivery" has completed.
+		PrimaryFirst bool
+	}
+)
+
+func (UnicastProjectionDeliveryPolicy) isProjectionDeliveryPolicy()   {}
+func (BroadcastProjectionDeliveryPolicy) isProjectionDeliveryPolicy() {}
 
 // ProjectionRoute describes a message type that's routed to a
 // [ProjectionMessageHandler].
-type ProjectionRoute interface {
-	ConfigureProjectionRoutes(ProjectionRouteConfigurer)
-}
+type ProjectionRoute interface{ isProjectionRoute() }
 
-// ProjectionRouteConfigurer configures the engine to route messages for a
-// [ProjectionMessageHandler].
-//
-// This interface is for internal use by engines.
-type ProjectionRouteConfigurer interface {
-	HandlesEvent(HandlesEventRoute)
-}
-
-// ConfigureProjectionRoutes configures the engine to route messages as described
-// by this route.
-func (r HandlesEventRoute) ConfigureProjectionRoutes(v ProjectionRouteConfigurer) {
-	v.HandlesEvent(r)
-}
+func (HandlesEventRoute) isProjectionRoute() {}
