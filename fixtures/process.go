@@ -7,7 +7,7 @@ import (
 	"github.com/dogmatiq/dogma"
 )
 
-// ProcessRoot is a test implementation of dogma.ProcessRoot.
+// ProcessRoot is a test implementation of [dogma.ProcessRoot].
 type ProcessRoot struct {
 	Value any
 }
@@ -15,7 +15,7 @@ type ProcessRoot struct {
 var _ dogma.ProcessRoot = &ProcessRoot{}
 
 // ProcessMessageHandler is a test implementation of
-// dogma.ProcessMessageHandler.
+// [dogma.ProcessMessageHandler].
 type ProcessMessageHandler struct {
 	NewFunc                  func() dogma.ProcessRoot
 	ConfigureFunc            func(dogma.ProcessConfigurer)
@@ -27,33 +27,23 @@ type ProcessMessageHandler struct {
 
 var _ dogma.ProcessMessageHandler = &ProcessMessageHandler{}
 
-// New constructs a new process instance and returns its root.
-//
-// If h.NewFunc is non-nil, it returns h.NewFunc(), otherwise it returns a new
-// empty fixtures.ProcessRoot.
-func (h *ProcessMessageHandler) New() dogma.ProcessRoot {
-	if h.NewFunc != nil {
-		return h.NewFunc()
-	}
-
-	return &ProcessRoot{}
-}
-
-// Configure configures the behavior of the engine as it relates to this
-// handler.
-//
-// If h.ConfigureFunc is non-nil, it calls h.ConfigureFunc(c).
+// Configure describes the handler's configuration to the engine.
 func (h *ProcessMessageHandler) Configure(c dogma.ProcessConfigurer) {
 	if h.ConfigureFunc != nil {
 		h.ConfigureFunc(c)
 	}
 }
 
-// RouteEventToInstance returns the ID of the process instance that is targeted
-// by e.
-//
-// If h.RouteEventToInstance is non-nil it returns h.RouteEventToInstance(ctx,
-// e), otherwise it panics.
+// New returns a process root instance in its initial state.
+func (h *ProcessMessageHandler) New() dogma.ProcessRoot {
+	if h.NewFunc != nil {
+		return h.NewFunc()
+	}
+	return &ProcessRoot{}
+}
+
+// RouteEventToInstance returns the ID of the instance that handles a specific
+// event.
 func (h *ProcessMessageHandler) RouteEventToInstance(
 	ctx context.Context,
 	e dogma.Event,
@@ -61,14 +51,10 @@ func (h *ProcessMessageHandler) RouteEventToInstance(
 	if h.RouteEventToInstanceFunc == nil {
 		panic(dogma.UnexpectedMessage)
 	}
-
 	return h.RouteEventToInstanceFunc(ctx, e)
 }
 
-// HandleEvent handles an event message that has been routed to this handler.
-//
-// If h.HandleEventFunc is non-nil it returns h.HandleEventFunc(ctx, r, s, e),
-// otherwise it returns nil.
+// HandleEvent begins or continues the process in response to an event.
 func (h *ProcessMessageHandler) HandleEvent(
 	ctx context.Context,
 	r dogma.ProcessRoot,
@@ -78,15 +64,10 @@ func (h *ProcessMessageHandler) HandleEvent(
 	if h.HandleEventFunc != nil {
 		return h.HandleEventFunc(ctx, r, s, e)
 	}
-
 	return nil
 }
 
-// HandleTimeout handles a timeout message that has been scheduled with
-// ProcessScope.ScheduleTimeout().
-//
-// If h.HandleTimeoutFunc is non-nil it returns h.HandleTimeoutFunc(ctx, r, s, t),
-// otherwise it returns nil.
+// HandleTimeout continues the process in response to a timeout.
 func (h *ProcessMessageHandler) HandleTimeout(
 	ctx context.Context,
 	r dogma.ProcessRoot,
@@ -96,19 +77,13 @@ func (h *ProcessMessageHandler) HandleTimeout(
 	if h.HandleTimeoutFunc != nil {
 		return h.HandleTimeoutFunc(ctx, r, s, t)
 	}
-
 	return nil
 }
 
-// TimeoutHint returns a duration that is suitable for computing a deadline for
-// the handling of the given message by this handler.
-//
-// If h.TimeoutHintFunc is non-nil it returns h.TimeoutHintFunc(m), otherwise it
-// returns 0.
+// TimeoutHint returns a suitable duration for handling the given message.
 func (h *ProcessMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
 	if h.TimeoutHintFunc != nil {
 		return h.TimeoutHintFunc(m)
 	}
-
 	return 0
 }

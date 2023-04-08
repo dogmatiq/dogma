@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-// TestCommand is an implementation of dogma.TestCommand used for testing.
+// TestCommand is a test implementation of [dogma.Command].
 type TestCommand[T any] struct {
 	Content T
 	Invalid string
@@ -33,7 +33,7 @@ func (c TestCommand[T]) Validate() error {
 	return nil
 }
 
-// TestEvent is an implementation of dogma.TestEvent used for testing.
+// TestEvent is a test implementation of [dogma.Event].
 type TestEvent[T any] struct {
 	Content T
 	Invalid string
@@ -61,7 +61,7 @@ func (e TestEvent[T]) Validate() error {
 	return nil
 }
 
-// TestTimeout is an implementation of dogma.TestTimeout used for testing.
+// TestTimeout is a test implementation of [dogma.Test].
 type TestTimeout[T any] struct {
 	Content T
 	Invalid string

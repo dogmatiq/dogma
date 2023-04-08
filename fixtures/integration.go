@@ -8,7 +8,7 @@ import (
 )
 
 // IntegrationMessageHandler is a test implementation of
-// dogma.IntegrationMessageHandler.
+// [dogma.IntegrationMessageHandler].
 type IntegrationMessageHandler struct {
 	ConfigureFunc     func(dogma.IntegrationConfigurer)
 	HandleCommandFunc func(context.Context, dogma.IntegrationCommandScope, dogma.Command) error
@@ -17,21 +17,14 @@ type IntegrationMessageHandler struct {
 
 var _ dogma.IntegrationMessageHandler = &IntegrationMessageHandler{}
 
-// Configure configures the behavior of the engine as it relates to this
-// handler.
-//
-// If h.ConfigureFunc is non-nil, it calls h.ConfigureFunc(c).
+// Configure describes the handler's configuration to the engine.
 func (h *IntegrationMessageHandler) Configure(c dogma.IntegrationConfigurer) {
 	if h.ConfigureFunc != nil {
 		h.ConfigureFunc(c)
 	}
 }
 
-// HandleCommand handles an integration command message that has been routed to
-// this handler.
-//
-// If h.HandleCommandFunc is non-nil it returns h.HandleCommandFunc(s, c),
-// otherwise it returns nil.
+// HandleCommand handles a command, typically by invoking some external API.
 func (h *IntegrationMessageHandler) HandleCommand(
 	ctx context.Context,
 	s dogma.IntegrationCommandScope,
@@ -40,19 +33,13 @@ func (h *IntegrationMessageHandler) HandleCommand(
 	if h.HandleCommandFunc != nil {
 		return h.HandleCommandFunc(ctx, s, c)
 	}
-
 	return nil
 }
 
-// TimeoutHint returns a duration that is suitable for computing a deadline for
-// the handling of the given message by this handler.
-//
-// If h.TimeoutHintFunc is non-nil it returns h.TimeoutHintFunc(m), otherwise it
-// returns 0.
+// TimeoutHint returns a suitable duration for handling the given message.
 func (h *IntegrationMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
 	if h.TimeoutHintFunc != nil {
 		return h.TimeoutHintFunc(m)
 	}
-
 	return 0
 }

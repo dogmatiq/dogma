@@ -3,7 +3,7 @@ package fixtures
 import "fmt"
 
 // MessageA is a type used as a dogma.Message in tests.
-// Deprecated: Use Command, Event or Timeout instead.
+// Deprecated: Use [Command], [Event] or [Timeout] instead.
 type MessageA struct {
 	Value any
 }
