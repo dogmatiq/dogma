@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
-## Unreleased
+## [0.12.0] - 2023-04-09
 
 This release aligns the Dogma API with several best practices that have emerged
 since the last release.
@@ -258,6 +258,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.10.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.10.0
 [0.11.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.11.0
 [0.11.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.11.1
+[0.12.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.12.0
 
 <!-- version template
 ## [0.0.1] - YYYY-MM-DD
