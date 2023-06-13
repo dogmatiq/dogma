@@ -30,3 +30,4 @@ the ADR documents.
 * [17. Recreation of Aggregate Instances After Destruction](0017-recreate-aggregate-after-destruction.md)
 * [18. Compacting Projection Data](0018-projection-compaction.md)
 * [16. Automatic Process Creation](0019-automatic-process-creation.md)
+* [20. Constraints on Identifier Values](0020-identifier-constraints.md)

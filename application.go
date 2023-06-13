@@ -12,9 +12,9 @@ type Application interface {
 type ApplicationConfigurer interface {
 	// Identity configures the application's identity.
 	//
-	// n is a short human-readable name. The name MAY change over the
-	// application's lifetime. n MUST contain solely printable, non-space UTF-8
-	// characters.
+	// n is a short human-readable name. It MAY change over the application's
+	// lifetime. It MUST contain solely printable, non-space UTF-8 characters.
+	// It must be between 1 and 255 bytes (not characters) in length.
 	//
 	// k is a unique key used to associate engine state with the application.
 	// The key SHOULD NOT change over the application's lifetime. k MUST be an

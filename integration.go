@@ -39,8 +39,9 @@ type IntegrationConfigurer interface {
 	// Identity configures the handler's identity.
 	//
 	// n is a short human-readable name. It MUST be unique within the
-	// application. The name MAY change over the handler's lifetime. n MUST
-	// contain solely printable, non-space UTF-8 characters.
+	// application at any given time, but MAY change over the handler's
+	// lifetime. It MUST contain solely printable, non-space UTF-8 characters.
+	// It must be between 1 and 255 bytes (not characters) in length.
 	//
 	// k is a unique key used to associate engine state with the handler. The
 	// key SHOULD NOT change over the handler's lifetime. k MUST be an RFC 4122

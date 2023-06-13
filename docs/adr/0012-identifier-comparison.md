@@ -6,6 +6,8 @@ Date: 2019-12-17
 
 Accepted
 
+- Amended by [20. Constraints on Identifier Values](0020-identifier-constraints.md)
+
 ## Context
 
 Identifiers (the names and keys used to identify applications and handlers) must

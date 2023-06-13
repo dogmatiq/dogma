@@ -6,6 +6,8 @@ Date: 2019-06-28
 
 Accepted
 
+- Amended by [20. Constraints on Identifier Values](0020-identifier-constraints.md)
+
 ## Context
 
 Engine implementations require a mechanism for associating ancillary data with
