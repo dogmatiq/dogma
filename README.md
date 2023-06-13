@@ -181,10 +181,11 @@ process are ["eventually consistent"][eventual consistency].
 An **integration** is a message handler that interacts with some external
 non-message-based system.
 
-Each integration is an implementation of the [`dogma.ProcessMessageHandler`]
+Each integration is an implementation of the [`dogma.IntegrationMessageHandler`]
 interface. The [engine](#engine) routes command [messages](#message) to the
-handler which interacts with some external systems. Integrations may optionally
-produce event messages that represent the results of their interactions.
+handler which interacts with some external system(s). Integrations may
+optionally produce event messages that represent the results of their
+interactions.
 
 Integrations are stateless from the perspective of the engine.
 
