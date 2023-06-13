@@ -10,6 +10,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
+## [0.12.1] - 2023-06-14
+
+### Changed
+
+- **[APP BC]** Application and handler identity names are now constrained to a
+  maximum of 255 bytes in length. This is a change to the
+  specification/documentation only.
+
 ## [0.12.0] - 2023-04-09
 
 This release aligns the Dogma API with several best practices that have emerged
