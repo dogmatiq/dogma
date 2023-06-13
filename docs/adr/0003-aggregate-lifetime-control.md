@@ -4,7 +4,7 @@ Date: 2018-12-10
 
 ## Status
 
-Approved
+Accepted
 
 - Amended by [16. Automatic Aggregate Creation](0016-automatic-aggregate-creation.md)
 - Amended by [17. Recreation of Aggregate Instances After Destruction](0017-recreate-aggregate-after-destruction.md)
@@ -49,11 +49,11 @@ We decided against having `Create()` or `Destroy()` take an event as a
 parameter for two reasons:
 
 1. This would necessitate a further decision about `Create()` as to whether the
-event it is passed should be recorded in all cases or only if the instance
-does not already exist. Neither of which is appropriate in all cases.
+   event it is passed should be recorded in all cases or only if the instance
+   does not already exist. Neither of which is appropriate in all cases.
 
 2. If we decide to relax this requirement in the future, those methods would
-have to lose those event arguments, breaking backwards compatibilty.
+   have to lose those event arguments, breaking backwards compatibilty.
 
 ## Consequences
 
