@@ -14,10 +14,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Added
 
-- **[ENGINE BC]** Added `...RegisterAggregateOption` parameter to `ApplicationConfigurer.RegisterAggregate()`
-- **[ENGINE BC]** Added `...RegisterProcessOption` parameter to `ApplicationConfigurer.RegisterProcess()`
-- **[ENGINE BC]** Added `...RegisterIntegrationOption` parameter to `ApplicationConfigurer.RegisterIntegration()`
-- **[ENGINE BC]** Added `...RegisterProjectionOption` parameter to `ApplicationConfigurer.RegisterProjection()`
+- **[ENGINE BC]** Added functional options to the following methods and functions:
+  - `ApplicationConfigurer.RegisterAggregate()`
+  - `ApplicationConfigurer.RegisterProcess()`
+  - `ApplicationConfigurer.RegisterIntegration()`
+  - `ApplicationConfigurer.RegisterProjection()`
+  - `CommandExecutor.ExecuteCommand()`
 
 ### Removed
 

@@ -159,7 +159,7 @@ type ProjectionCompactScope interface {
 type NoCompactBehavior struct{}
 
 // Compact does nothing.
-func (NoCompactBehavior) Compact(ctx context.Context, s ProjectionCompactScope) error {
+func (NoCompactBehavior) Compact(context.Context, ProjectionCompactScope) error {
 	return nil
 }
 
