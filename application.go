@@ -25,16 +25,32 @@ type ApplicationConfigurer interface {
 
 	// RegisterAggregate configures the engine to route messages for an
 	// aggregate.
-	RegisterAggregate(AggregateMessageHandler)
+	RegisterAggregate(AggregateMessageHandler, ...RegisterAggregateOption)
 
 	// RegisterProcess configures the engine to route messages for a process.
-	RegisterProcess(ProcessMessageHandler)
+	RegisterProcess(ProcessMessageHandler, ...RegisterProcessOption)
 
 	// RegisterIntegration configures the engine to route messages for an
 	// integration.
-	RegisterIntegration(IntegrationMessageHandler)
+	RegisterIntegration(IntegrationMessageHandler, ...RegisterIntegrationOption)
 
 	// RegisterProjection configures the engine to route messages for a
 	// projection.
-	RegisterProjection(ProjectionMessageHandler)
+	RegisterProjection(ProjectionMessageHandler, ...RegisterProjectionOption)
 }
+
+// RegisterAggregateOption is an option that affects the behavior of a call to
+// the RegisterAggregate() method of the [ApplicationConfigurer] interface.
+type RegisterAggregateOption struct{}
+
+// RegisterProcessOption is an option that affects the behavior of a call to
+// the RegisterProcess() method of the [ApplicationConfigurer] interface.
+type RegisterProcessOption struct{}
+
+// RegisterIntegrationOption is an option that affects the behavior of a call to
+// the RegisterIntegration() method of the [ApplicationConfigurer] interface.
+type RegisterIntegrationOption struct{}
+
+// RegisterProjectionOption is an option that affects the behavior of a call to
+// the RegisterProjection() method of the [ApplicationConfigurer] interface.
+type RegisterProjectionOption struct{}

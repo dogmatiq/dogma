@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## Unreleased - ETA 2023-10-09
 
+### Added
+
+- **[ENGINE BC]** Added `...RegisterAggregateOption` parameter to `ApplicationConfigurer.RegisterAggregate()`
+- **[ENGINE BC]** Added `...RegisterProcessOption` parameter to `ApplicationConfigurer.RegisterProcess()`
+- **[ENGINE BC]** Added `...RegisterIntegrationOption` parameter to `ApplicationConfigurer.RegisterIntegration()`
+- **[ENGINE BC]** Added `...RegisterProjectionOption` parameter to `ApplicationConfigurer.RegisterProjection()`
+
 ### Removed
 
 This release marks 6 months since the release of [0.12.0], which deprecated
