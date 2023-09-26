@@ -119,33 +119,6 @@ type ProcessConfigurer interface {
 	// Process handlers support the HandlesEvent(), ExecutesCommand() and
 	// SchedulesTimeout() route types.
 	Routes(...ProcessRoute)
-
-	// ConsumesEventType configures the engine to route events of a specific
-	// type to the handler.
-	//
-	// The event SHOULD be the zero-value of its type; the engine uses the type
-	// information, but not the value itself.
-	//
-	// Deprecated: Use ProcessConfigurer.Routes() instead.
-	ConsumesEventType(Event)
-
-	// ProducesCommandType configures the engine to use the handler as the
-	// source of events of a specific type.
-	//
-	// The command SHOULD be the zero-value of its type; the engine uses the
-	// type information, but not the value itself.
-	//
-	// Deprecated: Use ProcessConfigurer.Routes() instead.
-	ProducesCommandType(Command)
-
-	// SchedulesTimeoutType configures the engine to allow this handler to
-	// schedule timeouts of a specific type.
-	//
-	// The timeout SHOULD be the zero-value of its type; the engine uses the
-	// type information, but not the value itself.
-	//
-	// Deprecated: Use ProcessConfigurer.Routes() instead.
-	SchedulesTimeoutType(Timeout)
 }
 
 // ProcessEventScope performs engine operations within the context of a call

@@ -115,15 +115,6 @@ type ProjectionConfigurer interface {
 	//
 	// The default policy is UnicastProjectionDeliveryPolicy.
 	DeliveryPolicy(ProjectionDeliveryPolicy)
-
-	// ConsumesEventType configures the engine to route events of a specific
-	// type to the handler.
-	//
-	// The event SHOULD be the zero-value of its type; the engine uses the type
-	// information, but not the value itself.
-	//
-	// Deprecated: Use ProjectionConfigurer.Routes() instead.
-	ConsumesEventType(Event)
 }
 
 // ProjectionEventScope performs engine operations within the context of a call
@@ -173,13 +164,14 @@ func (NoCompactBehavior) Compact(ctx context.Context, s ProjectionCompactScope) 
 }
 
 type (
-	// A ProjectionDeliveryPolicy describes how to deliver events to a projection
-	// message handler on engines that support concurrent or distributed execution
-	// of a single Dogma application.
+	// A ProjectionDeliveryPolicy describes how to deliver events to a
+	// projection message handler on engines that support concurrent or
+	// distributed execution of a single Dogma application.
 	ProjectionDeliveryPolicy interface{ isProjectionDeliveryPolicy() }
 
-	// UnicastProjectionDeliveryPolicy is the default [ProjectionDeliveryPolicy]. It
-	// delivers each event to a single instance of the application.
+	// UnicastProjectionDeliveryPolicy is the default
+	// [ProjectionDeliveryPolicy]. It delivers each event to a single instance
+	// of the application.
 	UnicastProjectionDeliveryPolicy struct{}
 
 	// BroadcastProjectionDeliveryPolicy is a [ProjectionDeliveryPolicy] that

@@ -56,30 +56,6 @@ type IntegrationConfigurer interface {
 	// Integration handlers support the HandlesCommand() and RecordsEvent()
 	// route types.
 	Routes(...IntegrationRoute)
-
-	// ConsumesCommandType configures the engine to route commands of a specific
-	// type to the handler.
-	//
-	// The application's configuration MUST route each command type to a single
-	// handler.
-	//
-	// The command SHOULD be the zero-value of its type; the engine uses the
-	// type information, but not the value itself.
-	//
-	// Deprecated: Use IntegrationConfigurer.Routes() instead.
-	ConsumesCommandType(Command)
-
-	// ProducesEventType configures the engine to use the handler as the source
-	// of events of a specific type.
-	//
-	// The application's configuration MUST source each event type from a single
-	// handler.
-	//
-	// The event SHOULD be the zero-value of its type; the engine uses the type
-	// information, but not the value itself.
-	//
-	// Deprecated: Use IntegrationConfigurer.Routes() instead.
-	ProducesEventType(Event)
 }
 
 // IntegrationCommandScope performs engine operations within the context of a

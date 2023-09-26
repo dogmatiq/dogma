@@ -10,6 +10,26 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
+## Unreleased - ETA 2023-10-09
+
+### Removed
+
+This release marks 6 months since the release of [0.12.0], which deprecated
+several elements of the API. Those elements have been removed in this release.
+
+- **[BC]** Remove deprecated message routing methods (use `.Route()` instead)
+  - `AggregateConfigurer.ConsumesCommandType()`
+  - `AggregateConfigurer.ProducesEventType()`
+  - `ProcessConfigurer.ConsumesEventType()`
+  - `ProcessConfigurer.ProducesCommandType()`
+  - `ProcessConfigurer.SchedulesTimeoutType()`
+  - `IntegrationConfigurer.ConsumesCommandType()`
+  - `IntegrationConfigurer.ProducesEventType()`
+  - `ProjectionConfigurer.ConsumesEventType()`
+- **[BC]** Removed `DescribableMessage` interface and `DescribeMessage()`
+- **[BC]** Removed `ValidateableMessage` interface and `ValidateMessage()`
+- **[BC]** Removed `EventRecorder` interface
+
 ## [0.12.1] - 2023-06-14
 
 ### Changed

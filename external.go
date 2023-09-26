@@ -18,12 +18,3 @@ type CommandExecutor interface {
 	// returns.
 	ExecuteCommand(context.Context, Command) error
 }
-
-// EventRecorder records events outside of a Dogma message handler.
-//
-// Deprecated: No production engines implement this interface. To record
-// arbitrary events implement an [IntegrationMessageHandler] instead.
-type EventRecorder interface {
-	// RecordEvent records the occurrence of an event.
-	RecordEvent(context.Context, Event) error
-}
