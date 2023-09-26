@@ -9,7 +9,7 @@ import "reflect"
 // [IntegrationConfigurer].
 //
 // An application MUST NOT route a single command type to more than one handler.
-func HandlesCommand[T Command]() HandlesCommandRoute {
+func HandlesCommand[T Command](...HandlesCommandOption) HandlesCommandRoute {
 	return HandlesCommandRoute{typeOf[T]()}
 }
 
@@ -20,7 +20,7 @@ func HandlesCommand[T Command]() HandlesCommandRoute {
 // [IntegrationConfigurer].
 //
 // An application MUST NOT route a single event type from more than one handler.
-func RecordsEvent[T Event]() RecordsEventRoute {
+func RecordsEvent[T Event](...RecordsEventOption) RecordsEventRoute {
 	return RecordsEventRoute{typeOf[T]()}
 }
 
@@ -29,7 +29,7 @@ func RecordsEvent[T Event]() RecordsEventRoute {
 //
 // It's used as an argument to the Routes() method of [ProcessConfigurer] or
 // [ProjectionConfigurer].
-func HandlesEvent[T Event]() HandlesEventRoute {
+func HandlesEvent[T Event](...HandlesEventOption) HandlesEventRoute {
 	return HandlesEventRoute{typeOf[T]()}
 }
 
@@ -37,7 +37,7 @@ func HandlesEvent[T Event]() HandlesEventRoute {
 // [ProcessMessageHandler].
 //
 // It's used as an argument to the Routes() method of [ProcessConfigurer].
-func ExecutesCommand[T Command]() ExecutesCommandRoute {
+func ExecutesCommand[T Command](...ExecutesCommandOption) ExecutesCommandRoute {
 	return ExecutesCommandRoute{typeOf[T]()}
 }
 
@@ -47,7 +47,7 @@ func ExecutesCommand[T Command]() ExecutesCommandRoute {
 // It's used as an argument to the Routes() method of [ProcessConfigurer].
 //
 // An application MAY use a single timeout type with more than one process.
-func SchedulesTimeout[T Timeout]() SchedulesTimeoutRoute {
+func SchedulesTimeout[T Timeout](...SchedulesTimeoutOption) SchedulesTimeoutRoute {
 	return SchedulesTimeoutRoute{typeOf[T]()}
 }
 
@@ -85,3 +85,25 @@ func (SchedulesTimeoutRoute) isRoute() {}
 func typeOf[T any]() reflect.Type {
 	return reflect.TypeOf((*T)(nil)).Elem()
 }
+
+type (
+	// HandlesCommandOption is an option that affects the behavior of the route
+	// returned by [HandlesCommand].
+	HandlesCommandOption struct{}
+
+	// ExecutesCommandOption is an option that affects the behavior of the route
+	// returned by [ExecutesCommand].
+	ExecutesCommandOption struct{}
+
+	// HandlesEventOption is an option that affects the behavior of the route
+	// returned by [HandlesEvent].
+	HandlesEventOption struct{}
+
+	// RecordsEventOption is an option that affects the behavior of the route
+	// returned by [RecordsEvent].
+	RecordsEventOption struct{}
+
+	// SchedulesTimeoutOption is an option that affects the behavior of the
+	// route returned by [SchedulesTimeout].
+	SchedulesTimeoutOption struct{}
+)

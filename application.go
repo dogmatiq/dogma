@@ -39,18 +39,20 @@ type ApplicationConfigurer interface {
 	RegisterProjection(ProjectionMessageHandler, ...RegisterProjectionOption)
 }
 
-// RegisterAggregateOption is an option that affects the behavior of a call to
-// the RegisterAggregate() method of the [ApplicationConfigurer] interface.
-type RegisterAggregateOption struct{}
+type (
+	// RegisterAggregateOption is an option that affects the behavior of a call to
+	// the RegisterAggregate() method of the [ApplicationConfigurer] interface.
+	RegisterAggregateOption struct{}
 
-// RegisterProcessOption is an option that affects the behavior of a call to
-// the RegisterProcess() method of the [ApplicationConfigurer] interface.
-type RegisterProcessOption struct{}
+	// RegisterProcessOption is an option that affects the behavior of a call to
+	// the RegisterProcess() method of the [ApplicationConfigurer] interface.
+	RegisterProcessOption struct{}
 
-// RegisterIntegrationOption is an option that affects the behavior of a call to
-// the RegisterIntegration() method of the [ApplicationConfigurer] interface.
-type RegisterIntegrationOption struct{}
+	// RegisterIntegrationOption is an option that affects the behavior of a call to
+	// the RegisterIntegration() method of the [ApplicationConfigurer] interface.
+	RegisterIntegrationOption struct{}
 
-// RegisterProjectionOption is an option that affects the behavior of a call to
-// the RegisterProjection() method of the [ApplicationConfigurer] interface.
-type RegisterProjectionOption struct{}
+	// RegisterProjectionOption is an option that affects the behavior of a call to
+	// the RegisterProjection() method of the [ApplicationConfigurer] interface.
+	RegisterProjectionOption struct{}
+)

@@ -14,12 +14,17 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Added
 
-- **[ENGINE BC]** Added functional options to the following methods and functions:
+- **[ENGINE BC]** Added placeholder option parameters to the following methods and functions:
   - `ApplicationConfigurer.RegisterAggregate()`
   - `ApplicationConfigurer.RegisterProcess()`
   - `ApplicationConfigurer.RegisterIntegration()`
   - `ApplicationConfigurer.RegisterProjection()`
   - `CommandExecutor.ExecuteCommand()`
+  - `HandlesCommand()`
+  - `ExecutesCommand()`
+  - `HandlesEvent()`
+  - `RecordsEvent()`
+  - `SchedulesTimeout()`
 
 ### Removed
 
