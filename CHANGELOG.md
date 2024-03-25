@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
-## Unreleased - ETA 2023-10-09
+## [0.13.0] - 2024-03-26
 
 ### Added
 
@@ -28,7 +28,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Removed
 
-This release marks 6 months since the release of [0.12.0], which deprecated
+This release marks 9 months since the release of [0.12.0], which deprecated
 several elements of the API. Those elements have been removed in this release.
 
 - **[BC]** Remove deprecated message routing methods (use `.Route()` instead)
@@ -302,6 +302,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.11.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.11.1
 [0.12.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.12.0
 [0.12.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.12.1
+[0.13.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.13.0
 
 <!-- version template
 ## [0.0.1] - YYYY-MM-DD
