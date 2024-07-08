@@ -30,14 +30,14 @@ Handler implementations can return these values from their `New()` methods to
 indicate that they do not keep state.
 
 As these values are valid implementations of the `AggregateRoot` / `ProcessRoot`
-interfaces, engine implementations need not handle these impementations specially,
-though they can opt to do so by treating them as "sentinel" values.
+interfaces, engine implementations need not handle these implementations
+specially, though they can opt to do so by treating them as "sentinel" values.
 
 ## Consequences
 
 By including these implementations we ensure that there is a standard,
 observable way to indicate statelessness without requiring vastly different
-codepaths.
+code paths.
 
 Stateless implementations still need to implement a `New()` method, which is
 perhaps overly verbose, but this could be mitigated by also providing embeddable

@@ -64,8 +64,8 @@ how it might be cleaned up; something that might easily be ignored.
 
 `dogmatiq/testkit` can be updated to perform compaction when events are routed
 to projections, ensuring that the compaction code is actually invoked during
-testing and hopefully that it does not interfere with the regular operation of
-the projection.
+testing and that it does not interfere with the regular operation of the
+projection.
 
 ### Optimal Scheduling of Compaction
 

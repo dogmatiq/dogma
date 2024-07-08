@@ -1,0 +1,11 @@
+[Ddogmatiq]
+[Aa]ggregate
+[Aa]pp
+[Aa]pplication
+[Cc]onfigurer
+CQRS
+DDD
+OCC
+projectionkit
+testkit
+UUID

@@ -16,11 +16,10 @@ import (
 // "resources" with their "version". These are they keys and values,
 // respectively.
 //
-// The OCC store can be challenging to implement. The [projectionkit] module
-// provides adaptors that implement the OCC protocol using various popular
-// database systems.
-//
-// [projectionkit]: github.com/dogma/projectionkit
+// The OCC store can be challenging to implement. The
+// [github.com/dogmatiq/projectionkit] module provides adaptors that implement
+// the OCC protocol using popular database systems, such as PostgreSQL and
+// DynamoDB.
 type ProjectionMessageHandler interface {
 	// Configure describes the handler's configuration to the engine.
 	Configure(ProjectionConfigurer)

@@ -49,9 +49,8 @@ several elements of the API. Those elements have been removed in this release.
 
 ### Changed
 
-- **[APP BC]** Application and handler identity names are now constrained to a
-  maximum of 255 bytes in length. This is a change to the
-  specification/documentation only.
+- **[APP BC]** Application and handler identity names are now limited to 255
+  bytes in length. This is a change to the specification/documentation only.
 
 ## [0.12.0] - 2023-04-09
 

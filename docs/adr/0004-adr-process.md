@@ -8,8 +8,8 @@ Accepted
 
 ## Context
 
-We need a documented process for proposing, discussing and ultimate accepting or
-rejecting ADRs via pull requests.
+We need a documented process for proposing, discussing, and ultimate accepting
+or rejecting ADRs via pull requests.
 
 ## Decision
 

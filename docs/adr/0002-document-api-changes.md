@@ -36,6 +36,7 @@ Compatibility between versions can be clearly determined by examining the
 version number.
 
 <!-- references -->
+
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 [Go modules]: https://github.com/golang/go/wiki/Modules#modules

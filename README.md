@@ -40,7 +40,7 @@ which handles message delivery and data persistence.
 ## Related repositories
 
 - [testkit]: Utilities for black-box testing of Dogma applications.
-- [projectionkit]: Utilities for building [projections](#projection) in various popular database systems.
+- [projectionkit]: Utilities for building [projections](#projection) in popular database systems.
 - [example]: An example Dogma application that implements basic banking features.
 
 ## Concepts
@@ -183,9 +183,8 @@ non-message-based system.
 
 Each integration is an implementation of the [`dogma.IntegrationMessageHandler`]
 interface. The [engine](#engine) routes command [messages](#message) to the
-handler which interacts with some external system(s). Integrations may
-optionally produce event messages that represent the results of their
-interactions.
+handler which interacts with some external system. Integrations may optionally
+produce event messages that represent the results of their interactions.
 
 Integrations are stateless from the perspective of the engine.
 
@@ -200,8 +199,8 @@ handler which typically updates a read-optimized database of some kind. This
 view is often referred to as a "read model" or "query model".
 
 The [projectionkit] module provides engine-agnostic tools for building
-projections in various popular database systems, such as PostgreSQL, MySQL,
-DynamoDB and others
+projections in popular database systems, such as PostgreSQL, MySQL, DynamoDB and
+others.
 
 <!-- references -->
 
