@@ -1,3 +1,4 @@
+[Dd]eduplication
 [Dd]estroy
 [Dd]isable
 [Dd]isabled
@@ -19,5 +20,4 @@
 [Oo]nly
 [Vv]alidate
 [Ww]hitespace
-deduplication
 ADR|adr
