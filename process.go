@@ -119,6 +119,17 @@ type ProcessConfigurer interface {
 	// Process handlers support the HandlesEvent(), ExecutesCommand() and
 	// SchedulesTimeout() route types.
 	Routes(...ProcessRoute)
+
+	// Disable prevents the handler from receiving any messages.
+	//
+	// The engine MUST NOT call any methods other than Configure() on a disabled
+	// handler.
+	//
+	// Disabling a handler is useful when the handler's configuration prevents
+	// it from operating, such as when it's missing a required dependency,
+	// without requiring the user to conditionally register the handler with the
+	// application.
+	Disable(...DisableOption)
 }
 
 // ProcessEventScope performs engine operations within the context of a call
