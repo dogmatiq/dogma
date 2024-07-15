@@ -6,3 +6,4 @@
 ignore:
   - "**/fixtures"
   - "**/*_nocoverage.go"
+  - "*_nocoverage.go"
