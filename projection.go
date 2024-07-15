@@ -182,9 +182,6 @@ type (
 	}
 )
 
-func (UnicastProjectionDeliveryPolicy) isProjectionDeliveryPolicy()   {}
-func (BroadcastProjectionDeliveryPolicy) isProjectionDeliveryPolicy() {}
-
 // ProjectionRoute describes a message type that's routed to a
 // [ProjectionMessageHandler].
 type ProjectionRoute interface {
