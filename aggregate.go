@@ -112,8 +112,8 @@ type AggregateCommandScope interface {
 
 	// Destroy signals destruction of the aggregate instance.
 	//
-	// Destroying a process discards its state. The first command to target a
-	// destroyed instance operates on a new root.
+	// Destroying an aggregate instance discards its state. The first command to
+	// target a destroyed instance operates on a new root.
 	//
 	// Destruction occurs once the HandleCommand() method returns. Any future
 	// call to RecordEvent() on this scope prevents destruction.
