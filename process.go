@@ -239,7 +239,3 @@ type ProcessRoute interface {
 	Route
 	isProcessRoute()
 }
-
-func (HandlesEventRoute) isProcessRoute()     {}
-func (ExecutesCommandRoute) isProcessRoute()  {}
-func (SchedulesTimeoutRoute) isProcessRoute() {}

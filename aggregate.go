@@ -133,6 +133,3 @@ type AggregateRoute interface {
 	Route
 	isAggregateRoute()
 }
-
-func (HandlesCommandRoute) isAggregateRoute() {}
-func (RecordsEventRoute) isAggregateRoute()   {}

@@ -74,6 +74,3 @@ type IntegrationRoute interface {
 	Route
 	isIntegrationRoute()
 }
-
-func (HandlesCommandRoute) isIntegrationRoute() {}
-func (RecordsEventRoute) isIntegrationRoute()   {}

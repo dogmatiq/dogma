@@ -191,5 +191,3 @@ type ProjectionRoute interface {
 	Route
 	isProjectionRoute()
 }
-
-func (HandlesEventRoute) isProjectionRoute() {}

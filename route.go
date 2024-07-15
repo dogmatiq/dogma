@@ -76,16 +76,6 @@ type (
 	SchedulesTimeoutRoute struct{ Type reflect.Type }
 )
 
-func (HandlesCommandRoute) isRoute()   {}
-func (ExecutesCommandRoute) isRoute()  {}
-func (HandlesEventRoute) isRoute()     {}
-func (RecordsEventRoute) isRoute()     {}
-func (SchedulesTimeoutRoute) isRoute() {}
-
-func typeOf[T any]() reflect.Type {
-	return reflect.TypeOf((*T)(nil)).Elem()
-}
-
 type (
 	// HandlesCommandOption is an option that affects the behavior of the route
 	// returned by [HandlesCommand].
@@ -107,3 +97,7 @@ type (
 	// route returned by [SchedulesTimeout].
 	SchedulesTimeoutOption struct{}
 )
+
+func typeOf[T any]() reflect.Type {
+	return reflect.TypeOf((*T)(nil)).Elem()
+}
