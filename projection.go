@@ -114,6 +114,17 @@ type ProjectionConfigurer interface {
 	//
 	// The default policy is UnicastProjectionDeliveryPolicy.
 	DeliveryPolicy(ProjectionDeliveryPolicy)
+
+	// Disable prevents the handler from receiving any messages.
+	//
+	// The engine MUST NOT call any methods other than Configure() on a disabled
+	// handler.
+	//
+	// Disabling a handler is useful when the handler's configuration prevents
+	// it from operating, such as when it's missing a required dependency,
+	// without requiring the user to conditionally register the handler with the
+	// application.
+	Disable(...DisableOption)
 }
 
 // ProjectionEventScope performs engine operations within the context of a call
