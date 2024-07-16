@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
+## [Unreleased]
+
+### Added
+
+- **[ENGINE BC]** Added `Disable()` method to handler configurer interfaces.
+- Added placeholder `DisableOption` type for forward-compatibility.
+
 ## [0.13.0] - 2024-03-26
 
 ### Added
@@ -49,7 +56,7 @@ several elements of the API. Those elements have been removed in this release.
 
 ### Changed
 
-- **[APP BC]** Application and handler identity names are now limited to 255
+- **[BC]** Application and handler identity names are now limited to 255
   bytes in length. This is a change to the specification/documentation only.
 
 ## [0.12.0] - 2023-04-09
@@ -79,8 +86,8 @@ support for per-message routing configuration without further breaking changes.
 
 ### Added
 
-- **[APP BC]** Added `MessageDescription()` method to `Message` interface
-- **[APP BC]** Added `Validate()` method to `Message` interface
+- **[BC]** Added `MessageDescription()` method to `Message` interface
+- **[BC]** Added `Validate()` method to `Message` interface
 - Added `Command`, `Event` and `Timeout` as aliases for `Message` in preparation for stricter static message typing
 
 #### Routing API
@@ -107,7 +114,7 @@ support for per-message routing configuration without further breaking changes.
 
 ### Changed
 
-- **[APP BC]** Handler and application identity keys must now be an RFC 4122 UUID string
+- **[BC]** Handler and application identity keys must now be an RFC 4122 UUID string
 
 ### Deprecated
 
