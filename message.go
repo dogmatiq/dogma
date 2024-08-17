@@ -2,6 +2,9 @@ package dogma
 
 // A Message is an application-defined unit of data that describes a [Command],
 // [Event], or [Timeout] within a message-based application.
+//
+// Deprecated: Application developers should use [Command], [Event], or
+// [Timeout] instead.
 type Message interface {
 	// MessageDescription returns a human-readable description of the message.
 	MessageDescription() string
@@ -12,15 +15,33 @@ type Message interface {
 
 // A Command is a message that represents a request for a Dogma application to
 // perform some action.
-type Command = Message
+type Command interface {
+	// MessageDescription returns a human-readable description of the message.
+	MessageDescription() string
+
+	// Validate returns a non-nil error if the message is invalid.
+	Validate() error
+}
 
 // An Event is a message that indicates that some action has occurred within a
 // Dogma application.
-type Event = Message
+type Event interface {
+	// MessageDescription returns a human-readable description of the message.
+	MessageDescription() string
+
+	// Validate returns a non-nil error if the message is invalid.
+	Validate() error
+}
 
 // A Timeout is a message that represents a request for an action to be
 // performed at a specific time.
-type Timeout = Message
+type Timeout interface {
+	// MessageDescription returns a human-readable description of the message.
+	MessageDescription() string
+
+	// Validate returns a non-nil error if the message is invalid.
+	Validate() error
+}
 
 // UnexpectedMessage is a panic value used by a message handler when it receives
 // a message of a type that it did not expect.

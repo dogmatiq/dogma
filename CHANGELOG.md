@@ -10,6 +10,20 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
+## [Unreleased]
+
+### Changed
+
+- **[BC]** The `Command`, `Event` and `Timeout` interfaces are no longer aliases
+  for `Command`, they are distinct types. At this stage these interfaces are
+  method-compatible with the `Message` interface, however they will diverge in a
+  future release.
+
+### Deprecated
+
+- Marked the `Message` interface as deprecated. It may be removed in a future
+  release.
+
 ## [0.13.1]
 
 ### Added
