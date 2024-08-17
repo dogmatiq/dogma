@@ -62,9 +62,6 @@ type ProcessMessageHandler interface {
 	// the handler SHOULD NOT assume any specific ordering. The engine MAY call
 	// this method concurrently from separate goroutines or operating system
 	// processes.
-	//
-	// The implementation SHOULD NOT impose a context deadline. Implement the
-	// TimeoutHint() method instead.
 	HandleEvent(context.Context, ProcessRoot, ProcessEventScope, Event) error
 
 	// HandleTimeout continues the process in response to a timeout.
@@ -76,18 +73,7 @@ type ProcessMessageHandler interface {
 	// The engine MUST NOT call this method before the timeout's scheduled time.
 	// The engine MAY call this method concurrently from separate goroutines or
 	// operating system processes.
-	//
-	// The implementation SHOULD NOT impose a context deadline. Implement the
-	// TimeoutHint() method instead.
 	HandleTimeout(context.Context, ProcessRoot, ProcessTimeoutScope, Timeout) error
-
-	// TimeoutHint returns a suitable duration for handling the given message.
-	//
-	// The duration SHOULD be as short as possible. If no hint is available it
-	// MUST be zero.
-	//
-	// In this context, "timeout" refers to a deadline, not a timeout message.
-	TimeoutHint(Message) time.Duration
 }
 
 // ProcessRoot is a "marker" interface for the domain-specific state of a

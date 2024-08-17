@@ -31,3 +31,4 @@ the ADR documents.
 * [18. Compacting Projection Data](0018-projection-compaction.md)
 * [16. Automatic Process Creation](0019-automatic-process-creation.md)
 * [20. Constraints on Identifier Values](0020-identifier-constraints.md)
+* [21. Remove Handler Timeout Hints](0021-remove-handler-timeout-hints.md)

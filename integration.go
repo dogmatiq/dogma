@@ -2,7 +2,6 @@ package dogma
 
 import (
 	"context"
-	"time"
 )
 
 // An IntegrationMessageHandler integrates a Dogma application with external and
@@ -19,18 +18,7 @@ type IntegrationMessageHandler interface {
 	//
 	// The engine MAY call this method concurrently from separate goroutines or
 	// operating system processes.
-	//
-	// The implementation SHOULD NOT impose a context deadline; implement the
-	// TimeoutHint() method instead.
 	HandleCommand(context.Context, IntegrationCommandScope, Command) error
-
-	// TimeoutHint returns a suitable duration for handling the given message.
-	//
-	// The duration SHOULD be as short as possible. If no hint is available it
-	// MUST be zero.
-	//
-	// In this context, "timeout" refers to a deadline, not a timeout message.
-	TimeoutHint(Message) time.Duration
 }
 
 // A IntegrationConfigurer configures the engine for use with a specific

@@ -2,7 +2,6 @@ package fixtures
 
 import (
 	"context"
-	"time"
 
 	"github.com/dogmatiq/dogma"
 )
@@ -12,7 +11,6 @@ import (
 type IntegrationMessageHandler struct {
 	ConfigureFunc     func(dogma.IntegrationConfigurer)
 	HandleCommandFunc func(context.Context, dogma.IntegrationCommandScope, dogma.Command) error
-	TimeoutHintFunc   func(dogma.Message) time.Duration
 }
 
 var _ dogma.IntegrationMessageHandler = &IntegrationMessageHandler{}
@@ -34,12 +32,4 @@ func (h *IntegrationMessageHandler) HandleCommand(
 		return h.HandleCommandFunc(ctx, s, c)
 	}
 	return nil
-}
-
-// TimeoutHint returns a suitable duration for handling the given message.
-func (h *IntegrationMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
-	if h.TimeoutHintFunc != nil {
-		return h.TimeoutHintFunc(m)
-	}
-	return 0
 }

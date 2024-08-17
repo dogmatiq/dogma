@@ -49,9 +49,6 @@ type ProjectionMessageHandler interface {
 	// the handler SHOULD NOT assume any specific ordering. The engine MAY call
 	// this method concurrently from separate goroutines or operating system
 	// processes.
-	//
-	// The implementation SHOULD NOT impose a context deadline. Implement the
-	// TimeoutHint() method instead.
 	HandleEvent(
 		ctx context.Context,
 		r, c, n []byte,
@@ -69,14 +66,6 @@ type ProjectionMessageHandler interface {
 	//
 	// If r is present in the OCC store the handler SHOULD remove it.
 	CloseResource(ctx context.Context, r []byte) error
-
-	// TimeoutHint returns a suitable duration for handling the given event.
-	//
-	// The duration SHOULD be as short as possible. If no hint is available it
-	// MUST be zero.
-	//
-	// In this context, "timeout" refers to a deadline, not a timeout message.
-	TimeoutHint(Message) time.Duration
 
 	// Compact attempts to reduce the size of the projection.
 	//

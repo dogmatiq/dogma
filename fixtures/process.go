@@ -2,7 +2,6 @@ package fixtures
 
 import (
 	"context"
-	"time"
 
 	"github.com/dogmatiq/dogma"
 )
@@ -22,7 +21,6 @@ type ProcessMessageHandler struct {
 	RouteEventToInstanceFunc func(context.Context, dogma.Event) (string, bool, error)
 	HandleEventFunc          func(context.Context, dogma.ProcessRoot, dogma.ProcessEventScope, dogma.Event) error
 	HandleTimeoutFunc        func(context.Context, dogma.ProcessRoot, dogma.ProcessTimeoutScope, dogma.Timeout) error
-	TimeoutHintFunc          func(dogma.Message) time.Duration
 }
 
 var _ dogma.ProcessMessageHandler = &ProcessMessageHandler{}
@@ -78,12 +76,4 @@ func (h *ProcessMessageHandler) HandleTimeout(
 		return h.HandleTimeoutFunc(ctx, r, s, t)
 	}
 	return nil
-}
-
-// TimeoutHint returns a suitable duration for handling the given message.
-func (h *ProcessMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
-	if h.TimeoutHintFunc != nil {
-		return h.TimeoutHintFunc(m)
-	}
-	return 0
 }

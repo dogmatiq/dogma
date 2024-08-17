@@ -19,6 +19,17 @@ The format is based on [Keep a Changelog], and this project adheres to
   method-compatible with the `Message` interface, however they will diverge in a
   future release.
 
+### Removed
+
+This release removes the "timeout hint" functionality (see [ADR-0021]).
+Application implementers are free to apply their own context deadlines when
+handling messages.
+
+- **[BC]** Removed `ProcessMessageHandler.TimeoutHint()`
+- **[BC]** Removed `IntegrationMessageHandler.TimeoutHint()`
+- **[BC]** Removed `ProjectionMessageHandler.TimeoutHint()`
+- **[BC]** Removed `NoTimeoutHintBehavior`
+
 ### Deprecated
 
 - Marked the `Message` interface as deprecated. It may be removed in a future
@@ -325,6 +336,10 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.12.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.12.1
 [0.13.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.13.0
 [0.13.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.13.1
+
+<!-- adr references -->
+
+[ADR-21]: https://github.com/dogmatiq/dogma/blob/main/docs/adr/0021-remove-handler-timeout-hints.md
 
 <!-- version template
 ## [0.0.1] - YYYY-MM-DD

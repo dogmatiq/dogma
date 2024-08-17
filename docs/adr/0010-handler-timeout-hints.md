@@ -4,7 +4,7 @@ Date: 2019-06-28
 
 ## Status
 
-Accepted
+Superceded by [21. Remove Handler Timeout Hints](0021-remove-handler-timeout-hints.md)
 
 ## Context
 

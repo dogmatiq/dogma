@@ -2,7 +2,6 @@ package fixtures
 
 import (
 	"context"
-	"time"
 
 	"github.com/dogmatiq/dogma"
 )
@@ -14,7 +13,6 @@ type ProjectionMessageHandler struct {
 	HandleEventFunc     func(context.Context, []byte, []byte, []byte, dogma.ProjectionEventScope, dogma.Event) (bool, error)
 	ResourceVersionFunc func(context.Context, []byte) ([]byte, error)
 	CloseResourceFunc   func(context.Context, []byte) error
-	TimeoutHintFunc     func(dogma.Message) time.Duration
 	CompactFunc         func(context.Context, dogma.ProjectionCompactScope) error
 }
 
@@ -61,14 +59,6 @@ func (h *ProjectionMessageHandler) CloseResource(
 		return h.CloseResourceFunc(ctx, r)
 	}
 	return nil
-}
-
-// TimeoutHint returns a suitable duration for handling the given message.
-func (h *ProjectionMessageHandler) TimeoutHint(m dogma.Message) time.Duration {
-	if h.TimeoutHintFunc != nil {
-		return h.TimeoutHintFunc(m)
-	}
-	return 0
 }
 
 // Compact attempts to reduce the size of the projection.
