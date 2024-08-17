@@ -10,6 +10,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
+## [0.14.1] - 2024-08-18
+
+### Deprecated
+
+- The `fixtures` sub-package, which is used internally to test Dogma engine and
+  toolkit implementations, is now deprecated. It will be removed in a future
+  release.
+
 ## [0.14.0] - 2024-08-17
 
 ### Changed
@@ -337,6 +345,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.13.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.13.0
 [0.13.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.13.1
 [0.14.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.0
+[0.14.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.1
 
 <!-- adr references -->
 
