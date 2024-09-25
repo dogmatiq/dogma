@@ -14,14 +14,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Removed
 
-- **[BC]** Removed `Message.Validate()` method.
+- **[BC]** Removed `Message.Validate()`.
 
 ### Changed
 
-- **[BC]** Changed `Validate()` method on `Command`, `Event` and `Timeout` to
-  accept `CommandValidationScope`, `EventValidationScope` and
-  `TimeoutValidationScope`, respectively. This method was previously "inherited"
-  from the `Message` interface.
+- **[BC]** The `Validate()` methods on the `Command`, `Event` and `Timeout`
+  interfaces now require a `CommandValidationScope`, `EventValidationScope` and
+  `TimeoutValidationScope`, respectively.
 
 ### Added
 
@@ -30,10 +29,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Deprecated
 
-- The `Message` interface is no longer deprecated. It can still be useful within
-  engine implementations. Applications should continue to use the more-specific
-  `Command`, `Event` and `Timeout` interfaces wherever possible, which no longer
-  share compatible method sets.
+- The `Message` interface is **no longer deprecated** as it sees widespread use
+  within engine implementations. Applications should continue to use the
+  more-specific `Command`, `Event` and `Timeout` interfaces wherever possible,
+  which no longer share compatible method sets.
 
 ## [0.14.3] - 2024-09-27
 
