@@ -10,6 +10,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
+## [0.14.3] - 2024-09-27
+
+### Removed
+
+- **[ENGINE BC]** Removed deprecated `fixtures` package.
+
 ## [0.14.2] - 2024-08-21
 
 ### Removed
@@ -354,6 +360,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.14.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.0
 [0.14.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.1
 [0.14.2]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.2
+[0.14.3]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.3
 
 <!-- adr references -->
 
