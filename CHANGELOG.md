@@ -10,6 +10,30 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
+## [Unreleased]
+
+### Removed
+
+- **[BC]** Removed `Message.Validate()`.
+
+### Changed
+
+- **[BC]** The `Validate()` methods on the `Command`, `Event` and `Timeout`
+  interfaces now require a `CommandValidationScope`, `EventValidationScope` and
+  `TimeoutValidationScope`, respectively.
+
+### Added
+
+- Added `CommandValidationScope`, `EventValidationScope` and
+  `TimeoutValidationScope` interfaces.
+
+### Deprecated
+
+- The `Message` interface is **no longer deprecated** as it sees widespread use
+  within engine implementations. Applications should continue to use the
+  more-specific `Command`, `Event` and `Timeout` interfaces wherever possible,
+  which no longer share compatible method sets.
+
 ## [0.14.3] - 2024-09-27
 
 ### Removed
