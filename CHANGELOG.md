@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
-## [Unreleased]
+## [v0.15.0] - 2024-10-03
 
 ### Removed
 
@@ -19,13 +19,15 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### Changed
 
 - **[BC]** The `Validate()` methods on the `Command`, `Event` and `Timeout`
-  interfaces now require a `CommandValidationScope`, `EventValidationScope` and
-  `TimeoutValidationScope`, respectively.
+  interfaces now require a `CommandValidationScope`, `EventValidationScope` or
+  `TimeoutValidationScope` argument, respectively.
 
 ### Added
 
 - Added `CommandValidationScope`, `EventValidationScope` and
-  `TimeoutValidationScope` interfaces.
+  `TimeoutValidationScope` interfaces. These interfaces are currently empty, but
+  methods will be added in the future without causing application-facing
+  compatibility issues.
 
 ### Deprecated
 
@@ -385,6 +387,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.14.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.1
 [0.14.2]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.2
 [0.14.3]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.3
+[0.15.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.15.0
 
 <!-- adr references -->
 
