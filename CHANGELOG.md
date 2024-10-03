@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Changed
 
+- Bumped minimum Go version to v1.23.
 - **[BC]** The `Validate()` methods on the `Command`, `Event` and `Timeout`
   interfaces now require a `CommandValidationScope`, `EventValidationScope` or
   `TimeoutValidationScope` argument, respectively.
