@@ -74,8 +74,7 @@ command can produce any number of events, including zero.
 A timeout helps model business logic that depends on the passage of time.
 
 Messages must implement the appropriate interface: `Command`, `Event` or
-`Timeout`. These interfaces serve as aliases for [`dogma.Message`](message.go),
-but may diverge in the future.
+`Timeout`.
 
 ### Message handler
 
