@@ -60,7 +60,7 @@ type ApplicationConfigurer interface {
 //
 // It is used as an argument to the Handlers() method of
 // [ApplicationConfigurer].
-func RegisterAggregate(h AggregateMessageHandler, _ ...RegisterAggregateOption) HandlerRegistration {
+func RegisterAggregate(h AggregateMessageHandler, _ ...RegisterAggregateOption) AggregateRegistration {
 	return AggregateRegistration{h}
 }
 
@@ -68,7 +68,7 @@ func RegisterAggregate(h AggregateMessageHandler, _ ...RegisterAggregateOption) 
 //
 // It is used as an argument to the Handlers() method of
 // [ApplicationConfigurer].
-func RegisterProcess(h ProcessMessageHandler, _ ...RegisterProcessOption) HandlerRegistration {
+func RegisterProcess(h ProcessMessageHandler, _ ...RegisterProcessOption) ProcessRegistration {
 	return ProcessRegistration{h}
 }
 
@@ -77,7 +77,7 @@ func RegisterProcess(h ProcessMessageHandler, _ ...RegisterProcessOption) Handle
 //
 // It is used as an argument to the Handlers() method of
 // [ApplicationConfigurer].
-func RegisterIntegration(h IntegrationMessageHandler, _ ...RegisterIntegrationOption) HandlerRegistration {
+func RegisterIntegration(h IntegrationMessageHandler, _ ...RegisterIntegrationOption) IntegrationRegistration {
 	return IntegrationRegistration{h}
 }
 
@@ -86,7 +86,7 @@ func RegisterIntegration(h IntegrationMessageHandler, _ ...RegisterIntegrationOp
 //
 // It is used as an argument to the Handlers() method of
 // [ApplicationConfigurer].
-func RegisterProjection(h ProjectionMessageHandler, _ ...RegisterProjectionOption) HandlerRegistration {
+func RegisterProjection(h ProjectionMessageHandler, _ ...RegisterProjectionOption) ProjectionRegistration {
 	return ProjectionRegistration{h}
 }
 

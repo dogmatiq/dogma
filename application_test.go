@@ -12,12 +12,8 @@ func TestRegisterAggregate(t *testing.T) {
 	h := &aggregate{}
 	r := RegisterAggregate(h)
 
-	if r, ok := r.(AggregateRegistration); ok {
-		if r.Handler != h {
-			t.Fatal("unexpected handler")
-		}
-	} else {
-		t.Fatal("unexpected type")
+	if r.Handler != h {
+		t.Fatal("unexpected handler")
 	}
 }
 
@@ -27,12 +23,8 @@ func TestRegisterProcess(t *testing.T) {
 	h := &process{}
 	r := RegisterProcess(h)
 
-	if r, ok := r.(ProcessRegistration); ok {
-		if r.Handler != h {
-			t.Fatal("unexpected handler")
-		}
-	} else {
-		t.Fatal("unexpected type")
+	if r.Handler != h {
+		t.Fatal("unexpected handler")
 	}
 }
 
@@ -42,12 +34,8 @@ func TestRegisterIntegration(t *testing.T) {
 	h := &integration{}
 	r := RegisterIntegration(h)
 
-	if r, ok := r.(IntegrationRegistration); ok {
-		if r.Handler != h {
-			t.Fatal("unexpected handler")
-		}
-	} else {
-		t.Fatal("unexpected type")
+	if r.Handler != h {
+		t.Fatal("unexpected handler")
 	}
 }
 
@@ -57,11 +45,7 @@ func TestRegisterProjection(t *testing.T) {
 	h := &projection{}
 	r := RegisterProjection(h)
 
-	if r, ok := r.(ProjectionRegistration); ok {
-		if r.Handler != h {
-			t.Fatal("unexpected handler")
-		}
-	} else {
-		t.Fatal("unexpected type")
+	if r.Handler != h {
+		t.Fatal("unexpected handler")
 	}
 }
