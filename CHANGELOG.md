@@ -16,9 +16,9 @@ This releases introduces the `Handlers()` method to the `ApplicationConfigurer`
 interface. Implementors should use `Handlers()` in preference to the existing
 `Register*()` methods, which are now deprecated.
 
-The `Handlers()` offers a more extensible interface that allows future support
-for changes to handler configuration without introducing interface-level
-compilation errors.
+The `Handlers()` API offers a more extensible interface that allows for future
+changes to handler configuration without introducing interface-level compilation
+errors.
 
 ### Added
 
