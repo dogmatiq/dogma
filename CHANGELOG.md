@@ -10,6 +10,36 @@ The format is based on [Keep a Changelog], and this project adheres to
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 
+## [Unreleased]
+
+This releases introduces the `Handlers()` method to the `ApplicationConfigurer`
+interface. Implementors should use `Handlers()` in preference to the existing
+`Register*()` methods, which are now deprecated.
+
+The `Handlers()` offers a more extensible interface that allows future support
+for changes to handler configuration without introducing interface-level
+compilation errors.
+
+### Added
+
+- **[ENGINE BC]** Added `Handlers()` method to `ApplicationConfigurer`
+- Added `RegisterAggregate()`
+- Added `RegisterProcess()`
+- Added `RegisterIntegration()`
+- Added `RegisterProjection()`
+- Added `HandlerRegistration` interface
+- Added `AggregateRegistration` type
+- Added `ProcessRegistration` type
+- Added `IntegrationRegistration` type
+- Added `ProjectionRegistration` type
+
+### Deprecated
+
+- Deprecated `ApplicationConfigurer.RegisterAggregate()`
+- Deprecated `ApplicationConfigurer.RegisterProcess()`
+- Deprecated `ApplicationConfigurer.RegisterIntegration()`
+- Deprecated `ApplicationConfigurer.RegisterProjection()`
+
 ## [0.15.0] - 2024-10-03
 
 ### Removed
