@@ -33,6 +33,16 @@ compilation errors.
 - Added `IntegrationRegistration` type
 - Added `ProjectionRegistration` type
 
+### Changed
+
+- **[BC]** `HandlesCommand()`, `RecordsEvent()`, `HandlesEvent()`,
+  `ExecutesCommand()` and `SchedulesTimeout()` now panic if the type parameter
+  uses non-pointer receivers to implement `Command`. Therefore, it is no longer
+  possible to (mis-)use a single message type as both a pointer and a
+  non-pointer. If a type implements `Command`, `Event`, or `Timeout` using
+  pointer receivers then a pointer type must be used; otherwise, a non-pointer
+  type must be used.
+
 ### Deprecated
 
 - Deprecated `ApplicationConfigurer.RegisterAggregate()`

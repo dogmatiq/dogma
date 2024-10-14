@@ -1,6 +1,9 @@
 package dogma
 
-import "reflect"
+import (
+	"fmt"
+	"reflect"
+)
 
 // HandlesCommand routes command messages to an [AggregateMessageHandler] or
 // [IntegrationMessageHandler].
@@ -10,7 +13,7 @@ import "reflect"
 //
 // An application MUST NOT route a single command type to more than one handler.
 func HandlesCommand[T Command](...HandlesCommandOption) HandlesCommandRoute {
-	return HandlesCommandRoute{typeOf[T]()}
+	return HandlesCommandRoute{typeOf[Command, T]()}
 }
 
 // RecordsEvent routes event messages recorded by an [AggregateMessageHandler]
@@ -21,7 +24,7 @@ func HandlesCommand[T Command](...HandlesCommandOption) HandlesCommandRoute {
 //
 // An application MUST NOT route a single event type from more than one handler.
 func RecordsEvent[T Event](...RecordsEventOption) RecordsEventRoute {
-	return RecordsEventRoute{typeOf[T]()}
+	return RecordsEventRoute{typeOf[Event, T]()}
 }
 
 // HandlesEvent routes event messages to a [ProcessMessageHandler] or
@@ -30,7 +33,7 @@ func RecordsEvent[T Event](...RecordsEventOption) RecordsEventRoute {
 // It's used as an argument to the Routes() method of [ProcessConfigurer] or
 // [ProjectionConfigurer].
 func HandlesEvent[T Event](...HandlesEventOption) HandlesEventRoute {
-	return HandlesEventRoute{typeOf[T]()}
+	return HandlesEventRoute{typeOf[Event, T]()}
 }
 
 // ExecutesCommand routes command messages produced by a
@@ -38,7 +41,7 @@ func HandlesEvent[T Event](...HandlesEventOption) HandlesEventRoute {
 //
 // It's used as an argument to the Routes() method of [ProcessConfigurer].
 func ExecutesCommand[T Command](...ExecutesCommandOption) ExecutesCommandRoute {
-	return ExecutesCommandRoute{typeOf[T]()}
+	return ExecutesCommandRoute{typeOf[Command, T]()}
 }
 
 // SchedulesTimeout routes timeout messages scheduled by
@@ -48,7 +51,7 @@ func ExecutesCommand[T Command](...ExecutesCommandOption) ExecutesCommandRoute {
 //
 // An application MAY use a single timeout type with more than one process.
 func SchedulesTimeout[T Timeout](...SchedulesTimeoutOption) SchedulesTimeoutRoute {
-	return SchedulesTimeoutRoute{typeOf[T]()}
+	return SchedulesTimeoutRoute{typeOf[Timeout, T]()}
 }
 
 type (
@@ -98,6 +101,24 @@ type (
 	SchedulesTimeoutOption struct{}
 )
 
-func typeOf[T any]() reflect.Type {
-	return reflect.TypeOf((*T)(nil)).Elem()
+// typeOf returns the [reflect.Type] for C, which must be a concrete
+// implementation of the interface I.
+func typeOf[I Message, C Message]() reflect.Type {
+	concrete := reflect.TypeFor[C]()
+
+	if concrete.Kind() == reflect.Pointer {
+		iface := reflect.TypeFor[I]()
+		elem := concrete.Elem()
+
+		if elem.Implements(iface) {
+			panic(fmt.Sprintf(
+				"%s implements %s using non-pointer receivers, use %s instead",
+				concrete,
+				iface,
+				elem,
+			))
+		}
+	}
+
+	return concrete
 }
