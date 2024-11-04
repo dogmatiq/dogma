@@ -12,26 +12,24 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-This releases introduces the `Handlers()` method to the `ApplicationConfigurer`
-interface. Implementors should use `Handlers()` in preference to the existing
-`Register*()` methods, which are now deprecated.
+This releases introduces a `Routes()` method to the `ApplicationConfigurer`
+interface. Application developers should use `Routes()` in preference to the
+existing `Register*()` methods, which are now deprecated.
 
-The `Handlers()` API offers a more extensible interface that allows for future
+The `Routes()` API offers a more extensible interface that allows for future
 changes to handler configuration without introducing interface-level compilation
 errors.
 
 ### Added
 
-- **[ENGINE BC]** Added `Handlers()` method to `ApplicationConfigurer`
-- Added `RegisterAggregate()`
-- Added `RegisterProcess()`
-- Added `RegisterIntegration()`
-- Added `RegisterProjection()`
-- Added `HandlerRegistration` interface
-- Added `AggregateRegistration` type
-- Added `ProcessRegistration` type
-- Added `IntegrationRegistration` type
-- Added `ProjectionRegistration` type
+- **[ENGINE BC]** Added `Routes()` method to `ApplicationConfigurer`.
+- Added `ViaAggregate().`
+- Added `ViaProcess()`.
+- Added `ViaIntegration()`.
+- Added `ViaProjection()`.
+- Added `HandlerRoute` and `MessageRoute` interfaces.
+- Added `ViaAggregateRoute`, `ViaProcessRoute`, `ViaIntegrationRoute` and
+  `ViaProjectionRoute` types.
 
 ### Changed
 
@@ -45,10 +43,15 @@ errors.
 
 ### Deprecated
 
-- Deprecated `ApplicationConfigurer.RegisterAggregate()`
-- Deprecated `ApplicationConfigurer.RegisterProcess()`
-- Deprecated `ApplicationConfigurer.RegisterIntegration()`
-- Deprecated `ApplicationConfigurer.RegisterProjection()`
+- Deprecated `Route`, use `MessageRoute` instead.
+- Deprecated `ApplicationConfigurer.RegisterAggregate()`.
+- Deprecated `ApplicationConfigurer.RegisterProcess()`.
+- Deprecated `ApplicationConfigurer.RegisterIntegration()`.
+- Deprecated `ApplicationConfigurer.RegisterProjection()`.
+- Deprecated `RegisterAggregateOption`.
+- Deprecated `RegisterProcessOption`.
+- Deprecated `RegisterIntegrationOption`.
+- Deprecated `RegisterProjectionOption`.
 
 ## [0.15.0] - 2024-10-03
 

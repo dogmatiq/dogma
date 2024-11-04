@@ -6,44 +6,44 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
-func TestRegisterAggregate(t *testing.T) {
+func TestViaAggregate(t *testing.T) {
 	type aggregate struct{ AggregateMessageHandler }
 
 	h := &aggregate{}
-	r := RegisterAggregate(h)
+	r := ViaAggregate(h)
 
 	if r.Handler != h {
 		t.Fatal("unexpected handler")
 	}
 }
 
-func TestRegisterProcess(t *testing.T) {
+func TestViaProcess(t *testing.T) {
 	type process struct{ ProcessMessageHandler }
 
 	h := &process{}
-	r := RegisterProcess(h)
+	r := ViaProcess(h)
 
 	if r.Handler != h {
 		t.Fatal("unexpected handler")
 	}
 }
 
-func TestRegisterIntegration(t *testing.T) {
+func TestViaIntegration(t *testing.T) {
 	type integration struct{ IntegrationMessageHandler }
 
 	h := &integration{}
-	r := RegisterIntegration(h)
+	r := ViaIntegration(h)
 
 	if r.Handler != h {
 		t.Fatal("unexpected handler")
 	}
 }
 
-func TestRegisterProjection(t *testing.T) {
+func TestViaProjection(t *testing.T) {
 	type projection struct{ ProjectionMessageHandler }
 
 	h := &projection{}
-	r := RegisterProjection(h)
+	r := ViaProjection(h)
 
 	if r.Handler != h {
 		t.Fatal("unexpected handler")

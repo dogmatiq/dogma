@@ -6,10 +6,8 @@ import (
 )
 
 // HandlesCommand routes command messages to an [AggregateMessageHandler] or
-// [IntegrationMessageHandler].
-//
-// It's used as an argument to the Routes() method of [AggregateConfigurer] or
-// [IntegrationConfigurer].
+// [IntegrationMessageHandler]. It is used as an argument to the Routes() method
+// of [AggregateConfigurer] or [IntegrationConfigurer].
 //
 // An application MUST NOT route a single command type to more than one handler.
 func HandlesCommand[T Command](...HandlesCommandOption) HandlesCommandRoute {
@@ -17,10 +15,8 @@ func HandlesCommand[T Command](...HandlesCommandOption) HandlesCommandRoute {
 }
 
 // RecordsEvent routes event messages recorded by an [AggregateMessageHandler]
-// or [IntegrationMessageHandler].
-//
-// It's used as an argument to the Routes() method of [AggregateConfigurer] or
-// [IntegrationConfigurer].
+// or [IntegrationMessageHandler]. It is used as an argument to the Routes()
+// method of [AggregateConfigurer] or [IntegrationConfigurer].
 //
 // An application MUST NOT route a single event type from more than one handler.
 func RecordsEvent[T Event](...RecordsEventOption) RecordsEventRoute {
@@ -28,26 +24,22 @@ func RecordsEvent[T Event](...RecordsEventOption) RecordsEventRoute {
 }
 
 // HandlesEvent routes event messages to a [ProcessMessageHandler] or
-// [ProjectionMessageHandler].
-//
-// It's used as an argument to the Routes() method of [ProcessConfigurer] or
-// [ProjectionConfigurer].
+// [ProjectionMessageHandler]. It is used as an argument to the Routes() method
+// of [ProcessConfigurer] or [ProjectionConfigurer].
 func HandlesEvent[T Event](...HandlesEventOption) HandlesEventRoute {
 	return HandlesEventRoute{typeOf[Event, T]()}
 }
 
 // ExecutesCommand routes command messages produced by a
-// [ProcessMessageHandler].
-//
-// It's used as an argument to the Routes() method of [ProcessConfigurer].
+// [ProcessMessageHandler]. It is used as an argument to the Routes() method of
+// [ProcessConfigurer].
 func ExecutesCommand[T Command](...ExecutesCommandOption) ExecutesCommandRoute {
 	return ExecutesCommandRoute{typeOf[Command, T]()}
 }
 
 // SchedulesTimeout routes timeout messages scheduled by
-// [ProcessMessageHandler].
-//
-// It's used as an argument to the Routes() method of [ProcessConfigurer].
+// [ProcessMessageHandler]. It is used as an argument to the Routes() method of
+// [ProcessConfigurer].
 //
 // An application MAY use a single timeout type with more than one process.
 func SchedulesTimeout[T Timeout](...SchedulesTimeoutOption) SchedulesTimeoutRoute {
@@ -55,8 +47,14 @@ func SchedulesTimeout[T Timeout](...SchedulesTimeoutOption) SchedulesTimeoutRout
 }
 
 type (
-	// Route is an interface implemented by all route types.
-	Route interface{ isRoute() }
+	// MessageRoute is an interface for types that describe a relationship between a
+	// message handler and a specific message type.
+	MessageRoute = interface{ isMessageRoute() }
+
+	// Route is an alias for [MessageRoute]
+	//
+	// Deprecated: Use [MessageRoute] instead.
+	Route = MessageRoute
 
 	// HandlesCommandRoute describes a route for a handler that handles a
 	// [Command] of a specific type.
