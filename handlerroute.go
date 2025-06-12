@@ -18,9 +18,9 @@ func ViaAggregate(h AggregateMessageHandler, _ ...ViaAggregateOption) ViaAggrega
 // specified [ProcessMessageHandler]. It is used as an argument to the Routes()
 // method of [ApplicationConfigurer].
 //
-// [Event] messages recorded using an [AggregateCommandScope] or
-// [IntegrationCommandScope] are routed to h if it has a [HandlesEvent] route
-// for that event type.
+// [Event] messages recorded using an [AggregateCommandScope],
+// [IntegrationCommandScope], or [IntegrationEventScope] are routed to h if it
+// has a [HandlesEvent] route for that event type.
 //
 // [Command] messages executed by h using a [ProcessEventScope] or
 // [ProcessTimeoutScope] are routed to other handlers according to their route
@@ -39,8 +39,13 @@ func ViaProcess(h ProcessMessageHandler, _ ...ViaProcessOption) ViaProcessRoute 
 // [ProcessTimeoutScope] are routed to h if it has a [HandlesCommandRoute] for
 // that command type.
 //
-// [Event] messages recorded by h using an [IntegrationCommandScope] are routed
-// to other handlers according to their route configurations.
+// [Event] messages recorded using an [AggregateCommandScope] or
+// [IntegrationCommandScope] are routed to h if it has a [HandlesEvent] route
+// for that event type.
+//
+// [Event] messages recorded by h using an [IntegrationCommandScope] or
+// [IntegrationEventScope] are routed to other handlers according to their route
+// configurations.
 func ViaIntegration(h IntegrationMessageHandler, _ ...ViaIntegrationOption) ViaIntegrationRoute {
 	return ViaIntegrationRoute{h}
 }
@@ -49,9 +54,9 @@ func ViaIntegration(h IntegrationMessageHandler, _ ...ViaIntegrationOption) ViaI
 // [ProjectionMessageHandler]. It is used as an argument to the Routes() method
 // of [ApplicationConfigurer].
 //
-// [Event] messages recorded using an [AggregateCommandScope] or
-// [IntegrationCommandScope] are routed to h if it has a [HandlesEvent] route
-// for that event type.
+// [Event] messages recorded using an [AggregateCommandScope],
+// [IntegrationCommandScope], or [IntegrationEventScope] are routed to h if it
+// has a [HandlesEvent] route for that event type.
 func ViaProjection(h ProjectionMessageHandler, _ ...ViaProjectionOption) ViaProjectionRoute {
 	return ViaProjectionRoute{h}
 }

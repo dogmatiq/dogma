@@ -23,9 +23,10 @@ func RecordsEvent[T Event](...RecordsEventOption) RecordsEventRoute {
 	return RecordsEventRoute{typeOf[Event, T]()}
 }
 
-// HandlesEvent routes event messages to a [ProcessMessageHandler] or
-// [ProjectionMessageHandler]. It is used as an argument to the Routes() method
-// of [ProcessConfigurer] or [ProjectionConfigurer].
+// HandlesEvent routes event messages to a [ProcessMessageHandler],
+// [ProjectionMessageHandler], or [IntegrationMessageHandler]. It is used as an
+// argument to the Routes() method of [ProcessConfigurer], [ProjectionConfigurer],
+// or [IntegrationConfigurer].
 func HandlesEvent[T Event](...HandlesEventOption) HandlesEventRoute {
 	return HandlesEventRoute{typeOf[Event, T]()}
 }

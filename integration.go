@@ -2,6 +2,7 @@ package dogma
 
 import (
 	"context"
+	"time"
 )
 
 // An IntegrationMessageHandler integrates a Dogma application with external and
@@ -19,6 +20,16 @@ type IntegrationMessageHandler interface {
 	// The engine MAY call this method concurrently from separate goroutines or
 	// operating system processes.
 	HandleCommand(context.Context, IntegrationCommandScope, Command) error
+
+	// HandleEvent handles an event, typically by invoking some external API or
+	// sending notifications.
+	//
+	// It MAY optionally record events that describe the outcome of handling
+	// the event.
+	//
+	// The engine MAY call this method concurrently from separate goroutines or
+	// operating system processes.
+	HandleEvent(context.Context, IntegrationEventScope, Event) error
 }
 
 // A IntegrationConfigurer configures the engine for use with a specific
@@ -41,8 +52,8 @@ type IntegrationConfigurer interface {
 	// Routes configures the engine to route certain message types to and from
 	// the handler.
 	//
-	// Integration handlers support the HandlesCommand() and RecordsEvent()
-	// route types.
+	// Integration handlers support the HandlesCommand(), HandlesEvent(), and
+	// RecordsEvent() route types.
 	Routes(...IntegrationRoute)
 
 	// Disable prevents the handler from receiving any messages.
@@ -62,6 +73,19 @@ type IntegrationConfigurer interface {
 type IntegrationCommandScope interface {
 	// RecordEvent records the occurrence of an event.
 	RecordEvent(Event)
+
+	// Log records an informational message.
+	Log(format string, args ...any)
+}
+
+// IntegrationEventScope performs engine operations within the context of a
+// call to the HandleEvent() method of an [IntegrationMessageHandler].
+type IntegrationEventScope interface {
+	// RecordEvent records the occurrence of an event.
+	RecordEvent(Event)
+
+	// RecordedAt returns the time at which the event occurred.
+	RecordedAt() time.Time
 
 	// Log records an informational message.
 	Log(format string, args ...any)

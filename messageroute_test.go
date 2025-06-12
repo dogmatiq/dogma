@@ -149,3 +149,11 @@ func TestSchedulesTimeout(t *testing.T) {
 		SchedulesTimeout[X]()
 	})
 }
+
+func TestHandlesEventRoute_isIntegrationRoute(t *testing.T) {
+	// Test that HandlesEvent routes are now valid for integration handlers
+	route := HandlesEvent[nonPointerReceivers[EventValidationScope]]()
+
+	// This should compile without error if HandlesEventRoute implements IntegrationRoute
+	var _ IntegrationRoute = route
+}
