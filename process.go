@@ -151,6 +151,17 @@ type ProcessEventScope interface {
 	// RecordedAt returns the time at which the event occurred.
 	RecordedAt() time.Time
 
+	// Now returns the current engine time.
+	//
+	// The handler SHOULD use the returned time instead of calling time.Now()
+	// directly to ensure compatibility with testing frameworks that manipulate
+	// time.
+	//
+	// Under normal operating conditions the engine SHOULD return the current
+	// local time. The engine MAY return a different time under some
+	// circumstances, such as when executing tests.
+	Now() time.Time
+
 	// Log records an informational message.
 	Log(format string, args ...any)
 }
@@ -190,6 +201,17 @@ type ProcessTimeoutScope interface {
 	// The time may be before the current time. For example, the engine may
 	// deliver timeouts that were "missed" after recovering from downtime.
 	ScheduledFor() time.Time
+
+	// Now returns the current engine time.
+	//
+	// The handler SHOULD use the returned time instead of calling time.Now()
+	// directly to ensure compatibility with testing frameworks that manipulate
+	// time.
+	//
+	// Under normal operating conditions the engine SHOULD return the current
+	// local time. The engine MAY return a different time under some
+	// circumstances, such as when executing tests.
+	Now() time.Time
 
 	// Log records an informational message.
 	Log(format string, args ...any)
