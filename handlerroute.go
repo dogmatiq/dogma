@@ -63,6 +63,12 @@ type (
 		isHandlerRoute()
 	}
 
+	// HandlerSpec is an interface for all types that describe a handler
+	// to be registered with an [Application].
+	HandlerSpec interface {
+		isHandlerSpec()
+	}
+
 	// ViaAggregateRoute describes an [AggregateMessageHandler] that is to be
 	// registered with an [Application].
 	ViaAggregateRoute struct{ Handler AggregateMessageHandler }
@@ -78,6 +84,22 @@ type (
 	// ViaProjectionRoute describes a [ProjectionMessageHandler] that is to be
 	// registered with an [Application].
 	ViaProjectionRoute struct{ Handler ProjectionMessageHandler }
+
+	// WithAggregateSpec describes an [AggregateMessageHandler] that is to be
+	// registered with an [Application].
+	WithAggregateSpec struct{ Handler AggregateMessageHandler }
+
+	// WithProcessSpec describes a [ProcessMessageHandler] that is to be
+	// registered with an [Application].
+	WithProcessSpec struct{ Handler ProcessMessageHandler }
+
+	// WithIntegrationSpec describes an [IntegrationMessageHandler] that is
+	// to be registered with an [Application].
+	WithIntegrationSpec struct{ Handler IntegrationMessageHandler }
+
+	// WithProjectionSpec describes a [ProjectionMessageHandler] that is to be
+	// registered with an [Application].
+	WithProjectionSpec struct{ Handler ProjectionMessageHandler }
 )
 
 type (
@@ -96,4 +118,48 @@ type (
 	// ViaProjectionOption is an option that affects the behavior of a call to
 	// the RegisterProjection() method of the [ApplicationConfigurer] interface.
 	ViaProjectionOption struct{}
+
+	// WithAggregateOption is an option that affects the behavior of a call to
+	// the WithAggregate() function.
+	WithAggregateOption struct{}
+
+	// WithProcessOption is an option that affects the behavior of a call to
+	// the WithProcess() function.
+	WithProcessOption struct{}
+
+	// WithIntegrationOption is an option that affects the behavior of a call to
+	// the WithIntegration() function.
+	WithIntegrationOption struct{}
+
+	// WithProjectionOption is an option that affects the behavior of a call to
+	// the WithProjection() function.
+	WithProjectionOption struct{}
 )
+
+// WithAggregate configures an [Application] to use the specified
+// [AggregateMessageHandler]. It is used as an argument to the Handlers()
+// method of [ApplicationConfigurer].
+func WithAggregate(h AggregateMessageHandler, _ ...WithAggregateOption) WithAggregateSpec {
+	return WithAggregateSpec{h}
+}
+
+// WithProcess configures an [Application] to use the specified
+// [ProcessMessageHandler]. It is used as an argument to the Handlers()
+// method of [ApplicationConfigurer].
+func WithProcess(h ProcessMessageHandler, _ ...WithProcessOption) WithProcessSpec {
+	return WithProcessSpec{h}
+}
+
+// WithIntegration configures an [Application] to use the specified
+// [IntegrationMessageHandler]. It is used as an argument to the Handlers()
+// method of [ApplicationConfigurer].
+func WithIntegration(h IntegrationMessageHandler, _ ...WithIntegrationOption) WithIntegrationSpec {
+	return WithIntegrationSpec{h}
+}
+
+// WithProjection configures an [Application] to use the specified
+// [ProjectionMessageHandler]. It is used as an argument to the Handlers()
+// method of [ApplicationConfigurer].
+func WithProjection(h ProjectionMessageHandler, _ ...WithProjectionOption) WithProjectionSpec {
+	return WithProjectionSpec{h}
+}

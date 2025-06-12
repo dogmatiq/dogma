@@ -27,6 +27,9 @@ type ApplicationConfigurer interface {
 	// handlers.
 	Routes(...HandlerRoute)
 
+	// Handlers configures the application to use specific message handlers.
+	Handlers(...HandlerSpec)
+
 	// RegisterAggregate configures the engine to route messages for an
 	// aggregate.
 	//

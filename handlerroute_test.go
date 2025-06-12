@@ -49,3 +49,47 @@ func TestViaProjection(t *testing.T) {
 		t.Fatal("unexpected handler")
 	}
 }
+
+func TestWithAggregate(t *testing.T) {
+	type aggregate struct{ AggregateMessageHandler }
+
+	h := &aggregate{}
+	s := WithAggregate(h)
+
+	if s.Handler != h {
+		t.Fatal("unexpected handler")
+	}
+}
+
+func TestWithProcess(t *testing.T) {
+	type process struct{ ProcessMessageHandler }
+
+	h := &process{}
+	s := WithProcess(h)
+
+	if s.Handler != h {
+		t.Fatal("unexpected handler")
+	}
+}
+
+func TestWithIntegration(t *testing.T) {
+	type integration struct{ IntegrationMessageHandler }
+
+	h := &integration{}
+	s := WithIntegration(h)
+
+	if s.Handler != h {
+		t.Fatal("unexpected handler")
+	}
+}
+
+func TestWithProjection(t *testing.T) {
+	type projection struct{ ProjectionMessageHandler }
+
+	h := &projection{}
+	s := WithProjection(h)
+
+	if s.Handler != h {
+		t.Fatal("unexpected handler")
+	}
+}
