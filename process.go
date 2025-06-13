@@ -153,9 +153,13 @@ type ProcessEventScope interface {
 
 	// Now returns the current engine time.
 	//
-	// The handler SHOULD use the returned time to implement business logic
-	// that has some time-based component, such as determining when to schedule
-	// timeouts or making time-based process decisions.
+	// The handler SHOULD use the returned time instead of calling time.Now()
+	// directly to ensure compatibility with testing frameworks that manipulate
+	// time.
+	//
+	// Under normal operating conditions the engine SHOULD return the current
+	// local time. The engine MAY return a different time under some
+	// circumstances, such as when executing tests.
 	Now() time.Time
 
 	// Log records an informational message.
@@ -200,9 +204,13 @@ type ProcessTimeoutScope interface {
 
 	// Now returns the current engine time.
 	//
-	// The handler SHOULD use the returned time to implement timeout handling
-	// logic that has some time-based component, such as rescheduling timeouts
-	// or calculating elapsed time since the timeout was scheduled.
+	// The handler SHOULD use the returned time instead of calling time.Now()
+	// directly to ensure compatibility with testing frameworks that manipulate
+	// time.
+	//
+	// Under normal operating conditions the engine SHOULD return the current
+	// local time. The engine MAY return a different time under some
+	// circumstances, such as when executing tests.
 	Now() time.Time
 
 	// Log records an informational message.

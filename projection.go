@@ -133,9 +133,13 @@ type ProjectionEventScope interface {
 
 	// Now returns the current engine time.
 	//
-	// The handler SHOULD use the returned time to implement projection logic
-	// that has some time-based component, such as calculating time-based
-	// aggregations or filtering events by temporal criteria.
+	// The handler SHOULD use the returned time instead of calling time.Now()
+	// directly to ensure compatibility with testing frameworks that manipulate
+	// time.
+	//
+	// Under normal operating conditions the engine SHOULD return the current
+	// local time. The engine MAY return a different time under some
+	// circumstances, such as when executing tests.
 	Now() time.Time
 
 	// Log records an informational message.
