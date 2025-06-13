@@ -141,10 +141,6 @@ type AggregateCommandScope interface {
 	// The handler SHOULD use the returned time to implement business logic
 	// that has some time-based component, such as timestamping events or
 	// enforcing time-based business rules.
-	//
-	// Under normal operating conditions the engine SHOULD return the current
-	// local time. The engine MAY return a different time under some
-	// circumstances, such as when executing tests.
 	Now() time.Time
 
 	// Log records an informational message.

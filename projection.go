@@ -136,10 +136,6 @@ type ProjectionEventScope interface {
 	// The handler SHOULD use the returned time to implement projection logic
 	// that has some time-based component, such as calculating time-based
 	// aggregations or filtering events by temporal criteria.
-	//
-	// Under normal operating conditions the engine SHOULD return the current
-	// local time. The engine MAY return a different time under some
-	// circumstances, such as when executing tests.
 	Now() time.Time
 
 	// Log records an informational message.

@@ -69,10 +69,6 @@ type IntegrationCommandScope interface {
 	// The handler SHOULD use the returned time to implement integration logic
 	// that has some time-based component, such as timestamping external
 	// communications or enforcing time-based integration policies.
-	//
-	// Under normal operating conditions the engine SHOULD return the current
-	// local time. The engine MAY return a different time under some
-	// circumstances, such as when executing tests.
 	Now() time.Time
 
 	// Log records an informational message.
