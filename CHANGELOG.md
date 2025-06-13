@@ -31,8 +31,7 @@ errors.
 - Added `ViaAggregateRoute`, `ViaProcessRoute`, `ViaIntegrationRoute` and
   `ViaProjectionRoute` types.
 - Added `Now()` method to `AggregateCommandScope`, `ProcessEventScope`,
-  `ProcessTimeoutScope`, `IntegrationCommandScope` and `ProjectionEventScope`
-  to provide handlers with access to the current engine time.
+  `ProcessTimeoutScope`, `IntegrationCommandScope` and `ProjectionEventScope`.
 
 ### Changed
 

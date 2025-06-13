@@ -151,15 +151,18 @@ type ProcessEventScope interface {
 	// RecordedAt returns the time at which the event occurred.
 	RecordedAt() time.Time
 
-	// Now returns the current engine time.
+	// Now returns the current local time, according to the engine.
 	//
-	// The handler SHOULD use the returned time instead of calling time.Now()
-	// directly to ensure compatibility with testing frameworks that manipulate
-	// time.
+	// Use of this method is discouraged. It is preferrable to use information
+	// contained within the message, the process root, or the time returned by
+	// [ProcessEventScope.RecordedAt], which provides consistent behavior when
+	// message delivery is delayed or retried.
 	//
-	// Under normal operating conditions the engine SHOULD return the current
-	// local time. The engine MAY return a different time under some
-	// circumstances, such as when executing tests.
+	// If access to the system clock is absolutely necessary, handlers should
+	// call this method instead of [time.Now]. It may return a time different to
+	// that returned by [time.Now] under some circumstances, such as when
+	// executing tests or when accounting for clock skew in a distributed
+	// system.
 	Now() time.Time
 
 	// Log records an informational message.
@@ -202,15 +205,18 @@ type ProcessTimeoutScope interface {
 	// deliver timeouts that were "missed" after recovering from downtime.
 	ScheduledFor() time.Time
 
-	// Now returns the current engine time.
+	// Now returns the current local time, according to the engine.
 	//
-	// The handler SHOULD use the returned time instead of calling time.Now()
-	// directly to ensure compatibility with testing frameworks that manipulate
-	// time.
+	// Use of this method is discouraged. It is preferrable to use information
+	// contained within the message, the process root, or the time returned by
+	// [ProcessTimeoutScope.ScheduledFor], which provides consistent behavior
+	// when message delivery is delayed or retried.
 	//
-	// Under normal operating conditions the engine SHOULD return the current
-	// local time. The engine MAY return a different time under some
-	// circumstances, such as when executing tests.
+	// If access to the system clock is absolutely necessary, handlers should
+	// call this method instead of [time.Now]. It may return a time different to
+	// that returned by [time.Now] under some circumstances, such as when
+	// executing tests or when accounting for clock skew in a distributed
+	// system.
 	Now() time.Time
 
 	// Log records an informational message.
