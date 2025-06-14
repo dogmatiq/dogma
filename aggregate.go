@@ -42,8 +42,8 @@ type AggregateMessageHandler interface {
 	//
 	// The handler SHOULD NOT have any side-effects beyond recording events.
 	// Specifically, the implementation MUST NOT modify the root directly. Use
-	// AggregateCommandScope.RecordEvent() to record an event that represents
-	// the state change. See also AggregateRoot.ApplyEvent().
+	// [AggregateCommandScope.RecordEvent] to record an event that represents
+	// the state change. See also [AggregateRoot.ApplyEvent].
 	//
 	// If this is the first command routed to this instance, the root is the
 	// return value of New(). Otherwise, it's the value of the root as it
