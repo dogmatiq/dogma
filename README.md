@@ -98,6 +98,9 @@ An **application** is a collection of [message handlers](#message-handler) that
 work together as a unit. Typically, each application encapsulates a specific
 business (sub-)domain or "bounded-context".
 
+The application is represented by an implementation of the [`dogma.Application`]
+interface.
+
 ### Engine
 
 An engine is a Go module that delivers messages to an
