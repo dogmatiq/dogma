@@ -2,7 +2,7 @@
 
 # Dogma
 
-Build message-based applications in Go.
+Build message-based, event-sourced applications in Go.
 
 [![Documentation](https://img.shields.io/badge/go.dev-documentation-007d9c?&style=for-the-badge)](https://pkg.go.dev/github.com/dogmatiq/dogma)
 [![Latest Version](https://img.shields.io/github/tag/dogmatiq/dogma.svg?&style=for-the-badge&label=semver)](https://github.com/dogmatiq/dogma/releases)
@@ -13,15 +13,21 @@ Build message-based applications in Go.
 
 ## Overview
 
-Dogma is a toolkit for building message-based applications in Go.
+Dogma is a comprehensive set of tools for building message-based, event-sourced
+applications in Go.
 
 In Dogma, an **application** implements business logic by consuming and
-producing messages . The application is strictly separated from the **engine**,
+producing messages. The application is strictly separated from the **engine**,
 which handles message delivery and data persistence.
 
 ## Features
 
-- **Built for [Domain Driven Design]**: The API uses DDD terminology to help
+- **Event-sourced persistence**: Dogma applications are event-sourced, meaning
+  that all changes to the application's state are recorded as a sequence of
+  events. This allows for easy auditing, debugging, and rebuilding of
+  application state.
+
+- **Built for [Domain Driven Design]**: The API uses DDD concepts to help
   developers align their understanding of the application's business logic with
   its implementation.
 
@@ -37,7 +43,10 @@ which handles message delivery and data persistence.
 - **Built-in introspection**: Analyze application code to visualize how messages
   traverse your applications.
 
-## Related repositories
+## Repositories
+
+This repository contains the Go interfaces that form the contract between the
+application and the engine.
 
 - [testkit]: Utilities for black-box testing of Dogma applications.
 - [projectionkit]: Utilities for building [projections](#projection) in popular database systems.
@@ -73,13 +82,13 @@ command can produce any number of events, including zero.
 
 A timeout helps model business logic that depends on the passage of time.
 
-Messages must implement the appropriate interface: `Command`, `Event` or
-`Timeout`.
+Messages must implement the appropriate interface; one of [`dogma.Command`],
+[`dogma.Event`] or [`dogma.Timeout`].
 
 ### Message handler
 
-A message **handler** is part of an application that acts upon messages it
-receives.
+A message **handler** is a component of an application that acts upon messages
+it receives.
 
 Each handler specifies the message types it expects to receive. These message
 are **routed** to the handler by the [engine](#engine).
@@ -98,8 +107,8 @@ An **application** is a collection of [message handlers](#message-handler) that
 work together as a unit. Typically, each application encapsulates a specific
 business (sub-)domain or "bounded-context".
 
-The application is represented by an implementation of the [`dogma.Application`]
-interface.
+Each application is represented by an implementation of the
+[`dogma.Application`] interface.
 
 ### Engine
 
@@ -113,15 +122,8 @@ with it a set of guarantees about how the application behaves, for example:
   consistency guarantees, such as [immediate consistency] or [eventual
   consistency].
 
-- **Message delivery**: One engine may deliver messages in the same order that
-  they were produced, while another may process messages out of order or in
-  batches.
-
 - **Persistence**: The engine may offer a choice of persistence mechanisms for
   application state, such as in-memory, on-disk, or in a remote database.
-
-- **Data model**: The engine may provide a choice of data models for
-  application state, such as relational or document-oriented.
 
 - **Scalability**: The engine may provide a choice of scalability models, such
   as single-node or multi-node.
@@ -171,8 +173,8 @@ Each process has an associated implementation of the
 [messages](#message), which produces commands to execute.
 
 A process may use timeout messages to model business processes with time-based
-logic. The engine always routes timeout messages back to the process instance
-that produced them.
+logic. The engine routes timeout messages back to the process instance that
+produced them at the specified time.
 
 Processes use command messages to make changes to the application's state.
 Because each command represents a _separate_ atomic change, the results of a
@@ -198,11 +200,10 @@ events that occur.
 Each projection is an implementation of the [`dogma.ProjectionMessageHandler`]
 interface. The [engine](#engine) routes event [messages](#message) to the
 handler which typically updates a read-optimized database of some kind. This
-view is often referred to as a "read model" or "query model".
+view is often referred to as a "read model".
 
-The [projectionkit] module provides engine-agnostic tools for building
-projections in popular database systems, such as PostgreSQL, MySQL, DynamoDB and
-others.
+The [projectionkit] module provides tools for building read-models in popular
+database systems, such as PostgreSQL, MySQL, DynamoDB and others.
 
 <!-- references -->
 
@@ -211,6 +212,9 @@ others.
 [`dogma.integrationmessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#IntegrationMessageHandler
 [`dogma.processmessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProcessMessageHandler
 [`dogma.projectionmessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProjectionMessageHandler
+[`dogma.command`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Command
+[`dogma.event`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Event
+[`dogma.timeout`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Timeout
 [api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [cqrs]: https://martinfowler.com/bliki/CQRS.html
 [domain driven design distilled]: https://www.amazon.com/Domain-Driven-Design-Distilled-Vaughn-Vernon/dp/0134434420
