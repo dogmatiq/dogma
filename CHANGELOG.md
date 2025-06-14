@@ -30,6 +30,8 @@ errors.
 - Added `HandlerRoute` and `MessageRoute` interfaces.
 - Added `ViaAggregateRoute`, `ViaProcessRoute`, `ViaIntegrationRoute` and
   `ViaProjectionRoute` types.
+- Added `Now()` method to `AggregateCommandScope`, `ProcessEventScope`,
+  `ProcessTimeoutScope`, `IntegrationCommandScope` and `ProjectionEventScope`.
 
 ### Changed
 

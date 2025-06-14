@@ -1,5 +1,7 @@
 package dogma
 
+import "time"
+
 // A AggregateMessageHandler models business logic and state.
 //
 // Aggregates are the primary building blocks of an application's domain logic.
@@ -133,6 +135,19 @@ type AggregateCommandScope interface {
 	// event-sourcing engines typically do not destroy the record of the
 	// aggregate's historical events.
 	Destroy()
+
+	// Now returns the current local time, according to the engine.
+	//
+	// Use of this method is discouraged. It is preferrable to use information
+	// contained within the message or the aggregate root, which provides
+	// consistent behavior when message delivery is delayed or retried.
+	//
+	// If access to the system clock is absolutely necessary, handlers should
+	// call this method instead of [time.Now]. It may return a time different to
+	// that returned by [time.Now] under some circumstances, such as when
+	// executing tests or when accounting for clock skew in a distributed
+	// system.
+	Now() time.Time
 
 	// Log records an informational message.
 	Log(format string, args ...any)

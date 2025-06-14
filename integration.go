@@ -2,6 +2,7 @@ package dogma
 
 import (
 	"context"
+	"time"
 )
 
 // An IntegrationMessageHandler integrates a Dogma application with external and
@@ -62,6 +63,14 @@ type IntegrationConfigurer interface {
 type IntegrationCommandScope interface {
 	// RecordEvent records the occurrence of an event.
 	RecordEvent(Event)
+
+	// Now returns the current local time, according to the engine.
+	//
+	// Handlers should call this method instead of [time.Now]. It may return a
+	// time different to that returned by [time.Now] under some circumstances,
+	// such as when executing tests or when accounting for clock skew in a
+	// distributed system.
+	Now() time.Time
 
 	// Log records an informational message.
 	Log(format string, args ...any)
