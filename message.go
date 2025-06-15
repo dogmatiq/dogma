@@ -4,6 +4,10 @@ package dogma
 // [Event], or [Timeout] within a message-based application.
 type Message interface {
 	// MessageDescription returns a human-readable description of the message.
+	//
+	// The description SHOULD be no more than 120 characters in length to ensure
+	// readability when displayed in logs or user interfaces. Engines MAY
+	// truncate or compact longer descriptions for display purposes.
 	MessageDescription() string
 }
 
@@ -11,6 +15,10 @@ type Message interface {
 // perform some action.
 type Command interface {
 	// MessageDescription returns a human-readable description of the message.
+	//
+	// The description SHOULD be no more than 120 characters in length to ensure
+	// readability when displayed in logs or user interfaces. Engines MAY
+	// truncate or compact longer descriptions for display purposes.
 	MessageDescription() string
 
 	// Validate returns a non-nil error if the message is invalid.
@@ -21,6 +29,10 @@ type Command interface {
 // Dogma application.
 type Event interface {
 	// MessageDescription returns a human-readable description of the message.
+	//
+	// The description SHOULD be no more than 120 characters in length to ensure
+	// readability when displayed in logs or user interfaces. Engines MAY
+	// truncate or compact longer descriptions for display purposes.
 	MessageDescription() string
 
 	// Validate returns a non-nil error if the message is invalid.
@@ -31,6 +43,10 @@ type Event interface {
 // performed at a specific time.
 type Timeout interface {
 	// MessageDescription returns a human-readable description of the message.
+	//
+	// The description SHOULD be no more than 120 characters in length to ensure
+	// readability when displayed in logs or user interfaces. Engines MAY
+	// truncate or compact longer descriptions for display purposes.
 	MessageDescription() string
 
 	// Validate returns a non-nil error if the message is invalid.
