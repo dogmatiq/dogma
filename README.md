@@ -52,6 +52,14 @@ application and the engine.
 - [projectionkit]: Utilities for building [projections](#projection) in popular database systems.
 - [example]: An example Dogma application that implements basic banking features.
 
+## Why "Dogma"?
+
+The name _Dogma_ is a tongue-in-cheek nod to the project's strong opinions about
+how message-driven applications should be structured. It's not about rigid
+rule-following, but about embracing consistent patterns that enable rich tooling
+and clarity in complex systems — without sacrificing flexibility where it
+matters.
+
 ## Concepts
 
 Dogma leans heavily on the concepts of [Domain Driven Design]. It's designed to
