@@ -1,6 +1,6 @@
 # 24. Permanently End Processes
 
-Date: 2024-08-07
+Date: 2025-06-15
 
 ## Status
 
