@@ -13,35 +13,37 @@ Build message-based, event-sourced applications in Go.
 
 ## Overview
 
-Dogma is a comprehensive set of tools for building message-based, event-sourced
+Dogma is a comprehensive suite of tools for building robust message-driven
 applications in Go.
 
-In Dogma, an **application** implements business logic by consuming and
-producing messages. The application is strictly separated from the **engine**,
-which handles message delivery and data persistence.
+It includes core runtime interfaces for application logic and message delivery,
+along with tools for testing, static analysis, and application exploration.
 
 ## Features
 
-- **Event-sourced persistence**: Dogma applications are event-sourced, meaning
-  that all changes to the application's state are recorded as a sequence of
-  events. This allows for easy auditing, debugging, and rebuilding of
-  application state.
+- **Event-sourced by design** – Every state change is persisted as an immutable
+  domain event. This enables full auditability and allows read-optimized views
+  to be built or rebuilt from the event history at any time.
 
-- **Built for [Domain Driven Design]**: The API uses DDD concepts to help
-  developers align their understanding of the application's business logic with
-  its implementation.
+- **Grounded in [Domain-Driven Design]** – Dogma adopts core DDD concepts to
+  guide how applications are decomposed and how messages flow between
+  components.
 
-- **Flexible message format**: Supports any Go type that can be serialized as a
-  byte slice, with built-in support for JSON and Protocol Buffers.
+- **High-level testing** – The [testkit] module encourages verification of
+  application behavior by making assertions about domain events, rather than
+  inspecting state. It integrates seamlessly with Go’s standard [testing]
+  package.
 
-- **First-class testing**: Dogma's [testkit] module runs isolated behavioral
-  tests of your application.
+- **Native introspection** – Dogma's static analysis tools visualize message
+  flow and application structure, enabling discovery of domain events across
+  large codebases and multi-application projects.
 
-- **Engine-agnostic applications**: Choose the engine with the best messaging
-  and persistence semantics for your application.
+- **Domain and infrastructure separation** – Domain logic is cleanly and
+  strictly separated from infrastructure concerns such as message delivery and
+  persistence.
 
-- **Built-in introspection**: Analyze application code to visualize how messages
-  traverse your applications.
+- **Type-agnostic** – Messages and application state can be any Go type that
+  marshals to a byte slice, with built-in support for JSON and Protocol Buffers.
 
 ## Repositories
 
@@ -62,7 +64,7 @@ matters.
 
 ## Concepts
 
-Dogma leans heavily on the concepts of [Domain Driven Design]. It's designed to
+Dogma leans heavily on the concepts of [Domain-Driven Design]. It's designed to
 provide a suitable platform for applications that make use of design patterns
 such as Command/Query Responsibility Segregation ([CQRS]), [Event Sourcing] and
 [Eventual Consistency].
@@ -162,9 +164,9 @@ The engine manages each aggregate instance's state. State changes are
 by one command are always visible to future commands routed to the same
 instance.
 
-Aggregates can be a difficult concept to grasp. The book [Domain Driven Design
+Aggregates can be a difficult concept to grasp. The book [Domain-Driven Design
 Distilled], by Vaughn Vernon offers a suitable introduction to aggregates and
-the other elements of domain driven design.
+the other elements of domain-driven design.
 
 ### Process
 
@@ -225,13 +227,14 @@ database systems, such as PostgreSQL, MySQL, DynamoDB and others.
 [`dogma.timeout`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Timeout
 [api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [cqrs]: https://martinfowler.com/bliki/CQRS.html
-[domain driven design distilled]: https://www.amazon.com/Domain-Driven-Design-Distilled-Vaughn-Vernon/dp/0134434420
-[domain driven design]: https://en.wikipedia.org/wiki/Domain-driven_design
+[domain-driven design distilled]: https://www.amazon.com/Domain-Driven-Design-Distilled-Vaughn-Vernon/dp/0134434420
+[domain-driven design]: https://en.wikipedia.org/wiki/Domain-driven_design
 [event sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
 [eventual consistency]: https://en.wikipedia.org/wiki/Eventual_consistency
 [example]: https://github.com/dogmatiq/example
 [immediate consistency]: http://www.informit.com/articles/article.aspx?p=2020371&seqNum=2
 [projectionkit]: https://github.com/dogmatiq/projectionkit
 [rfc 2119]: https://tools.ietf.org/html/rfc2119
+[testing]: https://pkg.go.dev/testing
 [testkit]: https://github.com/dogmatiq/testkit
 [veracity]: https://github.com/dogmatiq/veracity
