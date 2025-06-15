@@ -43,7 +43,10 @@ type ProcessMessageHandler interface {
 	// specific event.
 	//
 	// If ok is false, the process ignores this event. Otherwise, id MUST not be
-	// empty. RFC 4122 UUIDs are the RECOMMENDED format for instance IDs.
+	// empty and MUST be no more than 255 bytes in length. RFC 4122 UUIDs are
+	// the RECOMMENDED format for instance IDs.
+	//
+	// Engines MUST support instance IDs of at least 255 bytes in length.
 	//
 	// A process instance begins the first time it receives an event.
 	RouteEventToInstance(context.Context, Event) (id string, ok bool, err error)

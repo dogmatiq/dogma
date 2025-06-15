@@ -33,8 +33,10 @@ type AggregateMessageHandler interface {
 	// RouteCommandToInstance returns the ID of the instance that handles a
 	// specific command.
 	//
-	// The return value MUST not be empty. RFC 4122 UUIDs are the RECOMMENDED
-	// format for instance IDs.
+	// The return value MUST not be empty. It MUST be no more than 255 bytes in
+	// length. RFC 4122 UUIDs are the RECOMMENDED format for instance IDs.
+	//
+	// Engines MUST support instance IDs of at least 255 bytes in length.
 	RouteCommandToInstance(Command) string
 
 	// HandleCommand executes business logic in response to a command.
