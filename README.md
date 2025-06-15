@@ -57,14 +57,13 @@ build, test, analyze, and run message-driven applications.
 
 - [dogma] (this repository) – Defines the API for building applications.
 - [testkit] – Utilities for testing Dogma applications.
-- [projectionkit] – Utilities for building [projections][concept/projection] in popular database systems.
-- [example] – An example Dogma application that implements basic banking features.
+- [projectionkit] – Utilities for building [projections][concepts/projection] in popular database systems.
 
 ### Engines
 
-A core Dogma concept is that of the [engine] — a Go module embedded within your
-application binary that orchestrates message delivery, state persistence, and
-the execution of application logic.
+An important Dogma concept is that of the [engine][concepts/engine] — a Go module embedded within
+your application binary that orchestrates message delivery, state persistence,
+and the execution of application logic.
 
 - [verity] – The original Dogma engine, designed to handle typical application
   loads in smaller deployments. While production-ready, Verity does not support
@@ -86,10 +85,23 @@ rule-following, but about embracing consistent patterns that enable rich tooling
 and clarity in complex systems — without sacrificing flexibility where it
 matters.
 
+## Getting Started
+
+If you're new to Dogma, we recommend starting with the [concepts] document to
+gain a solid understanding of the core ideas and terminology used throughout the
+ecosystem.
+
+You can also explore the [example] application for a practical, working
+implementation that demonstrates key concepts in action.
+
+For a detailed reference, see the [API documentation].
+
 <!-- references -->
 
-[engine]: TODO
-[projection]: TODO
+[api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
+[concepts]: docs/concepts.md
+[concepts/engine]: docs/concepts.md#engine
+[concepts/projection]: docs/concepts.md#projection
 [dogma]: https://github.com/dogmatiq/dogma
 [domain-driven design]: https://en.wikipedia.org/wiki/Domain-driven_design
 [event sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html

@@ -1,11 +1,7 @@
-## Concepts
+# Concepts
 
-In Dogma, an **application** implements business logic by consuming and
-producing messages. The application is strictly separated from the **engine**,
-which handles message delivery and data persistence.
-
-Dogma leans heavily on the concepts of [Domain-Driven Design]. It's designed to
-provide a suitable platform for applications that make use of design patterns
+[Dogma] leans heavily on the concepts of [Domain-Driven Design]. It's designed
+to provide a suitable platform for applications that make use of design patterns
 such as Command/Query Responsibility Segregation ([CQRS]), [Event Sourcing] and
 [Eventual Consistency].
 
@@ -21,7 +17,7 @@ by any developer wishing to build an application:
 - [Integration](#integration)
 - [Projection](#projection)
 
-### Message
+## Message
 
 A **message** is a data structure that represents a **command**, **event** or
 **timeout** within an application.
@@ -35,7 +31,7 @@ A timeout helps model business logic that depends on the passage of time.
 Messages must implement the appropriate interface; one of [`dogma.Command`],
 [`dogma.Event`] or [`dogma.Timeout`].
 
-### Message handler
+## Message handler
 
 A message **handler** is a component of an application that acts upon messages
 it receives.
@@ -51,7 +47,7 @@ Dogma defines four handler types, one each for [aggregates](#aggregate),
 [processes](#process), [integrations](#integration) and
 [projections](#projection). These concepts are described in more detail below.
 
-### Application
+## Application
 
 An **application** is a collection of [message handlers](#message-handler) that
 work together as a unit. Typically, each application encapsulates a specific
@@ -60,7 +56,7 @@ business (sub-)domain or "bounded-context".
 Each application is represented by an implementation of the
 [`dogma.Application`] interface.
 
-### Engine
+## Engine
 
 An engine is a Go module that delivers messages to an
 [application](#application) and persists the application's state.
@@ -83,7 +79,7 @@ engines and applications use to interact.
 
 One example of a Dogma engine is [Veracity].
 
-### Aggregate
+## Aggregate
 
 An **aggregate** is an entity that encapsulates a specific part of an
 application's business logic and its associated state. Each **instance** of an
@@ -108,7 +104,7 @@ Aggregates can be a difficult concept to grasp. The book [Domain-Driven Design
 Distilled], by Vaughn Vernon offers a suitable introduction to aggregates and
 the other elements of domain-driven design.
 
-### Process
+## Process
 
 A **process** automates a long running business process. In particular, they can
 coordinate changes across multiple [aggregate](#aggregate) instances, or between
@@ -130,7 +126,7 @@ Processes use command messages to make changes to the application's state.
 Because each command represents a _separate_ atomic change, the results of a
 process are ["eventually consistent"][eventual consistency].
 
-### Integration
+## Integration
 
 An **integration** is a message handler that interacts with some external
 non-message-based system.
@@ -142,7 +138,7 @@ produce event messages that represent the results of their interactions.
 
 Integrations are stateless from the perspective of the engine.
 
-### Projection
+## Projection
 
 A **projection** builds a partial view of the application's state from the
 events that occur.
@@ -165,7 +161,6 @@ database systems, such as PostgreSQL, MySQL, DynamoDB and others.
 [`dogma.command`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Command
 [`dogma.event`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Event
 [`dogma.timeout`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Timeout
-[api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [cqrs]: https://martinfowler.com/bliki/CQRS.html
 [dogma]: https://github.com/dogmatiq/dogma
 [domain-driven design distilled]: https://www.amazon.com/Domain-Driven-Design-Distilled-Vaughn-Vernon/dp/0134434420
@@ -175,8 +170,4 @@ database systems, such as PostgreSQL, MySQL, DynamoDB and others.
 [example]: https://github.com/dogmatiq/example
 [immediate consistency]: http://www.informit.com/articles/article.aspx?p=2020371&seqNum=2
 [projectionkit]: https://github.com/dogmatiq/projectionkit
-[rfc 2119]: https://tools.ietf.org/html/rfc2119
-[testing]: https://pkg.go.dev/testing
-[testkit]: https://github.com/dogmatiq/testkit
 [veracity]: https://github.com/dogmatiq/veracity
-[verity]: https://github.com/dogmatiq/verity
