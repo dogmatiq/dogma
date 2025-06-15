@@ -6,6 +6,8 @@ Date: 2025-06-13
 
 Accepted
 
+- Referenced By [23. Message Order Guarantees](0023-message-order-guarantees.md)
+
 ## Context
 
 Dogma has historically supported both CRUD-style and event-sourced applications.

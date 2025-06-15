@@ -33,3 +33,4 @@ the ADR documents.
 * [20. Constraints on Identifier Values](0020-identifier-constraints.md)
 * [21. Remove Handler Timeout Hints](0021-remove-handler-timeout-hints.md)
 * [22. Remove CRUD Application Support](0022-remove-crud-application-support.md)
+* [23. Message Order Guarantees](0023-message-order-guarantees.md)
