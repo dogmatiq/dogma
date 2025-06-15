@@ -2,7 +2,7 @@
 
 # Dogma
 
-Build message-based, event-sourced applications in Go.
+Build message-driven, event-sourced applications in Go.
 
 [![Documentation](https://img.shields.io/badge/go.dev-documentation-007d9c?&style=for-the-badge)](https://pkg.go.dev/github.com/dogmatiq/dogma)
 [![Latest Version](https://img.shields.io/github/tag/dogmatiq/dogma.svg?&style=for-the-badge&label=semver)](https://github.com/dogmatiq/dogma/releases)
