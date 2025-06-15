@@ -34,3 +34,4 @@ the ADR documents.
 * [21. Remove Handler Timeout Hints](0021-remove-handler-timeout-hints.md)
 * [22. Remove CRUD Application Support](0022-remove-crud-application-support.md)
 * [23. Message Order Guarantees](0023-message-order-guarantees.md)
+* [24. Permanently End Processes](0024-permanently-end-processes.md)
