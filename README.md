@@ -16,8 +16,9 @@ Build message-based, event-sourced applications in Go.
 Dogma is a comprehensive suite of tools for building robust message-driven
 applications in Go.
 
-It includes core runtime interfaces for application logic and message delivery,
-along with tools for testing, static analysis, and application exploration.
+It provides an abstraction for describing your application’s business logic with
+strict separation from components responsible for message delivery and
+persistence.
 
 ## Features
 
@@ -30,7 +31,7 @@ along with tools for testing, static analysis, and application exploration.
   components.
 
 - **High-level testing** – The [testkit] module encourages verification of
-  application behavior by making assertions about domain events, rather than
+  application behavior by making assertions about domain events rather than
   inspecting state. It integrates seamlessly with Go’s standard [testing]
   package.
 
@@ -44,6 +45,10 @@ along with tools for testing, static analysis, and application exploration.
 
 - **Type-agnostic** – Messages and application state can be any Go type that
   marshals to a byte slice, with built-in support for JSON and Protocol Buffers.
+
+- **Flexible persistence** – Support for a range of storage options such as
+  PostgreSQL and cloud services like DynamoDB, enabling use across diverse
+  environments.
 
 ## Repositories
 
