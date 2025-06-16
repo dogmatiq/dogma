@@ -78,9 +78,13 @@ type ProcessMessageHandler interface {
 
 // ProcessRoot is a "marker" interface for the domain-specific state of a
 // specific process instance.
-//
-// The interface is empty to allow use of any types supported by the engine.
-type ProcessRoot interface{}
+type ProcessRoot interface {
+	// Marshal is a function to serialize the state of the process into a byte slice.
+	Marshal() ([]byte, error)
+
+	// Unmarshal rebuilds the process instance from a serialized byte slice.
+	Unmarshal([]byte) error
+}
 
 // A ProcessConfigurer configures the engine for use with a specific process
 // message handler.
@@ -234,6 +238,16 @@ type ProcessTimeoutScope interface {
 var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
 
 type statelessProcessRoot struct{}
+
+// Marshal does nothing.
+func (statelessProcessRoot) Marshal() ([]byte, error) {
+	return nil, nil
+}
+
+// Unmarshal does nothing.
+func (statelessProcessRoot) Unmarshal([]byte) error {
+	return nil
+}
 
 // StatelessProcessBehavior is an embeddable type for [ProcessMessageHandler]
 // that do not have any domain-specific state.
