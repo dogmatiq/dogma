@@ -71,6 +71,26 @@ type AggregateRoot interface {
 	// that sometimes load aggregates into memory by applying their entire
 	// history.
 	ApplyEvent(Event)
+
+	// TakeSnapshot returns a snapshot of the aggregate instance.
+	//
+	// The snapshot is a byte slice that represents the current state of the
+	// aggregate instance.
+	//
+	// The snapshot is used to restore the aggregate instance to the state it
+	// had when the snapshot was taken.
+	TakeSnapshot() []byte
+
+	// RestoreSnapshot restores the aggregate instance to the state it had when
+	// the snapshot was taken.
+	//
+	// The snapshot is a byte slice that represents the state of the aggregate
+	// instance when the snapshot was taken.
+	//
+	// The function returns an error if the snapshot cannot be restored, for
+	// instance if the snapshot is invalid or the aggregate instance has changed
+	// since the snapshot was taken.
+	RestoreSnapshot([]byte) error
 }
 
 // An AggregateConfigurer configures the engine for use with a specific
@@ -158,4 +178,18 @@ type AggregateCommandScope interface {
 type AggregateRoute interface {
 	Route
 	isAggregateRoute()
+}
+
+// NoSnapshotBehavior is an embeddable type for [AggregateMessageHandler]
+// implementations that do not require snapshots.
+type NoSnapshotBehavior struct{}
+
+// TakeSnapshot does nothing.
+func (NoSnapshotBehavior) TakeSnapshot() []byte {
+	return nil
+}
+
+// RestoreSnapshot does nothing.
+func (NoSnapshotBehavior) RestoreSnapshot([]byte) error {
+	return nil
 }
