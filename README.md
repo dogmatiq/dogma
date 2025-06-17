@@ -61,21 +61,21 @@ build, test, analyze, and run message-driven applications.
 
 ### Engines
 
-An important Dogma concept is that of the [engine][concepts/engine] — a Go module embedded within
-your application binary that orchestrates message delivery, state persistence,
-and the execution of application logic.
+An important Dogma concept is that of the [engine][concepts/engine] — a Go
+module embedded within your application binary that orchestrates message
+delivery, state persistence, and the execution of application logic.
 
-- [verity] — The original Dogma engine, designed to handle typical application
-  loads in smaller deployments. While production-ready, Verity does not support
-  horizontal scaling of individual applications, using a fail-over model
-  instead.
+- [verity] – The original Dogma engine, designed for typical application loads
+  in smaller deployments. While production-ready, it does not support horizontal
+  scaling of individual applications; it uses a failover model instead.
 
-- [veracity] (under development) — The next-generation Dogma engine built for
-  horizontal scalability and distributed workloads. Longer term, Veracity is
-  intended to entirely replace Verity, becoming _the_ Dogma engine.
+- [veracity] _(under development)_ – The next-generation Dogma engine built for
+  horizontal scalability and distributed workloads. In the long term, it will
+  fully replace Verity, becoming _the_ production Dogma engine.
 
-For completeness, note that [testkit] also provides an engine implementation
-used to execute and inspect application behavior without persisting state.
+- [testkit] – A set of tools for testing Dogma applications. It includes an
+  in-memory engine that can be used to execute and inspect application behavior
+  without persisting state.
 
 ## Why "Dogma"?
 
