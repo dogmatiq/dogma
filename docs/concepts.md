@@ -194,13 +194,14 @@ explore the following resources:
 [veracity]: https://github.com/dogmatiq/veracity
 [verity]: https://github.com/dogmatiq/verity
 
-<!-- references -->
+<!-- API references -->
 
 [api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [`AggregateCommandScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#AggregateCommandScope
 [`AggregateMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#AggregateMessageHandler
 [`Application`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Application
 [`Command`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Command
+[`dogma`]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [`Event`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Event
 [`IntegrationMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#IntegrationMessageHandler
 [`ProcessMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessMessageHandler
