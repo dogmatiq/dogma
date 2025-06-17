@@ -55,13 +55,13 @@ persistence.
 Dogma is a collection of Go modules that together provide the tools needed to
 build, test, analyze, and run message-driven applications.
 
-- [dogma] (this repository) — Defines the API for building applications.
-- [testkit] — Utilities for testing Dogma applications.
-- [projectionkit] — Utilities for building [projections][concepts/projection] in popular database systems.
+- [dogma] (this repository) – Defines the API for building applications.
+- [testkit] – Utilities for testing Dogma applications.
+- [projectionkit] – Utilities for building [projections] in popular database systems.
 
 ### Engines
 
-An important Dogma concept is that of the [engine][concepts/engine] — a Go
+An important Dogma concept is that of the [engine] — a Go
 module embedded within your application binary that orchestrates message
 delivery, state persistence, and the execution of application logic.
 
@@ -100,8 +100,8 @@ For a detailed reference, see the [API documentation].
 
 [api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [concepts]: docs/concepts.md
-[concepts/engine]: docs/concepts.md#engine
-[concepts/projection]: docs/concepts.md#projection
+[engine]: docs/concepts.md#engines
+[projections]: docs/concepts.md#handlers
 [dogma]: https://github.com/dogmatiq/dogma
 [domain-driven design]: https://en.wikipedia.org/wiki/Domain-driven_design
 [event sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
