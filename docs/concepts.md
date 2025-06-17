@@ -155,11 +155,11 @@ an engine that suits your environment, or build your own.
 
 There are currently three official engines:
 
-- [verity] – The original Dogma engine, designed for typical application loads
+- [verity] - The original Dogma engine, designed for typical application loads
   in smaller deployments. While production-ready, it does not support horizontal
   scaling of individual applications; it uses a failover model instead.
 
-- [veracity] _(under development)_ – The next-generation Dogma engine built for
+- [veracity] _(under development)_ - The next-generation Dogma engine built for
   horizontal scalability and distributed workloads. In the long term, it will
   fully replace Verity, becoming _the_ production Dogma engine.
 
