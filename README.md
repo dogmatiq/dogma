@@ -70,8 +70,8 @@ and the execution of application logic.
   scaling of individual applications; it uses a failover model instead.
 
 - [veracity] _(under development)_ — The next-generation Dogma engine built for
-  horizontal scalability and distributed workloads. In the long term, it will
-  fully replace Verity, becoming _the_ production Dogma engine.
+  horizontal scalability and distributed workloads. Long term, it will fully
+  replace Verity, becoming _the_ production Dogma engine.
 
 - [testkit] — A set of tools for testing Dogma applications. It includes an
   in-memory engine that can be used to execute and inspect application behavior
