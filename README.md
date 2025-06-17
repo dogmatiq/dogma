@@ -61,9 +61,9 @@ build, test, analyze, and run message-driven applications.
 
 ### Engines
 
-An important Dogma concept is that of the [engine] — a Go
-module embedded within your application binary that orchestrates message
-delivery, state persistence, and the execution of application logic.
+An important Dogma concept is that of the [engine] — a Go module embedded within
+your application binary that orchestrates message delivery, state persistence,
+and the execution of application logic.
 
 - [verity] — The original Dogma engine, designed for typical application loads
   in smaller deployments. While production-ready, it does not support horizontal
