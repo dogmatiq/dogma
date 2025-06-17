@@ -3,7 +3,7 @@
 [Dogma] is a comprehensive suite of tools for building robust message-driven
 applications in Go.
 
-This document is a primer on Dogma’s core concepts — it introduces the
+This document is a primer on Dogma's core concepts — it introduces the
 terminology, mental models, and architecture patterns you need to understand
 before building an application.
 
@@ -86,7 +86,7 @@ There are four types of handler:
 - An **integration message handler** performs an action outside the
   application, such as sending an email or processing a payment using a
   third-party API. Like aggregates, integrations handle command messages and
-  record event messages to describe what occurred. From Dogma’s perspective,
+  record event messages to describe what occurred. From Dogma's perspective,
   integrations are stateless.
 
 Each handler in your application is represented by a Go type that implements one
@@ -121,14 +121,14 @@ of this event history.
 
 ## Applications
 
-We’ve made frequent mention of your **application**, but what exactly is an
+We've made frequent mention of your **application**, but what exactly is an
 application in Dogma?
 
 In practice, your application likely includes a user interface, APIs,
 authentication mechanisms, and more. Within Dogma, the term simply refers to a
 collection of related [message handlers] that together implement the logic for a
 particular business domain. The other components of your software are not
-relevant to Dogma. Accordingly, it imposes no constraints on how they’re built
+relevant to Dogma. Accordingly, it imposes no constraints on how they're built
 or what technologies you use.
 
 Although the handlers within your application declare which [messages] they
@@ -149,8 +149,8 @@ So far, the code we've referenced has been limited to the interfaces that you
 implement and use to build your [application]. To actually _run_ your
 application, you need an **engine**.
 
-Engines are not part of the [`dogma`] Go module, they’re separate modules that
-implement the runtime behaviour described by Dogma’s interfaces. You can choose
+Engines are not part of the [`dogma`] Go module, they're separate modules that
+implement the runtime behaviour described by Dogma's interfaces. You can choose
 an engine that suits your environment, or build your own.
 
 There are currently three official engines:
