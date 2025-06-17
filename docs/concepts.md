@@ -95,7 +95,8 @@ of the [`AggregateMessageHandler`], [`ProcessMessageHandler`],
 
 ## Scopes
 
-When a [handler] handles a [message], it does so within a specific **scope**.
+When a [message handler] handles a [message], it does so within a specific
+**scope**.
 
 The scope has two main roles:
 
@@ -180,8 +181,6 @@ explore the following resources:
 
 [message]: #messages
 [messages]: #messages
-[handler]: #handlers
-[handlers]: #handlers
 [message handler]: #handlers
 [message handlers]: #handlers
 [application]: #applications
