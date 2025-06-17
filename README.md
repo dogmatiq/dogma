@@ -16,38 +16,38 @@ Build message-driven, event-sourced applications in Go.
 Dogma is a comprehensive suite of tools for building robust message-driven
 applications in Go.
 
-It provides an abstraction for describing your application’s business logic with
+It provides an abstraction for describing your application's business logic with
 strict separation from the "engine" responsible for message delivery and
 persistence.
 
 ## Features
 
-- **[Event sourcing]** – Every state change is persisted as an immutable
+- **[Event sourcing]** — Every state change is persisted as an immutable
   domain event. This enables full auditability and allows read-optimized views
   to be built or rebuilt from the event history at any time.
 
-- **Grounded in [Domain-Driven Design]** – Dogma adopts core DDD concepts to
+- **Grounded in [Domain-Driven Design]** — Dogma adopts core DDD concepts to
   guide how applications are decomposed and how messages flow between
   components.
 
-- **High-level testing** – The [testkit] module encourages verification of
+- **High-level testing** — The [testkit] module encourages verification of
   application behavior by making assertions about domain events rather than
-  inspecting state. It integrates seamlessly with Go’s standard [testing]
+  inspecting state. It integrates seamlessly with Go's standard [testing]
   package.
 
-- **Native introspection** – Dogma's static analysis tools visualize message
+- **Native introspection** — Dogma's static analysis tools visualize message
   flow and application structure, enabling discovery of domain events across
   large codebases and multi-application projects.
 
-- **Domain and infrastructure separation** – Domain logic is cleanly and
+- **Domain and infrastructure separation** — Domain logic is cleanly and
   strictly separated from infrastructure concerns such as message delivery,
   persistence and telemetry.
 
-- **Type-agnostic** – Messages and application state can be any Go type that can
+- **Type-agnostic** — Messages and application state can be any Go type that can
   be marshaled to a byte slice, with built-in support for JSON and Protocol
   Buffers.
 
-- **Flexible persistence** – Support for a range of storage options such as
+- **Flexible persistence** — Support for a range of storage options such as
   PostgreSQL and Amazon DynamoDB, enabling use across diverse environments.
 
 ## Ecosystem
@@ -55,9 +55,9 @@ persistence.
 Dogma is a collection of Go modules that together provide the tools needed to
 build, test, analyze, and run message-driven applications.
 
-- [dogma] (this repository) – Defines the API for building applications.
-- [testkit] – Utilities for testing Dogma applications.
-- [projectionkit] – Utilities for building [projections][concepts/projection] in popular database systems.
+- [dogma] (this repository) — Defines the API for building applications.
+- [testkit] — Utilities for testing Dogma applications.
+- [projectionkit] — Utilities for building [projections][concepts/projection] in popular database systems.
 
 ### Engines
 
@@ -65,12 +65,12 @@ An important Dogma concept is that of the [engine][concepts/engine] — a Go mod
 your application binary that orchestrates message delivery, state persistence,
 and the execution of application logic.
 
-- [verity] – The original Dogma engine, designed to handle typical application
+- [verity] — The original Dogma engine, designed to handle typical application
   loads in smaller deployments. While production-ready, Verity does not support
   horizontal scaling of individual applications, using a fail-over model
   instead.
 
-- [veracity] (under development) – The next-generation Dogma engine built for
+- [veracity] (under development) — The next-generation Dogma engine built for
   horizontal scalability and distributed workloads. Longer term, Veracity is
   intended to entirely replace Verity, becoming _the_ Dogma engine.
 
