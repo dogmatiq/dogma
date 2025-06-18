@@ -94,7 +94,7 @@ ecosystem.
 You can also explore the [example] application for a practical, working
 implementation that demonstrates key concepts in action.
 
-For a detailed reference, see the [glossary] and [API documentation].
+For reference material, please see the [API documentation] and [glossary].
 
 <!-- references -->
 
