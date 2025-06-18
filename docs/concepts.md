@@ -176,6 +176,7 @@ explore the following resources:
 - The [example] repository, which contains a simple banking application with
   features such as opening accounts and transferring funds.
 - The [API documentation], for detailed information on Dogma's interfaces.
+- Browse the [glossary] to cement your understanding of Dogma's terminology.
 
 <!-- anchors -->
 
@@ -184,6 +185,10 @@ explore the following resources:
 [message handler]: #handlers
 [message handlers]: #handlers
 [application]: #applications
+
+<!-- other documentation  -->
+
+[glossary]: glossary.md
 
 <!-- go modules -->
 
