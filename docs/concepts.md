@@ -66,13 +66,6 @@ There are four types of handler:
   might use an instance per customer. Aggregates are the main building block of
   your application's logic.
 
-  > [!NOTE]
-  > The word "aggregate" is often a source of confusion.
-  >
-  > The terminology comes from [domain-driven design], where it refers to a
-  > group of related entities that are treated as a single unit — they are dealt
-  > with "in aggregate". It does not refer to data aggregation or summarization.
-
 - A **process message handler** coordinates a workflow that involves multiple
   aggregate instances. It handles event messages by executing commands to drive
   the workflow forward. It may also schedule timeout messages to trigger actions
@@ -92,6 +85,13 @@ There are four types of handler:
 Each handler in your application is represented by a Go type that implements one
 of the [`AggregateMessageHandler`], [`ProcessMessageHandler`],
 [`IntegrationMessageHandler`], or [`ProjectionMessageHandler`] interfaces.
+
+> [!NOTE]
+> The word "aggregate" is often a source of confusion.
+>
+> The terminology comes from [domain-driven design], where it refers to a group
+> of related entities that are treated as a single unit — they are dealt with
+> "in aggregate". It does not refer to data aggregation or summarization.
 
 ## Scopes
 
