@@ -1,173 +1,213 @@
-# Concepts
+# Dogma Concepts
 
-[Dogma] leans heavily on the concepts of [Domain-Driven Design]. It's designed
-to provide a suitable platform for applications that make use of design patterns
-such as Command/Query Responsibility Segregation ([CQRS]), [Event Sourcing] and
-[Eventual Consistency].
+[Dogma] is a comprehensive suite of tools for building robust message-driven
+applications in Go.
 
-The following concepts are core to Dogma's design, and should be well understood
-by any developer wishing to build an application:
+This document is a primer on Dogma's core concepts — it introduces the
+terminology, mental models, and architecture patterns you need to understand
+before building an application.
 
-- [Message](#message)
-- [Message handler](#message-handler)
-- [Application](#application)
-- [Engine](#engine)
-- [Aggregate](#aggregate)
-- [Process](#process)
-- [Integration](#integration)
-- [Projection](#projection)
+We recommend reading this document from start to finish, as each section builds
+on the last. For reference material, see the [API documentation].
 
-## Message
+> [!TIP]
+> Text styled **in bold** introduces a word or phrase with a specific meaning
+> in the Dogma ecosystem.
 
-A **message** is a data structure that represents a **command**, **event** or
-**timeout** within an application.
+## What is a "message-driven" application?
 
-A command is a request to make a single atomic change to the application's
-state. An event indicates that the state has changed in some way. A single
-command can produce any number of events, including zero.
+Dogma uses **messages** to describe both what should happen and what has already
+occurred. Your **application** reacts to messages one at a time — a message
+comes in, application logic is applied, and new messages come out. Each step is
+self-contained and easy to reason about. This is what we mean by a
+message-driven application.
 
-A timeout helps model business logic that depends on the passage of time.
+## Messages
 
-Messages must implement the appropriate interface; one of [`dogma.Command`],
-[`dogma.Event`] or [`dogma.Timeout`].
+A message is a data structure that describes something specific your application
+should do, or something it has already done.
 
-## Message handler
+There are three **kinds** of message:
 
-A message **handler** is a component of an application that acts upon messages
-it receives.
+- A **command** message is a request — an action your application should take.
 
-Each handler specifies the message types it expects to receive. These message
-are **routed** to the handler by the [engine](#engine).
+  For example, _add 10 widgets to Alex's shopping cart_.
 
-Command messages are always routed to a single handler. Event messages may be
-routed to any number of handlers, including zero. Timeout messages are always
-routed back to the handler that produced them.
+- An **event** message is a fact — an action your application has already taken.
 
-Dogma defines four handler types, one each for [aggregates](#aggregate),
-[processes](#process), [integrations](#integration) and
-[projections](#projection). These concepts are described in more detail below.
+  For example, _10 widgets were added to Alex's shopping cart_.
 
-## Application
+- A **timeout** message is a delayed request — an action that should be taken later.
 
-An **application** is a collection of [message handlers](#message-handler) that
-work together as a unit. Typically, each application encapsulates a specific
-business (sub-)domain or "bounded-context".
+  For example, _send Alex a reminder about their incomplete purchase after 24 hours_.
 
-Each application is represented by an implementation of the
-[`dogma.Application`] interface.
+Every distinct action — such as "add item to cart" or "complete purchase" — is
+represented by a different **message type**. Each message type is a Go type that
+implements one of the [`Command`], [`Event`], or [`Timeout`] interfaces.
 
-## Engine
+> [!IMPORTANT]
+> Messages must not rely on state that may be unavailable when they are handled.
+> Each example above explicitly includes the subject — _Alex_ — rather than an
+> inferred "current user". This approach captures intent when the message
+> is created, avoiding ambiguity later.
 
-An engine is a Go module that delivers messages to an
-[application](#application) and persists the application's state.
+## Handlers
 
-A Dogma application can run on any Dogma engine. The choice of engine brings
-with it a set of guarantees about how the application behaves, for example:
+A **message handler** is a component of your application that acts upon
+[messages] it receives by producing new messages, updating state, or interacting
+with external systems.
 
-- **Consistency**: Different engines may provide different levels of
-  consistency guarantees, such as [immediate consistency] or [eventual
-  consistency].
+There are four types of handler:
 
-- **Persistence**: The engine may offer a choice of persistence mechanisms for
-  application state, such as in-memory, on-disk, or in a remote database.
+- An **aggregate message handler** manages a group of related entities, such
+  as a shopping cart and the items within it. It handles commands by recording
+  events that reflect changes to the entities' state. Each aggregate in your
+  application has many **instances** — for example, a shopping cart aggregate
+  might use an instance per customer. Aggregates are the main building block of
+  your application's logic.
 
-- **Scalability**: The engine may provide a choice of scalability models, such
-  as single-node or multi-node.
+- A **process message handler** coordinates a workflow that involves multiple
+  aggregate instances or time-sensitive logic. It handles event messages by
+  executing commands and scheduling timeout messages to drive the workflow
+  forward. Like aggregates, each process can have many instances.
 
-This repository is not itself an engine implementation. It defines the API that
-engines and applications use to interact.
+- A **projection message handler** builds a view of the application's state by
+  observing event messages. This view, called a **read-model**, is typically
+  stored in a database and optimised for querying or presentation. Projections
+  cannot produce new messages.
 
-One example of a Dogma engine is [Veracity].
+- An **integration message handler** performs an action outside the
+  application, such as sending an email or processing a payment using a
+  third-party API. Like aggregates, integrations handle command messages and
+  record event messages to describe what occurred. From Dogma's perspective,
+  integrations are stateless.
 
-## Aggregate
+Each handler in your application is represented by a Go type that implements one
+of the [`AggregateMessageHandler`], [`ProcessMessageHandler`],
+[`IntegrationMessageHandler`], or [`ProjectionMessageHandler`] interfaces.
 
-An **aggregate** is an entity that encapsulates a specific part of an
-application's business logic and its associated state. Each **instance** of an
-aggregate represents a unique occurrence of that entity within the application.
+> [!NOTE]
+> The word "aggregate" is often a source of confusion.
+>
+> The terminology comes from [domain-driven design], where it refers to a group
+> of related entities that are treated as a single unit — they are dealt with
+> "in aggregate". It does not refer to data aggregation or summarization.
 
-Each aggregate has an associated implementation of the
-[`dogma.AggregateMessageHandler`] interface. The [engine](#engine) routes
-command [messages](#message) to the handler to change the state of specific
-instances. Such changes are represented by event messages.
+## Scopes
 
-An important responsibility of an aggregate is to enforce the invariants of the
-business domain. These are the rules that must hold true at all times. For
-example, in a hypothetical banking system, an aggregate representing a
-customer's account balance must ensure that the balance never goes below zero.
+When a [message handler] handles a [message], it does so within a specific
+**scope**.
 
-The engine manages each aggregate instance's state. State changes are
-["immediately consistent"][immediate consistency] meaning that the changes made
-by one command are always visible to future commands routed to the same
-instance.
+The scope has two main roles:
 
-Aggregates can be a difficult concept to grasp. The book [Domain-Driven Design
-Distilled], by Vaughn Vernon offers a suitable introduction to aggregates and
-the other elements of domain-driven design.
+- It provides information about the incoming message — for example, the time at
+  which an event was recorded.
+- It defines the messaging operations that the handler can perform in response
+  to the message, such as executing commands or recording events.
 
-## Process
+There are several kinds of scopes, each represented by a separate Go interface.
+For example, the [`AggregateCommandScope`] interface represents the scope in
+which an aggregate handles a command message. Your handler receives a scope with
+each incoming message — you do not need to implement these interfaces yourself.
 
-A **process** automates a long running business process. In particular, they can
-coordinate changes across multiple [aggregate](#aggregate) instances, or between
-aggregates and [integrations](#integration).
+## Event sourcing
 
-Like aggregates, processes encapsulate related logic and state. Each
-**instance** of a process represents a unique occurrence of that process within
-the application.
+Dogma treats event [messages] as the primary source of truth. When an event is
+recorded, it becomes part of the application's permanent history. The
+application's _state_ is derived from these events — it is a reflection of what
+has occurred. This approach is known as [event sourcing].
 
-Each process has an associated implementation of the
-[`dogma.ProcessMessageHandler`] interface. The [engine](#engine) routes event
-[messages](#message), which produces commands to execute.
+Consult the [api documentation] for details on how each handler type makes use
+of this event history.
 
-A process may use timeout messages to model business processes with time-based
-logic. The engine routes timeout messages back to the process instance that
-produced them at the specified time.
+## Applications
 
-Processes use command messages to make changes to the application's state.
-Because each command represents a _separate_ atomic change, the results of a
-process are ["eventually consistent"][eventual consistency].
+We've made frequent mention of your **application**, but what exactly is an
+application in Dogma?
 
-## Integration
+In practice, your application likely includes a user interface, APIs,
+authentication mechanisms, and more. Within Dogma, the term simply refers to a
+collection of related [message handlers] that together implement the logic for a
+particular business domain. The other components of your software are not
+relevant to Dogma. Accordingly, it imposes no constraints on how they're built
+or what technologies you use.
 
-An **integration** is a message handler that interacts with some external
-non-message-based system.
+Although the handlers within your application declare which [messages] they
+consume and produce, the message types themselves are not, strictly speaking,
+part of any one application. Your broader application may consist of multiple
+Dogma applications, and messages can be used to communicate between them.
 
-Each integration is an implementation of the [`dogma.IntegrationMessageHandler`]
-interface. The [engine](#engine) routes command [messages](#message) to the
-handler which interacts with some external system. Integrations may optionally
-produce event messages that represent the results of their interactions.
+In code, each application is represented by a Go type that implements the
+[`Application`] interface.
 
-Integrations are stateless from the perspective of the engine.
+> [!TIP]
+> If you're familiar with [domain-driven design], a Dogma application roughly
+> aligns with the concept of a bounded context.
 
-## Projection
+## Engines
 
-A **projection** builds a partial view of the application's state from the
-events that occur.
+So far, the code we've referenced has been limited to the interfaces that you
+implement and use to build your [application]. To actually _run_ your
+application, you need an **engine**.
 
-Each projection is an implementation of the [`dogma.ProjectionMessageHandler`]
-interface. The [engine](#engine) routes event [messages](#message) to the
-handler which typically updates a read-optimized database of some kind. This
-view is often referred to as a "read model".
+Engines are not part of the [`dogmatiq/dogma`] Go module, they're separate
+modules that implement the runtime behaviour described by Dogma's interfaces.
+You can choose an engine that suits your environment, or build your own.
 
-The [projectionkit] module provides tools for building read-models in popular
-database systems, such as PostgreSQL, MySQL, DynamoDB and others.
+There are currently three official engines:
 
-<!-- references -->
+- [verity] — The original Dogma engine, designed for typical application loads
+  in smaller deployments. While production-ready, it does not support scaling of
+  a single application across multiple machines.
 
-[`dogma.aggregatemessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#AggregateMessageHandler
-[`dogma.application`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Application
-[`dogma.integrationmessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#IntegrationMessageHandler
-[`dogma.processmessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProcessMessageHandler
-[`dogma.projectionmessagehandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#ProjectionMessageHandler
-[`dogma.command`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Command
-[`dogma.event`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Event
-[`dogma.timeout`]: https://pkg.go.dev/github.com/dogmatiq/dogma?tab=doc#Timeout
-[cqrs]: https://martinfowler.com/bliki/CQRS.html
+- [veracity] _(under development)_ — The next-generation Dogma engine built for
+  horizontal scalability and distributed workloads. Long term, it will fully
+  replace Verity, becoming _the_ production Dogma engine.
+
+- [testkit] — A set of tools for testing Dogma applications. It includes an
+  in-memory engine that executes and inspects application behavior without
+  persisting state.
+
+## What's next?
+
+Now that you have a high-level understanding of Dogma's concepts, you can
+explore the following resources:
+
+- The [example] repository, which contains a simple banking application with
+  features such as opening accounts and transferring funds.
+- The [API documentation], for detailed information on Dogma's interfaces.
+
+<!-- anchors -->
+
+[message]: #messages
+[messages]: #messages
+[message handler]: #handlers
+[message handlers]: #handlers
+[application]: #applications
+
+<!-- go modules -->
+
 [dogma]: https://github.com/dogmatiq/dogma
-[domain-driven design distilled]: https://www.amazon.com/Domain-Driven-Design-Distilled-Vaughn-Vernon/dp/0134434420
+[example]: https://github.com/dogmatiq/example
+[testkit]: https://github.com/dogmatiq/testkit
+[veracity]: https://github.com/dogmatiq/veracity
+[verity]: https://github.com/dogmatiq/verity
+
+<!-- API references -->
+
+[api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
+[`AggregateCommandScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#AggregateCommandScope
+[`AggregateMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#AggregateMessageHandler
+[`Application`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Application
+[`Command`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Command
+[`dogmatiq/dogma`]: https://pkg.go.dev/github.com/dogmatiq/dogma
+[`Event`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Event
+[`IntegrationMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#IntegrationMessageHandler
+[`ProcessMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessMessageHandler
+[`ProjectionMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionMessageHandler
+[`Timeout`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Timeout
+
+<!-- external references -->
+
 [domain-driven design]: https://en.wikipedia.org/wiki/Domain-driven_design
 [event sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
-[eventual consistency]: https://en.wikipedia.org/wiki/Eventual_consistency
-[example]: https://github.com/dogmatiq/example
-[immediate consistency]: http://www.informit.com/articles/article.aspx?p=2020371&seqNum=2
-[projectionkit]: https://github.com/dogmatiq/projectionkit
-[veracity]: https://github.com/dogmatiq/veracity

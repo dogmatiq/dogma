@@ -57,25 +57,25 @@ build, test, analyze, and run message-driven applications.
 
 - [dogma] (this repository) — Defines the API for building applications.
 - [testkit] — Utilities for testing Dogma applications.
-- [projectionkit] — Utilities for building [projections][concepts/projection] in popular database systems.
+- [projectionkit] — Utilities for building [projections] in popular database systems.
 
 ### Engines
 
-An important Dogma concept is that of the [engine][concepts/engine] — a Go module embedded within
+An important Dogma concept is that of the [engine] — a Go module embedded within
 your application binary that orchestrates message delivery, state persistence,
 and the execution of application logic.
 
-- [verity] — The original Dogma engine, designed to handle typical application
-  loads in smaller deployments. While production-ready, Verity does not support
-  horizontal scaling of individual applications, using a fail-over model
-  instead.
+- [verity] — The original Dogma engine, designed for typical application loads
+  in smaller deployments. While production-ready, it does not support scaling of
+  a single application across multiple machines.
 
-- [veracity] (under development) — The next-generation Dogma engine built for
-  horizontal scalability and distributed workloads. Longer term, Veracity is
-  intended to entirely replace Verity, becoming _the_ Dogma engine.
+- [veracity] _(under development)_ — The next-generation Dogma engine built for
+  horizontal scalability and distributed workloads. Long term, it will fully
+  replace Verity, becoming _the_ production Dogma engine.
 
-For completeness, note that [testkit] also provides an engine implementation
-used to execute and inspect application behavior without persisting state.
+- [testkit] — A set of tools for testing Dogma applications. It includes an
+  in-memory engine that can be used to execute and inspect application behavior
+  without persisting state.
 
 ## Why "Dogma"?
 
@@ -100,13 +100,13 @@ For a detailed reference, see the [API documentation].
 
 [api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [concepts]: docs/concepts.md
-[concepts/engine]: docs/concepts.md#engine
-[concepts/projection]: docs/concepts.md#projection
 [dogma]: https://github.com/dogmatiq/dogma
 [domain-driven design]: https://en.wikipedia.org/wiki/Domain-driven_design
+[engine]: docs/concepts.md#engines
 [event sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
 [example]: https://github.com/dogmatiq/example
 [projectionkit]: https://github.com/dogmatiq/projectionkit
+[projections]: docs/concepts.md#handlers
 [testing]: https://pkg.go.dev/testing
 [testkit]: https://github.com/dogmatiq/testkit
 [veracity]: https://github.com/dogmatiq/veracity
