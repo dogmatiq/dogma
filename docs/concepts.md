@@ -184,7 +184,6 @@ explore the following resources:
 [message handler]: #handlers
 [message handlers]: #handlers
 [application]: #applications
-[applications]: #applications
 
 <!-- go modules -->
 
