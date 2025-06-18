@@ -67,7 +67,7 @@ type AggregateRoot interface {
 	// modify the instance's state.
 	//
 	// The method SHOULD accept historical events that are no longer routed to
-	// this aggregate type. This is typically required by event-sourcing engines
+	// this aggregate type. This is typically required by event sourcing engines
 	// that sometimes load aggregates into memory by applying their entire
 	// history.
 	ApplyEvent(Event)
@@ -132,7 +132,7 @@ type AggregateCommandScope interface {
 	// call to RecordEvent() on this scope prevents destruction.
 	//
 	// The precise destruction semantics are engine defined. For example,
-	// event-sourcing engines typically do not destroy the record of the
+	// event sourcing engines typically do not destroy the record of the
 	// aggregate's historical events.
 	Destroy()
 

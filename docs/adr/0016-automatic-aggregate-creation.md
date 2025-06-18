@@ -43,7 +43,7 @@ validation logic needs to be implemented within the scope to verify that the
 application code is using the scope correctly, even though the engine does not
 really benefit from these requirements.
 
-For example, event sourced engine implementations tend to call
+For example, event-sourced engine implementations tend to call
 `AggregateMessageHandler.New()` to construct a new instance before applying
 historical events via `ApplyEvent()`. This means that the root instance is
 constructed in memory before `HandleCommand()` is even invoked. The requirement
