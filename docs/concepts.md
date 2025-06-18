@@ -46,10 +46,10 @@ represented by a different **message type**. Each message type is a Go type that
 implements one of the [`Command`], [`Event`], or [`Timeout`] interfaces.
 
 > [!IMPORTANT]
-> Messages must contain all the information necessary to act on them. Notice how
-> each example above explicitly references the subject — Alex — rather than an
-> implied "current user". This approach "captures intent" at the time the
-> message is created, leaving no room for ambiguity when it is handled.
+> Messages must not rely on state that may be unavailable when they are handled.
+> Each example above explicitly includes the subject — _Alex_ — rather than an
+> inferred "current user". This approach captures intent when the message
+> is created, avoiding ambiguity later.
 
 ## Handlers
 
