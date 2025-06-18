@@ -94,7 +94,7 @@ ecosystem.
 You can also explore the [example] application for a practical, working
 implementation that demonstrates key concepts in action.
 
-For a detailed reference, see the [API documentation].
+For reference material, please see the [API documentation] and [glossary].
 
 <!-- references -->
 
@@ -105,6 +105,7 @@ For a detailed reference, see the [API documentation].
 [engine]: docs/concepts.md#engines
 [event sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
 [example]: https://github.com/dogmatiq/example
+[glossary]: docs/glossary.md
 [projectionkit]: https://github.com/dogmatiq/projectionkit
 [projections]: docs/concepts.md#handlers
 [testing]: https://pkg.go.dev/testing
