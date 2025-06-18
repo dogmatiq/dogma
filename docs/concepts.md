@@ -67,9 +67,9 @@ There are four types of handler:
   your application's logic.
 
 - A **process message handler** coordinates a workflow that involves multiple
-  aggregate instances. It handles event messages by executing commands to drive
-  the workflow forward. It may also schedule timeout messages to trigger actions
-  at specific times. Like aggregates, each process can have many instances.
+  aggregate instances or time-sensitive logic. It handles event messages by
+  executing commands and scheduling timeout messages to drive the workflow
+  forward. Like aggregates, each process can have many instances.
 
 - A **projection message handler** builds a view of the application's state by
   observing event messages. This view, called a **read-model**, is typically
