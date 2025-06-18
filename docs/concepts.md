@@ -150,9 +150,9 @@ So far, the code we've referenced has been limited to the interfaces that you
 implement and use to build your [application]. To actually _run_ your
 application, you need an **engine**.
 
-Engines are not part of the [`dogma`] Go module, they're separate modules that
-implement the runtime behaviour described by Dogma's interfaces. You can choose
-an engine that suits your environment, or build your own.
+Engines are not part of the [`dogmatiq/dogma`] Go module, they're separate
+modules that implement the runtime behaviour described by Dogma's interfaces.
+You can choose an engine that suits your environment, or build your own.
 
 There are currently three official engines:
 
@@ -201,7 +201,7 @@ explore the following resources:
 [`AggregateMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#AggregateMessageHandler
 [`Application`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Application
 [`Command`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Command
-[`dogma`]: https://pkg.go.dev/github.com/dogmatiq/dogma
+[`dogmatiq/dogma`]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [`Event`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Event
 [`IntegrationMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#IntegrationMessageHandler
 [`ProcessMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessMessageHandler
