@@ -87,7 +87,7 @@ See [`dogma.Command`].
 ### Configurer
 
 An interface used by an [application] or [message handler] to configure its
-identity and declare its [routes] to the [engine].
+[identity] and declare its [routes] to the [engine].
 
 See:
 
