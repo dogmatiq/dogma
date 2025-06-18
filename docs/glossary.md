@@ -105,7 +105,7 @@ A software development approach that emphasizes modeling software around the
 core concepts and behavior of the business domain it supports.
 
 See [domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design)
-on Wikipedia.
+for more information.
 
 ## E
 
@@ -123,7 +123,10 @@ See [`dogma.Event`].
 ### Event-sourcing
 
 An architectural pattern in which the authoritative representation of an
-application's state is provided by one or more [event streams].
+[application]'s state is provided by one or more [event streams].
+
+See [event sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) for
+more information.
 
 ### Event stream
 
@@ -147,8 +150,8 @@ See:
 
 ### Identity
 
-A human-readable name and machine-readable key (UUID) that uniquely identifies
-each [application] and [message handler].
+A human-readable name and machine-readable key (UUID), specified via a
+[configurer], that uniquely identifies each [application] and [message handler].
 
 ### Instance
 
