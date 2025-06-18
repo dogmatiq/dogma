@@ -100,13 +100,13 @@ For a detailed reference, see the [API documentation].
 
 [api documentation]: https://pkg.go.dev/github.com/dogmatiq/dogma
 [concepts]: docs/concepts.md
-[engine]: docs/concepts.md#engines
-[projections]: docs/concepts.md#handlers
 [dogma]: https://github.com/dogmatiq/dogma
 [domain-driven design]: https://en.wikipedia.org/wiki/Domain-driven_design
+[engine]: docs/concepts.md#engines
 [event sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
 [example]: https://github.com/dogmatiq/example
 [projectionkit]: https://github.com/dogmatiq/projectionkit
+[projections]: docs/concepts.md#handlers
 [testing]: https://pkg.go.dev/testing
 [testkit]: https://github.com/dogmatiq/testkit
 [veracity]: https://github.com/dogmatiq/veracity
