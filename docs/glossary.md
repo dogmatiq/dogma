@@ -120,7 +120,7 @@ A [message] that describes an action that the application has already performed.
 
 See [`dogma.Event`].
 
-### Event-sourcing
+### Event sourcing
 
 An architectural pattern in which the authoritative representation of an
 [application]'s state is provided by one or more [event streams].
