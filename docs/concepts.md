@@ -110,12 +110,12 @@ For example, the [`AggregateCommandScope`] interface represents the scope in
 which an aggregate handles a command message. Your handler receives a scope with
 each incoming message — you do not need to implement these interfaces yourself.
 
-## Event-sourcing
+## Event sourcing
 
 Dogma treats event [messages] as the primary source of truth. When an event is
 recorded, it becomes part of the application's permanent history. The
 application's _state_ is derived from these events — it is a reflection of what
-has occurred. This approach is known as [event-sourcing].
+has occurred. This approach is known as [event sourcing].
 
 Consult the [api documentation] for details on how each handler type makes use
 of this event history.
@@ -210,4 +210,4 @@ explore the following resources:
 <!-- external references -->
 
 [domain-driven design]: https://en.wikipedia.org/wiki/Domain-driven_design
-[event-sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
+[event sourcing]: https://martinfowler.com/eaaDev/EventSourcing.html
