@@ -22,32 +22,32 @@ persistence.
 
 ## Features
 
-- **[Event sourcing]** — Every state change is persisted as an immutable
-  domain event. This enables full auditability and allows read-optimized views
-  to be built or rebuilt from the event history at any time.
+- **[Event sourcing]** — Dogma records every state change as an immutable event.
+  This enables full auditability and allows you to build or rebuild
+  read-optimized views from the event history at any time.
 
-- **Grounded in [Domain-Driven Design]** — Dogma adopts core DDD concepts to
-  guide how applications are decomposed and how messages flow between
-  components.
+- **Grounded in [Domain-Driven Design]** — Dogma adopts core concepts from DDD
+  to guide how developers decompose application logic and how messages flow
+  between components.
 
-- **High-level testing** — The [testkit] module encourages verification of
-  application behavior by making assertions about domain events rather than
-  inspecting state. It integrates seamlessly with Go's standard [testing]
+- **High-level testing** — Dogma's [testkit] module encourages behavior-driven
+  testing by helping you make assertions about message flow rather than
+  application state. It integrates seamlessly with Go's standard [testing]
   package.
 
 - **Native introspection** — Dogma's static analysis tools visualize message
   flow and application structure, enabling discovery of domain events across
   large codebases and multi-application projects.
 
-- **Domain and infrastructure separation** — Domain logic is cleanly and
-  strictly separated from infrastructure concerns such as message delivery,
-  persistence and telemetry.
+- **Domain and infrastructure separation** — Dogma's API enforces a clean
+  separation between application logic and infrastructure concerns such as
+  message delivery, persistence, and telemetry.
 
-- **Type-agnostic** — Messages and application state can be any Go type that can
-  be marshaled to a byte slice, with built-in support for JSON and Protocol
-  Buffers.
+- **Type-agnostic** — Dogma lets you represent messages and application state
+  using any Go types that you can marshal to a byte slice, with built-in support
+  for JSON and Protocol Buffers.
 
-- **Flexible persistence** — Support for a range of storage options such as
+- **Flexible persistence** — Dogma supports a range of storage options including
   PostgreSQL and Amazon DynamoDB, enabling use across diverse environments.
 
 ## Ecosystem
@@ -55,7 +55,7 @@ persistence.
 Dogma is a collection of Go modules that together provide the tools needed to
 build, test, analyze, and run message-driven applications.
 
-- [dogma] (this repository) — Defines the API for building applications.
+- [dogma] — Defines the API for building applications.
 - [testkit] — Utilities for testing Dogma applications.
 - [projectionkit] — Utilities for building [projections] in popular database systems.
 
@@ -69,23 +69,23 @@ and the execution of application logic.
   in smaller deployments. While production-ready, it does not support scaling of
   a single application across multiple machines.
 
-- [veracity] _(under development)_ — The next-generation Dogma engine built for
-  horizontal scalability and distributed workloads. Long term, it will fully
-  replace Verity, becoming _the_ production Dogma engine.
+- [veracity] — The next-generation Dogma engine built for
+  horizontal scalability and distributed workloads. The Dogma maintainers intend
+  for Veracity to fully replace Verity, becoming _the_ production Dogma engine.
 
 - [testkit] — A set of tools for testing Dogma applications. It includes an
-  in-memory engine that can be used to execute and inspect application behavior
-  without persisting state.
+  in-memory engine that allows inspection of application behavior without
+  persisting state.
 
-## Why "Dogma"?
+## Why _Dogma_?
 
-The name _Dogma_ is a tongue-in-cheek nod to the project's strong opinions about
-how message-driven applications should be structured. It's not about rigid
+The name is a tongue-in-cheek nod to the project's strong opinions about how
+best to structure message-driven applications. It's not about rigid
 rule-following, but about embracing consistent patterns that enable rich tooling
 and clarity in complex systems — without sacrificing flexibility where it
 matters.
 
-## Getting Started
+## Getting started
 
 If you're new to Dogma, we recommend starting with the [concepts] document to
 gain a solid understanding of the core ideas and terminology used throughout the

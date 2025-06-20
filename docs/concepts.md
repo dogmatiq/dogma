@@ -1,4 +1,4 @@
-# Dogma Concepts
+# Dogma concepts
 
 [Dogma] is a comprehensive suite of tools for building robust message-driven
 applications in Go.
@@ -14,12 +14,12 @@ on the last. For reference material, see the [API documentation].
 > Text styled **in bold** introduces a word or phrase with a specific meaning
 > in the Dogma ecosystem.
 
-## What is a "message-driven" application?
+## What _is_ a "message-driven" application?
 
 Dogma uses **messages** to describe both what should happen and what has already
 occurred. Your **application** reacts to messages one at a time — a message
-comes in, application logic is applied, and new messages come out. Each step is
-self-contained and easy to reason about. This is what we mean by a
+comes in, the application performs some action, and new messages come out. Each
+step is self-contained and easy to reason about. This is what we mean by a
 message-driven application.
 
 ## Messages
@@ -27,29 +27,29 @@ message-driven application.
 A message is a data structure that describes something specific your application
 should do, or something it has already done.
 
-There are three **kinds** of message:
+Dogma defines three **kinds** of message:
 
-- A **command** message is a request — an action your application should take.
+- A **command** message is a request — it tells your application to do something now.
 
   For example, _add 10 widgets to Alex's shopping cart_.
 
-- An **event** message is a fact — an action your application has already taken.
+- An **event** message is a fact — it represents something your application has already done.
 
-  For example, _10 widgets were added to Alex's shopping cart_.
+  For example, _Alex added 10 widgets to their shopping cart_.
 
-- A **timeout** message is a delayed request — an action that should be taken later.
+- A **timeout** message is a delayed request — it tells your application to do something later.
 
   For example, _send Alex a reminder about their incomplete purchase after 24 hours_.
 
-Every distinct action — such as "add item to cart" or "complete purchase" — is
-represented by a different **message type**. Each message type is a Go type that
+Every distinct action — such as "add item to cart" or "complete purchase" —
+corresponds to a different **message type**, each represented by a Go type that
 implements one of the [`Command`], [`Event`], or [`Timeout`] interfaces.
 
 > [!IMPORTANT]
-> Messages must not rely on state that may be unavailable when they are handled.
-> Each example above explicitly includes the subject — _Alex_ — rather than an
-> inferred "current user". This approach captures intent when the message
-> is created, avoiding ambiguity later.
+> Messages must not rely on state that may be unavailable when they're handled.
+> Note how each earlier example explicitly includes the subject — _Alex_ —
+> rather than an inferred "current user". This approach captures intent within
+> the message itself, avoiding ambiguity in the handling logic.
 
 ## Handlers
 
@@ -57,7 +57,7 @@ A **message handler** is a component of your application that acts upon
 [messages] it receives by producing new messages, updating state, or interacting
 with external systems.
 
-There are four types of handler:
+Dogma defines four types of handler:
 
 - An **aggregate message handler** manages a group of related entities, such
   as a shopping cart and the items within it. It handles commands by recording
@@ -74,7 +74,7 @@ There are four types of handler:
 - A **projection message handler** builds a view of the application's state by
   observing event messages. This view, called a **read-model**, is typically
   stored in a database and optimised for querying or presentation. Projections
-  cannot produce new messages.
+  don't produce messages of any kind.
 
 - An **integration message handler** performs an action outside the
   application, such as sending an email or processing a payment using a
@@ -82,16 +82,16 @@ There are four types of handler:
   record event messages to describe what occurred. From Dogma's perspective,
   integrations are stateless.
 
-Each handler in your application is represented by a Go type that implements one
+Each handler in your application corresponds to a Go type that implements one
 of the [`AggregateMessageHandler`], [`ProcessMessageHandler`],
 [`IntegrationMessageHandler`], or [`ProjectionMessageHandler`] interfaces.
 
 > [!NOTE]
-> The word "aggregate" is often a source of confusion.
+> The word "aggregate" is often misunderstood.
 >
-> The terminology comes from [domain-driven design], where it refers to a group
-> of related entities that are treated as a single unit — they are dealt with
-> "in aggregate". It does not refer to data aggregation or summarization.
+> In [domain-driven design], an aggregate is a group of related entities treated
+> as a single unit — they're dealt with "in aggregate". It does not refer to
+> data aggregation or summarization.
 
 ## Scopes
 
@@ -100,22 +100,25 @@ When a [message handler] handles a [message], it does so within a specific
 
 The scope has two main roles:
 
-- It provides information about the incoming message — for example, the time at
-  which an event was recorded.
+- It provides information about the incoming message — for example, the time
+  when an event occurred.
 - It defines the messaging operations that the handler can perform in response
   to the message, such as executing commands or recording events.
 
-There are several kinds of scopes, each represented by a separate Go interface.
+Dogma defines multiple scopes types, each represented by a separate Go interface.
 For example, the [`AggregateCommandScope`] interface represents the scope in
 which an aggregate handles a command message. Your handler receives a scope with
 each incoming message — you do not need to implement these interfaces yourself.
 
 ## Event sourcing
 
-Dogma treats event [messages] as the primary source of truth. When an event is
-recorded, it becomes part of the application's permanent history. The
-application's _state_ is derived from these events — it is a reflection of what
-has occurred. This approach is known as [event sourcing].
+Dogma treats event [messages] as the primary source of truth. When your
+application performs an action, it records an event that becomes part of its
+permanent history — the foundation of an approach known as [event sourcing].
+
+We can derive different representations of the application's _state_ from these
+events at any time — a powerful capability that lets you evolve the structure of
+your data and introduce new views without touching your business logic.
 
 Consult the [api documentation] for details on how each handler type makes use
 of this event history.
@@ -126,18 +129,18 @@ We've made frequent mention of your **application**, but what exactly is an
 application in Dogma?
 
 In practice, your application likely includes a user interface, APIs,
-authentication mechanisms, and more. Within Dogma, the term simply refers to a
-collection of related [message handlers] that together implement the logic for a
-particular business domain. The other components of your software are not
-relevant to Dogma. Accordingly, it imposes no constraints on how they're built
-or what technologies you use.
+authentication, and more. In Dogma, "application" has a narrower meaning — it
+refers to a collection of [message handlers] that work together to implement a
+particular business domain. The other components of your software are outside
+Dogma's responsibility — it imposes no constraints on how they're built or what
+technologies you use.
 
 Although the handlers within your application declare which [messages] they
 consume and produce, the message types themselves are not, strictly speaking,
 part of any one application. Your broader application may consist of multiple
-Dogma applications, and messages can be used to communicate between them.
+Dogma applications that communicate using messages.
 
-In code, each application is represented by a Go type that implements the
+In code, each application corresponds to a Go type that implements the
 [`Application`] interface.
 
 > [!TIP]
@@ -146,23 +149,22 @@ In code, each application is represented by a Go type that implements the
 
 ## Engines
 
-So far, the code we've referenced has been limited to the interfaces that you
-implement and use to build your [application]. To actually _run_ your
-application, you need an **engine**.
+We've discussed the _interfaces_ that you implement and use to build your
+[application]. To actually _run_ your application, you need an **engine**.
 
 Engines are not part of the [`dogmatiq/dogma`] Go module, they're separate
 modules that implement the runtime behaviour described by Dogma's interfaces.
 You can choose an engine that suits your environment, or build your own.
 
-There are currently three official engines:
+The ecosystem currently offers three official engines:
 
 - [verity] — The original Dogma engine, designed for typical application loads
   in smaller deployments. While production-ready, it does not support scaling of
   a single application across multiple machines.
 
-- [veracity] _(under development)_ — The next-generation Dogma engine built for
-  horizontal scalability and distributed workloads. Long term, it will fully
-  replace Verity, becoming _the_ production Dogma engine.
+- [veracity] — The next-generation Dogma engine built for
+  horizontal scalability and distributed workloads. The Dogma maintainers intend
+  for Veracity to fully replace Verity, becoming _the_ production Dogma engine.
 
 - [testkit] — A set of tools for testing Dogma applications. It includes an
   in-memory engine that executes and inspects application behavior without
@@ -173,8 +175,8 @@ There are currently three official engines:
 Now that you have a high-level understanding of Dogma's concepts, you can
 explore the following resources:
 
-- The [example] repository, which contains a simple banking application with
-  features such as opening accounts and transferring funds.
+- The [example] repository, which demonstrates a minimal banking application
+  with features such as opening accounts and transferring funds.
 - The [API documentation], for detailed information on Dogma's interfaces.
 - Browse the [glossary] to cement your understanding of Dogma's terminology.
 

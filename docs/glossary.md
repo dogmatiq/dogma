@@ -1,4 +1,4 @@
-# Dogma Glossary
+# Dogma glossary
 
 [A](#a) •
 B •
@@ -31,13 +31,13 @@ Z
 
 ### Aggregate
 
-A collection of related business entities that are treated as a single unit. For
+A collection of related business entities that behave as a cohesive whole. For
 example, a shopping cart and the items within it.
 
 > [!NOTE]
-> The term originates from [domain-driven design], where it refers to a group
-> of entities that are dealt with "in aggregate". It does not refer to data
-> aggregation or summarization.
+> In [domain-driven design], an aggregate is a group of related entities treated
+> as a single unit — they're dealt with "in aggregate". It does not refer to
+> data aggregation or summarization.
 
 > [!TIP]
 > "Aggregate" is often used informally to mean [aggregate message handler].
@@ -122,8 +122,8 @@ See [`dogma.Event`].
 
 ### Event sourcing
 
-An architectural pattern in which the authoritative representation of an
-[application]'s state is provided by one or more [event streams].
+An architectural pattern in which one or more [event streams] provide the
+authoritative representation of an [application]'s state.
 
 See [event sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) for
 more information.
@@ -266,14 +266,14 @@ See [`dogma.ProcessRoot`].
 
 The [scope] in which a [process message handler] handles a [timeout] message at
 its scheduled time, by updating state, executing [command] messages, or
-scheduling additional [timeout] messages to advance the [process instance]'s
+scheduling more [timeout] messages to advance the [process instance]'s
 workflow.
 
 See [`dogma.ProcessTimeoutScope`].
 
 ### Projection
 
-A read-optimized view of (a subset of) the application's state constructed by
+A read-optimized view of a subset of the application's state constructed by
 observing [event] messages, typically persisted to a database.
 
 > [!TIP]
@@ -302,8 +302,8 @@ See [`dogma.ProjectionMessageHandler`].
 
 ### `projectionkit`
 
-A Go module that provides tools for building [projections] in various popular
-self-hosted and cloud-based database systems.
+A Go module that provides tools for building [projections] using a range of
+popular self-hosted and cloud-based database systems.
 
 See [`dogmatiq/projectionkit`].
 
