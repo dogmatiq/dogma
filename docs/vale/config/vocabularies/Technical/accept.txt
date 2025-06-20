@@ -18,6 +18,7 @@
 [Mm]odify
 [Mm]ultiple
 [Oo]nly
+[Pp]urchase
 [Vv]alidate
 [Ww]hitespace
 ADR|adr

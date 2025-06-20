@@ -1,4 +1,5 @@
-[Ddogmatiq]
+[Dd]ogma
+[Dd]ogmatiq
 [Aa]ggregate
 [Aa]pp
 [Aa]pplication
