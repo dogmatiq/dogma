@@ -1,29 +1,48 @@
 package dogma
 
-// An Application is a collection of message handlers that model a single
-// logical business domain.
+// An Application defines a collection of message handlers that work together to
+// implement a specific business domain.
+//
+// An application in the general sense must provide at least one Dogma
+// [Application] implementation.
 type Application interface {
-	// Configure describes the application's configuration to the engine.
-	Configure(ApplicationConfigurer)
+	// Configure declares the application's configuration by calling methods on c.
+	//
+	// The configuration includes the application's identity and handler routes.
+	//
+	// The engine calls this method at least once during startup. If called more
+	// than once, it must produce the same configuration each time.
+	Configure(c ApplicationConfigurer)
 }
 
-// An ApplicationConfigurer configures the engine for use with a specific
-// application.
+// ApplicationConfigurer is the interface an [Application] uses to declare its
+// configuration.
+//
+// The engine provides the implementation to [Application].Configure during
+// startup.
 type ApplicationConfigurer interface {
-	// Identity configures the application's identity.
+	// Identity configures the application's unique identity.
 	//
-	// n is a short human-readable name. It MAY change over the application's
-	// lifetime. It MUST contain solely printable, non-space UTF-8 characters.
-	// It must be between 1 and 255 bytes (not characters) in length.
+	// n is a short human-readable name used in logs, telemetry, and other
+	// places where the application's identity appears. The value must be
+	// between 1 and 255 bytes in length, and contain only printable, non-space
+	// UTF-8 characters. Changing the application's name does not affect its
+	// behavior.
 	//
-	// k is a unique key used to associate engine state with the application.
-	// The key SHOULD NOT change over the application's lifetime. k MUST be an
-	// RFC 4122 UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// Use of hard-coded literals for both values is RECOMMENDED.
-	Identity(n string, k string)
+	// k is a key that uniquely identifies the application. The engine uses the
+	// key to associate application state with the correct application instance,
+	// so it must not change. The value must be a canonical RFC 4122 UUID
+	// string, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f", and is
+	// case-insensitive.
+	Identity(n, k string)
 
-	// Routes configures the application to route messages via specific message
-	// handlers.
+	// Routes configures the application to route messages to and from specific
+	// message handlers.
+	//
+	// It accepts routes created by [ViaAggregate], [ViaProcess],
+	// [ViaIntegration], and [ViaProjection].
+	//
+	// The application does not declare routes for specific message types
+	// directly; it inherits routes from the handlers it contains.
 	Routes(...HandlerRoute)
 }
