@@ -1,3 +1,4 @@
+(ADR|adr)s?
 [Dd]eduplication
 [Dd]estroy
 [Dd]isable
@@ -22,12 +23,12 @@
 [Oo]nly
 [Oo]verspecified
 [Pp]urchase
+[Pp]urchase
 [Ss]harding
 [Tt]oolset
 [Uu]nderspecified
 [Vv]alidate
 [Ww]hitespace
-(ADR|adr)s?
 APIs?
 ASCII
 CQRS
