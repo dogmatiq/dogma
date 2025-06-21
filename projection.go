@@ -199,6 +199,6 @@ type (
 // ProjectionRoute describes a message type that's routed to a
 // [ProjectionMessageHandler].
 type ProjectionRoute interface {
-	Route
+	MessageRoute
 	isProjectionRoute()
 }

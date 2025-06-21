@@ -79,6 +79,6 @@ type IntegrationCommandScope interface {
 // IntegrationRoute describes a message type that's routed to or from a
 // [IntegrationMessageHandler].
 type IntegrationRoute interface {
-	Route
+	MessageRoute
 	isIntegrationRoute()
 }

@@ -49,12 +49,7 @@ func SchedulesTimeout[T Timeout](...SchedulesTimeoutOption) SchedulesTimeoutRout
 type (
 	// MessageRoute is an interface for types that describe a relationship between a
 	// message handler and a specific message type.
-	MessageRoute = interface{ isMessageRoute() }
-
-	// Route is an alias for [MessageRoute]
-	//
-	// Deprecated: Use [MessageRoute] instead.
-	Route = MessageRoute
+	MessageRoute interface{ isMessageRoute() }
 
 	// HandlesCommandRoute describes a route for a handler that handles a
 	// [Command] of a specific type.

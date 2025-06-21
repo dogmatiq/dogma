@@ -261,6 +261,6 @@ func (NoTimeoutMessagesBehavior) HandleTimeout(
 // ProcessRoute describes a message type that's routed to or from a
 // [ProcessMessageHandler].
 type ProcessRoute interface {
-	Route
+	MessageRoute
 	isProcessRoute()
 }

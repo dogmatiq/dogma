@@ -9,12 +9,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
+[bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
+[engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
 ## [Unreleased]
 
 This releases introduces a `Routes()` method to the `ApplicationConfigurer`
-interface. Application developers should use `Routes()` in preference to the
-existing `Register*()` methods, which are now deprecated.
+interface. Application developers must use `Routes()`. The existing
+`Register*()` methods have been removed.
 
 The `Routes()` API offers a more extensible interface that allows for future
 changes to handler configuration without introducing interface-level compilation
@@ -22,7 +24,6 @@ errors.
 
 ### Added
 
-- **[ENGINE BC]** Added `Routes()` method to `ApplicationConfigurer`.
 - Added `ViaAggregate().`
 - Added `ViaProcess()`.
 - Added `ViaIntegration()`.
@@ -32,28 +33,30 @@ errors.
   `ViaProjectionRoute` types.
 - Added `Now()` method to `AggregateCommandScope`, `ProcessEventScope`,
   `ProcessTimeoutScope`, `IntegrationCommandScope` and `ProjectionEventScope`.
+- **[ENGINE BC]** Added `Routes()` method to `ApplicationConfigurer`.
+- **[ENGINE BC]** Added `IsHistorical()` method to `EventValidationScope`.
+- **[ENGINE BC]** Added `IsScheduled()` method to `TimeoutValidationScope`.
 
 ### Changed
 
 - **[BC]** `HandlesCommand()`, `RecordsEvent()`, `HandlesEvent()`,
   `ExecutesCommand()` and `SchedulesTimeout()` now panic if the type parameter
-  uses non-pointer receivers to implement `Command`. Therefore, it is no longer
-  possible to (mis-)use a single message type as both a pointer and a
-  non-pointer. If a type implements `Command`, `Event`, or `Timeout` using
-  pointer receivers then a pointer type must be used; otherwise, a non-pointer
-  type must be used.
+  uses non-pointer receivers to implement `Command`. It's no longer possible to
+  use a single message type as both a pointer and a non-pointer. If a type
+  implements `Command`, `Event`, or `Timeout` using pointer receivers then a
+  pointer type must be used; otherwise, a non-pointer type must be used.
 
-### Deprecated
+### Removed
 
-- Deprecated `Route`, use `MessageRoute` instead.
-- Deprecated `ApplicationConfigurer.RegisterAggregate()`.
-- Deprecated `ApplicationConfigurer.RegisterProcess()`.
-- Deprecated `ApplicationConfigurer.RegisterIntegration()`.
-- Deprecated `ApplicationConfigurer.RegisterProjection()`.
-- Deprecated `RegisterAggregateOption`.
-- Deprecated `RegisterProcessOption`.
-- Deprecated `RegisterIntegrationOption`.
-- Deprecated `RegisterProjectionOption`.
+- **[BC]** Removed `Route`, use `MessageRoute` instead.
+- **[BC]** Removed `ApplicationConfigurer.RegisterAggregate()`.
+- **[BC]** Removed `ApplicationConfigurer.RegisterProcess()`.
+- **[BC]** Removed `ApplicationConfigurer.RegisterIntegration()`.
+- **[BC]** Removed `ApplicationConfigurer.RegisterProjection()`.
+- **[BC]** Removed `RegisterAggregateOption`.
+- **[BC]** Removed `RegisterProcessOption`.
+- **[BC]** Removed `RegisterIntegrationOption`.
+- **[BC]** Removed `RegisterProjectionOption`.
 
 ## [0.15.0] - 2024-10-03
 
@@ -108,13 +111,13 @@ errors.
 ### Changed
 
 - **[BC]** The `Command`, `Event` and `Timeout` interfaces are no longer aliases
-  for `Command`, they are distinct types. At this stage these interfaces are
-  method-compatible with the `Message` interface, however they will diverge in a
+  for `Command`, they're distinct types. At this stage these interfaces are
+  method-compatible with the `Message` interface, but they will diverge in a
   future release.
 
 ### Removed
 
-This release removes the "timeout hint" functionality (see [ADR-0021]).
+This release removes the "timeout hint" feature (see [ADR-21]).
 Application implementers are free to apply their own context deadlines when
 handling messages.
 
@@ -155,7 +158,7 @@ handling messages.
 ### Removed
 
 This release marks 9 months since the release of [0.12.0], which deprecated
-several elements of the API. Those elements have been removed in this release.
+multiple elements of the API. Those elements have been removed in this release.
 
 - **[BC]** Remove deprecated message routing methods (use `.Route()` instead)
   - `AggregateConfigurer.ConsumesCommandType()`
@@ -179,8 +182,8 @@ several elements of the API. Those elements have been removed in this release.
 
 ## [0.12.0] - 2023-04-09
 
-This release aligns the Dogma API with several best practices that have emerged
-since the last release.
+This release aligns the Dogma API with best practices that have emerged since
+the last release.
 
 **Although this release includes a large number of changes there should be no
 breaking changes to applications that are already following these best
@@ -348,7 +351,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 ### Added
 
 - Add `DescribeMessage()` and the `DescribableMessage` interface
-- Add the `fixtures` package, which contains message fixtures and mocks of various Dogma interfaces
+- Add the `fixtures` package, which contains message fixtures and mocks of Dogma interfaces
 
 ## [0.6.0] - 2019-08-01
 

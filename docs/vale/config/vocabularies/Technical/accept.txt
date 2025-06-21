@@ -22,3 +22,4 @@
 [Vv]alidate
 [Ww]hitespace
 ADR|adr
+minimum
