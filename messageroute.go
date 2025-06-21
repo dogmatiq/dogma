@@ -5,43 +5,55 @@ import (
 	"reflect"
 )
 
-// HandlesCommand routes command messages to an [AggregateMessageHandler] or
-// [IntegrationMessageHandler]. It is used as an argument to the Routes() method
-// of [AggregateConfigurer] or [IntegrationConfigurer].
+// HandlesCommand configures an [AggregateMessageHandler] or
+// [IntegrationMessageHandler] as a consumer of [Command] messages of type T.
 //
-// An application MUST NOT route a single command type to more than one handler.
+// Pass the returned [MessageRoute] to [AggregateConfigurer].Routes or
+// [IntegrationConfigurer].Routes.
+//
+// The engine panics if the application has multiple handlers that handle T.
 func HandlesCommand[T Command](...HandlesCommandOption) HandlesCommandRoute {
 	return HandlesCommandRoute{typeOf[Command, T]()}
 }
 
-// RecordsEvent routes event messages recorded by an [AggregateMessageHandler]
-// or [IntegrationMessageHandler]. It is used as an argument to the Routes()
-// method of [AggregateConfigurer] or [IntegrationConfigurer].
+// RecordsEvent configures an [AggregateMessageHandler] or
+// [IntegrationMessageHandler] as a producer of [Event] messages of type T.
 //
-// An application MUST NOT route a single event type from more than one handler.
+// Pass the returned [MessageRoute] to [AggregateConfigurer].Routes or
+// [IntegrationConfigurer].Routes.
+//
+// The engine panics if the application has multiple handlers that record T.
 func RecordsEvent[T Event](...RecordsEventOption) RecordsEventRoute {
 	return RecordsEventRoute{typeOf[Event, T]()}
 }
 
-// HandlesEvent routes event messages to a [ProcessMessageHandler] or
-// [ProjectionMessageHandler]. It is used as an argument to the Routes() method
-// of [ProcessConfigurer] or [ProjectionConfigurer].
+// HandlesEvent configures a [ProcessMessageHandler] or [ProjectionMessageHandler] as a
+// consumer of [Event] messages of type T.
+//
+// Pass the returned [MessageRoute] to [ProcessConfigurer].Routes or
+// [ProjectionConfigurer].Routes.
+//
+// An application may have multiple handlers that handle T.
 func HandlesEvent[T Event](...HandlesEventOption) HandlesEventRoute {
 	return HandlesEventRoute{typeOf[Event, T]()}
 }
 
-// ExecutesCommand routes command messages produced by a
-// [ProcessMessageHandler]. It is used as an argument to the Routes() method of
-// [ProcessConfigurer].
+// ExecutesCommand configures a [ProcessMessageHandler] as a producer of
+// [Command] messages of type T.
+//
+// Pass the returned [MessageRoute] to [ProcessConfigurer].Routes.
+//
+// The application may have multiple handlers that execute T.
 func ExecutesCommand[T Command](...ExecutesCommandOption) ExecutesCommandRoute {
 	return ExecutesCommandRoute{typeOf[Command, T]()}
 }
 
-// SchedulesTimeout routes timeout messages scheduled by
-// [ProcessMessageHandler]. It is used as an argument to the Routes() method of
-// [ProcessConfigurer].
+// SchedulesTimeout configures a [ProcessMessageHandler] as a scheduler of
+// [Timeout] messages of type T.
 //
-// An application MAY use a single timeout type with more than one process.
+// Pass the returned [MessageRoute] to [ProcessConfigurer].Routes.
+//
+// The application may have multiple handlers that schedule T.
 func SchedulesTimeout[T Timeout](...SchedulesTimeoutOption) SchedulesTimeoutRoute {
 	return SchedulesTimeoutRoute{typeOf[Timeout, T]()}
 }
@@ -51,54 +63,79 @@ type (
 	// message handler and a specific message type.
 	MessageRoute interface{ isMessageRoute() }
 
-	// HandlesCommandRoute describes a route for a handler that handles a
-	// [Command] of a specific type.
+	// HandlesCommandRoute is a [HandlerRoute] that represents a handler's
+	// ability to handle [Command] messages of a specific type.
+	//
+	// Avoid constructing values of this type directly; use [HandlesCommand]
+	// instead.
 	HandlesCommandRoute struct{ Type reflect.Type }
 
-	// ExecutesCommandRoute describes a route for a handler that executes a
-	// [Command] of a specific type.
+	// ExecutesCommandRoute is a [HandlerRoute] that represents a handler's
+	// ability to execute [Command] messages of a specific type.
+	//
+	// Avoid constructing values of this type directly; use [ExecutesCommand]
+	// instead.
 	ExecutesCommandRoute struct{ Type reflect.Type }
 
-	// HandlesEventRoute describes a route for a handler that handles an
-	// [Event] of a specific type.
+	// HandlesEventRoute is a [HandlerRoute] that represents a handler's
+	// ability to handle [Event] messages of a specific type.
+	//
+	// Avoid constructing values of this type directly; use [HandlesEvent]
+	// instead.
 	HandlesEventRoute struct{ Type reflect.Type }
 
-	// RecordsEventRoute describes a route for a handler that records an
-	// [Event] of a specific type.
+	// RecordsEventRoute is a [HandlerRoute] that represents a handler's
+	// ability to record [Event] messages of a specific type.
+	//
+	// Avoid constructing values of this type directly; use [RecordsEvent]
+	// instead.
 	RecordsEventRoute struct{ Type reflect.Type }
 
-	// SchedulesTimeoutRoute describes a route for a handler that schedules a
-	// [Timeout] of a specific type.
+	// SchedulesTimeoutRoute is a [HandlerRoute] that represents a handler's
+	// ability to schedule [Timeout] messages of a specific type.
+	//
+	// Avoid constructing values of this type directly; use [SchedulesTimeout]
+	// instead.
 	SchedulesTimeoutRoute struct{ Type reflect.Type }
 )
 
 type (
-	// HandlesCommandOption is an option that affects the behavior of the route
-	// returned by [HandlesCommand].
+	// HandlesCommandOption is an option that modifies the behavior of
+	// [HandlesCommand].
+	//
+	// This type exists for forward-compatibility.
 	HandlesCommandOption interface {
 		futureHandlesCommandOption()
 	}
 
-	// ExecutesCommandOption is an option that affects the behavior of the route
-	// returned by [ExecutesCommand].
+	// ExecutesCommandOption is an option that modifies the behavior of
+	// [HandlesEvent].
+	//
+	// This type exists for forward-compatibility.
 	ExecutesCommandOption interface {
 		futureExecutesCommandOption()
 	}
 
-	// HandlesEventOption is an option that affects the behavior of the route
-	// returned by [HandlesEvent].
+	// HandlesEventOption is an option that modifies the behavior of
+	// [RecordsEvent].
+	//
+	// This type exists for forward-compatibility.
 	HandlesEventOption interface {
 		futureHandlesEventOption()
 	}
 
-	// RecordsEventOption is an option that affects the behavior of the route
-	// returned by [RecordsEvent].
+	// RecordsEventOption is an option that modifies the behavior of
+	// [ExecutesCommand].
+	//
+	// This type exists for forward-compatibility.
 	RecordsEventOption interface {
 		futureRecordsEventOption()
 	}
 
-	// SchedulesTimeoutOption is an option that affects the behavior of the
-	// route returned by [SchedulesTimeout].
+	// SchedulesTimeoutOption is an option that modifies the behavior of
+	// [SchedulesTimeout].
+	//
+	// This type exists for forward-compatibility.
 	SchedulesTimeoutOption interface {
 		futureSchedulesTimeoutOption()
 	}
@@ -106,7 +143,7 @@ type (
 
 // typeOf returns the [reflect.Type] for C, which must be a concrete
 // implementation of the interface I.
-func typeOf[I Message, C Message]() reflect.Type {
+func typeOf[I, C Message]() reflect.Type {
 	concrete := reflect.TypeFor[C]()
 
 	if concrete.Kind() == reflect.Pointer {
