@@ -15,6 +15,7 @@
 [Ii]mmediately
 [Ii]mplement
 [Ii]nvalid
+[Mm]inimum
 [Mm]odify
 [Mm]ultiple
 [Oo]nly
@@ -24,4 +25,4 @@
 [Vv]alidate
 [Ww]hitespace
 ADR|adr
-minimum
+cannot
