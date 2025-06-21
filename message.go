@@ -52,7 +52,9 @@ type CommandValidationScope interface {
 // EventValidationScope provides information about the context in which an
 // [Event] is being validated.
 type EventValidationScope interface {
-	reservedEventValidationScope()
+	// IsHistorical returns true if the event has already occurred, or false if
+	// it's occurring now.
+	IsHistorical() bool
 }
 
 // TimeoutValidationScope provides information about the context in which a
