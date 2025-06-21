@@ -7,12 +7,31 @@ package dogma
 //
 // Each message type implements either [Command], [Event], or [Timeout].
 type Message interface {
-	// MessageDescription returns a concise human-readable explanation of the message's
-	// meaning for use in contexts such as logging and telemetry.
+	// MessageDescription returns a concise human-readable explanation of the
+	// message's meaning for use in contexts such as logging and telemetry.
 	//
 	// The description should be clear and relevant to developers and
-	// non-technical people familiar with the application's domain, but is not
-	// intended for end users.
+	// non-technical stakeholders familiar with the application's domain. It's
+	// not intended for display to end users.
+	//
+	// Descriptions of [Command] messages should use present-continuous tense.
+	// For example: "adding 10 widgets to Alex's shopping cart".
+	//
+	// Descriptions of [Event] messages should use past tense. For example:
+	// "added 10 widgets to Alex's shopping cart".
+	//
+	// Descriptions of [Timeout] messages should read as though the timeout has
+	// just elapsed. For example: "Alex's cart is now inactive" or "24 hours
+	// elapsed since first item added to Alex's cart".
+	//
+	// Use lowercase sentences with no trailing punctuation. Omit overly
+	// specific details that do not alter the message's intent.
+	//
+	// Be wary of assuming a specific actor if the message does not explicitly
+	// encode that information. For example, prefer "Alex's purchase completed"
+	// over "Alex completed their purchase". This guidance is especially
+	// relevant to [Event] messages, where each type should represent a specific
+	// state change regardless of who initiated it.
 	MessageDescription() string
 }
 
