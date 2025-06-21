@@ -27,8 +27,8 @@ type Command interface {
 	// correctly encoded such that it represents a valid action that the
 	// application can perform, if current state permits.
 	//
-	// The [CommandValidationScope] interface is empty; the argument provides
-	// forward compatibility with future features.
+	// The [CommandValidationScope] argument exists for forward-compatibility;
+	// the interface is currently empty.
 	Validate(CommandValidationScope) error
 }
 
@@ -79,7 +79,7 @@ type unexpectedMessage struct{}
 //
 // The engine provides the implementation to [Command].Validate.
 //
-// Currently reserved for future use.
+// This interface exists for forward-compatibility.
 type CommandValidationScope interface {
 	futureCommandValidationScope()
 }
