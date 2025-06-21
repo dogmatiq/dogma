@@ -10,8 +10,7 @@ type Message interface {
 // A Command is a message that represents a request for a Dogma application to
 // perform some action.
 type Command interface {
-	// MessageDescription returns a human-readable description of the message.
-	MessageDescription() string
+	Message
 
 	// Validate returns a non-nil error if the message is invalid.
 	Validate(CommandValidationScope) error
@@ -20,8 +19,7 @@ type Command interface {
 // An Event is a message that indicates that some action has occurred within a
 // Dogma application.
 type Event interface {
-	// MessageDescription returns a human-readable description of the message.
-	MessageDescription() string
+	Message
 
 	// Validate returns a non-nil error if the message is invalid.
 	Validate(EventValidationScope) error
@@ -30,8 +28,7 @@ type Event interface {
 // A Timeout is a message that represents a request for an action to be
 // performed at a specific time.
 type Timeout interface {
-	// MessageDescription returns a human-readable description of the message.
-	MessageDescription() string
+	Message
 
 	// Validate returns a non-nil error if the message is invalid.
 	Validate(TimeoutValidationScope) error
