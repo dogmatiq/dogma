@@ -9,9 +9,11 @@ import "context"
 type CommandExecutor interface {
 	// ExecuteCommand submits a command for execution.
 	//
-	// The engine guarantees execution of the command at some point. The engine
-	// may invoke the associated handler more than once, but the command's
-	// side-effects, such as the events it produces, occur exactly once.
+	// The engine may invoke the associated handler more than once, but the
+	// command's side-effects, such as the events it produces, occur exactly
+	// once. The engine attempts to execute the command immediately, but there
+	// is no guarantee that execution is complete by the time this method
+	// returns.
 	//
 	// If it returns a non-nil error, the engine may not have taken ownership of
 	// message delivery, and the application should retry execution.
