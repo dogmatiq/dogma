@@ -2,7 +2,7 @@ package dogma
 
 import "context"
 
-// A CommandExecutor submits commands for execution.
+// A CommandExecutor submits [Command] messages for execution.
 //
 // It's the primary way that code outside of the Dogma application interacts
 // with the engine.
