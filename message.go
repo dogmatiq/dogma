@@ -53,12 +53,14 @@ type CommandValidationScope interface {
 // [Event] is being validated.
 type EventValidationScope interface {
 	// IsHistorical returns true if the event has already occurred, or false if
-	// it's occurring now.
+	// the application is recording a new event.
 	IsHistorical() bool
 }
 
 // TimeoutValidationScope provides information about the context in which a
 // [Timeout] is being validated.
 type TimeoutValidationScope interface {
-	reservedTimeoutValidationScope()
+	// IsScheduled returns true if the timeout is already scheduled to occur, or
+	// false if the application is scheduling a new timeout.
+	IsScheduled() bool
 }
