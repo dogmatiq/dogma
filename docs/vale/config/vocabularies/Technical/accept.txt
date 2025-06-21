@@ -25,4 +25,5 @@
 [Vv]alidate
 [Ww]hitespace
 ADR|adr
+cannot
 CRUD
