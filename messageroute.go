@@ -117,7 +117,7 @@ type (
 	}
 
 	// HandlesEventOption is an option that modifies the behavior of
-	// [RecordsEvent].
+	// [HandlesEvent].
 	//
 	// This type exists for forward-compatibility.
 	HandlesEventOption interface {
