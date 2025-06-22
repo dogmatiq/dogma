@@ -109,7 +109,7 @@ type (
 	}
 
 	// ExecutesCommandOption is an option that modifies the behavior of
-	// [HandlesEvent].
+	// [ExecutesCommand].
 	//
 	// This type exists for forward-compatibility.
 	ExecutesCommandOption interface {
