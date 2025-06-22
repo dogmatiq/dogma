@@ -125,7 +125,7 @@ type (
 	}
 
 	// RecordsEventOption is an option that modifies the behavior of
-	// [ExecutesCommand].
+	// [RecordsEvent].
 	//
 	// This type exists for forward-compatibility.
 	RecordsEventOption interface {
