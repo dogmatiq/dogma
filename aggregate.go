@@ -119,22 +119,7 @@ type AggregateCommandScope interface {
 	//
 	// It applies the event to the root such that the applied changes are
 	// visible to the handler after this method returns.
-	//
-	// Recording an event cancels any prior call to Destroy() on this scope.
 	RecordEvent(Event)
-
-	// Destroy signals destruction of the aggregate instance.
-	//
-	// Destroying an aggregate instance discards its state. The first command to
-	// target a destroyed instance operates on a new root.
-	//
-	// Destruction occurs once the HandleCommand() method returns. Any future
-	// call to RecordEvent() on this scope prevents destruction.
-	//
-	// The precise destruction semantics are engine defined. For example,
-	// event sourcing engines typically do not destroy the record of the
-	// aggregate's historical events.
-	Destroy()
 
 	// Now returns the current local time, according to the engine.
 	//
