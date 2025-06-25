@@ -4,7 +4,7 @@ Date: 2025-06-24
 
 ## Status
 
-Proposed
+Accepted
 
 - Amends [19. Automatic Process Creation](0019-automatic-process-creation.md)
 
