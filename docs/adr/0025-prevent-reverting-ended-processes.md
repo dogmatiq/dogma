@@ -29,14 +29,9 @@ instance.
 
 ## Consequences
 
-Engines must now track whether a process instance has ended and suppress event
-delivery to that instance, whereas current implementations typically revert
-ending the process and keep it alive.
+Calling `End()` is now always final. The scope on which end is called will not
+be able to perform any additional operations. Any future messages that are
+routed to the ended process instance will be ignored.
 
-Ambiguity around how to handle process effects after it has been ended is
-eliminated by removing the possibility altogether. All effects must be produced
-before calling `End()`.
-
-This change resolves the immediate ambiguity but may not be sufficient in the
-long term. In future, it may be necessary for a process to explicitly declare
-ways to revert/negate ending or start a new instance.
+Engines will need to keep track of ended processes indefinitely, presenting an
+additional data management concern.
