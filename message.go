@@ -98,7 +98,7 @@ type unexpectedMessage struct{}
 //
 // The engine provides the implementation to [Command].Validate.
 //
-// This interface exists for forward-compatibility.
+// This type exists for forward-compatibility.
 type CommandValidationScope interface {
 	futureCommandValidationScope()
 }
