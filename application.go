@@ -21,13 +21,13 @@ type Application interface {
 // The engine provides the implementation to [Application].Configure during
 // startup.
 type ApplicationConfigurer interface {
-	// Identity configures the application's unique identity.
+	// Identity sets the application's unique identity.
 	//
-	// n is a short human-readable name used in logs, telemetry, and other
-	// places where the application's identity appears. The value must be
-	// between 1 and 255 bytes in length, and contain only printable, non-space
-	// UTF-8 characters. Changing the application's name does not affect its
-	// behavior.
+	// n is a short human-readable name displayed wherever the application's
+	// identity appears, such as in logs and telemetry signals. The value must
+	// be between 1 and 255 bytes in length, and contain only printable,
+	// non-space UTF-8 characters. Changing the handler's name does not affect
+	// its behavior.
 	//
 	// k is a key that uniquely identifies the application. The engine uses the
 	// key to associate application state with the correct application instance,
@@ -36,13 +36,12 @@ type ApplicationConfigurer interface {
 	// case-insensitive.
 	Identity(n, k string)
 
-	// Routes configures the application to route messages to and from specific
-	// message handlers.
+	// Routes adds handler routes that associate message types with handlers.
 	//
 	// It accepts routes created by [ViaAggregate], [ViaProcess],
 	// [ViaIntegration], and [ViaProjection].
 	//
-	// The application does not declare routes for specific message types
-	// directly; it inherits routes from the handlers it contains.
+	// The application does not declare routes for message types directly; it
+	// inherits routes from the handlers it contains.
 	Routes(...HandlerRoute)
 }
