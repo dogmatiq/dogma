@@ -1,4 +1,4 @@
-# 22. Remove CRUD Application Support
+# 22. Remove CRUD application support
 
 Date: 2025-06-13
 
@@ -36,7 +36,7 @@ implemented as a pure conceptual and documentation change initially.
   For example, We can specify behavioral guarantees much more explicitly,
   particularly around message delivery order.
 
-This decision also opens the door to several API improvements:
+This decision also opens the door to API improvements:
 
 - Removal of `AggregateCommandScope.Destroy()`. The concept of destroying
   something with immutable history has already been confusing in practice, and
@@ -46,10 +46,10 @@ This decision also opens the door to several API improvements:
   "resource versioning system" could be modeled directly as event stream
   offsets.
 - Richer control over event consumption. Event-consuming handlers could grow
-  features for specifying whether they are interested in historical events
-  (since we know they are available) or only new events.
+  features for specifying whether they are interested in historical events,
+  since we know they are available, or only new events.
 
-### Migration Path
+### Migration path
 
 Although unlikely to exist in the wild, existing applications that were built
 with CRUD patterns in mind will need to be refactored to use event sourcing

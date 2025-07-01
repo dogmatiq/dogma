@@ -1,4 +1,4 @@
-# 21. Remove Handler Timeout Hints
+# 21. Remove handler timeout hints
 
 Date: 2024-08-17
 
@@ -12,7 +12,7 @@ Supercedes [10. Handler Timeout Hints](0010-handler-timeout-hints.md)
 
 Handler timeouts hints have been present for a number of years, but have not
 been widely adopted. Nor have engine implementations made use of them in any way
-that offers functionality beyond what is possible by having the handler
+that offers capabilities beyond what is possible by having the handler
 implementation impose its own context deadline.
 
 ## Decision

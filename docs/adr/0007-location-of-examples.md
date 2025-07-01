@@ -1,4 +1,4 @@
-# 7. Location of Examples
+# 7. Location of examples
 
 Date: 2019-01-03
 
