@@ -44,8 +44,8 @@ example, a shopping cart and the items within it.
 
 ### Aggregate command scope
 
-The [scope] in which an [aggregate message handler] handles a [command] message
-by recording [event] messages that represent changes to an [aggregate instance].
+The [handler scope] in which an [aggregate message handler] handles a [command]
+message by recording [event] messages that represent changes to an [aggregate instance].
 
 See [`dogma.AggregateCommandScope`].
 
@@ -146,6 +146,14 @@ See:
 - [`dogma.ViaProjection()`]
 - [`dogma.ViaIntegration()`]
 
+### Handler scope
+
+The context within which a [message handler] executes some logic. For example,
+when handling an incoming [message], the scope provides information about that
+message and defines the messaging operations available to the handler.
+
+See [`dogma.HandlerScope`].
+
 ## I
 
 ### Identity
@@ -163,8 +171,8 @@ See [integration message handler].
 
 ### Integration command scope
 
-The [scope] in which an [integration message handler] handles a [command]
-message by interacting with an external system.
+The [handler scope] in which an [integration message handler] handles a
+[command] message by interacting with an external system.
 
 See [`dogma.IntegrationCommandScope`].
 
@@ -237,9 +245,9 @@ logic.
 
 ### Process event scope
 
-The [scope] in which a [process message handler] handles an [event] message by
-updating state, executing [command] messages, or scheduling [timeout] messages
-to advance the [process instance]'s workflow.
+The [handler scope] in which a [process message handler] handles an [event]
+message by updating state, executing [command] messages, or scheduling [timeout]
+messages to advance the [process instance]'s workflow.
 
 See [`dogma.ProcessEventScope`].
 
@@ -264,9 +272,9 @@ See [`dogma.ProcessRoot`].
 
 ### Process timeout scope
 
-The [scope] in which a [process message handler] handles a [timeout] message at
-its scheduled time, by updating state, executing [command] messages, or
-scheduling more [timeout] messages to advance the [process instance]'s
+The [handler scope] in which a [process message handler] handles a [timeout]
+message at its scheduled time, by updating state, executing [command] messages,
+or scheduling more [timeout] messages to advance the [process instance]'s
 workflow.
 
 See [`dogma.ProcessTimeoutScope`].
@@ -282,8 +290,8 @@ observing [event] messages, typically persisted to a database.
 
 ### Projection compact scope
 
-The [scope] in which a [projection message handler] compacts its state by
-removing or summarizing older or redundant data.
+The [handler scope] in which a [projection message handler] compacts its state
+by removing or summarizing older or redundant data.
 
 See [`dogma.ProjectionCompactScope`].
 
@@ -327,12 +335,6 @@ actions.
 
 See [process].
 
-### Scope
-
-The context within which a [message handler] handles an incoming [message].
-It provides information about the message and defines the messaging operations
-available to the handler.
-
 ## T
 
 ### `testkit`
@@ -349,6 +351,10 @@ time in the future.
 See [`dogma.Timeout`].
 
 ## V
+
+### Validation scope
+
+The context within which a [message] executes its data validation logic.
 
 ### Veracity
 
@@ -385,6 +391,7 @@ See [process].
 [event streams]: #event-stream
 [event]: #event
 [handler route]: #handler-route
+[handler scope]: #handler-scope
 [identity]: #identity
 [integration message handler]: #integration-message-handler
 [integrations]: #integration
@@ -402,7 +409,6 @@ See [process].
 [projection]: #projection
 [projections]: #projection
 [routes]: #route
-[scope]: #scope
 [timeout]: #timeout
 
 <!-- go modules -->
@@ -423,21 +429,22 @@ See [process].
 [`dogma.Command`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Command
 [`dogma.Event`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Event
 [`dogma.ExecutesCommand()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ExecutesCommand
+[`dogma.HandlerScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#HandlerScope
 [`dogma.HandlesCommand()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#HandlesCommand
 [`dogma.HandlesEvent()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#HandlesEvent
 [`dogma.IntegrationCommandScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#IntegrationCommandScope
 [`dogma.IntegrationConfigurer`]: https://pkg.go.dev/github.com/dogmatiq/dogma#IntegrationConfigurer
+[`dogma.IntegrationMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#IntegrationMessageHandler
 [`dogma.Message`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Message
 [`dogma.ProcessConfigurer`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessConfigurer
 [`dogma.ProcessEventScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessEventScope
-[`dogma.IntegrationMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#IntegrationMessageHandler
-[`dogma.ProjectionMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionMessageHandler
 [`dogma.ProcessMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessMessageHandler
 [`dogma.ProcessRoot`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessRoot
 [`dogma.ProcessTimeoutScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessTimeoutScope
 [`dogma.ProjectionCompactScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionCompactScope
 [`dogma.ProjectionConfigurer`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionConfigurer
 [`dogma.ProjectionEventScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionEventScope
+[`dogma.ProjectionMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionMessageHandler
 [`dogma.RecordsEvent()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#RecordsEvent
 [`dogma.SchedulesTimeout()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#SchedulesTimeout
 [`dogma.Timeout`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Timeout
