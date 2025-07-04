@@ -33,16 +33,17 @@ If you're new to Dogma, start by familiarising yourself with the key [concepts].
 
 ### State
 
-Aggregates and processes maintain state across many separate instances.
-The engine routes each message to a specific instance using an identifier
-provided by the application.
+Aggregates and processes are stateful — they maintain state across many separate
+instances. The engine routes each message to a specific instance using an
+identifier provided by the application, ensuring that the handler sees the state
+established by prior messages for that instance.
 
-Each aggregate instance records events, and each process instance holds data.
-Together, this represents the application's state.
+Aggregate message handlers manipulate state by recording events. Process message
+handlers manipulate state by storing data directly within each process instance.
 
-Although both integration and projection message handlers may use or store data,
-it's not considered state within Dogma. See the [definition of state] in the
-glossary for further clarification.
+Integration and projection message handlers may use or store data, but they're
+stateless according to Dogma's [definition of state], which limits the term to
+data managed by the engine.
 
 ### External data access
 
