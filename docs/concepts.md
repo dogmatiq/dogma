@@ -158,15 +158,15 @@ You can choose an engine that suits your environment, or build your own.
 
 The ecosystem currently offers three official engines:
 
-- [verity] — The original Dogma engine, designed for typical application loads
+- [`dogmatiq/verity`] — The original Dogma engine, designed for typical application loads
   in smaller deployments. While production-ready, it does not support scaling of
   a single application across multiple machines.
 
-- [veracity] — The next-generation Dogma engine built for
+- [`dogmatiq/veracity`] — The next-generation Dogma engine built for
   horizontal scalability and distributed workloads. The Dogma maintainers intend
   for Veracity to fully replace Verity, becoming _the_ production Dogma engine.
 
-- [testkit] — A set of tools for testing Dogma applications. It includes an
+- [`dogmatiq/testkit`] — A set of tools for testing Dogma applications. It includes an
   in-memory engine that executes and inspects application behavior without
   persisting state.
 
@@ -175,10 +175,9 @@ The ecosystem currently offers three official engines:
 Now that you have a high-level understanding of Dogma's concepts, you can
 explore the following resources:
 
-- The [example] repository, which demonstrates a minimal banking application
-  with features such as opening accounts and transferring funds.
-- The [API documentation], for detailed information on Dogma's interfaces.
-- Browse the [glossary] to cement your understanding of Dogma's terminology.
+- [API documentation] — detailed information about Dogma's API.
+- [Glossary] — a central reference for Dogma's terminology.
+- [`dogmatiq/example`] — a minimal example application with simple banking features.
 
 <!-- anchors -->
 
@@ -190,15 +189,16 @@ explore the following resources:
 
 <!-- other documentation  -->
 
+[dogma]: https://github.com/dogmatiq/dogma?tab=readme-ov-file#readme
 [glossary]: glossary.md
+[handler type comparison]: handler-type-comparison.md
 
 <!-- go modules -->
 
-[dogma]: https://github.com/dogmatiq/dogma
-[example]: https://github.com/dogmatiq/example
-[testkit]: https://github.com/dogmatiq/testkit
-[veracity]: https://github.com/dogmatiq/veracity
-[verity]: https://github.com/dogmatiq/verity
+[`dogmatiq/example`]: https://github.com/dogmatiq/example
+[`dogmatiq/testkit`]: https://github.com/dogmatiq/testkit
+[`dogmatiq/veracity`]: https://github.com/dogmatiq/veracity
+[`dogmatiq/verity`]: https://github.com/dogmatiq/verity
 
 <!-- API references -->
 
