@@ -26,7 +26,7 @@ If you're new to Dogma, start by familiarising yourself with the key [concepts].
 - `~` supported, but not recommended
 - `↓` consumes
 - `↑` produces
-- `⇅` produces &amp; consumes
+- `⇅` produces & consumes
 - `—` not applicable
 
 ## Definitions
