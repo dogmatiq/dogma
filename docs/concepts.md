@@ -191,7 +191,6 @@ explore the following resources:
 
 [dogma]: https://github.com/dogmatiq/dogma?tab=readme-ov-file#readme
 [glossary]: glossary.md
-[handler type comparison]: handler-type-comparison.md
 
 <!-- go modules -->
 
