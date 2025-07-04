@@ -18,7 +18,7 @@ O •
 [P](#p) •
 Q •
 R •
-S •
+[S](#s) •
 [T](#t) •
 U •
 [V](#v) •
@@ -56,14 +56,14 @@ shopping cart aggregate may use a separate instance for each customer.
 
 ### Aggregate message handler
 
-A [message handler] that manages the state and behavior of an [aggregate] by
+A [message handler] that manages the [state] and behavior of an [aggregate] by
 handling [command] messages and recording [event] messages.
 
 See [`dogma.AggregateMessageHandler`].
 
 ### Aggregate root
 
-The primary entity within an [aggregate] through which all state changes occur.
+The primary entity within an [aggregate] through which all [state] changes occur.
 For example, a shopping cart aggregate that consists of a cart and its items may
 use the cart itself as its root.
 
@@ -80,7 +80,7 @@ See [`dogma.Application`].
 
 ### Command
 
-A [message] that represents a request for the application to perform an action.
+A [message] that represents a request for the [application] to perform an action.
 
 See [`dogma.Command`].
 
@@ -112,18 +112,18 @@ for more information.
 ### Engine
 
 A runtime component that executes a Dogma [application] by delivering [messages]
-to its [message handlers] and persisting application state.
+to its [message handlers] and persisting application [state].
 
 ### Event
 
-A [message] that describes an action that the application has already performed.
+A [message] that describes an action that the [application] has already performed.
 
 See [`dogma.Event`].
 
 ### Event sourcing
 
 An architectural pattern in which one or more [event streams] provide the
-authoritative representation of an [application]'s state.
+authoritative representation of an [application]'s [state].
 
 See [event sourcing](https://martinfowler.com/eaaDev/EventSourcing.html) for
 more information.
@@ -148,9 +148,10 @@ See:
 
 ### Handler scope
 
-The context within which a [message handler] executes some logic. For example,
-when handling an incoming [message], the scope provides information about that
-message and defines the messaging operations available to the handler.
+The context within which a [message handler] executes application logic. For
+example, when handling an incoming [message], the scope provides information
+about that message and defines the messaging operations available to the
+handler.
 
 See [`dogma.HandlerScope`].
 
@@ -178,7 +179,7 @@ See [`dogma.IntegrationCommandScope`].
 
 ### Integration message handler
 
-A stateless [message handler] that interacts with external systems, such as a
+A [stateless] [message handler] that interacts with external systems, such as a
 third-party payment API, by handling [command] messages and recording [event]
 messages to represent outcomes.
 
@@ -201,7 +202,7 @@ See:
 ### Message handler
 
 A component of an [application] that acts upon [messages] by producing
-new messages or manipulating application state.
+new messages or manipulating application [state].
 
 See:
 
@@ -236,7 +237,7 @@ business domain. Typically represented as a distinct Go type, such as
 
 ### Process
 
-A stateful workflow within an [application] that coordinates business logic
+A [stateful] workflow within an [application] that coordinates business logic
 involving multiple [aggregate instances], [integrations] or time-sensitive
 logic.
 
@@ -246,7 +247,7 @@ logic.
 ### Process event scope
 
 The [handler scope] in which a [process message handler] handles an [event]
-message by updating state, executing [command] messages, or scheduling [timeout]
+message by updating [state], executing [command] messages, or scheduling [timeout]
 messages to advance the [process instance]'s workflow.
 
 See [`dogma.ProcessEventScope`].
@@ -254,7 +255,7 @@ See [`dogma.ProcessEventScope`].
 ### Process instance
 
 A unique occurrence of a [process] within an [application], encapsulating the
-state of a specific execution of a workflow.
+[state] of a specific execution of a workflow.
 
 ### Process message handler
 
@@ -265,7 +266,7 @@ See [`dogma.ProcessMessageHandler`].
 
 ### Process root
 
-The primary entity within a [process]'s state through which all changes occur.
+The primary entity within a [process]'s [state] through which all changes occur.
 Named by analogy to [aggregate root].
 
 See [`dogma.ProcessRoot`].
@@ -273,15 +274,15 @@ See [`dogma.ProcessRoot`].
 ### Process timeout scope
 
 The [handler scope] in which a [process message handler] handles a [timeout]
-message at its scheduled time, by updating state, executing [command] messages,
-or scheduling more [timeout] messages to advance the [process instance]'s
+message at its scheduled time, by updating [state], executing [command]
+messages, or scheduling more [timeout] messages to advance the [process instance]'s
 workflow.
 
 See [`dogma.ProcessTimeoutScope`].
 
 ### Projection
 
-A read-optimized view of a subset of the application's state constructed by
+A read-optimized view of a subset of the application's [state] constructed by
 observing [event] messages, typically persisted to a database.
 
 > [!TIP]
@@ -290,21 +291,22 @@ observing [event] messages, typically persisted to a database.
 
 ### Projection compact scope
 
-The [handler scope] in which a [projection message handler] compacts its state
+The [handler scope] in which a [projection message handler] compacts its data
 by removing or summarizing older or redundant data.
 
 See [`dogma.ProjectionCompactScope`].
 
 ### Projection event scope
 
-The [scope] in which a [projection message handler] applies an [event] message
-to its [projection].
+The [handler scope] in which a [projection message handler] applies an [event]
+message to its [projection].
 
 See [`dogma.ProjectionEventScope`].
 
 ### Projection message handler
 
-A [message handler] that builds a [projection] by handling [event] messages.
+A [stateless] [message handler] that builds a [projection] by handling [event]
+messages.
 
 See [`dogma.ProjectionMessageHandler`].
 
@@ -334,6 +336,26 @@ of operations and, if necessary, rolling back changes through compensating
 actions.
 
 See [process].
+
+### State
+
+The authoritative representation of the current condition of an [application],
+consisting of its [event streams] and [process instances], managed by the
+[engine].
+
+> [!IMPORTANT]
+> Although "state" is often used informally to mean any application data, here
+> it refers strictly to data managed by the [engine]. Data stored in a [projection]
+> or an external system accessed by an [integration message handler] is not
+> considered state.
+
+### Stateful
+
+Describes a [message handler] or other component that has [state].
+
+### Stateless
+
+Describes a [message handler] or other component that does not have [state].
 
 ## T
 
@@ -394,6 +416,7 @@ See [process].
 [handler scope]: #handler-scope
 [identity]: #identity
 [integration message handler]: #integration-message-handler
+[integration message handlers]: #integration-message-handler
 [integrations]: #integration
 [message handler]: #message-handler
 [message handlers]: #message-handler
@@ -403,12 +426,16 @@ See [process].
 [message]: #message
 [messages]: #message
 [process instance]: #process-instance
+[process instances]: #process-instance
 [process message handler]: #process-message-handler
 [process]: #process
 [projection message handler]: #projection-message-handler
 [projection]: #projection
 [projections]: #projection
 [routes]: #route
+[state]: #state
+[stateful]: #stateful
+[stateless]: #stateless
 [timeout]: #timeout
 
 <!-- go modules -->
