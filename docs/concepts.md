@@ -46,10 +46,10 @@ corresponds to a different **message type**, each represented by a Go type that
 implements one of the [`Command`], [`Event`], or [`Timeout`] interfaces.
 
 > [!IMPORTANT]
-> Messages must not rely on state that may be unavailable when they're handled.
-> Note how each earlier example explicitly includes the subject — _Alex_ —
-> rather than an inferred "current user". This approach captures intent within
-> the message itself, avoiding ambiguity in the handling logic.
+> Messages must not rely on information that may be unavailable when they're
+> handled. Note how each earlier example explicitly includes the subject —
+> _Alex_ — rather than an inferred "current user". This approach captures intent
+> within the message itself, avoiding ambiguity in the handling logic.
 
 ## Handlers
 
@@ -72,9 +72,9 @@ Dogma defines four types of handler:
   forward. Like aggregates, each process can have many instances.
 
 - A **projection message handler** builds a view of the application's state by
-  observing event messages. This view, called a **read-model**, is typically
-  stored in a database and optimised for querying or presentation. Projections
-  don't produce messages of any kind.
+  observing event messages. This view, often called a **read-model**, is
+  typically stored in a database and optimised for querying or presentation.
+  Projections don't produce messages of any kind.
 
 - An **integration message handler** performs an action outside the
   application, such as sending an email or processing a payment using a
