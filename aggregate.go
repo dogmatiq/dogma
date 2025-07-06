@@ -1,7 +1,5 @@
 package dogma
 
-import "time"
-
 // An AggregateMessageHandler models business logic and state within a Dogma
 // application by handling [Command] messages and recording [Event] messages.
 //
@@ -113,6 +111,8 @@ type AggregateConfigurer interface {
 // AggregateCommandScope performs engine operations within the context of a call
 // to the HandleCommand() method of an [AggregateMessageHandler].
 type AggregateCommandScope interface {
+	HandlerScope
+
 	// InstanceID returns the ID of the aggregate instance.
 	InstanceID() string
 
@@ -121,22 +121,6 @@ type AggregateCommandScope interface {
 	// It applies the event to the root such that the applied changes are
 	// visible to the handler after this method returns.
 	RecordEvent(Event)
-
-	// Now returns the current local time, according to the engine.
-	//
-	// Use of this method is discouraged. It is preferrable to use information
-	// contained within the message or the aggregate root, which provides
-	// consistent behavior when message delivery is delayed or retried.
-	//
-	// If access to the system clock is absolutely necessary, handlers should
-	// call this method instead of [time.Now]. It may return a time different to
-	// that returned by [time.Now] under some circumstances, such as when
-	// executing tests or when accounting for clock skew in a distributed
-	// system.
-	Now() time.Time
-
-	// Log records an informational message.
-	Log(format string, args ...any)
 }
 
 // AggregateRoute describes a message type that's routed to or from a
