@@ -22,7 +22,8 @@ Please follow these guidelines when contributing:
   commits (and only _your_ commits) must occur after `origin/main` commit. If
   you're unable to "fast-forward" your commits onto `main`, then you know the
   branch has diverged, though this may give false negatives. If your branch
-  _does_ diverge, you need to rebase it and "force push" to GitHub.
+  _does_ diverge, you need to rebase it and "force push" to GitHub. Never push
+  changes to any branch other than your feature branch.
 
 - Don't make empty commits.
 
