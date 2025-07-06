@@ -17,6 +17,9 @@ Please follow these guidelines when contributing:
 
 ## Development Flow
 
+- Check if there have been changes to the `main` branch since your last commit.
+  If so, rebase your branch as soon as practicable to avoid merge conflicts.
+
 - Run `make` to build & test the project after each change.
 
 - Run `make coverage` to build coverage reports to verify that new code is
