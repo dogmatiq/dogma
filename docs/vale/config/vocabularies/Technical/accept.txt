@@ -24,4 +24,5 @@
 [Ww]hitespace
 ADR|adr
 CRUD
+RFC
 UUIDs?
