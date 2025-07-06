@@ -56,19 +56,15 @@ type AggregateMessageHandler interface {
 	HandleCommand(AggregateRoot, AggregateCommandScope, Command)
 }
 
-// AggregateRoot is an interface for the domain-specific state of a specific
-// aggregate instance.
+// An AggregateRoot is an interface for an application's in-memory
+// representation of an aggregate instance.
 type AggregateRoot interface {
-	// ApplyEvent updates aggregate instance to reflect the occurrence of an
+	// ApplyEvent updates the aggregate instance to reflect the occurrence of an
 	// event.
 	//
-	// This implementation of this method is the only code permitted to
-	// modify the instance's state.
-	//
-	// The method SHOULD accept historical events that are no longer routed to
-	// this aggregate type. This is typically required by event sourcing engines
-	// that sometimes load aggregates into memory by applying their entire
-	// history.
+	// The engine calls this method when loading the instance from historical
+	// events or recording a new event. It must handle all historical event
+	// types, including those no longer routed to this aggregate.
 	ApplyEvent(Event)
 }
 
