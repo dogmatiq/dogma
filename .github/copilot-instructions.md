@@ -19,7 +19,7 @@ Please follow these guidelines when contributing:
 
 - Check if there have been changes to the `main` branch since your last commit.
   If so, rebase your branch as soon as practicable to avoid merge conflicts.
-  When rebasing, ensure the commit referenced by `main` is in your branches
+  When rebasing, ensure the commit referenced by `main` is in your branch's
   commit history, and all of your changes occur after that commit.
 
 - Run `make` to build & test the project after each change.
