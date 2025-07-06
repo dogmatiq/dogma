@@ -62,8 +62,10 @@ type IntegrationCommandScope interface {
 	RecordEvent(Event)
 }
 
-// IntegrationRoute describes a message type that's routed to or from a
-// [IntegrationMessageHandler].
+// IntegrationRoute is an interface for types that represent a relationship
+// between an [IntegrationMessageHandler] and a message type.
+//
+// Use [HandlesCommand] or [RecordsEvent] to create an IntegrationRoute.
 type IntegrationRoute interface {
 	MessageRoute
 	isIntegrationRoute()
