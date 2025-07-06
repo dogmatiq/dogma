@@ -19,8 +19,11 @@
 [Mm]odify
 [Mm]ultiple
 [Oo]nly
+[Pp]eriod
 [Pp]urchase
+[Ss]imple
 [Vv]alidate
 [Ww]hitespace
 ADR|adr
+cannot
 CRUD
