@@ -18,9 +18,10 @@ Please follow these guidelines when contributing:
 ## Development Flow
 
 - Check if there have been changes to the `main` branch since your last commit.
-  If so, rebase your branch as soon as practicable to avoid merge conflicts.
-  When rebasing, ensure the commit referenced by `main` is in your branch's
-  commit history, and all of your changes occur after that commit.
+  You will need to fetch remotes to do this, as you wont have a local copy of
+  `main` by default. Rebase your feature branch often to ensure that the commit
+  referenced by `main` is in your branch's history and your changes occur after
+  those changes on `main`.
 
 - Run `make` to build & test the project after each change.
 
