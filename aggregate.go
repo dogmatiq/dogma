@@ -2,7 +2,8 @@ package dogma
 
 import "time"
 
-// A AggregateMessageHandler models business logic and state.
+// An AggregateMessageHandler models business logic and state within a Dogma
+// application by handling [Command] messages and recording [Event] messages.
 //
 // Aggregates are the primary building blocks of an application's domain logic.
 // They enforce the domain's strict invariants.
