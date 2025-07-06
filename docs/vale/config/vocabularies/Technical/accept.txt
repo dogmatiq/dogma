@@ -24,3 +24,4 @@
 [Ww]hitespace
 ADR|adr
 CRUD
+UUIDs?
