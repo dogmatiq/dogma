@@ -14,6 +14,10 @@ type Message interface {
 	// non-technical stakeholders familiar with the application's domain. It's
 	// not intended for display to end users.
 	//
+	// Use lowercase sentences with no trailing punctuation. Omit sensitive
+	// information and overly specific details that do not alter the message's
+	// intent.
+	//
 	// Descriptions of [Command] messages should use present-continuous tense.
 	// For example: "adding 10 widgets to Alex's shopping cart".
 	//
@@ -23,9 +27,6 @@ type Message interface {
 	// Descriptions of [Timeout] messages should read as though the timeout has
 	// just elapsed. For example: "Alex's cart is now inactive" or "24 hours
 	// elapsed since first item added to Alex's cart".
-	//
-	// Use lowercase sentences with no trailing punctuation. Omit overly
-	// specific details that do not alter the message's intent.
 	//
 	// Be wary of assuming a specific actor if the message does not explicitly
 	// encode that information. For example, prefer "Alex's purchase completed"
