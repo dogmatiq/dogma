@@ -339,9 +339,9 @@ See [process].
 
 ### State
 
-The authoritative representation of the current condition of an [application],
-consisting of its [event streams] and [process instances], managed by the
-[engine].
+The authoritative representation of an [application]'s current condition, as
+managed by the [engine]. It consists of the [event] messages produced by
+[aggregate message handlers] and the data stored within [process instances].
 
 > [!IMPORTANT]
 > Although "state" is often used informally to mean any application data, here
@@ -402,6 +402,7 @@ See [process].
 [aggregate instance]: #aggregate-instance
 [aggregate instances]: #aggregate-instance
 [aggregate message handler]: #aggregate-message-handler
+[aggregate message handlers]: #aggregate-message-handler
 [aggregate root]: #aggregate-root
 [aggregate]: #aggregate
 [application]: #application
