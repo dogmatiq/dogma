@@ -23,6 +23,7 @@
 [Vv]alidate
 [Ww]hitespace
 ADR|adr
+APIs?
 CRUD
 RFC
 UUIDs?
