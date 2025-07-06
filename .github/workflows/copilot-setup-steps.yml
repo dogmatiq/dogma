@@ -31,8 +31,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
 
-      - name: "Update apt packages"
-        run: sudo apt-get update
-
       - name: "Install Vale"
-        run: sudo apt-get install -y vale
+        uses: errata-ai/vale-action@v2.1.1
