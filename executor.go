@@ -22,5 +22,24 @@ type CommandExecutor interface {
 // ExecuteCommandOption is an option that affects the behavior of a call to the
 // ExecuteCommand() method of the [CommandExecutor] interface.
 type ExecuteCommandOption interface {
-	futureExecuteCommandOption()
+	ApplyExecuteCommandOption(executeCommandOptionsBuilder)
+}
+
+// WithIdempotencyKey returns an [ExecuteCommandOption] that sets a unique
+// identifier for the [Command].
+func WithIdempotencyKey(key string) ExecuteCommandOption {
+	if key == "" {
+		panic("idempotency key cannot be empty")
+	}
+	return idempotencyKey(key)
+}
+
+type executeCommandOptionsBuilder interface {
+	IdempotencyKey(string)
+}
+
+type idempotencyKey string
+
+func (i idempotencyKey) ApplyExecuteCommandOption(v executeCommandOptionsBuilder) {
+	v.IdempotencyKey(string(i))
 }

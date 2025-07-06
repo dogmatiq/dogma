@@ -36,6 +36,7 @@ errors.
 - **[ENGINE BC]** Added `Routes()` method to `ApplicationConfigurer`.
 - **[ENGINE BC]** Added `IsHistorical()` method to `EventValidationScope`.
 - **[ENGINE BC]** Added `IsScheduled()` method to `TimeoutValidationScope`.
+- Added `WithIdempotencyKey()`.
 
 ### Changed
 
