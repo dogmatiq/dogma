@@ -4,6 +4,14 @@ package dogma
 // [Event], or [Timeout] within a message-based application.
 type Message interface {
 	// MessageDescription returns a human-readable description of the message.
+	//
+	// The description is intended primarily for logging, debugging, and other
+	// human-oriented display purposes.
+	//
+	// The description SHOULD be no more than 120 characters in length and
+	// SHOULD NOT contain line breaks. Engines MUST support descriptions of at
+	// least 120 characters, but MAY truncate or compact longer descriptions for
+	// display or storage purposes.
 	MessageDescription() string
 }
 
