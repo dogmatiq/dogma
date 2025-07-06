@@ -1,11 +1,18 @@
 package dogma
 
+import "time"
+
 // A HandlerConfigurer is the interface a handler uses to declare its
 // configuration. It defines configuration methods common to all handler types.
 //
 // Each handler type has a corresponding configurer type that extends this
-// interface. See [AggregateConfigurer], [ProcessConfigurer],
-// [IntegrationConfigurer], and [ProjectionConfigurer].
+// interface.
+//
+// See:
+//   - [AggregateConfigurer]
+//   - [ProcessConfigurer]
+//   - [IntegrationConfigurer]
+//   - [ProjectionConfigurer].
 type HandlerConfigurer interface {
 	// Identity sets the handler's unique identity.
 	//
@@ -45,4 +52,41 @@ type HandlerConfigurer interface {
 // This type exists for forward-compatibility.
 type DisableOption interface {
 	futureDisableOption()
+}
+
+// HandlerScope represents the context within which the engine invokes a message
+// handler.
+//
+// Each operation that a handler performs has a corresponding scope type that
+// extends this interface.
+//
+// See:
+//   - [AggregateCommandScope]
+//   - [ProcessEventScope]
+//   - [ProcessTimeoutScope]
+//   - [IntegrationCommandScope]
+//   - [ProjectionEventScope]
+//   - [ProjectionCompactScope]
+type HandlerScope interface {
+	// Now returns the current local time according to the engine.
+	//
+	// Use this method in preference to [time.Now]; its return value may differ
+	// in certain situations, such as when executing tests or when compensating
+	// for clock skew in a distributed system.
+	Now() time.Time
+
+	// Log records an informational message using [fmt.Printf]-style formatting.
+	//
+	// The message should be clear and relevant to developers and non-technical
+	// stakeholders familiar with the application's domain. It's not intended
+	// for display to end users.
+	//
+	// Use lowercase sentences with no trailing punctuation and omit sensitive
+	// information.
+	//
+	// Use this method to explain conditions or decisions that are not captured
+	// in a [Message]. For example, if a handler receives a command to cancel a
+	// shopping cart order after shipping, it might log “cannot cancel order
+	// #49412, it has already shipped”.
+	Log(format string, args ...any)
 }
