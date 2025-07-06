@@ -2,11 +2,10 @@ package dogma
 
 import (
 	"context"
-	"time"
 )
 
-// An IntegrationMessageHandler integrates a Dogma application with external and
-// non-message-based systems.
+// An IntegrationMessageHandler connects a Dogma application to external systems
+// by handling [Command] messages and optionally recording [Event] messages.
 //
 // The engine does not keep any state for integration handlers.
 type IntegrationMessageHandler interface {

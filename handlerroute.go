@@ -37,7 +37,7 @@ type (
 	// between the [Application] and a message handler.
 	//
 	// Use [ViaAggregate], [ViaProcess], [ViaIntegration], or [ViaProjection]
-	// to create a [HandlerRoute].
+	// to create a HandlerRoute.
 	HandlerRoute interface{ isHandlerRoute() }
 
 	// ViaAggregateRoute is a [HandlerRoute] that represents a relationship
