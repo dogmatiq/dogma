@@ -76,11 +76,10 @@ Dogma defines four types of handler:
   typically stored in a database and optimised for querying or presentation.
   Projections don't produce messages of any kind.
 
-- An **integration message handler** performs an action outside the
-  application, such as sending an email or processing a payment using a
-  third-party API. Like aggregates, integrations handle command messages and
-  record event messages to describe what occurred. From Dogma's perspective,
-  integrations are stateless.
+- An **integration message handler** perform actions outside the application,
+  such as sending emails or processing payments using a third-party API. Like
+  aggregates, integrations handle command messages and record event messages to
+  describe what occurred. From Dogma's perspective, integrations are stateless.
 
 Each handler in your application corresponds to a Go type that implements one
 of the [`AggregateMessageHandler`], [`ProcessMessageHandler`],
