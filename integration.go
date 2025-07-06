@@ -6,19 +6,32 @@ import (
 
 // An IntegrationMessageHandler connects a Dogma application to external systems
 // by handling [Command] messages and optionally recording [Event] messages.
-//
-// The engine does not keep any state for integration handlers.
 type IntegrationMessageHandler interface {
-	// Configure describes the handler's configuration to the engine.
+	// Configure declares the handler's configuration by calling methods on c.
+	//
+	// The configuration includes the handler's identity and message routes.
+	//
+	// The engine calls this method at least once during startup. It must
+	// produce the same configuration each time it's called.
 	Configure(IntegrationConfigurer)
 
-	// HandleCommand handles a command, typically by invoking some external API.
+	// HandleCommand handles a [Command] message by performing an operation
+	// outside the Dogma application.
 	//
-	// It MAY optionally record events that describe the outcome of the command.
+	// It may cause side-effects in external systems, such as invoking a
+	// third-party API. It may use s to record one or more [Event] messages that
+	// describe the outcome.
 	//
-	// The engine MAY call this method concurrently from separate goroutines or
-	// operating system processes.
-	HandleCommand(context.Context, IntegrationCommandScope, Command) error
+	// The engine guarantees that it persists the events recorded by exactly one
+	// successful invocation of this method for each command message. It does
+	// not guarantee the order, number, or concurrency of those attempts. The
+	// implementation must ensure that the command's external side-effects are
+	// idempotent and safe for concurrent execution.
+	HandleCommand(
+		ctx context.Context,
+		s IntegrationCommandScope,
+		c Command,
+	) error
 }
 
 // IntegrationConfigurer is the interface an [IntegrationMessageHandler] uses to
