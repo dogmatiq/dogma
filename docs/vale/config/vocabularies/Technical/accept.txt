@@ -24,6 +24,7 @@
 [Ww]hitespace
 ADR|adr
 APIs?
+ASCII
 CRUD
 RFC
 UUIDs?

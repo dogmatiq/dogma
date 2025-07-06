@@ -1,29 +1,77 @@
+<!-- vale off -->
+
 # Copilot instructions
 
-This is a Go repository containing interfaces that define a contract between a
-Dogma "application" and a Dogma "engine".
+This is a Go repository containing interfaces that define the contract between a
+Dogma **application** and a Dogma **engine**.
 
-The API documentation is a key part of the repository. The primary audience is
-the "application developers" who are the end-users of the Dogma API. Assume that
-application developers are familiar with Go and backend development but may not
-be familiar with event-sourcing, DDD, or Dogma itself.
+API documentation is a central part of this repository. The primary audience is
+application developers — the end-users of the Dogma API. Assume they're
+proficient in Go and backend development, but may be unfamiliar with Dogma,
+event-sourcing, or DDD.
 
-Please follow these guidelines when contributing:
+All contributions should align with the style and expectations outlined below.
 
 ## Development
 
-- Check if your feature branch has diverged from `main` before pushing to GitHub.
-  - If your branch diverges, rebase it and "force push" to GitHub.
-  - The commit referenced by `main` must be in your branch's history.
-  - Your commits (and only _your_ commits) must occur after the head of `main`.
-  - Never push changes to any branch other than your feature branch.
-- Do not introduce uncoverged changes. `make artifacts/coverage/cover.out`
-  builds a coverage.
-- Do not make empty commits.
-- Run `make precommit` before pushing to GitHub.
+- Never push to `main`. Only push feature branches.
+- Always rebase your branch on `main` before pushing:
+  - Your branch's history must contain the head of `main`.
+  - Your commits (and only your commits) must follow the head of `main`.
 - Run `make` to build and test the project.
-- Run `vale` to check documentation for style and grammar issues. Don't worry
-  about fixing existing issues, but do not introduce new issues.
+- Run `make lint` to run linters.
+- Run `make precommit` before pushing.
+- Don't introduce uncovered code. Use `make artifacts/coverage/cover.out`.
+- Don't create empty commits.
+- Follow Go best practices and idiomatic patterns.
+- Readability and understandability are paramount.
+- Code without tests is incomplete.
+- Use table-driven unit tests when possible.
+- Maintain existing code structure and organization.
+- Plan for "forward compatibility" by using placeholder options and similar
+  strategies where appropriate.
+
+## Documentation
+
+- Code without API documentation is incomplete.
+- Update the `CHANGELOG.md` file when making changes that affect the API.
+- Suggest changes to the `docs/` folder when appropriate.
+- `make lint` runs `vale` to check documentation quality.
+- You don’t need to fix existing `vale` issues, but must not introduce new ones.
+
+### Syntax
+
+- Use [Go documentation conventions] for formatting and structure.
+- Use US English spelling and grammar.
+- Use Oxford commas.
+- Hyphenate terms like "side-effect" and "real-time".
+- Avoid non-ASCII punctuation.
+- Use punctuation _outside_ quotation marks:
+  - ✅ This is a "handler".
+  - ❌ This is a "handler."
+- Link to interface methods using syntax supported by `pkg.go.dev`:
+  - ✅ `[Interface].Method`
+  - ❌ `[Interface.Method]`
+
+### Style
+
+- Use precise, consistent, unambiguous language.
+- Be concise, clear, and developer-friendly.
+- The target audience is the application developer, not Dogma maintainers.
+- Assume familiarity with Go, not Dogma.
+- Match definitions from the [glossary].
+- Use instructional phrasing to guide the reader to correct usage:
+  - ✅ "Prefer conditionally disabling a handler ..."
+  - ✅ "Use lowercase sentences with no trailing punctuation ..."
+  - ✅ "Avoid constructing values of this type directly ..."
+  - ❌ "The developer should prefer conditionally disabling a handler ..."
+- Avoid constructions that misrepresent agency:
+  - ✅ "The handler records an event."
+  - ✅ "The engine persists the event."
+  - ❌ "The command records an event."
+  - ❌ "The application persists the event."
+- Document intended usage, not just behaviour.
+- Document design constraints and invariants where relevant.
 
 ## Repository structure
 
@@ -35,17 +83,6 @@ Please follow these guidelines when contributing:
 - `docs/glossary.md` — Definitions of Dogma's terminology. Ensure that words in
   the glossary are only used with their documented meanings.
 - `CHANGELOG.md` — A file that documents changes to the API.
-- `artifacts/` — Uncommitted artifacts produced by `make`.
 
-## Guidelines
-
-- Follow Go best practices and idiomatic patterns.
-- Readability and understandability are paramount.
-- Code without API documentation is incomplete.
-- Code without tests is incomplete. Use table-driven unit tests when possible.
-- Maintain existing code structure and organization.
-- Plan for "forward compability" by using placeholder options and similar
-  strategies where appropriate.
-- Suggest changes to the `docs/` folder when appropriate.
-- Use US English grammar and orthography and Oxford commas.
-- Update the `CHANGELOG.md` file when making changes that affect the API.
+[Go documentation conventions]: https://go.dev/doc/comment
+[glossary]: ../docs/glossary.md
