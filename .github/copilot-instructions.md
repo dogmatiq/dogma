@@ -15,16 +15,16 @@ used by the application.
 
 Please follow these guidelines when contributing:
 
-## Development Flow
+## Development
 
 - Your Git branch must never diverge from `origin/main`. The commit hash
   referred to by `origin/main` must appear in your branch's history. Your
   commits (and only _your_ commits) must occur after `origin/main` commit. If
   you're unable to "fast-forward" your commits onto `main`, then you know the
   branch has diverged, though this may give false negatives. If your branch
-  _does_ diverge, you need to rebase it and "force push" to GitHub. You wont
-  have a local copy of `main` by default, so fetch it before attempting to
-  compare.
+  _does_ diverge, you need to rebase it and "force push" to GitHub.
+
+- Don't make empty commits.
 
 - Run `make` to build & test the project after each change.
 
@@ -66,7 +66,7 @@ Please follow these guidelines when contributing:
 - `.makefiles/` - Vendored Makefiles, do not modify these directly.
 - All code is in the root of the repository. Do not introduce subpackages.
 
-## Key Guidelines
+## Guidelines
 
 - Follow Go best practices and idiomatic patterns.
 
@@ -85,10 +85,10 @@ Please follow these guidelines when contributing:
   by multiple different functions. The intent is to keep the usage as readable
   as possible.
 
-## Documentation
-
 - Readability and understandability are paramount.
-- Use `vale` to check for problems with new documentation.
+
 - Document public APIs and complex logic.
+
 - Suggest changes to the `docs/` folder when appropriate.
+
 - Use US English grammar and orthography, with Oxford commas.
