@@ -21,7 +21,8 @@ Please follow these guidelines when contributing:
   You will need to fetch remotes to do this, as you wont have a local copy of
   `main` by default. Rebase your feature branch often to ensure that the commit
   referenced by `main` is in your branch's history and your changes occur after
-  those changes on `main`.
+  those changes on `main`. You'll need to force-push your changes to GitHub
+  afterwards.
 
 - Run `make` to build & test the project after each change.
 
