@@ -72,40 +72,19 @@ type AggregateRoot interface {
 	ApplyEvent(Event)
 }
 
-// An AggregateConfigurer configures the engine for use with a specific
-// aggregate message handler.
+// AggregateConfigurer is the interface an [AggregateMessageHandler] uses to
+// declare its configuration.
+//
+// The engine provides the implementation to
+// [AggregateMessageHandler].Configure during startup.
 type AggregateConfigurer interface {
-	// Identity configures the handler's identity.
-	//
-	// n is a short human-readable name. It MUST be unique within the
-	// application at any given time, but MAY change over the handler's
-	// lifetime. It MUST contain solely printable, non-space UTF-8 characters.
-	// It must be between 1 and 255 bytes (not characters) in length.
-	//
-	// k is a unique key used to associate engine state with the handler. The
-	// key SHOULD NOT change over the handler's lifetime. k MUST be an RFC 4122
-	// UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// Use of hard-coded literals for both values is RECOMMENDED.
-	Identity(n string, k string)
+	HandlerConfigurer
 
-	// Routes configures the engine to route certain message types to and from
-	// the handler.
+	// Routes associates message types with the handler, indicating which types
+	// it consumes and produces.
 	//
-	// Aggregate handlers support the HandlesCommand() and RecordsEvent() route
-	// types.
+	// It accepts routes created by [HandlesCommand] and [RecordsEvent].
 	Routes(...AggregateRoute)
-
-	// Disable prevents the handler from receiving any messages.
-	//
-	// The engine MUST NOT call any methods other than Configure() on a disabled
-	// handler.
-	//
-	// Disabling a handler is useful when the handler's configuration prevents
-	// it from operating, such as when it's missing a required dependency,
-	// without requiring the user to conditionally register the handler with the
-	// application.
-	Disable(...DisableOption)
 }
 
 // AggregateCommandScope represents the context within which the engine
