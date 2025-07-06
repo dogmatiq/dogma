@@ -17,18 +17,21 @@ Please follow these guidelines when contributing:
 
 ## Development Flow
 
-- Your Git branch must never diverge from `main`. The commit hash referred to by
-  `origin/main` must appear in your branch's history. Your commits (and only
-  _your_ commits) must occur after `main` commit. If you're unable to
-  "fast-forward" your commits onto `main`, then you know the branch has
-  diverged. If your branch _does_ diverge, you need to rebase it and "force
-  push" to GitHub.
+- Your Git branch must never diverge from `origin/main`. The commit hash
+  referred to by `origin/main` must appear in your branch's history. Your
+  commits (and only _your_ commits) must occur after `origin/main` commit. If
+  you're unable to "fast-forward" your commits onto `main`, then you know the
+  branch has diverged, though this may give false negatives. If your branch
+  _does_ diverge, you need to rebase it and "force push" to GitHub. You wont
+  have a local copy of `main` by default, so fetch it before attempting to
+  compare.
 
 - Run `make` to build & test the project after each change.
 
 - Run `make coverage` to build coverage reports to verify that new code is
-  covered by tests. CI will fail if a change introduces a decrease in
-  coverage or new code is uncovered.
+  covered by tests. CI will fail if a change introduces a decrease in coverage
+  or new code is uncovered. The coverage results are stored in
+  `artifacts/coverage/cover.out`.
 
 - Run `make precommit` to run any local pre-commit hooks. This runs the tests,
   builds for all target operating systems, and executes any other pre-commit
@@ -43,8 +46,8 @@ Please follow these guidelines when contributing:
 - `docs/adr` — Architecture Decision Records (ADRs) for substantial or complex
   design decisions. You may be asked to write an ADR. Do not modify existing
   ADRs except to cross-link them to new ADRs, or update their status. The
-  audience is primarily the Dogma maintainers, but they should be digestable by
-  application developers too. Keep them simple.
+  audience is primarily the Dogma maintainers, but ADRs should make sense to
+  application developers, too.
 
 - `docs/concepts.md` — Overview of the Dogma concepts and architecture. Read
   this to gain a deeper understanding of the design.
