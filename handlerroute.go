@@ -83,17 +83,25 @@ type (
 type (
 	// ViaAggregateOption is an option that affects the behavior of a call to
 	// the RegisterAggregate() method of the [ApplicationConfigurer] interface.
-	ViaAggregateOption struct{}
+	ViaAggregateOption interface {
+		futureViaAggregateOption()
+	}
 
 	// ViaProcessOption is an option that affects the behavior of a call to
 	// the RegisterProcess() method of the [ApplicationConfigurer] interface.
-	ViaProcessOption struct{}
+	ViaProcessOption interface {
+		futureViaProcessOption()
+	}
 
 	// ViaIntegrationOption is an option that affects the behavior of a call to
 	// the RegisterIntegration() method of the [ApplicationConfigurer] interface.
-	ViaIntegrationOption struct{}
+	ViaIntegrationOption interface {
+		futureViaIntegrationOption()
+	}
 
 	// ViaProjectionOption is an option that affects the behavior of a call to
 	// the RegisterProjection() method of the [ApplicationConfigurer] interface.
-	ViaProjectionOption struct{}
+	ViaProjectionOption interface {
+		futureViaProjectionOption()
+	}
 )

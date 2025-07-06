@@ -75,23 +75,33 @@ type (
 type (
 	// HandlesCommandOption is an option that affects the behavior of the route
 	// returned by [HandlesCommand].
-	HandlesCommandOption struct{}
+	HandlesCommandOption interface {
+		futureHandlesCommandOption()
+	}
 
 	// ExecutesCommandOption is an option that affects the behavior of the route
 	// returned by [ExecutesCommand].
-	ExecutesCommandOption struct{}
+	ExecutesCommandOption interface {
+		futureExecutesCommandOption()
+	}
 
 	// HandlesEventOption is an option that affects the behavior of the route
 	// returned by [HandlesEvent].
-	HandlesEventOption struct{}
+	HandlesEventOption interface {
+		futureHandlesEventOption()
+	}
 
 	// RecordsEventOption is an option that affects the behavior of the route
 	// returned by [RecordsEvent].
-	RecordsEventOption struct{}
+	RecordsEventOption interface {
+		futureRecordsEventOption()
+	}
 
 	// SchedulesTimeoutOption is an option that affects the behavior of the
 	// route returned by [SchedulesTimeout].
-	SchedulesTimeoutOption struct{}
+	SchedulesTimeoutOption interface {
+		futureSchedulesTimeoutOption()
+	}
 )
 
 // typeOf returns the [reflect.Type] for C, which must be a concrete

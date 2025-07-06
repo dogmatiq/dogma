@@ -1,4 +1,6 @@
 package dogma
 
 // DisableOption is an option that affects the behavior of a disabled handler.
-type DisableOption struct{}
+type DisableOption interface {
+	futureDisableOption()
+}

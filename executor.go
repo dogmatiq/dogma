@@ -21,4 +21,6 @@ type CommandExecutor interface {
 
 // ExecuteCommandOption is an option that affects the behavior of a call to the
 // ExecuteCommand() method of the [CommandExecutor] interface.
-type ExecuteCommandOption struct{}
+type ExecuteCommandOption interface {
+	futureExecuteCommandOption()
+}

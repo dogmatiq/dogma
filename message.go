@@ -43,7 +43,7 @@ type unexpectedMessage struct{}
 // CommandValidationScope provides information about the context in which a
 // [Command] is being validated.
 type CommandValidationScope interface {
-	reservedCommandValidationScope()
+	futureCommandValidationScope()
 }
 
 // EventValidationScope provides information about the context in which an
