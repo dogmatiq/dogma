@@ -21,8 +21,8 @@ type CommandExecutor interface {
 
 // ExecuteCommandOption is an option that affects the behavior of a call to the
 // ExecuteCommand() method of the [CommandExecutor] interface.
-type ExecuteCommandOption struct {
-	idempotencyKey string
+type ExecuteCommandOption interface {
+	isExecuteCommandOption()
 }
 
 // WithIdempotencyKey returns an ExecuteCommandOption that specifies an
@@ -33,13 +33,23 @@ type ExecuteCommandOption struct {
 // but it can help a client safely retry when the domain-level idempotency is
 // poorly implemented.
 func WithIdempotencyKey(key string) ExecuteCommandOption {
-	return ExecuteCommandOption{
-		idempotencyKey: key,
-	}
+	return idempotencyKeyOption{key}
 }
 
-// IdempotencyKey returns the idempotency key specified for this option.
+// IdempotencyKey returns the idempotency key from the given options.
 // It returns an empty string if no idempotency key was specified.
-func (o ExecuteCommandOption) IdempotencyKey() string {
-	return o.idempotencyKey
+func IdempotencyKey(options ...ExecuteCommandOption) string {
+	for _, opt := range options {
+		if keyOpt, ok := opt.(idempotencyKeyOption); ok {
+			return keyOpt.key
+		}
+	}
+	return ""
 }
+
+// idempotencyKeyOption is an ExecuteCommandOption that specifies an idempotency key.
+type idempotencyKeyOption struct {
+	key string
+}
+
+func (idempotencyKeyOption) isExecuteCommandOption() {}

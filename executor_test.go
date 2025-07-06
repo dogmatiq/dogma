@@ -11,35 +11,42 @@ func TestWithIdempotencyKey(t *testing.T) {
 		key := "test-key-123"
 		option := WithIdempotencyKey(key)
 
-		if option.IdempotencyKey() != key {
-			t.Fatalf("expected idempotency key %q, got %q", key, option.IdempotencyKey())
+		if IdempotencyKey(option) != key {
+			t.Fatalf("expected idempotency key %q, got %q", key, IdempotencyKey(option))
 		}
 	})
 
 	t.Run("it handles empty string", func(t *testing.T) {
 		option := WithIdempotencyKey("")
 
-		if option.IdempotencyKey() != "" {
-			t.Fatalf("expected empty idempotency key, got %q", option.IdempotencyKey())
+		if IdempotencyKey(option) != "" {
+			t.Fatalf("expected empty idempotency key, got %q", IdempotencyKey(option))
 		}
 	})
 }
 
-func TestExecuteCommandOption_IdempotencyKey(t *testing.T) {
-	t.Run("it returns empty string for zero-value option", func(t *testing.T) {
-		var option ExecuteCommandOption
-
-		if option.IdempotencyKey() != "" {
-			t.Fatalf("expected empty idempotency key, got %q", option.IdempotencyKey())
+func TestIdempotencyKey(t *testing.T) {
+	t.Run("it returns empty string for no options", func(t *testing.T) {
+		if IdempotencyKey() != "" {
+			t.Fatalf("expected empty idempotency key, got %q", IdempotencyKey())
 		}
 	})
 
-	t.Run("it returns the key set by WithIdempotencyKey", func(t *testing.T) {
+	t.Run("it returns the key from WithIdempotencyKey option", func(t *testing.T) {
 		key := "my-unique-key"
 		option := WithIdempotencyKey(key)
 
-		if option.IdempotencyKey() != key {
-			t.Fatalf("expected idempotency key %q, got %q", key, option.IdempotencyKey())
+		if IdempotencyKey(option) != key {
+			t.Fatalf("expected idempotency key %q, got %q", key, IdempotencyKey(option))
+		}
+	})
+
+	t.Run("it returns the key from multiple options", func(t *testing.T) {
+		key := "my-unique-key"
+		option1 := WithIdempotencyKey(key)
+		
+		if IdempotencyKey(option1) != key {
+			t.Fatalf("expected idempotency key %q, got %q", key, IdempotencyKey(option1))
 		}
 	})
 }
