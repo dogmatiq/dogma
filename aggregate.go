@@ -18,7 +18,12 @@ package dogma
 // related entities and values. The [AggregateRoot] interface represents the
 // "root" entity through which the handler accesses the instance's state.
 type AggregateMessageHandler interface {
-	// Configure describes the handler's configuration to the engine.
+	// Configure declares the handler's configuration by calling methods on c.
+	//
+	// The configuration includes the handler's identity and message routes.
+	//
+	// The engine calls this method at least once during startup. It must
+	// produce the same configuration each time it's called.
 	Configure(AggregateConfigurer)
 
 	// New returns an aggregate root instance in its initial state.
