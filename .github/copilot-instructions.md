@@ -57,6 +57,7 @@ All contributions should align with the style and expectations outlined below.
 
 - Use precise, consistent, unambiguous language.
 - Be concise, clear, and developer-friendly.
+- Don't try to explain everything in the opening comment.
 - The target audience is the application developer, not Dogma maintainers.
 - Assume familiarity with Go, not Dogma.
 - Match definitions from the [glossary].
