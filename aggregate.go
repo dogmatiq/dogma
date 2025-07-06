@@ -12,9 +12,6 @@ package dogma
 // each instance represents a separate occurrence of the aggregate. For example,
 // a shopping cart aggregate message handler may manage one instance per
 // customer.
-//
-// The [AggregateRoot] interface serves as the primary entity through which
-// the handler accesses and modifies each aggregate instance's state.
 type AggregateMessageHandler interface {
 	// Configure declares the handler's configuration by calling methods on c.
 	//
@@ -24,12 +21,11 @@ type AggregateMessageHandler interface {
 	// produce the same configuration each time it's called.
 	Configure(AggregateConfigurer)
 
-	// New returns an aggregate root instance in its initial state.
+	// New returns a new [AggregateRoot] for an aggregate instance.
 	//
-	// The return value MUST NOT be nil. It MAY be the zero-value of the root's
-	// underlying type.
-	//
-	// Each call SHOULD return the same type and initial state.
+	// The engine calls this method to get a "blank slate" when handling the
+	// first command for a new instance or when reconstructing an existing
+	// instance from its historical events.
 	New() AggregateRoot
 
 	// RouteCommandToInstance returns the ID of the instance that handles a
@@ -59,8 +55,13 @@ type AggregateMessageHandler interface {
 	HandleCommand(AggregateRoot, AggregateCommandScope, Command)
 }
 
-// An AggregateRoot is an interface for an application's in-memory
-// representation of an aggregate instance.
+// An AggregateRoot is an interface for an application's working representation
+// of an aggregate instance used within [AggregateMessageHandler]
+// implementations.
+//
+// The aggregate root encapsulates business logic and provides a way to inspect
+// the current state when making decisions about which events to record. The
+// recorded events are the authoritative source of truth, not the AggregateRoot.
 type AggregateRoot interface {
 	// ApplyEvent updates the aggregate instance to reflect the occurrence of an
 	// event.
