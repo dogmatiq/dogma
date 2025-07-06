@@ -7,18 +7,25 @@ import (
 // An IntegrationMessageHandler connects a Dogma application to external systems
 // by handling [Command] messages and optionally recording [Event] messages.
 //
-// The engine does not keep any state for integration handlers.
+// Implement
+// For example, implement an integration handler to submit a transaction to a
+// third-party payment processor as part of a shopping cart checkout process.
 type IntegrationMessageHandler interface {
-	// Configure describes the handler's configuration to the engine.
+	// Configure declares the handler's configuration by calling methods on c.
+	//
+	// The configuration includes the handler's identity and message routes.
+	//
+	// The engine calls this method at least once during startup. If called more
+	// than once, it must produce the same configuration each time.
 	Configure(IntegrationConfigurer)
 
-	// HandleCommand handles a command, typically by invoking some external API.
-	//
-	// It MAY optionally record events that describe the outcome of the command.
-	//
-	// The engine MAY call this method concurrently from separate goroutines or
-	// operating system processes.
-	HandleCommand(context.Context, IntegrationCommandScope, Command) error
+	// HandleCommand handles a [Command] message by communicating with some
+	// external system and optionally recording new [Event] messages.
+	HandleCommand(
+		ctx context.Context,
+		s IntegrationCommandScope,
+		c Command,
+	) error
 }
 
 // IntegrationConfigurer is the interface an [IntegrationMessageHandler] uses to
@@ -36,26 +43,23 @@ type IntegrationConfigurer interface {
 	Routes(...IntegrationRoute)
 }
 
-// IntegrationCommandScope performs engine operations within the context of a
-// call to the HandleCommand() method of an [IntegrationMessageHandler].
+// IntegrationCommandScope represents the context within which the engine
+// invokes [IntegrationMessageHandler].HandleCommand.
 type IntegrationCommandScope interface {
-	// RecordEvent records the occurrence of an event.
-	RecordEvent(Event)
+	HandlerScope
 
-	// Now returns the current local time, according to the engine.
+	// RecordEvent records an [Event] that results from handling the [Command].
 	//
-	// Handlers should call this method instead of [time.Now]. It may return a
-	// time different to that returned by [time.Now] under some circumstances,
-	// such as when executing tests or when accounting for clock skew in a
-	// distributed system.
-	Now() time.Time
-
-	// Log records an informational message.
-	Log(format string, args ...any)
+	// The engine persists the event only if
+	// [IntegrationMessageHandler].HandleCommand returns nil; otherwise, it
+	// discards the event.
+	RecordEvent(Event)
 }
 
-// IntegrationRoute describes a message type that's routed to or from a
-// [IntegrationMessageHandler].
+// IntegrationRoute is an interface for types that represent a relationship
+// between an [IntegrationMessageHandler] and a message type.
+//
+// Use [HandlesCommand] or [RecordsEvent] to create an IntegrationRoute.
 type IntegrationRoute interface {
 	MessageRoute
 	isIntegrationRoute()
