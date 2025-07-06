@@ -17,12 +17,12 @@ Please follow these guidelines when contributing:
 
 ## Development Flow
 
-- Check if there have been changes to the `main` branch since your last commit.
-  You will need to fetch remotes to do this, as you wont have a local copy of
-  `main` by default. Rebase your feature branch often to ensure that the commit
-  referenced by `main` is in your branch's history and all of your commits (and
-  only _your_ commits) occur after those changes on `main`. You'll need to
-  force-push your changes to GitHub afterwards.
+- Your Git branch must never diverge from `main`. The commit hash referred to by
+  `origin/main` must appear in your branch's history. Your commits (and only
+  _your_ commits) must occur after `main` commit. If you're unable to
+  "fast-forward" your commits onto `main`, then you know the branch has
+  diverged. If your branch _does_ diverge, you need to rebase it and "force
+  push" to GitHub.
 
 - Run `make` to build & test the project after each change.
 
