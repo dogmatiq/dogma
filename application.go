@@ -6,12 +6,13 @@ package dogma
 // An application in the general sense must provide at least one Dogma
 // [Application] implementation.
 type Application interface {
-	// Configure declares the application's configuration by calling methods on c.
+	// Configure declares the application's configuration by calling methods on
+	// c.
 	//
 	// The configuration includes the application's identity and handler routes.
 	//
-	// The engine calls this method at least once during startup. If called more
-	// than once, it must produce the same configuration each time.
+	// The engine calls this method at least once during startup. It must
+	// produce the same configuration each time it's called.
 	Configure(c ApplicationConfigurer)
 }
 
