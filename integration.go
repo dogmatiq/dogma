@@ -22,9 +22,9 @@ type IntegrationMessageHandler interface {
 	// third-party API. It may use s to record one or more [Event] messages that
 	// describe the outcome.
 	//
-	// The engine guarantees that it persists the events recorded by exactly one
-	// successful invocation of this method for each command message. It does
-	// not guarantee the order, number, or concurrency of those attempts. The
+	// The engine atomically persists the events recorded by exactly one
+	// successful invocation of this method for each command message. It doesn't
+	// guarantee the order, number, or concurrency of those attempts. The
 	// implementation must ensure that the command's external side-effects are
 	// idempotent and safe for concurrent execution.
 	HandleCommand(
@@ -56,9 +56,9 @@ type IntegrationCommandScope interface {
 
 	// RecordEvent records an [Event] that results from handling the [Command].
 	//
-	// The engine persists the event only if
-	// [IntegrationMessageHandler].HandleCommand returns nil; otherwise, it
-	// discards the event.
+	// The engine doesn't persist the event until
+	// [IntegrationMessageHandler].HandleCommand returns successfully. It
+	// persists all events recorded using the same scope atomically.
 	RecordEvent(Event)
 }
 
