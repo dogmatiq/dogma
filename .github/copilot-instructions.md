@@ -19,8 +19,7 @@ All contributions should align with the style and expectations outlined below.
   - Your branch's history must contain the head of `main`.
   - Your commits (and only your commits) must follow the head of `main`.
 - Run `make` to build and test the project.
-- Run `make lint` to run linters.
-- Run `make precommit` before pushing.
+- Run `make lint precommit` before committing.
 - Don't introduce uncovered code. Use `make artifacts/coverage/cover.out`.
 - Don't create empty commits.
 - Follow Go best practices and idiomatic patterns.
