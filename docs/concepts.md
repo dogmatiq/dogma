@@ -176,6 +176,7 @@ Now that you have a high-level understanding of Dogma's concepts, you can
 explore the following resources:
 
 - [API documentation] — detailed information about Dogma's API.
+- [Handler type comparison] — a comparison of Dogma's four message handler types.
 - [Glossary] — a central reference for Dogma's terminology.
 - [`dogmatiq/example`] — a minimal example application with simple banking features.
 
@@ -191,6 +192,7 @@ explore the following resources:
 
 [dogma]: https://github.com/dogmatiq/dogma?tab=readme-ov-file#readme
 [glossary]: glossary.md
+[handler type comparison]: handler-type-comparison.md
 
 <!-- go modules -->
 
