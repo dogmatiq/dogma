@@ -49,22 +49,17 @@ type IntegrationConfigurer interface {
 	Routes(...IntegrationRoute)
 }
 
-// IntegrationCommandScope performs engine operations within the context of a
-// call to the HandleCommand() method of an [IntegrationMessageHandler].
+// IntegrationCommandScope represents the context within which the engine
+// invokes [IntegrationMessageHandler].HandleCommand.
 type IntegrationCommandScope interface {
-	// RecordEvent records the occurrence of an event.
-	RecordEvent(Event)
+	HandlerScope
 
-	// Now returns the current local time, according to the engine.
+	// RecordEvent records an [Event] that results from handling the [Command].
 	//
-	// Handlers should call this method instead of [time.Now]. It may return a
-	// time different to that returned by [time.Now] under some circumstances,
-	// such as when executing tests or when accounting for clock skew in a
-	// distributed system.
-	Now() time.Time
-
-	// Log records an informational message.
-	Log(format string, args ...any)
+	// The engine persists the event only if
+	// [IntegrationMessageHandler].HandleCommand returns nil; otherwise, it
+	// discards the event.
+	RecordEvent(Event)
 }
 
 // IntegrationRoute describes a message type that's routed to or from a
