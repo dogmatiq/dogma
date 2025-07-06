@@ -17,15 +17,21 @@ Please follow these guidelines when contributing:
 
 ## Development
 
-- Your Git branch must never diverge from `origin/main`. The commit hash
-  referred to by `origin/main` must appear in your branch's history. Your
-  commits (and only _your_ commits) must occur after `origin/main` commit. If
-  you're unable to "fast-forward" your commits onto `main`, then you know the
-  branch has diverged, though this may give false negatives. If your branch
-  _does_ diverge, you need to rebase it and "force push" to GitHub. Never push
-  changes to any branch other than your feature branch.
+### Git
 
 - Don't make empty commits.
+
+- Run `make precommit` before pushing to GitHub.
+
+- Check if your feature branch has diverged from `origin/main` before
+  starting work, and again before pushing to GitHub.
+
+  - If your branch does diverge, you need to rebase it and "force push" to GitHub.
+  - The commit hash referred to by `origin/main` must appear in your branch's history.
+  - Your commits (and only _your_ commits) must occur after the `origin/main` commit.
+  - Never push changes to any branch other than your feature branch.
+
+### Building
 
 - Run `make` to build & test the project after each change.
 
@@ -33,10 +39,6 @@ Please follow these guidelines when contributing:
   covered by tests. CI will fail if a change introduces a decrease in coverage
   or new code is uncovered. The coverage results are stored in
   `artifacts/coverage/cover.out`.
-
-- Run `make precommit` to run any local pre-commit hooks. This runs the tests,
-  builds for all target operating systems, and executes any other pre-commit
-  hooks that are by the Makefiles, such as code generation and formatting.
 
 - Run `vale` to check documentation for style and grammar issues. There are
   currently lots of existing issues, so don't worry about fixing them all at
