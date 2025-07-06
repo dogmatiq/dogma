@@ -20,9 +20,9 @@ Please follow these guidelines when contributing:
 - Check if there have been changes to the `main` branch since your last commit.
   You will need to fetch remotes to do this, as you wont have a local copy of
   `main` by default. Rebase your feature branch often to ensure that the commit
-  referenced by `main` is in your branch's history and your changes occur after
-  those changes on `main`. You'll need to force-push your changes to GitHub
-  afterwards.
+  referenced by `main` is in your branch's history and all of your commits (and
+  only _your_ commits) occur after those changes on `main`. You'll need to
+  force-push your changes to GitHub afterwards.
 
 - Run `make` to build & test the project after each change.
 
