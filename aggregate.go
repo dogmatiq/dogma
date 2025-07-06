@@ -1,22 +1,20 @@
 package dogma
 
-// An AggregateMessageHandler models business logic and state within a Dogma
-// application by handling [Command] messages and recording [Event] messages.
+// An AggregateMessageHandler is an application-defined message handler that
+// handles [Command] messages and records [Event] messages that represent
+// changes to application state.
 //
-// Aggregates are the primary building blocks of an application's domain logic.
-// They enforce the domain's strict invariants.
+// An aggregate is a collection of related business entities that behave as a
+// cohesive whole, such as a shopping cart and the items within it. The
+// aggregate message handler manages the behavior and state of such aggregates.
 //
-// Aggregates use [Command] messages to represent requests to perform some
-// specific business logic and change the state of the application
-// accordingly. [Event] messages represent those changes.
+// Each aggregate message handler typically manages multiple instances, where
+// each instance represents a separate occurrence of the aggregate. For example,
+// a shopping cart aggregate message handler may manage one instance per
+// customer.
 //
-// Aggregates are stateful. An application typically uses multiple instances of
-// an aggregate, each with its own state. For example, a banking application may
-// use one instance of the "account" aggregate for each bank account.
-//
-// The state of each instance is application-defined. Often it's a tree of
-// related entities and values. The [AggregateRoot] interface represents the
-// "root" entity through which the handler accesses the instance's state.
+// The [AggregateRoot] interface serves as the primary entity through which
+// the handler accesses and modifies each aggregate instance's state.
 type AggregateMessageHandler interface {
 	// Configure declares the handler's configuration by calling methods on c.
 	//
