@@ -79,9 +79,11 @@ All contributions should align with the style and expectations outlined below.
 - Reflow paragraphs for readability:
   - Analyze each paragraph as a whole, not just individual lines.
   - Fit as many words as you can on each line, up to a hard 80 character limit.
+  - Move words to fill available space.
   - Don't split Markdown-style links across lines.
-  - Don't add hyphens to achieve wrapping, just move the whole word to the next
-    line.
+  - Treat punctuation that is not separated by whitespace as part of the
+    adjacent word.
+  - Don't add hyphens, just move the whole word to the next line.
 - Regarding [RFC 2119]:
   - Avoid uppercase [RFC 2119] keywords in API documentation.
   - Avoid uppercase [RFC 2119] keywords in Markdown documentation, unless the
