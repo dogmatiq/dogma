@@ -14,7 +14,7 @@ Accepted
 We need a way to control the lifetime of an aggregate from the domain layer.
 
 If you imagine an aggregate running atop a "CRUD-based" Dogma engine, it's easy
-to see that creation and destruction of aggregate data are necessary operations.
+to see that aggregates need creation and destruction operations.
 This is less obvious in an event-sourced scenario where the notion of "deletion"
 is not present.
 
