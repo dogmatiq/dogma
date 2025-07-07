@@ -86,11 +86,9 @@ of the [`AggregateMessageHandler`], [`ProcessMessageHandler`],
 [`IntegrationMessageHandler`], or [`ProjectionMessageHandler`] interfaces.
 
 > [!NOTE]
-> The word "aggregate" is often misunderstood.
->
-> In [domain-driven design], an aggregate is a group of related entities treated
-> as a single unit — they're dealt with "in aggregate". It does not refer to
-> data aggregation or summarization.
+> In [domain-driven design], an "aggregate" is a group of related entities
+> treated as a single unit — they're dealt with "in aggregate". The term doesn't
+> refer to data aggregation or summarization.
 
 ## Scopes
 
@@ -107,7 +105,7 @@ The scope has two main roles:
 Dogma defines multiple scopes types, each represented by a separate Go interface.
 For example, the [`AggregateCommandScope`] interface represents the scope in
 which an aggregate handles a command message. Your handler receives a scope with
-each incoming message — you do not need to implement these interfaces yourself.
+each incoming message — you don't need to implement these interfaces yourself.
 
 ## Event sourcing
 
@@ -135,7 +133,7 @@ Dogma's responsibility — it imposes no constraints on how they're built or wha
 technologies you use.
 
 Although the handlers within your application declare which [messages] they
-consume and produce, the message types themselves are not, strictly speaking,
+consume and produce, the message types themselves aren't, strictly speaking,
 part of any one application. Your broader application may consist of multiple
 Dogma applications that communicate using messages.
 
@@ -151,14 +149,14 @@ In code, each application corresponds to a Go type that implements the
 We've discussed the _interfaces_ that you implement and use to build your
 [application]. To actually _run_ your application, you need an **engine**.
 
-Engines are not part of the [`dogmatiq/dogma`] Go module, they're separate
+Engines aren't part of the [`dogmatiq/dogma`] Go module, they're separate
 modules that implement the runtime behaviour described by Dogma's interfaces.
 You can choose an engine that suits your environment, or build your own.
 
 The ecosystem currently offers three official engines:
 
 - [`dogmatiq/verity`] — The original Dogma engine, designed for typical application loads
-  in smaller deployments. While production-ready, it does not support scaling of
+  in smaller deployments. While production-ready, it doesn't support scaling of
   a single application across multiple machines.
 
 - [`dogmatiq/veracity`] — The next-generation Dogma engine built for
@@ -177,7 +175,7 @@ explore the following resources:
 - [API documentation] — detailed information about Dogma's API.
 - [Handler type comparison] — a comparison of Dogma's four message handler types.
 - [Glossary] — a central reference for Dogma's terminology.
-- [`dogmatiq/example`] — a minimal example application with simple banking features.
+- [`dogmatiq/example`] — a minimal example application with basic banking features.
 
 <!-- anchors -->
 

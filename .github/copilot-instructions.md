@@ -71,6 +71,9 @@ All contributions should align with the style and expectations outlined below.
   - ❌ "The application persists the event."
 - Document intended usage, not just behaviour.
 - Document design constraints and invariants where relevant.
+- Think hard before ignoring "suggestion" level Vale issues.
+- Ultrathink before ignoring "warning" level Vale issues.
+- Don't ignore "error" level Vale issues.
 
 ## Repository structure
 

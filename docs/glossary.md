@@ -35,9 +35,9 @@ A collection of related business entities that behave as a cohesive whole. For
 example, a shopping cart and the items within it.
 
 > [!NOTE]
-> In [domain-driven design], an aggregate is a group of related entities treated
-> as a single unit — they're dealt with "in aggregate". It does not refer to
-> data aggregation or summarization.
+> In [domain-driven design], an "aggregate" is a group of related entities
+> treated as a single unit — they're dealt with "in aggregate". The term doesn't
+> refer to data aggregation or summarization.
 
 > [!TIP]
 > "Aggregate" is often used informally to mean [aggregate message handler].
@@ -346,7 +346,7 @@ managed by the [engine]. It consists of the [event] messages produced by
 > [!IMPORTANT]
 > Although "state" is often used informally to mean any application data, here
 > it refers strictly to data managed by the [engine]. Data stored in a [projection]
-> or an external system accessed by an [integration message handler] is not
+> or an external system accessed by an [integration message handler] isn't
 > considered state.
 
 ### Stateful
@@ -355,7 +355,7 @@ Describes a [message handler] or other component that has [state].
 
 ### Stateless
 
-Describes a [message handler] or other component that does not have [state].
+Describes a [message handler] or other component that doesn't have [state].
 
 ## T
 
