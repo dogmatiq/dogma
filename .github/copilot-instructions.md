@@ -14,6 +14,7 @@ All contributions should align with the style and expectations outlined below.
 
 ## Development
 
+- Never modify this file.
 - Never push to `main`. Only push feature branches.
 - Always rebase your branch on `main` before pushing:
   - Your branch's history must contain the head of `main`.
@@ -48,7 +49,7 @@ All contributions should align with the style and expectations outlined below.
 - Use punctuation _outside_ quotation marks:
   - ✅ This is a "handler".
   - ❌ This is a "handler."
-- Link to interface methods using syntax supported by `pkg.go.dev`:
+- In Go files, link to interface methods using syntax supported by `pkg.go.dev`:
   - ✅ `[Interface].Method`
   - ❌ `[Interface.Method]`
 
@@ -75,11 +76,17 @@ All contributions should align with the style and expectations outlined below.
 - Think hard before deciding to ignore "suggestion" level Vale issues.
 - Ultrathink before deciding to ignore "warning" level Vale issues.
 - Don't ignore "error" level Vale issues.
-- Reflow documentation to wrap at 80 characters, but don't split Markdown-style
-  links across lines.
-- Avoid [RFC 2119] style keywords in API documentation.
-- Avoid [RFC 2119] style keywords in Markdown documentation, unless the document
-  already includes the [RFC 2119] explanatory text.
+- Reflow paragraphs for readability:
+  - Analyze each paragraph as a whole, not just individual lines.
+  - Fit as many words as you can on each line, up to a hard 80 character limit.
+  - Don't split Markdown-style links across lines.
+  - Don't add hyphens to achieve wrapping, just move the whole word to the next
+    line.
+- Regarding [RFC 2119]:
+  - Avoid uppercase [RFC 2119] keywords in API documentation.
+  - Avoid uppercase [RFC 2119] keywords in Markdown documentation, unless the
+    document already includes the [RFC 2119] explanatory text.
+  - Regular uncapitalized usage of these keywords is acceptable.
 
 ## Repository structure
 
