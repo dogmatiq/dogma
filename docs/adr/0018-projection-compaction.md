@@ -58,7 +58,7 @@ implementation of `Compact()`.
 
 Making compaction a first-class feature of the projection interface encourages
 application developers to think about the lifetime of the projection's data and
-how it might be cleaned up; something that might easily be ignored.
+how it might be cleaned up. This is something that might easily be ignored.
 
 ### Testing
 

@@ -11,7 +11,7 @@ Accepted
 
 ## Context
 
-Identifiers (the names and keys used to identify applications and handlers) are
+Identifiers — the names and keys used to identify applications and handlers — are
 currently free-form. It would be beneficial if the engine could make some
 assumptions about the format of identifiers so that they may be stored
 efficiently.
@@ -24,7 +24,7 @@ but that string must be an [RFC 4122] UUID in the canonical format:
 `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`.
 
 We will also limit the maximum length of identifier names to 255 bytes. This
-limit is specified in bytes (as opposed to Unicode characters) so that engines
+limit is specified in bytes rather than Unicode characters so that engines
 implementations may easily reason about storage requirements.
 
 ## Consequences

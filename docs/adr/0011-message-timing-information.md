@@ -26,7 +26,7 @@ timestamps of interest, and the decisions made in each case.
 
 We believe the existing requirement that the application "model time" is still
 appropriate for command messages. The time at which the command message is
-created or enqueued is irrelevant; any time information relevant to the domain
+created or enqueued is irrelevant. Any timing information relevant to the domain
 logic should be included in the message itself.
 
 **We have decided not to expose the command creation time.**

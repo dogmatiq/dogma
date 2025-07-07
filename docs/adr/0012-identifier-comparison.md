@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-Identifiers (the names and keys used to identify applications and handlers) must
+Identifiers — the names and keys used to identify applications and handlers — must
 be compared by engines to determine if two such entities are to be considered
 equivalent.
 
