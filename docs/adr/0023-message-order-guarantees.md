@@ -1,4 +1,4 @@
-# 23. Message Order Guarantees
+# 23. Message order guarantees
 
 Date: 2025-06-14
 
@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-In light of the removal of CRUD application support, we are able to make more
+Given the removal of CRUD application support, we are able to make more
 specific guarantees about the order in which messages are delivered to an application's handlers.
 
 ## Decision

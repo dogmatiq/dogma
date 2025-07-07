@@ -1,4 +1,4 @@
-# 4. ADR Process
+# 4. ADR process
 
 Date: 2018-12-07
 

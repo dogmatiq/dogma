@@ -1,4 +1,4 @@
-# 11. Message Timing Information
+# 11. Message timing information
 
 Date: 2019-07-05
 
@@ -22,7 +22,7 @@ approach of including explicit timing information "modeling time".
 The sections below focus on each of the message roles, their respective
 timestamps of interest, and the decisions made in each case.
 
-### Command Messages
+### Command messages
 
 We believe the existing requirement that the application "model time" is still
 appropriate for command messages. The time at which the command message is
@@ -31,7 +31,7 @@ logic should be included in the message itself.
 
 **We have decided not to expose the command creation time.**
 
-### Event Messages
+### Event messages
 
 The time at which an event is recorded is a fundamental property of the event
 itself. Put another way, every event occurs at some time regardless of whether
@@ -51,7 +51,7 @@ Chapter 8, in the "Modeling Events" section.
 In actuality, a `Time()` method had already been added to `ProjectionEventScope`
 without any supporting ADR, this method is to be renamed.
 
-### Timeout Messages
+### Timeout messages
 
 The time at which a timeout message is scheduled to be handled is a fundamental
 property of the timeout concept.

@@ -1,4 +1,4 @@
-# 15. Routing Unrecognized Messages
+# 15. Routing unrecognized messages
 
 Date: 2020-11-01
 

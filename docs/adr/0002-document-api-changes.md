@@ -1,4 +1,4 @@
-# 2. Document API Changes
+# 2. Document API changes
 
 Date: 2018-12-07
 

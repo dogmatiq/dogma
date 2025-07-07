@@ -1,4 +1,4 @@
-# 13. Aggregate and Process Instance Existance Checks
+# 13. Aggregate and process instance existence checks
 
 Date: 2020-10-16
 
@@ -14,7 +14,7 @@ already exists before performing an operation on the scope, such as producing a
 new message or destroying/ending the instance.
 
 For example, it may be necessary to ignore a command that has been sent to an
-aggregate that has been destroyed. There is currently no idiomatic way to do
+aggregate that has been destroyed. Currently, no idiomatic way exists to do
 this, short of calling `Create()` only to immediately call `Destroy()` if
 creation succeeded.
 

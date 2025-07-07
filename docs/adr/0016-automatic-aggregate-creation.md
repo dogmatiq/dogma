@@ -1,4 +1,4 @@
-# 16. Automatic Aggregate Creation
+# 16. Automatic aggregate creation
 
 Date: 2020-11-02
 
@@ -17,7 +17,7 @@ overly cumbersome implementations.
 
 ### Effect on handler implementations
 
-From the handler implementors perspective there are numerous subtle interactions
+From the handler implementers perspective there are numerous subtle interactions
 between the aggregate instance's "state of existence" and the domain logic.
 
 Perhaps most egregiously is the requirement that an instance already exist
@@ -33,12 +33,12 @@ logic. The subtle interactions between the domain implementation (especially
 when located within methods of the aggregate root) and the handler itself are
 difficult to glean by reading the code, and hard to reason about.
 
-In summary, the semantics of `Create()` do not help the handler implementor to
+In summary, the semantics of `Create()` do not help the handler implementer to
 implement their domain logic in a clear and concise way.
 
 ### Effect on engine implementations
 
-From the engine implementors perspective it seems that a non-trivial amount of
+From the engine implementers perspective it seems that a non-trivial amount of
 validation logic needs to be implemented within the scope to verify that the
 application code is using the scope correctly, even though the engine does not
 really benefit from these requirements.

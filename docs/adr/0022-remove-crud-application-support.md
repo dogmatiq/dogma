@@ -11,7 +11,7 @@ Accepted
 ## Context
 
 Dogma has historically supported both CRUD-style and event-sourced applications.
-However, in practice, all commerical use that we're aware of has been
+However, in practice, all commercial use that we're aware of has been
 for event-sourced applications.
 
 ## Decision

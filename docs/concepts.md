@@ -119,7 +119,7 @@ We can derive different representations of the application's _state_ from these
 events at any time — a powerful capability that lets you evolve the structure of
 your data and introduce new views without touching your business logic.
 
-Consult the [api documentation] for details on how each handler type makes use
+Consult the [API documentation] for details on how each handler type makes use
 of this event history.
 
 ## Applications

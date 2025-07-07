@@ -1,4 +1,4 @@
-# 25. Prevent Reverting Ended Processes
+# 25. Prevent reverting ended processes
 
 Date: 2025-06-24
 
@@ -17,7 +17,7 @@ same `Process[Event|Timeout]Scope` instance causes the `End()` call to be
 In [ADR-24](0024-permanently-end-processes.md), the semantics of `End()` were
 changed such that it takes effect permanently, meaning that no future events
 will be routed to the ended instance (timeout messages already behaved this
-way). In light of this change, it's misleading if `End()` can sometimes be
+way). Given this change, it's misleading if `End()` can sometimes be
 "undone".
 
 ## Decision

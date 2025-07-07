@@ -1,4 +1,4 @@
-# 19. Automatic Process Creation
+# 19. Automatic process creation
 
 Date: 2021-02-18
 

@@ -34,7 +34,7 @@ Identifiers can be compared using Go's standard comparison operators.
 
 It is possible that two identifiers may appear to be equal but consist of
 different byte sequences. For example, when a character with a diacritic mark is
-represented with a single codepoint, versus with combining characters. This is
+represented with a single code point, versus with combining characters. This is
 considered unlikely to present problems in practice, but nonetheless it is worth
 mentioning that the onus is on the application developer to normalize any UTF-8
 identifiers.

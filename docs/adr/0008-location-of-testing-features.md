@@ -1,4 +1,4 @@
-# 8. Location of Testing Features
+# 8. Location of testing features
 
 Date: 2019-01-03
 
@@ -45,11 +45,11 @@ implement testing tools in their own module.
 
 As always, introducing more repositories increases the overhead of dependency
 management for Dogmatiq maintainers. However, keeping any code that is not
-directly related to interoperability outside of `dogma` removes the possiblity
-of having to release a new major semver version due to a backwards-incompatible
+directly related to interoperability outside of `dogma` removes the possibility
+of having to release a new major semantic version due to a backwards-incompatible
 change that only affected the ancillary code and not the Dogma API itself.
 
-We will need to make it very clear which `dogmatest` versions work with which
+We will need to make it clear which `dogmatest` versions work with which
 `dogma` versions in the documentation for both projects. We may end up in a
 scenario where we bump the major version of `dogmatest`, without such a bump
 being made to `dogma`. However, we should probably at least _prefer_ to keep

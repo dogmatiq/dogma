@@ -1,4 +1,4 @@
-# 24. Permanently End Processes
+# 24. Permanently end processes
 
 Date: 2025-06-15
 

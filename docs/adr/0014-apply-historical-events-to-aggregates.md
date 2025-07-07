@@ -1,4 +1,4 @@
-# 14. Applying Historical Events to Aggregate Instances
+# 14. Applying historical events to aggregate instances
 
 Date: 2020-10-19
 
@@ -36,5 +36,5 @@ Existing event sourcing engine implementations are no longer violating the spec.
 As this is a documentation change only it does not provide engines with any
 information they need to determine if an event type is historical. This should
 be a non-issue as the engine itself will have its own mechanism for loading
-historical events. We may expand the functionality of `AggregateConfigurer` in
+historical events. We may expand the capability of `AggregateConfigurer` in
 the future to allow declaration of historical event types.
