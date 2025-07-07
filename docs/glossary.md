@@ -45,7 +45,8 @@ example, a shopping cart and the items within it.
 ### Aggregate command scope
 
 The [handler scope] in which an [aggregate message handler] handles a [command]
-message by recording [event] messages that represent changes to an [aggregate instance].
+message by recording [event] messages that represent changes to an
+[aggregate instance].
 
 See [`dogma.AggregateCommandScope`].
 

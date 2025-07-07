@@ -46,8 +46,9 @@ implement testing tools in their own module.
 As always, introducing more repositories increases the overhead of dependency
 management for Dogmatiq maintainers. However, keeping any code that is not
 directly related to interoperability outside of `dogma` removes the possibility
-of having to release a new major semantic version due to a backwards-incompatible
-change that only affected the ancillary code and not the Dogma API itself.
+of having to release a new major semantic version due to a
+backwards-incompatible change that only affected the ancillary code and not the
+Dogma API itself.
 
 We will need to make it clear which `dogmatest` versions work with which
 `dogma` versions in the documentation for both projects. We may end up in a

@@ -11,8 +11,8 @@ Accepted
 
 ## Context
 
-Identifiers — the names and keys used to identify applications and handlers — are
-currently free-form. It would be beneficial if the engine could make some
+Identifiers — the names and keys used to identify applications and handlers —
+are currently free-form. It would be beneficial if the engine could make some
 assumptions about the format of identifiers so that they may be stored
 efficiently.
 

@@ -11,7 +11,8 @@ Accepted
 ## Context
 
 Given the removal of CRUD application support, we are able to make more
-specific guarantees about the order in which messages are delivered to an application's handlers.
+specific guarantees about the order in which messages are delivered to an
+application's handlers.
 
 ## Decision
 
