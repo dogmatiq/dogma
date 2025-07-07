@@ -6,7 +6,11 @@ GENERATED_FILES += docs/adr/README.md
 docs/adr/README.md: .adr-dir $(filter-out docs/adr/README.md,$(wildcard docs/adr/*.md))
 	adr generate toc -i docs/adr/README.intro.md > "$@"
 
-lint::
+.vale/vale.touch: .vale.ini
+	vale sync
+	@touch $@
+
+lint:: .vale/vale.touch
 	vale --no-wrap --no-global .
 
 .makefiles/%:
