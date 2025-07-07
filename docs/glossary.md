@@ -64,9 +64,9 @@ See [`dogma.AggregateMessageHandler`].
 
 ### Aggregate root
 
-The primary entity within an [aggregate] through which all [state] changes occur.
-For example, a shopping cart aggregate that consists of a cart and its items may
-use the cart itself as its root.
+The primary entity within an [aggregate] through which all [state] changes
+occur. For example, a shopping cart aggregate that consists of a cart and its
+items may use the cart itself as its root.
 
 See [`dogma.AggregateRoot`].
 
@@ -81,7 +81,8 @@ See [`dogma.Application`].
 
 ### Command
 
-A [message] that represents a request for the [application] to perform an action.
+A [message] that represents a request for the [application] to perform an
+action.
 
 See [`dogma.Command`].
 
@@ -117,7 +118,8 @@ to its [message handlers] and persisting application [state].
 
 ### Event
 
-A [message] that describes an action that the [application] has already performed.
+A [message] that describes an action that the [application] has already
+performed.
 
 See [`dogma.Event`].
 
