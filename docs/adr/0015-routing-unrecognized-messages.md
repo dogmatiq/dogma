@@ -13,7 +13,7 @@ specification such that `AggregateRoot.ApplyEvent()` implementations were no
 longer required to panic with an `UnrecognizedMessage` value when passed an
 unexpected message type.
 
-Prompted by this requirement, we relaxed the requirement for ALL handler
+Prompted by this requirement, we relaxed the requirement for all handler
 methods, which was likely too broad of a change.
 
 Specifically, unlike when handling a message, the routing methods

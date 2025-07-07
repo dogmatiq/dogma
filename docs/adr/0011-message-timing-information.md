@@ -12,7 +12,7 @@ We need to decide whether message timing information should be exposed via the
 API. In this context "timing information" refers to important points in time
 throughout the lifecycle of a message.
 
-The initial rationale for *not* exposing these timestamps was that any business
+The initial rationale for _not_ exposing these timestamps was that any business
 logic that depends on time in some way should explicitly include any timing
 information within the message itself. We call such logic "time-based" and the
 approach of including explicit timing information "modeling time".
@@ -38,8 +38,8 @@ itself. Put another way, every event occurs at some time regardless of whether
 the domain is time-based.
 
 Furthermore, the time at which the event occurs may be relevant to some
-ancillary domain logic that is *triggered* by the event, even if the aggregate
-that *produced* the event has no time-based logic.
+ancillary domain logic that is _triggered_ by the event, even if the aggregate
+that _produced_ the event has no time-based logic.
 
 The inclusion of the "occurred time" as a fundamental property of the event is
 supported by [Implementing Domain Driven
