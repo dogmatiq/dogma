@@ -82,7 +82,6 @@ All contributions should align with the style and expectations outlined below.
   - Don't split Markdown-style links across lines.
   - Don't add hyphens to achieve wrapping, just move the whole word to the next
     line.
-  - Single-line list items may extend up to 120 characters.
 - Regarding [RFC 2119]:
   - Avoid uppercase [RFC 2119] keywords in API documentation.
   - Avoid uppercase [RFC 2119] keywords in Markdown documentation, unless the

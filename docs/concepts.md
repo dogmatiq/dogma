@@ -11,8 +11,8 @@ We recommend reading this document from start to finish, as each section builds
 on the last. For reference material, see the [API documentation].
 
 > [!TIP]
-> Text styled **in bold** introduces a word or phrase with a specific meaning
-> in the Dogma ecosystem.
+> Text styled **in bold** introduces a word or phrase with a specific meaning in
+> the Dogma ecosystem.
 
 ## What _is_ a "message-driven" application?
 
@@ -63,8 +63,8 @@ with external systems.
 
 Dogma defines four types of handler:
 
-- An **aggregate message handler** manages a group of related entities, such
-  as a shopping cart and the items within it. It handles commands by recording
+- An **aggregate message handler** manages a group of related entities, such as
+  a shopping cart and the items within it. It handles commands by recording
   events that reflect changes to the entities' state. Each aggregate in your
   application has many **instances** — for example, a shopping cart aggregate
   might use an instance per customer. Aggregates are the main building block of
@@ -108,9 +108,9 @@ The scope has two main roles:
 
 Dogma defines multiple scopes types, each represented by a separate Go
 interface. For example, the [`AggregateCommandScope`] interface represents the
-scope in
-which an aggregate handles a command message. Your handler receives a scope with
-each incoming message — you don't need to implement these interfaces yourself.
+scope in which an aggregate handles a command message. Your handler receives a
+scope with each incoming message — you don't need to implement these interfaces
+yourself.
 
 ## Event sourcing
 
@@ -170,8 +170,7 @@ The ecosystem currently offers three official engines:
 
 - [`dogmatiq/testkit`] — A set of tools for testing Dogma applications. It
   includes an in-memory engine that executes and inspects application behavior
-  without
-  persisting state.
+  without persisting state.
 
 ## What's next?
 
