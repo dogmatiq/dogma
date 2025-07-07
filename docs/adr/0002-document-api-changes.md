@@ -32,7 +32,7 @@ Additionally, tag names are to be prefixed with a `v` as required by [Go modules
 
 Developers will have a single source of information about changes to the API.
 
-Compatibility between versions can be clearly determined by examining the
+Compatibility between versions can be determined by examining the
 version number.
 
 <!-- references -->

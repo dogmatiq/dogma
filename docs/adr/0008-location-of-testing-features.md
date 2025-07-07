@@ -21,7 +21,7 @@ module itself, or a separate `dogmatest` module.
    download `dogmatest` at all. This is not a particularly strong argument.
 
 1. We can make BC breaking changes to `dogmatest`, without having to make
-   a new major release of `dogma`. We would need to document clearly which
+   a new major release of `dogma`. We would need to document which
    major `dogma` versions are supported by which major `dogmatest` versions.
 
 ### Benefits to a single module

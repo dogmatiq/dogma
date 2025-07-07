@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-After implementing several real engines and business domains we have found the
+After implementing multiple real engines and business domains we have found the
 rules governing how `AggregateCommandScope.Create()`, `Root()`, `RecordEvent()`
 and `Destroy()` can be called in relationship to one another tends to lead to
 overly cumbersome implementations.
@@ -70,15 +70,15 @@ event is recorded.
 
 ## Consequences
 
-Largely, this should simplify implementations of both `AggregateMessageHandler`
+This should simplify implementations of both `AggregateMessageHandler`
 by application developers and `AggregateCommandScope` by engine developers.
 
-Handler implementations should become more clearly based purely on domain logic.
+Handler implementations should become more directly based purely on domain logic.
 Note that along with the removal of `StatelessAggregateRoot`, some aggregates
 implementations will require an additional type declaration for their root
 value.
 
 The removal of `Create()` does mean that engines no longer get an explicit
 request to create an instance. However, since all state changes must be done by
-recording event we expect this to be a fairly trivial change to existing engine
+recording event we expect this to be a straightforward change to existing engine
 implementations.

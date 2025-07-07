@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-After implementing several real business domains we have found that it can be
+After implementing multiple real business domains we have found that it can be
 difficult to use `AggregateCommandScope.Destroy()` effectively.
 
 Ideally, `Destroy()` could be called after recording any event that effectively

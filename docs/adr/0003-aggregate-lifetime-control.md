@@ -28,13 +28,13 @@ We've opted to name the methods used to create and destroy aggregate instances
 `AggregateScope.Create()` and `Destroy()`, respectively. Note that
 `AggregateScope` has since been renamed to `AggregateCommandScope`.
 
-`Create()` is a fairly self explanatory name. This is an idempotent operation.
+`Create()` is a self-explanatory name. This is an idempotent operation.
 The method returns `true` if the call actually resulted in the creation of the
-instance; or `false` if the instance already exists.
+instance, or `false` if the instance already exists.
 
 `Destroy()` was chosen in preference to words such as "delete", as depending on
 the engine implementation, no deletion necessarily occurs. It was chosen in
-preference to "done", as it more clearly indicates that the aggregate instance
+preference to "done", as it explicitly indicates that the aggregate instance
 state will be "reset". This could be implemented in an ES-based engine by
 recording internal events to represent the create/destroy operations, and only
 loading those events that occurred since the most recent creation.

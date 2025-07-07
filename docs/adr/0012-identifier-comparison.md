@@ -18,7 +18,7 @@ The documentation specifies that such keys must be non-empty UTF-8 strings
 consisting of printable characters without whitespace, but it did not previously
 specify how such strings would be compared.
 
-These identifiers are either mostly or entirely immutable and generated as part
+These identifiers are either partially or entirely immutable and generated as part
 of the source code. They do not need to be parsed and validated from user input.
 
 ## Decision

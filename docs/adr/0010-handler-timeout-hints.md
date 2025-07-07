@@ -12,7 +12,7 @@ We need to decide on a mechanism for engine implementations to determine
 suitable timeout durations to apply when handling a message.
 
 For aggregate message handlers, which are not permitted to access external
-resources, a fairly constant timeout duration should be discernible by the
+resources, a consistent timeout duration should be discernible by the
 engine developers.
 
 For all other handler types, which may make network requests or perform CPU

@@ -28,7 +28,7 @@ improve consistency between the aggregate and process APIs.
 
 ## Consequences
 
-Largely, this should simplify implementations of both `ProcessMessageHandler` by
+This should simplify implementations of both `ProcessMessageHandler` by
 application developers and `Process[Event|Timeout]Scope` by engine developers.
 
 The removal of `Begin()` does mean that engines no longer get an explicit

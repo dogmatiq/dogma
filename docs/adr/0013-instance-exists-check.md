@@ -25,5 +25,5 @@ We have chosen to add an `Exists()` method to aggregate scopes, and an analogous
 
 ## Consequences
 
-This is a fairly wide-reaching BC break for engine implementations, although
+This is a wide-reaching BC break for engine implementations, although
 implementing it should be trivial.
