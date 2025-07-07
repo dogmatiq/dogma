@@ -16,8 +16,12 @@ aggregate.
 The current specification language prohibits this, as per the `ApplyEvent()`
 documentation:
 
+<!-- vale off -->
+
 > It MUST NOT be called with a message of any type that has not been
 > configured for production by a prior call to Configure().
+
+<!-- vale on -->
 
 Additionally, without adding some new features to `AggregateConfigurer` it is
 impossible to declare an event as historical, meaning that there is no way to

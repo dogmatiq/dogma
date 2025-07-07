@@ -59,7 +59,7 @@ constructing the in-memory root value.
 - Remove `StatelessAggregateRoot` and `StatelessAggregateBehavior`. With the
   notion of "existence" being removed from the public API a stateless aggregate
   becomes nonsensical.
-- Reinstate the hard requirement that the handlers MUST panic with
+- Reinstate the hard requirement that the handlers panic with
   `UnexpectedMessage` when asked to handle a message type that was not
   configured as being consumed by that handler. Removing the requirement to call
   `Create()` should simplify the dispatching logic sufficiently such that no

@@ -23,7 +23,7 @@ nothing" when passed an unexpected message type.
 
 ## Decision
 
-Reinstate the hard requirement that the handlers MUST panic with
+Reinstate the hard requirement that the handlers panic with
 `UnexpectedMessage` when asked to route a message type that was not configured
 as being consumed by that handler.
 
