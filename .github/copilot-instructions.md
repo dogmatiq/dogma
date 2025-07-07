@@ -76,6 +76,9 @@ All contributions should align with the style and expectations outlined below.
 - Don't ignore "error" level Vale issues.
 - Reflow documentation to wrap at 80 characters, but don't split Markdown-style
   links across lines.
+- Avoid [RFC 2119] style keywords in API documentation.
+- Avoid [RFC 2119] style keywords in Markdown documentation, unless the document
+  already includes the [RFC 2119] explanatory text.
 
 ## Repository structure
 
@@ -88,5 +91,6 @@ All contributions should align with the style and expectations outlined below.
   the glossary are only used with their documented meanings.
 - `CHANGELOG.md` — A file that documents changes to the API.
 
-[Go documentation conventions]: https://go.dev/doc/comment
 [glossary]: ../docs/glossary.md
+[Go documentation conventions]: https://go.dev/doc/comment
+[RFC 2119]: https://datatracker.ietf.org/doc/html/rfc2119
