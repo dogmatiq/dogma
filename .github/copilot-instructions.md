@@ -71,8 +71,9 @@ All contributions should align with the style and expectations outlined below.
   - ❌ "The application persists the event."
 - Document intended usage, not just behaviour.
 - Document design constraints and invariants where relevant.
-- Think hard before ignoring "suggestion" level Vale issues.
-- Ultrathink before ignoring "warning" level Vale issues.
+- Ultrathink about whether changes to existing documentation alter the meaning.
+- Think hard before deciding to ignore "suggestion" level Vale issues.
+- Ultrathink before deciding to ignore "warning" level Vale issues.
 - Don't ignore "error" level Vale issues.
 - Reflow documentation to wrap at 80 characters, but don't split Markdown-style
   links across lines.
