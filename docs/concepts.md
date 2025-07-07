@@ -19,8 +19,8 @@ on the last. For reference material, see the [API documentation].
 Dogma uses **messages** to describe both what should happen and what has already
 occurred. Your **application** reacts to messages one at a time — a message
 comes in, the application performs some action, and new messages come out. Each
-step is self-contained and easy to reason about. This is what we mean by a
-message-driven application.
+step is self-contained and straightforward to understand. This is what we mean
+by a message-driven application.
 
 ## Messages
 

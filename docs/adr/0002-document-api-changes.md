@@ -11,7 +11,7 @@ Accepted
 We need to advertise a meaningful history of changes to the Dogma API
 specification for both application developers and engine developers.
 
-The types of changes that have been made should be clearly identified, with
+The types of changes that have been made should be explicitly identified, with
 special attention drawn to changes that are not backwards compatible.
 
 ### Proposals
