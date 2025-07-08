@@ -4,9 +4,9 @@ import (
 	"context"
 )
 
-// An IntegrationMessageHandler is an application-defined message handler that
-// performs actions outside the Dogma application, such as sending emails or
-// processing payments using a third-party API.
+// An IntegrationMessageHandler is a message handler that performs actions
+// outside the Dogma application, such as sending emails or processing payments
+// using a third-party API.
 //
 // It handles [Command] messages, produces external side-effects, and optionally
 // records [Event] messages.
