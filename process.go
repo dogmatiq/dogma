@@ -222,7 +222,11 @@ func (StatelessProcessBehavior) New() ProcessRoot {
 }
 
 // NoTimeoutMessagesBehavior is an embeddable type for [ProcessMessageHandler]
-// implementations that do not use [Timeout] messages.
+// implementations that don't use [Timeout] messages.
+//
+// Embed this type in a [ProcessMessageHandler] to signal that the handler
+// doesn't schedule timeouts and to avoid boilerplate code that's never
+// used.
 type NoTimeoutMessagesBehavior struct{}
 
 // HandleTimeout panics with the [UnexpectedMessage] value.
@@ -235,9 +239,26 @@ func (NoTimeoutMessagesBehavior) HandleTimeout(
 	panic(UnexpectedMessage)
 }
 
-// ProcessRoute describes a message type that's routed to or from a
-// [ProcessMessageHandler].
-type ProcessRoute interface {
-	MessageRoute
-	isProcessRoute()
+// StatelessProcessBehavior is an embeddable type for [ProcessMessageHandler]
+// implementations that don't maintain any state.
+//
+// Embed this type in a [ProcessMessageHandler] to signal that the handler is
+// stateless and to avoid boilerplate code that's never used.
+type StatelessProcessBehavior struct{}
+
+// New returns [StatelessProcessRoot].
+func (StatelessProcessBehavior) New() ProcessRoot {
+	return StatelessProcessRoot
 }
+
+// StatelessProcessRoot is an empty [ProcessRoot] for processes that don't
+// maintain any state.
+//
+// Embed [StatelessProcessBehavior] in a [ProcessMessageHandler] to use this
+// type as its [ProcessRoot] implementation.
+//
+// The engine may provide optimized persistence for stateless processes that use
+// this type.
+var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
+
+type statelessProcessRoot struct{}
