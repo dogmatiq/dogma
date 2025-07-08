@@ -11,16 +11,16 @@ We recommend reading this document from start to finish, as each section builds
 on the last. For reference material, see the [API documentation].
 
 > [!TIP]
-> Text styled **in bold** introduces a word or phrase with a specific meaning
-> in the Dogma ecosystem.
+> Text styled **in bold** introduces a word or phrase with a specific meaning in
+> the Dogma ecosystem.
 
 ## What _is_ a "message-driven" application?
 
 Dogma uses **messages** to describe both what should happen and what has already
 occurred. Your **application** reacts to messages one at a time — a message
 comes in, the application performs some action, and new messages come out. Each
-step is self-contained and easy to reason about. This is what we mean by a
-message-driven application.
+step is self-contained and straightforward to understand. This is what we mean
+by a message-driven application.
 
 ## Messages
 
@@ -29,17 +29,21 @@ should do, or something it has already done.
 
 Dogma defines three **kinds** of message:
 
-- A **command** message is a request — it tells your application to do something now.
+- A **command** message is a request — it tells your application to do something
+  now.
 
   For example, _add 10 widgets to Alex's shopping cart_.
 
-- An **event** message is a fact — it represents something your application has already done.
+- An **event** message is a fact — it represents something your application has
+  already done.
 
   For example, _Alex added 10 widgets to their shopping cart_.
 
-- A **timeout** message is a delayed request — it tells your application to do something later.
+- A **timeout** message is a delayed request — it tells your application to do
+  something later.
 
-  For example, _send Alex a reminder about their incomplete purchase after 24 hours_.
+  For example, _send Alex a reminder about their incomplete purchase after 24
+  hours_.
 
 Every distinct action — such as "add item to cart" or "complete purchase" —
 corresponds to a different **message type**, each represented by a Go type that
@@ -59,8 +63,8 @@ with external systems.
 
 Dogma defines four types of handler:
 
-- An **aggregate message handler** manages a group of related entities, such
-  as a shopping cart and the items within it. It handles commands by recording
+- An **aggregate message handler** manages a group of related entities, such as
+  a shopping cart and the items within it. It handles commands by recording
   events that reflect changes to the entities' state. Each aggregate in your
   application has many **instances** — for example, a shopping cart aggregate
   might use an instance per customer. Aggregates are the main building block of
@@ -86,11 +90,9 @@ of the [`AggregateMessageHandler`], [`ProcessMessageHandler`],
 [`IntegrationMessageHandler`], or [`ProjectionMessageHandler`] interfaces.
 
 > [!NOTE]
-> The word "aggregate" is often misunderstood.
->
-> In [domain-driven design], an aggregate is a group of related entities treated
-> as a single unit — they're dealt with "in aggregate". It does not refer to
-> data aggregation or summarization.
+> In [domain-driven design], an "aggregate" is a group of related entities
+> treated as a single unit — they're dealt with "in aggregate". The term doesn't
+> refer to data aggregation or summarization.
 
 ## Scopes
 
@@ -104,10 +106,11 @@ The scope has two main roles:
 - It defines the messaging operations that the handler can perform in response
   to the message, such as executing commands or recording events.
 
-Dogma defines multiple scopes types, each represented by a separate Go interface.
-For example, the [`AggregateCommandScope`] interface represents the scope in
-which an aggregate handles a command message. Your handler receives a scope with
-each incoming message — you do not need to implement these interfaces yourself.
+Dogma defines multiple scopes types, each represented by a separate Go
+interface. For example, the [`AggregateCommandScope`] interface represents the
+scope in which an aggregate handles a command message. Your handler receives a
+scope with each incoming message — you don't need to implement these interfaces
+yourself.
 
 ## Event sourcing
 
@@ -119,7 +122,7 @@ We can derive different representations of the application's _state_ from these
 events at any time — a powerful capability that lets you evolve the structure of
 your data and introduce new views without touching your business logic.
 
-Consult the [api documentation] for details on how each handler type makes use
+Consult the [API documentation] for details on how each handler type makes use
 of this event history.
 
 ## Applications
@@ -135,7 +138,7 @@ Dogma's responsibility — it imposes no constraints on how they're built or wha
 technologies you use.
 
 Although the handlers within your application declare which [messages] they
-consume and produce, the message types themselves are not, strictly speaking,
+consume and produce, the message types themselves aren't, strictly speaking,
 part of any one application. Your broader application may consist of multiple
 Dogma applications that communicate using messages.
 
@@ -151,23 +154,23 @@ In code, each application corresponds to a Go type that implements the
 We've discussed the _interfaces_ that you implement and use to build your
 [application]. To actually _run_ your application, you need an **engine**.
 
-Engines are not part of the [`dogmatiq/dogma`] Go module, they're separate
+Engines aren't part of the [`dogmatiq/dogma`] Go module, they're separate
 modules that implement the runtime behaviour described by Dogma's interfaces.
 You can choose an engine that suits your environment, or build your own.
 
 The ecosystem currently offers three official engines:
 
-- [`dogmatiq/verity`] — The original Dogma engine, designed for typical application loads
-  in smaller deployments. While production-ready, it does not support scaling of
-  a single application across multiple machines.
+- [`dogmatiq/verity`] — The original Dogma engine, designed for typical
+  application loads in smaller deployments. While production-ready, it doesn't
+  support scaling of a single application across multiple machines.
 
 - [`dogmatiq/veracity`] — The next-generation Dogma engine built for
   horizontal scalability and distributed workloads. The Dogma maintainers intend
   for Veracity to fully replace Verity, becoming _the_ production Dogma engine.
 
-- [`dogmatiq/testkit`] — A set of tools for testing Dogma applications. It includes an
-  in-memory engine that executes and inspects application behavior without
-  persisting state.
+- [`dogmatiq/testkit`] — A set of tools for testing Dogma applications. It
+  includes an in-memory engine that executes and inspects application behavior
+  without persisting state.
 
 ## What's next?
 
@@ -175,9 +178,11 @@ Now that you have a high-level understanding of Dogma's concepts, you can
 explore the following resources:
 
 - [API documentation] — detailed information about Dogma's API.
-- [Handler type comparison] — a comparison of Dogma's four message handler types.
+- [Handler type comparison] — a comparison of Dogma's four message handler
+  types.
 - [Glossary] — a central reference for Dogma's terminology.
-- [`dogmatiq/example`] — a minimal example application with simple banking features.
+- [`dogmatiq/example`] — a minimal example application with basic banking
+  features.
 
 <!-- anchors -->
 

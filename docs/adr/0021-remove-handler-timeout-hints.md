@@ -6,7 +6,7 @@ Date: 2024-08-17
 
 Accepted
 
-Supercedes [10. Handler Timeout Hints](0010-handler-timeout-hints.md)
+Supersedes [10. Handler Timeout Hints](0010-handler-timeout-hints.md)
 
 ## Context
 

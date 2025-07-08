@@ -1,4 +1,4 @@
-# 9. Immutable Application and Handler Keys
+# 9. Immutable application and handler keys
 
 Date: 2019-06-28
 

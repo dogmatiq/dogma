@@ -35,9 +35,9 @@ A collection of related business entities that behave as a cohesive whole. For
 example, a shopping cart and the items within it.
 
 > [!NOTE]
-> In [domain-driven design], an aggregate is a group of related entities treated
-> as a single unit — they're dealt with "in aggregate". It does not refer to
-> data aggregation or summarization.
+> In [domain-driven design], an "aggregate" is a group of related entities
+> treated as a single unit — they're dealt with "in aggregate". The term doesn't
+> refer to data aggregation or summarization.
 
 > [!TIP]
 > "Aggregate" is often used informally to mean [aggregate message handler].
@@ -45,7 +45,8 @@ example, a shopping cart and the items within it.
 ### Aggregate command scope
 
 The [handler scope] in which an [aggregate message handler] handles a [command]
-message by recording [event] messages that represent changes to an [aggregate instance].
+message by recording [event] messages that represent changes to an
+[aggregate instance].
 
 See [`dogma.AggregateCommandScope`].
 
@@ -63,9 +64,9 @@ See [`dogma.AggregateMessageHandler`].
 
 ### Aggregate root
 
-The primary entity within an [aggregate] through which all [state] changes occur.
-For example, a shopping cart aggregate that consists of a cart and its items may
-use the cart itself as its root.
+The primary entity within an [aggregate] through which all [state] changes
+occur. For example, a shopping cart aggregate that consists of a cart and its
+items may use the cart itself as its root.
 
 See [`dogma.AggregateRoot`].
 
@@ -80,7 +81,8 @@ See [`dogma.Application`].
 
 ### Command
 
-A [message] that represents a request for the [application] to perform an action.
+A [message] that represents a request for the [application] to perform an
+action.
 
 See [`dogma.Command`].
 
@@ -116,7 +118,8 @@ to its [message handlers] and persisting application [state].
 
 ### Event
 
-A [message] that describes an action that the [application] has already performed.
+A [message] that describes an action that the [application] has already
+performed.
 
 See [`dogma.Event`].
 
@@ -346,7 +349,7 @@ managed by the [engine]. It consists of the [event] messages produced by
 > [!IMPORTANT]
 > Although "state" is often used informally to mean any application data, here
 > it refers strictly to data managed by the [engine]. Data stored in a [projection]
-> or an external system accessed by an [integration message handler] is not
+> or an external system accessed by an [integration message handler] isn't
 > considered state.
 
 ### Stateful
@@ -355,7 +358,7 @@ Describes a [message handler] or other component that has [state].
 
 ### Stateless
 
-Describes a [message handler] or other component that does not have [state].
+Describes a [message handler] or other component that doesn't have [state].
 
 ## T
 

@@ -24,7 +24,7 @@ version than it is to remove it once it's in use.
 
 ## Consequences
 
-It's simpler to describe how the various message and handler types interact.
+It's simpler to describe how the message and handler types interact.
 
 A minor downside is that commands that unconditionally trigger a process still
 have to pass through an aggregate that "does nothing".

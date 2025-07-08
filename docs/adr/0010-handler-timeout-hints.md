@@ -1,10 +1,10 @@
-# 10. Handler Timeout Hints
+# 10. Handler timeout hints
 
 Date: 2019-06-28
 
 ## Status
 
-Superceded by [21. Remove Handler Timeout Hints](0021-remove-handler-timeout-hints.md)
+Superseded by [21. Remove Handler Timeout Hints](0021-remove-handler-timeout-hints.md)
 
 ## Context
 
@@ -12,7 +12,7 @@ We need to decide on a mechanism for engine implementations to determine
 suitable timeout durations to apply when handling a message.
 
 For aggregate message handlers, which are not permitted to access external
-resources, a fairly constant timeout duration should be discernable by the
+resources, a consistent timeout duration should be discernible by the
 engine developers.
 
 For all other handler types, which may make network requests or perform CPU
@@ -21,7 +21,7 @@ circumstances.
 
 ## Decision
 
-We have decided to allow process, integration and projection message handlers
+We have decided to allow process, integration, and projection message handlers
 to provide a timeout "hint" on a per-message basis by way of a
 `TimeoutHint(dogma.Message) time.Duration` method.
 

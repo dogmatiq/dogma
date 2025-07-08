@@ -57,7 +57,7 @@ projection data, third-party APIs, the system clock, and so on.
 
 - Process message handlers may read external data during message routing and
   handling, primarily to access the application's projection data, though this
-  is not recommended. Wherever possible, all logic should rely solely on
+  isn't recommended. Wherever possible, all logic should rely solely on
   information within event messages and the instance's state. This restriction
   ensures that processes are deterministic — they produce the same behavior for
   the same sequence of events.
@@ -115,7 +115,7 @@ all events recorded by a specific command to the same event stream. This
 guarantees that consumers see events from each command in the order they
 occurred. The engine may choose a different event stream for each command.
 
-Process and projection message handlers do not record event messages, so no
+Process and projection message handlers don't record event messages, so no
 binding strategy applies.
 
 <!-- anchors -->

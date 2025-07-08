@@ -1,4 +1,4 @@
-# 16. Automatic Aggregate Creation
+# 16. Automatic aggregate creation
 
 Date: 2020-11-02
 
@@ -10,14 +10,14 @@ Accepted
 
 ## Context
 
-After implementing several real engines and business domains we have found the
+After implementing multiple real engines and business domains we have found the
 rules governing how `AggregateCommandScope.Create()`, `Root()`, `RecordEvent()`
 and `Destroy()` can be called in relationship to one another tends to lead to
 overly cumbersome implementations.
 
 ### Effect on handler implementations
 
-From the handler implementors perspective there are numerous subtle interactions
+From the handler implementers perspective there are numerous subtle interactions
 between the aggregate instance's "state of existence" and the domain logic.
 
 Perhaps most egregiously is the requirement that an instance already exist
@@ -33,12 +33,12 @@ logic. The subtle interactions between the domain implementation (especially
 when located within methods of the aggregate root) and the handler itself are
 difficult to glean by reading the code, and hard to reason about.
 
-In summary, the semantics of `Create()` do not help the handler implementor to
+In summary, the semantics of `Create()` do not help the handler implementer to
 implement their domain logic in a clear and concise way.
 
 ### Effect on engine implementations
 
-From the engine implementors perspective it seems that a non-trivial amount of
+From the engine implementers perspective it seems that a non-trivial amount of
 validation logic needs to be implemented within the scope to verify that the
 application code is using the scope correctly, even though the engine does not
 really benefit from these requirements.
@@ -59,7 +59,7 @@ constructing the in-memory root value.
 - Remove `StatelessAggregateRoot` and `StatelessAggregateBehavior`. With the
   notion of "existence" being removed from the public API a stateless aggregate
   becomes nonsensical.
-- Reinstate the hard requirement that the handlers MUST panic with
+- Reinstate the hard requirement that the handlers panic with
   `UnexpectedMessage` when asked to handle a message type that was not
   configured as being consumed by that handler. Removing the requirement to call
   `Create()` should simplify the dispatching logic sufficiently such that no
@@ -70,15 +70,15 @@ event is recorded.
 
 ## Consequences
 
-Largely, this should simplify implementations of both `AggregateMessageHandler`
+This should simplify implementations of both `AggregateMessageHandler`
 by application developers and `AggregateCommandScope` by engine developers.
 
-Handler implementations should become more clearly based purely on domain logic.
+Handler implementations should become more directly based purely on domain logic.
 Note that along with the removal of `StatelessAggregateRoot`, some aggregates
 implementations will require an additional type declaration for their root
 value.
 
 The removal of `Create()` does mean that engines no longer get an explicit
 request to create an instance. However, since all state changes must be done by
-recording event we expect this to be a fairly trivial change to existing engine
+recording event we expect this to be a straightforward change to existing engine
 implementations.

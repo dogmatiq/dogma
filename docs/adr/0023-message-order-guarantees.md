@@ -1,4 +1,4 @@
-# 23. Message Order Guarantees
+# 23. Message order guarantees
 
 Date: 2025-06-14
 
@@ -10,8 +10,9 @@ Accepted
 
 ## Context
 
-In light of the removal of CRUD application support, we are able to make more
-specific guarantees about the order in which messages are delivered to an application's handlers.
+Given the removal of CRUD application support, we are able to make more
+specific guarantees about the order in which messages are delivered to an
+application's handlers.
 
 ## Decision
 
@@ -37,7 +38,7 @@ The guarantees around command and timeout ordering are unchanged and should pose
 no issues for existing applications.
 
 In practice, engines attempt to handle commands immediately, providing an
-approximate chronological order; however, they are free to defer and retry
+approximate chronological order. However, they are free to defer and retry
 commands as necessary.
 
 The use of a weak total order for timeouts makes the ordering of timeouts with
@@ -47,7 +48,7 @@ current engine implementations and clarifies what was previously underspecified.
 The guarantees around event ordering have been strengthened. Previously, there
 were no guarantees about the order of events, regardless of their source. Where
 events are now guaranteed to be observed in recorded order, this does not imply
-that their "recorded at" time is monotonic; it simply reflects the system clock
+that their "recorded at" time is monotonic. It simply reflects the system clock
 at the time of recording.
 
 Even where the behavior is unchanged in practice, these rules allow us to

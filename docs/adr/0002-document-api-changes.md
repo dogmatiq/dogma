@@ -1,4 +1,4 @@
-# 2. Document API Changes
+# 2. Document API changes
 
 Date: 2018-12-07
 
@@ -11,7 +11,7 @@ Accepted
 We need to advertise a meaningful history of changes to the Dogma API
 specification for both application developers and engine developers.
 
-The types of changes that have been made should be clearly identified, with
+The types of changes that have been made should be explicitly identified, with
 special attention drawn to changes that are not backwards compatible.
 
 ### Proposals
@@ -32,7 +32,7 @@ Additionally, tag names are to be prefixed with a `v` as required by [Go modules
 
 Developers will have a single source of information about changes to the API.
 
-Compatibility between versions can be clearly determined by examining the
+Compatibility between versions can be determined by examining the
 version number.
 
 <!-- references -->

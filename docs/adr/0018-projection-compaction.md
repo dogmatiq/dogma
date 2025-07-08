@@ -1,4 +1,4 @@
-# 18. Compacting Projection Data
+# 18. Compacting projection data
 
 Date: 2020-11-11
 
@@ -20,7 +20,7 @@ longer required.
 
 We have encountered a genuine example of this when implementing an SQL
 projection that inserts a row whenever a user performs a specific action. The
-data is queried in order to enforce a "cool down" that prevents the user from
+data is queried to enforce a "cool down" that prevents the user from
 repeating that action again within a specific time frame.
 
 The insert is triggered by the occurrence of an event, but the data becomes
@@ -40,25 +40,25 @@ still serves its purpose.
 
 ## Consequences
 
-### Engine Complexity
+### Engine complexity
 
 This change does introduce further complexity to engine implementations. It is,
 of course, entirely possible to perform this kind of compaction outside the
-engine. To keep this compexity to a minimum we have avoided building in any
+engine. To keep this complexity to a minimum we have avoided building in any
 facility for the projection handler to schedule compaction at specific times.
 
-### Backwards Compatibility
+### Backwards compatibility
 
-Every existing projection implementation now requires an addtional method, even
+Every existing projection implementation now requires an additional method, even
 if no compaction is required. The `NoCompactBehavior` struct can be embedded
 within a `ProjectionMessageHandler` implementation to provide a no-op
 implementation of `Compact()`.
 
-### First Class Compaction
+### First class compaction
 
 Making compaction a first-class feature of the projection interface encourages
 application developers to think about the lifetime of the projection's data and
-how it might be cleaned up; something that might easily be ignored.
+how it might be cleaned up. This is something that might easily be ignored.
 
 ### Testing
 
@@ -67,10 +67,10 @@ to projections, ensuring that the compaction code is actually invoked during
 testing and that it does not interfere with the regular operation of the
 projection.
 
-### Optimal Scheduling of Compaction
+### Optimal scheduling of compaction
 
 Many aspects of an engine's behavior are engine-specific. By giving the engine
-control over when compaction occurs engine implemenators may be able to make
+control over when compaction occurs engine implementers may be able to make
 informed decisions about when it's appropriate to perform compaction.
 
 For example, an engine may perform compaction only when there is a period of low
