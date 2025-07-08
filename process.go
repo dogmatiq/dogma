@@ -200,25 +200,11 @@ type ProcessTimeoutScope interface {
 	Log(format string, args ...any)
 }
 
-// StatelessProcessRoot is an implementation of [ProcessRoot] for processes that
-// do not require any domains-specific state.
-//
-// [StatelessProcessBehavior] provides a partial implementation of
-// [ProcessMessageHandler] that returns this value.
-//
-// Engines MAY use this value as a sentinel to provide an optimized code path
-// when no state is required.
-var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
-
-type statelessProcessRoot struct{}
-
-// StatelessProcessBehavior is an embeddable type for [ProcessMessageHandler]
-// that do not have any domain-specific state.
-type StatelessProcessBehavior struct{}
-
-// New returns [StatelessProcessRoot].
-func (StatelessProcessBehavior) New() ProcessRoot {
-	return StatelessProcessRoot
+// ProcessRoute describes a message type that's routed to or from a
+// [ProcessMessageHandler].
+type ProcessRoute interface {
+	MessageRoute
+	isProcessRoute()
 }
 
 // NoTimeoutMessagesBehavior is an embeddable type for [ProcessMessageHandler]
