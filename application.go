@@ -27,14 +27,13 @@ type ApplicationConfigurer interface {
 	// n is a short human-readable name displayed wherever the application's
 	// identity appears, such as in logs and telemetry signals. The value must
 	// be between 1 and 255 bytes in length, and contain only printable,
-	// non-space UTF-8 characters. Changing the handler's name does not affect
+	// non-space UTF-8 characters. Changing the handler's name doesn't affect
 	// its behavior.
 	//
 	// k is a key that uniquely identifies the application. The engine uses the
-	// key to associate application state with the correct application instance,
-	// so it must not change. The value must be a canonical RFC 4122 UUID
-	// string, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f", and is
-	// case-insensitive.
+	// key to associate application state with the correct application instance
+	// - it must not change. The value must be a canonical RFC 4122 UUID string,
+	// such as "5195fe85-eb3f-4121-84b0-be72cbc5722f", and is case-insensitive.
 	Identity(n, k string)
 
 	// Routes adds handler routes that associate message types with handlers.
@@ -42,7 +41,7 @@ type ApplicationConfigurer interface {
 	// It accepts routes created by [ViaAggregate], [ViaProcess],
 	// [ViaIntegration], and [ViaProjection].
 	//
-	// The application does not declare routes for message types directly; it
+	// The application doesn't declare routes for message types directly; it
 	// inherits routes from the handlers it contains.
 	Routes(...HandlerRoute)
 }

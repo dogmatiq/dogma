@@ -7,7 +7,7 @@ import "context"
 // It's the primary way that code outside of the Dogma application interacts
 // with the engine.
 type CommandExecutor interface {
-	// ExecuteCommand submits a command for execution.
+	// ExecuteCommand submits a [Command] for execution.
 	//
 	// The engine may invoke the associated handler more than once, but the
 	// command's side-effects, such as the events it produces, occur exactly
@@ -16,7 +16,8 @@ type CommandExecutor interface {
 	// returns.
 	//
 	// If it returns a non-nil error, the engine may not have taken ownership of
-	// message delivery, and the application should retry execution.
+	// message delivery, and the application should retry execution. See
+	// [WithIdempotencyKey].
 	ExecuteCommand(context.Context, Command, ...ExecuteCommandOption) error
 }
 

@@ -15,7 +15,7 @@ type Message interface {
 	// not intended for display to end users.
 	//
 	// Use lowercase sentences with no trailing punctuation. Omit sensitive
-	// information and overly specific details that do not alter the message's
+	// information and overly specific details that don't alter the message's
 	// intent.
 	//
 	// Descriptions of [Command] messages should use present-continuous tense.
@@ -28,7 +28,7 @@ type Message interface {
 	// just elapsed. For example: "Alex's cart is now inactive" or "24 hours
 	// elapsed since first item added to Alex's cart".
 	//
-	// Be wary of assuming a specific actor if the message does not explicitly
+	// Be wary of assuming a specific actor if the message doesn't explicitly
 	// encode that information. For example, prefer "Alex's purchase completed"
 	// over "Alex completed their purchase". This guidance is especially
 	// relevant to [Event] messages, where each type should represent a specific
@@ -41,7 +41,7 @@ type Message interface {
 type Command interface {
 	Message
 
-	// Validate returns a non-nil error if the message is not well-formed.
+	// Validate returns a non-nil error if the message isn't well-formed.
 	//
 	// A command is well-formed if all required information is present and
 	// correctly encoded such that it represents a valid action that the
@@ -60,7 +60,7 @@ type Command interface {
 type Event interface {
 	Message
 
-	// Validate returns a non-nil error if the message is not well-formed.
+	// Validate returns a non-nil error if the message isn't well-formed.
 	//
 	// An event is well-formed if all required information is present and
 	// correctly encoded such that it accurately represents an action that can
@@ -77,7 +77,7 @@ type Event interface {
 type Timeout interface {
 	Message
 
-	// Validate returns a non-nil error if the message is not well-formed.
+	// Validate returns a non-nil error if the message isn't well-formed.
 	//
 	// A timeout is well-formed if all required information is present and
 	// correctly encoded such that it accurately represents an action that can
@@ -90,7 +90,7 @@ type Timeout interface {
 }
 
 // UnexpectedMessage is a panic value used by a message handler when it receives
-// a message of a type that it did not expect.
+// a message of a type that it didn't expect.
 var UnexpectedMessage unexpectedMessage
 
 type unexpectedMessage struct{}
