@@ -42,7 +42,11 @@ Dogma defines three **kinds** of message:
 - A **timeout** message is a delayed notification — it tells your application
   that some relevant period of time has elapsed.
 
+  <!-- vale Google.Passive = NO -->
+
   For example, _it's been 24 hours since the first item was added to Alex's cart_.
+
+  <!-- vale Google.Passive = YES -->
 
 Every distinct action — such as "add item to cart" or "complete purchase" —
 corresponds to a different **message type**, each represented by a Go type that
