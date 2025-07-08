@@ -17,7 +17,7 @@ type IntegrationMessageHandler interface {
 	//
 	// The engine calls this method at least once during startup. It must
 	// produce the same configuration each time it's called.
-	Configure(IntegrationConfigurer)
+	Configure(c IntegrationConfigurer)
 
 	// HandleCommand handles a [Command] message by performing an action outside
 	// the Dogma application.

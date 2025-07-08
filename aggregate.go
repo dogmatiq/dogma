@@ -19,7 +19,7 @@ type AggregateMessageHandler interface {
 	//
 	// The engine calls this method at least once during startup. It must
 	// produce the same configuration each time it's called.
-	Configure(AggregateConfigurer)
+	Configure(c AggregateConfigurer)
 
 	// New returns a new [AggregateRoot] for an aggregate instance.
 	//
