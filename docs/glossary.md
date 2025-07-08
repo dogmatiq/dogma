@@ -52,8 +52,8 @@ See [`dogma.AggregateCommandScope`].
 
 ### Aggregate instance
 
-A unique occurrence of an [aggregate] within an [application]. For example, a
-shopping cart aggregate may use a separate instance for each customer.
+A distinct occurrence of an [aggregate] within an [application]. For example, a
+shopping cart aggregate may use an instance for each customer.
 
 ### Aggregate message handler
 

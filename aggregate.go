@@ -1,15 +1,15 @@
 package dogma
 
-// An AggregateMessageHandler is an application-defined message handler that
-// handles [Command] messages and records [Event] messages that represent
-// changes to application state.
+// An AggregateMessageHandler is a message handler that handles [Command]
+// messages and records [Event] messages that represent changes to application
+// state.
 //
 // An aggregate is a collection of related business entities that behave as a
 // cohesive whole, such as a shopping cart and the items within it. The
 // aggregate message handler manages the behavior and state of such aggregates.
 //
 // Each aggregate message handler typically manages multiple instances, where
-// each instance represents a separate occurrence of the aggregate. For example,
+// each instance represents a distinct occurrence of the aggregate. For example,
 // a shopping cart aggregate message handler may manage one instance per
 // customer.
 type AggregateMessageHandler interface {
@@ -24,35 +24,47 @@ type AggregateMessageHandler interface {
 	// New returns a new [AggregateRoot] for an aggregate instance.
 	//
 	// The engine calls this method to get a "blank slate" when handling the
-	// first command for a new instance or when reconstructing an existing
-	// instance from its historical events.
+	// first [Command] for a new instance or when reconstructing an existing
+	// instance from its historical [Event] messages.
 	New() AggregateRoot
 
-	// RouteCommandToInstance returns the ID of the instance that handles a
-	// specific command.
+	// RouteCommandToInstance returns the ID of the aggregate instance c
+	// modifies.
 	//
-	// The return value MUST not be empty. RFC 4122 UUIDs are the RECOMMENDED
-	// format for instance IDs.
-	RouteCommandToInstance(Command) string
+	// The return value must be a non-empty string that uniquely identifies the
+	// target instance. For example, in a shopping cart aggregate, the instance
+	// ID might be the customer's ID. RFC 4122 UUIDs are the recommended format.
+	//
+	// Commands routed to the same instance operate on the same state. There's
+	// no need to create an instance in advance - it "exists" once the handler
+	// records events against it.
+	//
+	// The engine calls this method before handling the [Command]. It must
+	// return the same value each time it's called with the same command.
+	RouteCommandToInstance(c Command) string
 
-	// HandleCommand executes business logic in response to a command.
+	// HandleCommand handles a [Command] message by executing business logic to
+	// determine which [Event] messages to record, if any.
 	//
-	// The handler inspects the root to determine which events to record, if
-	// any.
+	// r is the [AggregateRoot] for the instance that the command targets, as
+	// determined by [AggregateMessageHandler].RouteCommandToInstance. It
+	// reflects the state of the targeted instance after applying its historical
+	// events.
 	//
-	// The handler SHOULD NOT have any side-effects beyond recording events.
-	// Specifically, the implementation MUST NOT modify the root directly. Use
-	// [AggregateCommandScope.RecordEvent] to record an event that represents
-	// the state change. See also [AggregateRoot.ApplyEvent].
+	// This method must not cause external side-effects or modify r directly.
+	// Logic must depend only on information within the given root, scope, and
+	// command.
 	//
-	// If this is the first command routed to this instance, the root is the
-	// return value of New(). Otherwise, it's the value of the root as it
-	// existed after handling the command.
-	//
-	// While the engine MAY call this method concurrently from separate
-	// goroutines or operating system processes, the state changes and events
-	// that represent them always appear to have occurred sequentially.
-	HandleCommand(AggregateRoot, AggregateCommandScope, Command)
+	// The engine atomically persists the events recorded by exactly one
+	// successful invocation of this method for each command message. It doesn't
+	// guarantee the order, number, or concurrency of those attempts. The
+	// implementation doesn't need to perform any synchronization or idempotency
+	// checks.
+	HandleCommand(
+		r AggregateRoot,
+		s AggregateCommandScope,
+		c Command,
+	)
 }
 
 // An AggregateRoot is an interface for an application's working representation
