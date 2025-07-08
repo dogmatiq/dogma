@@ -76,14 +76,8 @@ All contributions should align with the style and expectations outlined below.
 - Think hard before deciding to ignore "suggestion" level Vale issues.
 - Ultrathink before deciding to ignore "warning" level Vale issues.
 - Don't ignore "error" level Vale issues.
-- Reflow paragraphs for readability:
-  - Analyze each paragraph as a whole, not just individual lines.
-  - Fit as many words as you can on each line, up to a hard 80 character limit.
-  - Move words to fill available space.
-  - Don't split Markdown-style links across lines.
-  - Treat punctuation that is not separated by whitespace as part of the
-    adjacent word.
-  - Don't add hyphens, just move the whole word to the next line.
+- Reflow paragraphs for readability, up to a maximum of 80 characters per line.
+- Don't split Markdown-style links across lines.
 - Regarding [RFC 2119]:
   - Avoid uppercase [RFC 2119] keywords in API documentation.
   - Avoid uppercase [RFC 2119] keywords in Markdown documentation, unless the
