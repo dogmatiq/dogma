@@ -4,12 +4,17 @@ import (
 	"context"
 )
 
-// An IntegrationMessageHandler is a message handler that performs actions
-// outside the Dogma application, such as sending emails or processing payments
-// using a third-party API.
+// An IntegrationMessageHandler connects a Dogma application to an external
+// system.
 //
-// It handles [Command] messages, produces external side-effects, and optionally
-// records [Event] messages.
+// It handles [Command] messages, and may record [Event] messages to describe
+// the outcome.
+//
+// Integration message handlers encapsulate integration logic such as sending an
+// email, charging a credit card, or updating a third-party API. They should
+// implement only the "glue code". For example, an integration with a payment
+// gateway might debit a customer's credit card, but shouldn't apply discounts
+// or calculate sales tax.
 type IntegrationMessageHandler interface {
 	// Configure declares the handler's configuration by calling methods on c.
 	//
