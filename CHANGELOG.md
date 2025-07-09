@@ -58,6 +58,11 @@ errors.
 - **[BC]** Removed `RegisterProcessOption`.
 - **[BC]** Removed `RegisterIntegrationOption`.
 - **[BC]** Removed `RegisterProjectionOption`.
+- **[BC]** Removed `ProjectionConfigurer.DeliveryPolicy()`
+- **[BC]** Removed `ProjectionScope.IsPrimaryDelivery()`
+- **[BC]** Removed `ProjectionDeliveryPolicy`
+- **[BC]** Removed `UnicastProjectionDeliveryPolicy`
+- **[BC]** Removed `BroadcastProjectionDeliveryPolicy`
 
 ## [0.15.0] - 2024-10-03
 

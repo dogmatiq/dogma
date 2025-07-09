@@ -99,11 +99,6 @@ type ProjectionConfigurer interface {
 	// Projection handlers support the HandlesEvent() route type.
 	Routes(...ProjectionRoute)
 
-	// DeliveryPolicy configures how the engine delivers events to the handler.
-	//
-	// The default policy is UnicastProjectionDeliveryPolicy.
-	DeliveryPolicy(ProjectionDeliveryPolicy)
-
 	// Disable prevents the handler from receiving any messages.
 	//
 	// The engine MUST NOT call any methods other than Configure() on a disabled
@@ -121,15 +116,6 @@ type ProjectionConfigurer interface {
 type ProjectionEventScope interface {
 	// RecordedAt returns the time at which the event occurred.
 	RecordedAt() time.Time
-
-	// IsPrimaryDelivery returns true on one of the application instances that
-	// receive the event, and false on all other instances.
-	//
-	// This method is useful when the projection must perform some specific
-	// operation once per event, such as updating a shared resource that's used
-	// by all applications, while still delivering the event to all instances of
-	// the application.
-	IsPrimaryDelivery() bool
 
 	// Now returns the current local time, according to the engine.
 	//
@@ -167,6 +153,13 @@ type ProjectionCompactScope interface {
 	Log(format string, args ...any)
 }
 
+// ProjectionRoute describes a message type that's routed to a
+// [ProjectionMessageHandler].
+type ProjectionRoute interface {
+	MessageRoute
+	isProjectionRoute()
+}
+
 // NoCompactBehavior is an embeddable type for [ProjectionMessageHandler]
 // implementations that do not require compaction.
 type NoCompactBehavior struct{}
@@ -174,31 +167,4 @@ type NoCompactBehavior struct{}
 // Compact does nothing.
 func (NoCompactBehavior) Compact(context.Context, ProjectionCompactScope) error {
 	return nil
-}
-
-type (
-	// A ProjectionDeliveryPolicy describes how to deliver events to a
-	// projection message handler on engines that support concurrent or
-	// distributed execution of a single Dogma application.
-	ProjectionDeliveryPolicy interface{ isProjectionDeliveryPolicy() }
-
-	// UnicastProjectionDeliveryPolicy is the default
-	// [ProjectionDeliveryPolicy]. It delivers each event to a single instance
-	// of the application.
-	UnicastProjectionDeliveryPolicy struct{}
-
-	// BroadcastProjectionDeliveryPolicy is a [ProjectionDeliveryPolicy] that
-	// delivers each event to a all instance of the application.
-	BroadcastProjectionDeliveryPolicy struct {
-		// PrimaryFirst defers "secondary delivery" of events until after the
-		// "primary delivery" has completed.
-		PrimaryFirst bool
-	}
-)
-
-// ProjectionRoute describes a message type that's routed to a
-// [ProjectionMessageHandler].
-type ProjectionRoute interface {
-	MessageRoute
-	isProjectionRoute()
 }
