@@ -46,8 +46,7 @@ type IntegrationMessageHandler interface {
 type IntegrationConfigurer interface {
 	HandlerConfigurer
 
-	// Routes associates message types with the handler, indicating which types
-	// it consumes and produces.
+	// Routes declares the message types that the handler consumes and produces.
 	//
 	// It accepts routes created by [HandlesCommand] and [RecordsEvent].
 	Routes(...IntegrationRoute)

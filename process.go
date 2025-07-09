@@ -87,16 +87,18 @@ type ProcessMessageHandler interface {
 // allow future extensions without breaking compatibility.
 type ProcessRoot any
 
-// A ProcessConfigurer configures the engine for use with a specific process
-// message handler.
+// ProcessConfigurer is the interface that a [ProcessMessageHandler] uses to
+// declare its configuration.
+//
+// The engine provides the implementation to [ProcessMessageHandler].Configure
+// during startup.
 type ProcessConfigurer interface {
 	HandlerConfigurer
 
-	// Routes configures the engine to route certain message types to and from
-	// the handler.
+	// Routes declares the message types that the handler consumes and produces.
 	//
-	// Process handlers support the HandlesEvent(), ExecutesCommand() and
-	// SchedulesTimeout() route types.
+	// It accepts routes created by [HandlesEvent], [ExecutesCommand], and
+	// [SchedulesTimeout].
 	Routes(...ProcessRoute)
 }
 
