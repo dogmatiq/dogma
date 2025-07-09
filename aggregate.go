@@ -59,7 +59,7 @@ type AggregateMessageHandler interface {
 	// events.
 	//
 	// The implementation must not cause external side-effects or modify r
-	// directly. Logic must depend only on information within r, s and c.
+	// directly. Logic must depend only on information within r, s, and c.
 	//
 	// The engine atomically persists the events recorded by exactly one
 	// successful invocation of this method for each command message. It doesn't
