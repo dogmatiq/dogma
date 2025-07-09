@@ -71,9 +71,9 @@ type AggregateMessageHandler interface {
 // of an aggregate instance used within [AggregateMessageHandler]
 // implementations.
 //
-// The aggregate root encapsulates business logic and provides a way to inspect
-// the current state when making decisions about which events to record. The
-// recorded events are the authoritative source of truth, not the AggregateRoot.
+// It encapsulates business logic and provides a way to inspect the current
+// state when making decisions about which events to record. The recorded events
+// are the authoritative source of truth, not the AggregateRoot.
 type AggregateRoot interface {
 	// ApplyEvent updates the aggregate instance to reflect the occurrence of an
 	// event.

@@ -76,11 +76,16 @@ type ProcessMessageHandler interface {
 	HandleTimeout(context.Context, ProcessRoot, ProcessTimeoutScope, Timeout) error
 }
 
-// ProcessRoot is a "marker" interface for the domain-specific state of a
-// specific process instance.
+// A ProcessRoot is an interface for an application's representation of a
+// process instance used within [ProcessMessageHandler] implementations.
 //
-// The interface is empty to allow use of any types supported by the engine.
-type ProcessRoot interface{}
+// It encapsulates workflow logic and provides a way to inspect the current
+// state when making decisions about which commands to execute and which
+// timeouts to schedule.
+//
+// This interface is currently equivalent to [any], but is a distinct type to
+// allow future extensions without breaking compatibility.
+type ProcessRoot any
 
 // A ProcessConfigurer configures the engine for use with a specific process
 // message handler.
