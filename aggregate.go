@@ -1,17 +1,23 @@
 package dogma
 
-// An AggregateMessageHandler is a message handler that handles [Command]
-// messages and records [Event] messages that represent changes to application
-// state.
+// An AggregateMessageHandler encapsulates an application's "invariant" logic -
+// conditions that must always hold true.
 //
-// An aggregate is a collection of related business entities that behave as a
+// It handles [Command] messages and records [Event] messages that represent
+// changes to application state.
+//
+// An "aggregate" is a collection of related business entities that behave as a
 // cohesive whole, such as a shopping cart and the items within it. The
 // aggregate message handler manages the behavior and state of such aggregates.
+// The term doesn't refer to data aggregation or summarization.
 //
 // Each aggregate message handler typically manages multiple instances, where
 // each instance represents a distinct occurrence of the aggregate. For example,
-// a shopping cart aggregate message handler may manage one instance per
-// customer.
+// a shopping cart aggregate might use one instance per customer.
+//
+// Aggregates enforce business rules that must always hold true for a specific
+// instance. For example, a shopping cart aggregate might prevent checkout if
+// the cart is empty, or limit the number of items to 10.
 type AggregateMessageHandler interface {
 	// Configure declares the handler's configuration by calling methods on c.
 	//
@@ -21,15 +27,16 @@ type AggregateMessageHandler interface {
 	// produce the same configuration each time it's called.
 	Configure(c AggregateConfigurer)
 
-	// New returns a new [AggregateRoot] for an aggregate instance.
+	// New returns a new [AggregateRoot] representing the initial state of an
+	// aggregate instance.
 	//
 	// The engine calls this method to get a "blank slate" when handling the
 	// first [Command] for a new instance or when reconstructing an existing
 	// instance from its historical [Event] messages.
 	New() AggregateRoot
 
-	// RouteCommandToInstance returns the ID of the aggregate instance c
-	// modifies.
+	// RouteCommandToInstance returns the ID of the aggregate instance that c
+	// targets.
 	//
 	// The return value must be a non-empty string that uniquely identifies the
 	// target instance. For example, in a shopping cart aggregate, the instance
@@ -37,14 +44,14 @@ type AggregateMessageHandler interface {
 	//
 	// Commands routed to the same instance operate on the same state. There's
 	// no need to create an instance in advance - it "exists" once the handler
-	// records events against it.
+	// records an [Event] against it.
 	//
-	// The engine calls this method before handling the [Command]. It must
-	// return the same value each time it's called with the same command.
+	// The engine calls this method before handling the [Command]. The
+	// implementation must derive the ID from information within c.
 	RouteCommandToInstance(c Command) string
 
-	// HandleCommand handles a [Command] message by executing business logic to
-	// determine which [Event] messages to record, if any.
+	// HandleCommand updates an aggregate instance's state by recording [Event]
+	// messages that represent the effects of a [Command].
 	//
 	// r is the [AggregateRoot] for the instance that the command targets, as
 	// determined by [AggregateMessageHandler].RouteCommandToInstance. It

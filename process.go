@@ -5,48 +5,62 @@ import (
 	"time"
 )
 
-// A ProcessMessageHandler models a business process.
+// A ProcessMessageHandler encapsulates an application's "workflow" logic -
+// stateful decision-making that spans multiple [Command] messages.
 //
-// Processes are useful for coordinating changes across aggregate instances and
-// for modeling processes that include time-based logic.
+// It handles [Event] messages and executes [Command] to enact further
+// application state changes. It may also schedule [Timeout] messages to perform
+// actions at specific times. For example, to send a reminder if a customer
+// hasn't completed the checkout process within one hour.
 //
-// [Event] messages can begin, advance or end a process. The process causes
-// changes within the application by executing [Command] messages.
+// Each process message handler typically manages multiple instances, where each
+// instance represents a distinct occurrence of the process. For example, a
+// shopping cart checkout process might use one instance per customer.
 //
-// Processes are stateful. Am application typically uses multiple instances of a
-// process, each with its own state. For example, an e-commerce application may
-// use one instance of the "checkout" process for each customer's shopping cart.
-//
-// The state of each instance is application-defined. Often it's a tree of
-// related entities and values. The [ProcessRoot] interface represents the "root"
-// entity through which the handler accesses the instance's state.
-//
-// Processes can also schedule [Timeout] messages. Timeouts model time in the
-// business domain. For example, a timeout could trigger an email to a customer
-// who added a product to their shopping cart but did not pay within one hour.
-//
-// Process handlers SHOULD NOT directly perform write operations such as
-// updating a database or invoking any API that does so.
+// Process message handlers coordinate state changes that involve some
+// combination of multiple aggregate instances, integrations with external
+// systems, and time-based logic. As a general rule, they should implement only
+// workflow logic. For example, a process might decide when to refund a
+// customer's purchase, but shouldn't calculate the refund amount or interact
+// directly with the payment processor.
 type ProcessMessageHandler interface {
-	// Configure describes the handler's configuration to the engine.
-	Configure(ProcessConfigurer)
+	// Configure declares the handler's configuration by calling methods on c.
+	//
+	// The configuration includes the handler's identity and message routes.
+	//
+	// The engine calls this method at least once during startup. It must
+	// produce the same configuration each time it's called.
+	Configure(c ProcessConfigurer)
 
-	// New returns a process root instance in its initial state.
+	// New returns a new [ProcessRoot] representing the initial state of a
+	// process instance.
 	//
-	// The return value MUST NOT be nil. It MAY be the zero-value of the root's
-	// underlying type.
-	//
-	// Each call SHOULD return the same type and initial state.
+	// The engine calls this method to get a "blank slate" when handling the
+	// first [Event] for a new instance. Unlike aggregates, the engine doesn't
+	// reconstruct process state from historical events.
 	New() ProcessRoot
 
-	// RouteEventToInstance returns the ID of the instance that handles a
-	// specific event.
+	// RouteEventToInstance returns the ID of the process instance that e
+	// targets.
 	//
-	// If ok is false, the process ignores this event. Otherwise, id MUST not be
-	// empty. RFC 4122 UUIDs are the RECOMMENDED format for instance IDs.
+	// If ok is false, the handler ignores the event. Otherwise, the returned ID
+	// must be a non-empty string that uniquely identifies the target instance.
+	// For example, in a shopping cart checkout process, the instance ID might
+	// be the customer's ID. RFC 4122 UUIDs are the recommended format.
 	//
-	// A process instance begins the first time it receives an event.
-	RouteEventToInstance(context.Context, Event) (id string, ok bool, err error)
+	// Events routed to the same instance operate on the same state. There's no
+	// need to create an instance in advance - it "exists" once the handler
+	// modifies its [ProcessRoot], executes a [Command], or schedules a
+	// [Timeout] against it.
+	//
+	// The engine calls this method before handling the [Event]. The
+	// implementation may query external data - such as the application's
+	// projections - but this isn't recommended. Wherever possible, it should
+	// derive the ID from information within e.
+	RouteEventToInstance(
+		ctx context.Context,
+		e Event,
+	) (id string, ok bool, err error)
 
 	// HandleEvent begins or continues the process in response to an event.
 	//
