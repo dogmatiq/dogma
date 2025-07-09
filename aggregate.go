@@ -99,24 +99,24 @@ type AggregateConfigurer interface {
 	Routes(...AggregateRoute)
 }
 
-// AggregateCommandScope represents the context within which the engine
-// invokes [AggregateMessageHandler].HandleCommand.
+// AggregateCommandScope represents the context within which an
+// [AggregateMessageHandler] handles a [Command] message.
 type AggregateCommandScope interface {
 	HandlerScope
 
-	// InstanceID returns the ID of the aggregate instance that the command
+	// InstanceID returns the ID of the aggregate instance that the [Command]
 	// targets, as returned by [AggregateMessageHandler].RouteCommandToInstance.
 	InstanceID() string
 
 	// RecordEvent records an [Event] that results from handling the [Command].
 	//
-	// The engine applies the event to the aggregate root by calling
+	// It applies the event to the aggregate root by calling
 	// [AggregateRoot].ApplyEvent, making the state changes visible to the
 	// handler immediately.
 	//
-	// The engine doesn't persist the event until
-	// [AggregateMessageHandler].HandleCommand completes successfully. It
-	// persists all events recorded using the same scope atomically.
+	// The engine persists all events recorded within this scope in a single
+	// atomic operation after the [AggregateMessageHandler] finishes handling
+	// the inbound command.
 	RecordEvent(Event)
 }
 

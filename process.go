@@ -95,109 +95,75 @@ type ProcessConfigurer interface {
 	Routes(...ProcessRoute)
 }
 
-// ProcessEventScope performs engine operations within the context of a call
-// to the HandleEvent() method of a [ProcessMessageHandler].
-type ProcessEventScope interface {
-	// InstanceID returns the ID of the process instance.
+// ProcessScope represents the context within which a [ProcessMessageHandler]
+// handles a message.
+//
+// Each kind of message handled by a process message handler has a corresponding
+// scope type that extends this interface:
+//
+//   - [ProcessEventScope]
+//   - [ProcessTimeoutScope]
+type ProcessScope interface {
+	HandlerScope
+
+	// InstanceID returns the ID of the process instance that the message
+	// targets.
+	//
+	// When handling an [Event] message, it returns the ID produced by
+	// [ProcessMessageHandler].RouteEventToInstance during routing.
+	//
+	// When handling a [Timeout] message, it returns the ID of the instance that
+	// scheduled the timeout.
 	InstanceID() string
 
-	// End signals the end of the process.
+	// End signals the end of a process.
 	//
-	// Ending a process instance destroys its state and cancels any pending
-	// timeouts.
-	//
-	// The process instance ends once HandleEvent() returns. Any future call to
-	// ExecuteCommand() or ScheduleTimeout() on this scope prevents the process
-	// from ending.
-	//
-	// "Re-beginning" a process instance that has ended has undefined behavior
-	// and is NOT RECOMMENDED.
+	// The engine discards the instance's state, cancels any pending [Timeout]
+	// messages. It ignores any future messages that target the ended instance.
 	End()
 
-	// ExecuteCommand executes a command as a result of the event.
+	// ExecuteCommand submits a [Command] for execution.
 	//
-	// Executing a command cancels any prior call to End() on this scope.
+	// The engine persists all commands and timeouts produced within this scope
+	// in a single atomic operation after the [ProcessMessageHandler] finishes
+	// handling the inbound message. If the handler returns a non-nil error, the
+	// engine discards the messages.
+	//
+	// This method panics if the process instance has ended.
 	ExecuteCommand(Command)
 
-	// ScheduleTimeout schedules a timeout to occur at a specific time.
+	// ScheduleTimeout schedules a [Timeout] message to occur at the specified
+	// time.
 	//
-	// Ending the process cancels any pending timeouts. Scheduling a timeout
-	// cancels any prior call to End() on this scope.
+	// The engine persists all commands and timeouts produced within this scope
+	// in a single atomic operation after the [ProcessMessageHandler] finishes
+	// handling the inbound message. If the handler returns a non-nil error, the
+	// engine discards the messages.
+	//
+	// This method panics if the process instance has ended.
 	ScheduleTimeout(Timeout, time.Time)
-
-	// RecordedAt returns the time at which the event occurred.
-	RecordedAt() time.Time
-
-	// Now returns the current local time, according to the engine.
-	//
-	// Use of this method is discouraged. It is preferrable to use information
-	// contained within the message, the process root, or the time returned by
-	// [ProcessEventScope.RecordedAt], which provides consistent behavior when
-	// message delivery is delayed or retried.
-	//
-	// If access to the system clock is absolutely necessary, handlers should
-	// call this method instead of [time.Now]. It may return a time different to
-	// that returned by [time.Now] under some circumstances, such as when
-	// executing tests or when accounting for clock skew in a distributed
-	// system.
-	Now() time.Time
-
-	// Log records an informational message.
-	Log(format string, args ...any)
 }
 
-// ProcessTimeoutScope performs engine operations within the context of a call
-// to the HandleTimeout() method of a [ProcessMessageHandler].
+// ProcessEventScope represents the context within which a
+// [ProcessMessageHandler] handles an [Event] message.
+type ProcessEventScope interface {
+	ProcessScope
+
+	// RecordedAt returns the time at which the inbound [Event] occurred.
+	RecordedAt() time.Time
+}
+
+// ProcessTimeoutScope represents the context within which a
+// [ProcessMessageHandler] handles a [Timeout] message.
 type ProcessTimeoutScope interface {
-	// InstanceID returns the ID of the process instance.
-	InstanceID() string
+	ProcessScope
 
-	// End signals the end of the process.
+	// ScheduledFor returns the time at which the timeout occurred.
 	//
-	// Ending a process instance destroys its state and cancels any pending
-	// timeouts.
-	//
-	// The process instance ends once HandleTimeout() returns. Any future call
-	// to ExecuteCommand() or ScheduleTimeout() on this scope prevents the
-	// process from ending.
-	//
-	// "Re-beginning" a process instance that has ended has undefined behavior
-	// and is NOT RECOMMENDED.
-	End()
-
-	// ExecuteCommand executes a command as a result of the timeout.
-	//
-	// Executing a command cancels any prior call to End() on this scope.
-	ExecuteCommand(Command)
-
-	// ScheduleTimeout schedules a timeout to occur at a specific time.
-	//
-	// Ending the process cancels any pending timeouts. Scheduling a timeout
-	// cancels any prior call to End() on this scope.
-	ScheduleTimeout(Timeout, time.Time)
-
-	// ScheduledFor returns the time at which the timeout occured.
-	//
-	// The time may be before the current time. For example, the engine may
-	// deliver timeouts that were "missed" after recovering from downtime.
+	// Even though the engine attempts to deliver timeouts at their scheduled
+	// time, it may deliver them later when recovering from downtime or retrying
+	// after a failure.
 	ScheduledFor() time.Time
-
-	// Now returns the current local time, according to the engine.
-	//
-	// Use of this method is discouraged. It is preferrable to use information
-	// contained within the message, the process root, or the time returned by
-	// [ProcessTimeoutScope.ScheduledFor], which provides consistent behavior
-	// when message delivery is delayed or retried.
-	//
-	// If access to the system clock is absolutely necessary, handlers should
-	// call this method instead of [time.Now]. It may return a time different to
-	// that returned by [time.Now] under some circumstances, such as when
-	// executing tests or when accounting for clock skew in a distributed
-	// system.
-	Now() time.Time
-
-	// Log records an informational message.
-	Log(format string, args ...any)
 }
 
 // ProcessRoute describes a message type that's routed to or from a
