@@ -87,7 +87,7 @@ type ProcessMessageHandler interface {
 	//
 	// The engine delivers all [Event] messages recorded within a single scope
 	// in their recorded order. It also preserves the order of events from a
-	// single aggregate instance, even across scopes. It does not guarantee the
+	// single aggregate instance, even across scopes. It doesn't guarantee the
 	// relative delivery order of events from different handlers or aggregate
 	// instances.
 	HandleEvent(
@@ -117,8 +117,8 @@ type ProcessMessageHandler interface {
 	//
 	// The engine attempts to deliver timeout messages at their scheduled time.
 	// It may deliver them later when recovering from downtime or retrying after
-	// a failure. It doesn't guarantee the delivery order of timeout messages
-	// with the same scheduled time.
+	// a failure. It doesn't guarantee the relative delivery order of timeout
+	// messages with the same scheduled time.
 	HandleTimeout(
 		ctx context.Context,
 		r ProcessRoot,
