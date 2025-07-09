@@ -11,7 +11,7 @@ docs/adr/README.md: .adr-dir $(filter-out docs/adr/README.md,$(wildcard docs/adr
 	@touch $@
 
 lint:: .vale/vale.touch
-	vale --no-wrap --no-global .
+	vale --no-wrap --no-global --glob='!.*/**' .
 
 .makefiles/%:
 	@curl -sfL https://makefiles.dev/v1 | bash /dev/stdin "$@"
