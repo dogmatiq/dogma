@@ -58,9 +58,8 @@ type AggregateMessageHandler interface {
 	// reflects the state of the targeted instance after applying its historical
 	// events.
 	//
-	// This method must not cause external side-effects or modify r directly.
-	// Logic must depend only on information within the given root, scope, and
-	// command.
+	// The implementation must not cause external side-effects or modify r
+	// directly. Logic must depend only on information within r, s and c.
 	//
 	// The engine atomically persists the events recorded by exactly one
 	// successful invocation of this method for each command message. It doesn't

@@ -57,45 +57,82 @@ type ProcessMessageHandler interface {
 	// implementation may query external data - such as the application's
 	// projections - but this isn't recommended. Wherever possible, it should
 	// derive the ID from information within e.
+	//
+	// If the process instance identified by the returned ID has ended, the
+	// engine ignores the event.
 	RouteEventToInstance(
 		ctx context.Context,
 		e Event,
 	) (id string, ok bool, err error)
 
-	// HandleEvent begins or continues the process in response to an event.
+	// HandleEvent begins or advances a process in response to an [Event]
+	// message.
 	//
-	// The handler inspects the root to determine which commands to execute, if
-	// any. It may also schedule timeouts to "wake" the process at a later time.
+	// r is the [ProcessRoot] for the instance that the event targets, as
+	// determined by [ProcessMessageHandler].RouteEventToInstance. It reflects
+	// the state of the targeted instance after handling any prior [Event] or
+	// [Timeout] messages.
 	//
-	// If this is the first event routed to this instance, the root is the
-	// return value of New(). Otherwise, it's the value of the root as it
-	// existed after handling the last event or timeout.
+	// The implementation may update r directly, execute [Command] messages,
+	// schedule [Timeout] messages, or end the process. It may query external
+	// data - such as the application's projections - but this isn't
+	// recommended. Wherever possible, logic should depend solely on information
+	// within r, s, and e.
 	//
-	// The engine MAY provide specific guarantees about the order in which it
-	// supplies events to the handler. To maximize portability across engines,
-	// the handler SHOULD NOT assume any specific ordering. The engine MAY call
-	// this method concurrently from separate goroutines or operating system
-	// processes.
-	HandleEvent(context.Context, ProcessRoot, ProcessEventScope, Event) error
+	// The engine atomically persists the state changes, events, and timeouts
+	// produced by exactly one successful invocation of this method for each
+	// event message. It doesn't guarantee the order, number, or concurrency of
+	// those attempts. Generally, the implementation doesn't need to perform any
+	// synchronization or idempotency checks.
+	//
+	// The engine delivers all [Event] messages recorded within a single scope
+	// in their recorded order. It also preserves the order of events from a
+	// single aggregate instance, even across scopes. It does not guarantee the
+	// relative delivery order of events from different handlers or aggregate
+	// instances.
+	HandleEvent(
+		ctx context.Context,
+		r ProcessRoot,
+		s ProcessEventScope,
+		e Event,
+	) error
 
-	// HandleTimeout continues the process in response to a timeout.
+	// HandleTimeout advances a process in response to a [Timeout] message.
 	//
-	// The handler inspects the root to determine which commands to execute, if
-	// any. It may also schedule timeout messages to "wake" the process at a
-	// later time.
+	// r is the [ProcessRoot] for the instance that scheduled the timeout. It
+	// reflects the state of the targeted instance after handling any prior
+	// [Event] or [Timeout] messages.
 	//
-	// The engine MUST NOT call this method before the timeout's scheduled time.
-	// The engine MAY call this method concurrently from separate goroutines or
-	// operating system processes.
-	HandleTimeout(context.Context, ProcessRoot, ProcessTimeoutScope, Timeout) error
+	// The implementation may update r directly, execute [Command] messages,
+	// schedule [Timeout] messages, or end the process. It may query external
+	// data - such as the application's projections - but this isn't
+	// recommended. Wherever possible, logic should depend solely on information
+	// within r, s, and t.
+	//
+	// The engine atomically persists the state changes, events, and timeouts
+	// produced by exactly one successful invocation of this method for each
+	// timeout message. It doesn't guarantee the order, number, or concurrency
+	// of those attempts. Generally, the implementation doesn't need to perform
+	// any synchronization or idempotency checks.
+	//
+	// The engine attempts to deliver timeout messages at their scheduled time.
+	// It may deliver them later when recovering from downtime or retrying after
+	// a failure. It doesn't guarantee the delivery order of timeout messages
+	// with the same scheduled time.
+	HandleTimeout(
+		ctx context.Context,
+		r ProcessRoot,
+		s ProcessTimeoutScope,
+		t Timeout,
+	) error
 }
 
 // A ProcessRoot is an interface for an application's representation of a
 // process instance used within [ProcessMessageHandler] implementations.
 //
-// It encapsulates workflow logic and provides a way to inspect the current
-// state when making decisions about which commands to execute and which
-// timeouts to schedule.
+// It encapsulates process logic and provides a way to inspect the current state
+// when making decisions about which commands to execute and which timeouts to
+// schedule.
 //
 // This interface is currently equivalent to [any], but is a distinct type to
 // allow future extensions without breaking compatibility.
