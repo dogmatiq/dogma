@@ -58,9 +58,8 @@ type DisableOption interface {
 // handler.
 //
 // Each operation that a handler performs has a corresponding scope type that
-// extends this interface.
+// extends this interface:
 //
-// See:
 //   - [AggregateCommandScope]
 //   - [ProcessEventScope]
 //   - [ProcessTimeoutScope]

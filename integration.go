@@ -53,16 +53,17 @@ type IntegrationConfigurer interface {
 	Routes(...IntegrationRoute)
 }
 
-// IntegrationCommandScope represents the context within which the engine
-// invokes [IntegrationMessageHandler].HandleCommand.
+// IntegrationCommandScope represents the context within which an
+// [IntegrationMessageHandler] handles a [Command] message.
 type IntegrationCommandScope interface {
 	HandlerScope
 
 	// RecordEvent records an [Event] that results from handling the [Command].
 	//
-	// The engine doesn't persist the event until
-	// [IntegrationMessageHandler].HandleCommand returns successfully. It
-	// persists all events recorded using the same scope atomically.
+	// The engine persists all events recorded within this scope in a single
+	// atomic operation after the [IntegrationMessageHandler] finishes handling
+	// the inbound command. If the handler returns a non-nil error, the engine
+	// discards the events.
 	RecordEvent(Event)
 }
 
