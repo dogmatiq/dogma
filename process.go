@@ -86,7 +86,7 @@ type ProcessMessageHandler interface {
 	// synchronization or idempotency checks.
 	//
 	// The engine delivers all [Event] messages recorded within a single scope
-	// in their recorded order. It also preserves the order of events from a
+	// in the order they occurred. It also preserves the order of events from a
 	// single aggregate instance, even across scopes. It doesn't guarantee the
 	// relative delivery order of events from different handlers or aggregate
 	// instances.
