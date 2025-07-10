@@ -41,7 +41,7 @@ generic resources and versions.
   is reduced, as it no longer requires understanding the abstract "resource
   versioning system".
 - We can use more appropriate data types for the event stream identifiers and
-  offsets, perhaps `string` and `uint64`. Resource identifiers and versions are
+  offsets, perhaps `string` and `uint64`. Currently resource identifiers and versions are
   both represented by opaque byte slices.
 - We can build richer tooling that understands how to properly "reset" a
   projection to rebuild it from the start of the event streams.
