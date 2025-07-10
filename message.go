@@ -121,3 +121,13 @@ type TimeoutValidationScope interface {
 	// false if the application is scheduling a new timeout.
 	IsScheduled() bool
 }
+
+// EventStreamPosition represents the position of an [Event] within an event
+// stream.
+type EventStreamPosition struct {
+	// StreamID is an RFC 4122 UUID that identifies the event stream.
+	StreamID string
+
+	// Offset is the zero-based position of the event within the stream.
+	Offset uint64
+}

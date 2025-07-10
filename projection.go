@@ -13,16 +13,18 @@ import (
 // example, a projection might contain a list of customers with active shopping
 // carts.
 //
-// Projection message handlers use an optimistic concurrency control (OCC)
-// protocol to ensure exactly-once event processing. The protocol coordinates
-// between the engine and the handler using a key/value store that tracks the
-// version of engine-defined "resources". This prevents duplicate updates when
-// the engine retries operations or when multiple engine instances process the
-// same events.
+// Each event belongs to an ordered event stream, identified by a UUID. The
+// engine delivers events in the order they appear on the stream, using a
+// numeric offset to represent each event's position.
 //
-// The OCC protocol can be challenging to implement correctly. The
-// [github.com/dogmatiq/projectionkit] module provides adapters for popular
-// databases like PostgreSQL and DynamoDB that handle the OCC details.
+// A single projection may receive events from multiple streams, which may
+// belong to different applications.
+//
+// To ensure exactly-once event processing, the handler must implement
+// optimistic concurrency control (OCC) based on each event's position within an
+// event stream. The [github.com/dogmatiq/projectionkit] module provides
+// adapters for popular databases, like PostgreSQL and DynamoDB, that handle the
+// OCC details.
 type ProjectionMessageHandler interface {
 	// Configure declares the handler's configuration by calling methods on c.
 	//
@@ -35,56 +37,45 @@ type ProjectionMessageHandler interface {
 	// HandleEvent updates the projection to reflect the occurrence of an
 	// [Event].
 	//
-	// The handler must implement the OCC protocol to ensure exactly-once
-	// processing. The engine provides three values that coordinate this
-	// protocol:
+	// The handler must enforce exactly-once semantics by performing an
+	// optimistic concurrency check based on the event's [EventStreamPosition],
+	// available via [ProjectionEventScope].Position.
 	//
-	//   - r identifies an engine-defined resource
-	//   - c is the engine's view of r's current version
-	//   - n is the next version of r after handling this event
+	// To do this, the handler must persist an offset for each stream from which
+	// it receives events. When handling an event, it compares the event’s
+	// offset to the offset of the next unhandled event for that stream. If they
+	// match, the handler applies the event and increments the stored offset in
+	// a single atomic operation. If they don’t match, an OCC conflict has
+	// occurred, and the handler must not apply the event.
 	//
-	// The handler must atomically:
-	//   1. Verify that c matches r's actual version in the OCC store
-	//   2. Update the projection to reflect the event
-	//   3. Update r's version to n in the OCC store
+	// In either case, the return value n is the offset of the next unhandled
+	// event in the stream. If n is the offset immediately after that of the
+	// incoming event, the engine considers the event handled successfully.
+	// Otherwise, an OCC conflict has occurred, and the engine resumes
+	// delivering events from the stream starting at offset n.
 	//
-	// If all operations succeed, the handler returns ok as true. If c doesn't
-	// match r's actual version (an OCC conflict), the handler returns ok as
-	// false without modifying the projection. The engine retries conflicts
-	// automatically.
+	// A non-nil error indicates that the handler encountered a runtime problem
+	// other than an OCC conflict.
 	//
-	// The handler must treat r, c, and n as opaque values. The engine defines
-	// their meaning and content. The "current" version of a new resource is an
-	// empty byte slice. The handler must treat nil and empty slices as
-	// equivalent.
-	//
-	// The engine doesn't guarantee any specific event delivery order except
-	// that it preserves the order of events from a single aggregate instance.
-	// The engine may call this method concurrently from multiple goroutines or
-	// processes.
+	// The engine arranges events on streams such that it delivers all [Event]
+	// messages recorded within a single scope in the order they occurred. It
+	// also preserves the order of events from a single aggregate instance, even
+	// across scopes. It doesn't guarantee the relative delivery order of events
+	// from different handlers or aggregate instances.
 	HandleEvent(
 		ctx context.Context,
-		r, c, n []byte,
 		s ProjectionEventScope,
 		e Event,
-	) (ok bool, err error)
+	) (n uint64, err error)
 
-	// ResourceVersion returns the current version of the resource r from the
-	// projection's OCC store.
+	// StreamOffset returns the offset of the next unhandled event in a specific
+	// event stream.
 	//
-	// It returns an empty slice if r doesn't exist in the store. The handler
-	// must treat nil and empty slices as equivalent.
+	// s is the RFC 4122 UUID that identifies the event stream.
 	//
-	// The engine uses this method to determine r's current version before
-	// calling [ProjectionMessageHandler].HandleEvent.
-	ResourceVersion(ctx context.Context, r []byte) ([]byte, error)
-
-	// CloseResource removes the resource r from the OCC store.
-	//
-	// The engine calls this method when it no longer needs to track r. The
-	// handler should remove r and its version from the store if present. It
-	// should succeed even if r doesn't exist.
-	CloseResource(ctx context.Context, r []byte) error
+	// The first event in a stream is always at offset 0. Accordingly, if no
+	// events from s have been handled, this method returns 0.
+	StreamOffset(ctx context.Context, s string) (uint64, error)
 
 	// Compact reduces the projection's size by removing or consolidating data.
 	//
@@ -119,6 +110,9 @@ type ProjectionConfigurer interface {
 type ProjectionEventScope interface {
 	HandlerScope
 
+	// StreamPosition returns the [EventStreamPosition] of the [Event].
+	Position() EventStreamPosition
+
 	// RecordedAt returns the time at which the [Event] occurred.
 	RecordedAt() time.Time
 }
@@ -139,8 +133,8 @@ type ProjectionRoute interface {
 // NoCompactBehavior is an embeddable type for [ProjectionMessageHandler]
 // implementations that don't require compaction.
 //
-// Embed this type in a [ProjectionMessageHandler] to when projection data
-// doesn't grow unbounded or when an external system handles compaction.
+// Embed this type in a [ProjectionMessageHandler] when projection data doesn't
+// grow unbounded or when an external system handles compaction.
 type NoCompactBehavior struct{}
 
 // Compact returns nil without performing any operations.
