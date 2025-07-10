@@ -23,7 +23,7 @@ persistence.
 ## Features
 
 - **[Event sourcing]** — Dogma records every state change as an immutable event.
-  This enables full auditability and allows you to build or rebuild
+  This enables comprehensive auditing and allows you to build or rebuild
   read-optimized views from the event history at any time.
 
 - **Grounded in [Domain-Driven Design]** — Dogma adopts core concepts from DDD
@@ -66,7 +66,7 @@ your application binary that orchestrates message delivery, state persistence,
 and the execution of application logic.
 
 - [verity] — The original Dogma engine, designed for typical application loads
-  in smaller deployments. While production-ready, it does not support scaling of
+  in smaller deployments. While production-ready, it doesn't support scaling of
   a single application across multiple machines.
 
 - [veracity] — The next-generation Dogma engine built for

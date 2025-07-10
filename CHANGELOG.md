@@ -200,7 +200,7 @@ practices.**
 - Implement `Validate()` methods on message types
 
 Otherwise, most significant change is the introduction of `Routes()` methods to
-handler configurer interfaces. Implementors should use `Routes()` in preference
+handler configurer interfaces. Implementers should use `Routes()` in preference
 to the existing `Consumes*Type()` and `Produces*Type()` methods, which are now
 deprecated.
 
