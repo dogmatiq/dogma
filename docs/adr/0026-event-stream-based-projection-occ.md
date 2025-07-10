@@ -22,7 +22,7 @@ CRUD and event-sourced engines.
 
 - CRUD engines, or engines without strictly ordered events, were expected to use
   event IDs as the resource, with an empty version for unhandled events and a
-  non-empty verison for handled events.
+  non-empty version for handled events.
 - Event-sourced engines were expected - and do - use the application or
   event-stream ID as the resource, the stream offset as the version.
 
