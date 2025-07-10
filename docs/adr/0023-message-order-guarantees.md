@@ -6,7 +6,7 @@ Date: 2025-06-14
 
 Accepted
 
-- References [22. Remove CRUD Application Support](0022-remove-crud-application-support.md)
+- References [22. Remove CRUD application support](0022-remove-crud-application-support.md)
 
 ## Context
 
