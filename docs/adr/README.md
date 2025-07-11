@@ -36,3 +36,4 @@ the ADR documents.
 * [23. Message order guarantees](0023-message-order-guarantees.md)
 * [24. Permanently end processes](0024-permanently-end-processes.md)
 * [25. Prevent reverting ended processes](0025-prevent-reverting-ended-processes.md)
+* [26. Event-stream based projection OCC](0026-event-stream-based-projection-occ.md)
