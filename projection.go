@@ -110,7 +110,7 @@ type ProjectionConfigurer interface {
 type ProjectionEventScope interface {
 	HandlerScope
 
-	// StreamPosition returns the [EventStreamPosition] of the [Event].
+	// Position returns the [EventStreamPosition] of the [Event].
 	Position() EventStreamPosition
 
 	// RecordedAt returns the time at which the [Event] occurred.
