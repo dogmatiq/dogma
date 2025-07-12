@@ -71,7 +71,9 @@ type ProjectionMessageHandler interface {
 	// StreamOffset returns the offset of the next unhandled event in a specific
 	// event stream.
 	//
-	// s is the RFC 4122 UUID that identifies the event stream.
+	// s is an RFC 4122 UUID that identifies the event stream, such as
+	// "c50b5804-8312-4c61-b32c-9fbf49688db3". UUIDs are case-insensitive, but
+	// the engine must use a lowercase representation.
 	//
 	// The first event in any stream is at offset 0. Accordingly, if the handler
 	// hasn’t handled any events from s, this method returns 0.
