@@ -2,25 +2,27 @@ package dogma
 
 import "context"
 
-// A CommandExecutor executes a command from outside the context of any message
-// handler.
+// A CommandExecutor submits [Command] messages for execution.
 //
-// The CommandExecutor is the primary way that code outside of the Dogma
-// application interacts with the Dogma engine.
+// It's the primary way that code outside of the Dogma application interacts
+// with the engine.
 type CommandExecutor interface {
-	// ExecuteCommand executes or enqueues a command.
+	// ExecuteCommand submits a [Command] for execution.
 	//
-	// If it returns nil, the engine has guaranteed execution of the command.
-	// Otherwise, the it's the caller's responsibility to retry.
-	//
-	// The application SHOULD assume that the command is executed
-	// asynchronously; it has not necessarily executed by the time the method
+	// The engine may invoke the associated handler more than once, but the
+	// command's side-effects, such as the events it produces, occur exactly
+	// once. The engine attempts to execute the command immediately, but there
+	// is no guarantee that execution is complete by the time this method
 	// returns.
+	//
+	// If it returns a non-nil error, the engine may not have taken ownership of
+	// message delivery, and the application should retry execution. See
+	// [WithIdempotencyKey].
 	ExecuteCommand(context.Context, Command, ...ExecuteCommandOption) error
 }
 
-// ExecuteCommandOption is an option that affects the behavior of a call to the
-// ExecuteCommand() method of the [CommandExecutor] interface.
+// ExecuteCommandOption is an option that modifies the behavior of
+// [CommandExecutor].ExecuteCommand.
 type ExecuteCommandOption interface {
 	ApplyExecuteCommandOption(executeCommandOptionsBuilder)
 }

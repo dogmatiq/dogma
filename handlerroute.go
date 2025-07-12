@@ -1,106 +1,103 @@
 package dogma
 
-// ViaAggregate configures an [Application] to route messages to and from the
-// specified [AggregateMessageHandler]. It is used as an argument to the
-// Routes() method of [ApplicationConfigurer].
+// ViaAggregate configures the [Application] to route messages to and from an
+// [AggregateMessageHandler].
 //
-// [Command] messages executed using a [CommandExecutor], [ProcessEventScope] or
-// [ProcessTimeoutScope] are routed to h if it has a [HandlesCommandRoute] for
-// that command type.
-//
-// [Event] messages recorded by h using an [AggregateCommandScope] are routed to
-// other handlers according to their route configurations.
+// Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
 func ViaAggregate(h AggregateMessageHandler, _ ...ViaAggregateOption) ViaAggregateRoute {
 	return ViaAggregateRoute{h}
 }
 
-// ViaProcess configures an [Application] to route messages to and from the
-// specified [ProcessMessageHandler]. It is used as an argument to the Routes()
-// method of [ApplicationConfigurer].
+// ViaProcess configures the [Application] to route messages to and from a
+// [ProcessMessageHandler].
 //
-// [Event] messages recorded using an [AggregateCommandScope] or
-// [IntegrationCommandScope] are routed to h if it has a [HandlesEvent] route
-// for that event type.
-//
-// [Command] messages executed by h using a [ProcessEventScope] or
-// [ProcessTimeoutScope] are routed to other handlers according to their route
-// configurations.
-//
-// [Timeout] messages are always routed back to h itself.
+// Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
 func ViaProcess(h ProcessMessageHandler, _ ...ViaProcessOption) ViaProcessRoute {
 	return ViaProcessRoute{h}
 }
 
-// ViaIntegration configures an [Application] to route messages to and from the
-// specified [IntegrationMessageHandler]. It is used as an argument to the
-// Routes() method of [ApplicationConfigurer].
+// ViaIntegration configures the [Application] to route messages to and from an
+// [IntegrationMessageHandler].
 //
-// [Command] messages executed using a [CommandExecutor], [ProcessEventScope] or
-// [ProcessTimeoutScope] are routed to h if it has a [HandlesCommandRoute] for
-// that command type.
-//
-// [Event] messages recorded by h using an [IntegrationCommandScope] are routed
-// to other handlers according to their route configurations.
+// Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
 func ViaIntegration(h IntegrationMessageHandler, _ ...ViaIntegrationOption) ViaIntegrationRoute {
 	return ViaIntegrationRoute{h}
 }
 
-// ViaProjection configures an [Application] to route messages to the specified
-// [ProjectionMessageHandler]. It is used as an argument to the Routes() method
-// of [ApplicationConfigurer].
+// ViaProjection configures the [Application] to route messages to a
+// [ProjectionMessageHandler].
 //
-// [Event] messages recorded using an [AggregateCommandScope] or
-// [IntegrationCommandScope] are routed to h if it has a [HandlesEvent] route
-// for that event type.
+// Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
 func ViaProjection(h ProjectionMessageHandler, _ ...ViaProjectionOption) ViaProjectionRoute {
 	return ViaProjectionRoute{h}
 }
 
 type (
-	// HandlerRoute is an interface for all types that describe a relationship
-	// between an [Application] and the a handler.
-	HandlerRoute interface {
-		isHandlerRoute()
-	}
+	// HandlerRoute is an interface for types that represent a relationship
+	// between the [Application] and a message handler.
+	//
+	// Use [ViaAggregate], [ViaProcess], [ViaIntegration], or [ViaProjection]
+	// to create a HandlerRoute.
+	HandlerRoute interface{ isHandlerRoute() }
 
-	// ViaAggregateRoute describes an [AggregateMessageHandler] that is to be
-	// registered with an [Application].
+	// ViaAggregateRoute is a [HandlerRoute] that represents a relationship
+	// between the [Application] and an [AggregateMessageHandler].
+	//
+	// Avoid constructing values of this type directly; use [ViaAggregate]
+	// instead.
 	ViaAggregateRoute struct{ Handler AggregateMessageHandler }
 
-	// ViaProcessRoute describes a [ProcessMessageHandler] that is to be
-	// registered with an [Application].
+	// ViaProcessRoute is a [HandlerRoute] that represents a relationship
+	// between the [Application] and a [ProcessMessageHandler].
+	//
+	// Avoid constructing values of this type directly; use [ViaProcess]
+	// instead.
 	ViaProcessRoute struct{ Handler ProcessMessageHandler }
 
-	// ViaIntegrationRoute describes an [IntegrationMessageHandler] that is
-	// to be registered with an [Application].
+	// ViaIntegrationRoute is a [HandlerRoute] that represents a relationship
+	// between the [Application] and an [IntegrationMessageHandler].
+	//
+	// Avoid constructing values of this type directly; use [ViaIntegration]
+	// instead.
 	ViaIntegrationRoute struct{ Handler IntegrationMessageHandler }
 
-	// ViaProjectionRoute describes a [ProjectionMessageHandler] that is to be
-	// registered with an [Application].
+	// ViaProjectionRoute is a [HandlerRoute] that represents a relationship
+	// between the [Application] and a [ProjectionMessageHandler].
+	//
+	// Avoid constructing values of this type directly; use [ViaProjection]
+	// instead.
 	ViaProjectionRoute struct{ Handler ProjectionMessageHandler }
 )
 
 type (
-	// ViaAggregateOption is an option that affects the behavior of a call to
-	// the RegisterAggregate() method of the [ApplicationConfigurer] interface.
+	// ViaAggregateOption is an option that modifies the behavior of
+	// [ViaAggregate].
+	//
+	// This type exists for forward compatibility.
 	ViaAggregateOption interface {
 		futureViaAggregateOption()
 	}
 
-	// ViaProcessOption is an option that affects the behavior of a call to
-	// the RegisterProcess() method of the [ApplicationConfigurer] interface.
+	// ViaProcessOption is an option that modifies the behavior of
+	// [ViaProcess].
+	//
+	// This type exists for forward compatibility.
 	ViaProcessOption interface {
 		futureViaProcessOption()
 	}
 
-	// ViaIntegrationOption is an option that affects the behavior of a call to
-	// the RegisterIntegration() method of the [ApplicationConfigurer] interface.
+	// ViaIntegrationOption is an option that modifies the behavior of
+	// [ViaIntegration].
+	//
+	// This type exists for forward compatibility.
 	ViaIntegrationOption interface {
 		futureViaIntegrationOption()
 	}
 
-	// ViaProjectionOption is an option that affects the behavior of a call to
-	// the RegisterProjection() method of the [ApplicationConfigurer] interface.
+	// ViaProjectionOption is an option that modifies the behavior of
+	// [ViaProjection].
+	//
+	// This type exists for forward compatibility.
 	ViaProjectionOption interface {
 		futureViaProjectionOption()
 	}

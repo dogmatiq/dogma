@@ -5,247 +5,238 @@ import (
 	"time"
 )
 
-// A ProcessMessageHandler models a business process.
+// A ProcessMessageHandler encapsulates an application's "workflow" logic -
+// stateful decision-making that spans multiple [Command] messages.
 //
-// Processes are useful for coordinating changes across aggregate instances and
-// for modeling processes that include time-based logic.
+// It handles [Event] messages and executes [Command] to enact further
+// application state changes. It may also schedule [Timeout] messages to perform
+// actions at specific times. For example, to send a reminder if a customer
+// hasn't completed the checkout process within one hour.
 //
-// [Event] messages can begin, advance or end a process. The process causes
-// changes within the application by executing [Command] messages.
+// Each process message handler typically manages multiple instances, where each
+// instance represents a distinct occurrence of the process. For example, a
+// shopping cart checkout process might use one instance per customer.
 //
-// Processes are stateful. Am application typically uses multiple instances of a
-// process, each with its own state. For example, an e-commerce application may
-// use one instance of the "checkout" process for each customer's shopping cart.
-//
-// The state of each instance is application-defined. Often it's a tree of
-// related entities and values. The [ProcessRoot] interface represents the "root"
-// entity through which the handler accesses the instance's state.
-//
-// Processes can also schedule [Timeout] messages. Timeouts model time in the
-// business domain. For example, a timeout could trigger an email to a customer
-// who added a product to their shopping cart but did not pay within one hour.
-//
-// Process handlers SHOULD NOT directly perform write operations such as
-// updating a database or invoking any API that does so.
+// Process message handlers coordinate state changes that involve some
+// combination of multiple aggregate instances, integrations with external
+// systems, and time-based logic. As a general rule, they should implement only
+// workflow logic. For example, a process might decide when to refund a
+// customer's purchase, but shouldn't calculate the refund amount or interact
+// directly with the payment processor.
 type ProcessMessageHandler interface {
-	// Configure describes the handler's configuration to the engine.
-	Configure(ProcessConfigurer)
+	// Configure declares the handler's configuration by calling methods on c.
+	//
+	// The configuration includes the handler's identity and message routes.
+	//
+	// The engine calls this method at least once during startup. It must
+	// produce the same configuration each time it's called.
+	Configure(c ProcessConfigurer)
 
-	// New returns a process root instance in its initial state.
+	// New returns a new [ProcessRoot] representing the initial state of a
+	// process instance.
 	//
-	// The return value MUST NOT be nil. It MAY be the zero-value of the root's
-	// underlying type.
-	//
-	// Each call SHOULD return the same type and initial state.
+	// The engine calls this method to get a "blank slate" when handling the
+	// first [Event] for a new instance. Unlike aggregates, the engine doesn't
+	// reconstruct process state from historical events.
 	New() ProcessRoot
 
-	// RouteEventToInstance returns the ID of the instance that handles a
-	// specific event.
+	// RouteEventToInstance returns the ID of the process instance that e
+	// targets.
 	//
-	// If ok is false, the process ignores this event. Otherwise, id MUST not be
-	// empty. RFC 4122 UUIDs are the RECOMMENDED format for instance IDs.
+	// If ok is false, the handler ignores the event. Otherwise, the returned ID
+	// must be a non-empty string that uniquely identifies the target instance.
+	// For example, in a shopping cart checkout process, the instance ID might
+	// be the customer's ID. RFC 4122 UUIDs are the recommended format.
 	//
-	// A process instance begins the first time it receives an event.
-	RouteEventToInstance(context.Context, Event) (id string, ok bool, err error)
+	// Events routed to the same instance operate on the same state. There's no
+	// need to create an instance in advance - it "exists" once the handler
+	// modifies its [ProcessRoot], executes a [Command], or schedules a
+	// [Timeout] against it.
+	//
+	// The engine calls this method before handling the [Event]. The
+	// implementation may query external data - such as the application's
+	// projections - but this isn't recommended. Wherever possible, it should
+	// derive the ID from information within e.
+	//
+	// If the process instance identified by the returned ID has ended, the
+	// engine ignores the event.
+	RouteEventToInstance(
+		ctx context.Context,
+		e Event,
+	) (id string, ok bool, err error)
 
-	// HandleEvent begins or continues the process in response to an event.
+	// HandleEvent begins or advances a process in response to an [Event]
+	// message.
 	//
-	// The handler inspects the root to determine which commands to execute, if
-	// any. It may also schedule timeouts to "wake" the process at a later time.
+	// r is the [ProcessRoot] for the instance that the event targets, as
+	// determined by [ProcessMessageHandler].RouteEventToInstance. It reflects
+	// the state of the targeted instance after handling any prior [Event] or
+	// [Timeout] messages.
 	//
-	// If this is the first event routed to this instance, the root is the
-	// return value of New(). Otherwise, it's the value of the root as it
-	// existed after handling the last event or timeout.
+	// The implementation may update r directly, execute [Command] messages,
+	// schedule [Timeout] messages, or end the process. It may query external
+	// data - such as the application's projections - but this isn't
+	// recommended. Wherever possible, logic should depend solely on information
+	// within r, s, and e.
 	//
-	// The engine MAY provide specific guarantees about the order in which it
-	// supplies events to the handler. To maximize portability across engines,
-	// the handler SHOULD NOT assume any specific ordering. The engine MAY call
-	// this method concurrently from separate goroutines or operating system
-	// processes.
-	HandleEvent(context.Context, ProcessRoot, ProcessEventScope, Event) error
+	// The engine atomically persists the state changes, events, and timeouts
+	// produced by exactly one successful invocation of this method for each
+	// event message. It doesn't guarantee the order, number, or concurrency of
+	// those attempts. Generally, the implementation doesn't need to perform any
+	// synchronization or idempotency checks.
+	//
+	// The engine delivers all [Event] messages recorded within a single scope
+	// in the order they occurred. It also preserves the order of events from a
+	// single aggregate instance, even across scopes. It doesn't guarantee the
+	// relative delivery order of events from different handlers or aggregate
+	// instances.
+	HandleEvent(
+		ctx context.Context,
+		r ProcessRoot,
+		s ProcessEventScope,
+		e Event,
+	) error
 
-	// HandleTimeout continues the process in response to a timeout.
+	// HandleTimeout advances a process in response to a [Timeout] message.
 	//
-	// The handler inspects the root to determine which commands to execute, if
-	// any. It may also schedule timeout messages to "wake" the process at a
-	// later time.
+	// r is the [ProcessRoot] for the instance that scheduled the timeout. It
+	// reflects the state of the targeted instance after handling any prior
+	// [Event] or [Timeout] messages.
 	//
-	// The engine MUST NOT call this method before the timeout's scheduled time.
-	// The engine MAY call this method concurrently from separate goroutines or
-	// operating system processes.
-	HandleTimeout(context.Context, ProcessRoot, ProcessTimeoutScope, Timeout) error
+	// The implementation may update r directly, execute [Command] messages,
+	// schedule [Timeout] messages, or end the process. It may query external
+	// data - such as the application's projections - but this isn't
+	// recommended. Wherever possible, logic should depend solely on information
+	// within r, s, and t.
+	//
+	// The engine atomically persists the state changes, events, and timeouts
+	// produced by exactly one successful invocation of this method for each
+	// timeout message. It doesn't guarantee the order, number, or concurrency
+	// of those attempts. Generally, the implementation doesn't need to perform
+	// any synchronization or idempotency checks.
+	//
+	// The engine attempts to deliver timeout messages at their scheduled time.
+	// It may deliver them later when recovering from downtime or retrying after
+	// a failure. It doesn't guarantee the relative delivery order of timeout
+	// messages with the same scheduled time.
+	HandleTimeout(
+		ctx context.Context,
+		r ProcessRoot,
+		s ProcessTimeoutScope,
+		t Timeout,
+	) error
 }
 
-// ProcessRoot is a "marker" interface for the domain-specific state of a
-// specific process instance.
+// A ProcessRoot is an interface for an application's representation of a
+// process instance used within [ProcessMessageHandler] implementations.
 //
-// The interface is empty to allow use of any types supported by the engine.
-type ProcessRoot interface{}
+// It encapsulates process logic and provides a way to inspect the current state
+// when making decisions about which commands to execute and which timeouts to
+// schedule.
+//
+// This interface is currently equivalent to [any], but is a distinct type to
+// allow future extensions without breaking compatibility.
+type ProcessRoot any
 
-// A ProcessConfigurer configures the engine for use with a specific process
-// message handler.
+// ProcessConfigurer is the interface that a [ProcessMessageHandler] uses to
+// declare its configuration.
+//
+// The engine provides the implementation to [ProcessMessageHandler].Configure
+// during startup.
 type ProcessConfigurer interface {
-	// Identity configures the handler's identity.
-	//
-	// n is a short human-readable name. It MUST be unique within the
-	// application at any given time, but MAY change over the handler's
-	// lifetime. It MUST contain solely printable, non-space UTF-8 characters.
-	// It must be between 1 and 255 bytes (not characters) in length.
-	//
-	// k is a unique key used to associate engine state with the handler. The
-	// key SHOULD NOT change over the handler's lifetime. k MUST be an RFC 4122
-	// UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// Use of hard-coded literals for both values is RECOMMENDED.
-	Identity(n string, k string)
+	HandlerConfigurer
 
-	// Routes configures the engine to route certain message types to and from
-	// the handler.
+	// Routes declares the message types that the handler consumes and produces.
 	//
-	// Process handlers support the HandlesEvent(), ExecutesCommand() and
-	// SchedulesTimeout() route types.
+	// It accepts routes created by [HandlesEvent], [ExecutesCommand], and
+	// [SchedulesTimeout].
 	Routes(...ProcessRoute)
-
-	// Disable prevents the handler from receiving any messages.
-	//
-	// The engine MUST NOT call any methods other than Configure() on a disabled
-	// handler.
-	//
-	// Disabling a handler is useful when the handler's configuration prevents
-	// it from operating, such as when it's missing a required dependency,
-	// without requiring the user to conditionally register the handler with the
-	// application.
-	Disable(...DisableOption)
 }
 
-// ProcessEventScope performs engine operations within the context of a call
-// to the HandleEvent() method of a [ProcessMessageHandler].
+// ProcessScope represents the context within which a [ProcessMessageHandler]
+// handles a message.
+//
+// Each kind of message handled by a process message handler has a corresponding
+// scope type that extends this interface:
+//
+//   - [ProcessEventScope]
+//   - [ProcessTimeoutScope]
+type ProcessScope interface {
+	HandlerScope
+
+	// InstanceID returns the ID of the process instance that the message
+	// targets.
+	//
+	// When handling an [Event] message, it returns the ID produced by
+	// [ProcessMessageHandler].RouteEventToInstance during routing.
+	//
+	// When handling a [Timeout] message, it returns the ID of the instance that
+	// scheduled the timeout.
+	InstanceID() string
+
+	// End signals the end of a process.
+	//
+	// The engine discards the instance's state, cancels any pending [Timeout]
+	// messages. It ignores any future messages that target the ended instance.
+	End()
+
+	// ExecuteCommand submits a [Command] for execution.
+	//
+	// The engine persists all commands and timeouts produced within this scope
+	// in a single atomic operation after the [ProcessMessageHandler] finishes
+	// handling the inbound message. If the handler returns a non-nil error, the
+	// engine discards the messages.
+	//
+	// This method panics if the process instance has ended.
+	ExecuteCommand(Command)
+
+	// ScheduleTimeout schedules a [Timeout] message to occur at the specified
+	// time.
+	//
+	// The engine persists all commands and timeouts produced within this scope
+	// in a single atomic operation after the [ProcessMessageHandler] finishes
+	// handling the inbound message. If the handler returns a non-nil error, the
+	// engine discards the messages.
+	//
+	// This method panics if the process instance has ended.
+	ScheduleTimeout(Timeout, time.Time)
+}
+
+// ProcessEventScope represents the context within which a
+// [ProcessMessageHandler] handles an [Event] message.
 type ProcessEventScope interface {
-	// InstanceID returns the ID of the process instance.
-	InstanceID() string
+	ProcessScope
 
-	// End signals the end of the process.
-	//
-	// Ending a process instance destroys its state and cancels any pending
-	// timeouts.
-	//
-	// The process instance ends once HandleEvent() returns. Any future call to
-	// ExecuteCommand() or ScheduleTimeout() on this scope prevents the process
-	// from ending.
-	//
-	// "Re-beginning" a process instance that has ended has undefined behavior
-	// and is NOT RECOMMENDED.
-	End()
-
-	// ExecuteCommand executes a command as a result of the event.
-	//
-	// Executing a command cancels any prior call to End() on this scope.
-	ExecuteCommand(Command)
-
-	// ScheduleTimeout schedules a timeout to occur at a specific time.
-	//
-	// Ending the process cancels any pending timeouts. Scheduling a timeout
-	// cancels any prior call to End() on this scope.
-	ScheduleTimeout(Timeout, time.Time)
-
-	// RecordedAt returns the time at which the event occurred.
+	// RecordedAt returns the time at which the inbound [Event] occurred.
 	RecordedAt() time.Time
-
-	// Now returns the current local time, according to the engine.
-	//
-	// Use of this method is discouraged. It is preferrable to use information
-	// contained within the message, the process root, or the time returned by
-	// [ProcessEventScope.RecordedAt], which provides consistent behavior when
-	// message delivery is delayed or retried.
-	//
-	// If access to the system clock is absolutely necessary, handlers should
-	// call this method instead of [time.Now]. It may return a time different to
-	// that returned by [time.Now] under some circumstances, such as when
-	// executing tests or when accounting for clock skew in a distributed
-	// system.
-	Now() time.Time
-
-	// Log records an informational message.
-	Log(format string, args ...any)
 }
 
-// ProcessTimeoutScope performs engine operations within the context of a call
-// to the HandleTimeout() method of a [ProcessMessageHandler].
+// ProcessTimeoutScope represents the context within which a
+// [ProcessMessageHandler] handles a [Timeout] message.
 type ProcessTimeoutScope interface {
-	// InstanceID returns the ID of the process instance.
-	InstanceID() string
+	ProcessScope
 
-	// End signals the end of the process.
+	// ScheduledFor returns the time at which the timeout occurred.
 	//
-	// Ending a process instance destroys its state and cancels any pending
-	// timeouts.
-	//
-	// The process instance ends once HandleTimeout() returns. Any future call
-	// to ExecuteCommand() or ScheduleTimeout() on this scope prevents the
-	// process from ending.
-	//
-	// "Re-beginning" a process instance that has ended has undefined behavior
-	// and is NOT RECOMMENDED.
-	End()
-
-	// ExecuteCommand executes a command as a result of the timeout.
-	//
-	// Executing a command cancels any prior call to End() on this scope.
-	ExecuteCommand(Command)
-
-	// ScheduleTimeout schedules a timeout to occur at a specific time.
-	//
-	// Ending the process cancels any pending timeouts. Scheduling a timeout
-	// cancels any prior call to End() on this scope.
-	ScheduleTimeout(Timeout, time.Time)
-
-	// ScheduledFor returns the time at which the timeout occured.
-	//
-	// The time may be before the current time. For example, the engine may
-	// deliver timeouts that were "missed" after recovering from downtime.
+	// Even though the engine attempts to deliver timeouts at their scheduled
+	// time, it may deliver them later when recovering from downtime or retrying
+	// after a failure.
 	ScheduledFor() time.Time
-
-	// Now returns the current local time, according to the engine.
-	//
-	// Use of this method is discouraged. It is preferrable to use information
-	// contained within the message, the process root, or the time returned by
-	// [ProcessTimeoutScope.ScheduledFor], which provides consistent behavior
-	// when message delivery is delayed or retried.
-	//
-	// If access to the system clock is absolutely necessary, handlers should
-	// call this method instead of [time.Now]. It may return a time different to
-	// that returned by [time.Now] under some circumstances, such as when
-	// executing tests or when accounting for clock skew in a distributed
-	// system.
-	Now() time.Time
-
-	// Log records an informational message.
-	Log(format string, args ...any)
 }
 
-// StatelessProcessRoot is an implementation of [ProcessRoot] for processes that
-// do not require any domains-specific state.
-//
-// [StatelessProcessBehavior] provides a partial implementation of
-// [ProcessMessageHandler] that returns this value.
-//
-// Engines MAY use this value as a sentinel to provide an optimized code path
-// when no state is required.
-var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
-
-type statelessProcessRoot struct{}
-
-// StatelessProcessBehavior is an embeddable type for [ProcessMessageHandler]
-// that do not have any domain-specific state.
-type StatelessProcessBehavior struct{}
-
-// New returns [StatelessProcessRoot].
-func (StatelessProcessBehavior) New() ProcessRoot {
-	return StatelessProcessRoot
+// ProcessRoute describes a message type that's routed to or from a
+// [ProcessMessageHandler].
+type ProcessRoute interface {
+	MessageRoute
+	isProcessRoute()
 }
 
 // NoTimeoutMessagesBehavior is an embeddable type for [ProcessMessageHandler]
-// implementations that do not use [Timeout] messages.
+// implementations that don't use [Timeout] messages.
+//
+// Embed this type in a [ProcessMessageHandler] to signal that the handler
+// doesn't schedule timeouts and to avoid boilerplate code that's never
+// used.
 type NoTimeoutMessagesBehavior struct{}
 
 // HandleTimeout panics with the [UnexpectedMessage] value.
@@ -258,9 +249,26 @@ func (NoTimeoutMessagesBehavior) HandleTimeout(
 	panic(UnexpectedMessage)
 }
 
-// ProcessRoute describes a message type that's routed to or from a
-// [ProcessMessageHandler].
-type ProcessRoute interface {
-	MessageRoute
-	isProcessRoute()
+// StatelessProcessBehavior is an embeddable type for [ProcessMessageHandler]
+// implementations that don't maintain any state.
+//
+// Embed this type in a [ProcessMessageHandler] to signal that the handler is
+// stateless and to avoid boilerplate code that's never used.
+type StatelessProcessBehavior struct{}
+
+// New returns [StatelessProcessRoot].
+func (StatelessProcessBehavior) New() ProcessRoot {
+	return StatelessProcessRoot
 }
+
+// StatelessProcessRoot is an empty [ProcessRoot] for processes that don't
+// maintain any state.
+//
+// Embed [StatelessProcessBehavior] in a [ProcessMessageHandler] to use this
+// type as its [ProcessRoot] implementation.
+//
+// The engine may provide optimized persistence for stateless processes that use
+// this type.
+var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
+
+type statelessProcessRoot struct{}

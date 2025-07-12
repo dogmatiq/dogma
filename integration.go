@@ -2,82 +2,79 @@ package dogma
 
 import (
 	"context"
-	"time"
 )
 
-// An IntegrationMessageHandler integrates a Dogma application with external and
-// non-message-based systems.
+// An IntegrationMessageHandler connects a Dogma application to an external
+// system.
 //
-// The engine does not keep any state for integration handlers.
+// It handles [Command] messages, and may record [Event] messages to describe
+// the outcome.
+//
+// Integration message handlers encapsulate integration logic such as sending an
+// email, charging a credit card, or updating a third-party API. They should
+// implement only the "glue code". For example, an integration with a payment
+// gateway might debit a customer's credit card, but shouldn't apply discounts
+// or calculate sales tax.
 type IntegrationMessageHandler interface {
-	// Configure describes the handler's configuration to the engine.
-	Configure(IntegrationConfigurer)
+	// Configure declares the handler's configuration by calling methods on c.
+	//
+	// The configuration includes the handler's identity and message routes.
+	//
+	// The engine calls this method at least once during startup. It must
+	// produce the same configuration each time it's called.
+	Configure(c IntegrationConfigurer)
 
-	// HandleCommand handles a command, typically by invoking some external API.
+	// HandleCommand handles a [Command] message by performing an action outside
+	// the Dogma application.
 	//
-	// It MAY optionally record events that describe the outcome of the command.
+	// It may cause side-effects in external systems, such as invoking a
+	// third-party API. It may use s to record one or more [Event] messages that
+	// describe the outcome.
 	//
-	// The engine MAY call this method concurrently from separate goroutines or
-	// operating system processes.
-	HandleCommand(context.Context, IntegrationCommandScope, Command) error
+	// The engine atomically persists the events recorded by exactly one
+	// successful invocation of this method for each command message. It doesn't
+	// guarantee the order, number, or concurrency of those attempts. The
+	// implementation must ensure that the command's external side-effects are
+	// idempotent and safe for concurrent execution.
+	HandleCommand(
+		ctx context.Context,
+		s IntegrationCommandScope,
+		c Command,
+	) error
 }
 
-// A IntegrationConfigurer configures the engine for use with a specific
-// integration message handler.
+// IntegrationConfigurer is the interface an [IntegrationMessageHandler] uses to
+// declare its configuration.
+//
+// The engine provides the implementation to
+// [IntegrationMessageHandler].Configure during startup.
 type IntegrationConfigurer interface {
-	// Identity configures the handler's identity.
-	//
-	// n is a short human-readable name. It MUST be unique within the
-	// application at any given time, but MAY change over the handler's
-	// lifetime. It MUST contain solely printable, non-space UTF-8 characters.
-	// It must be between 1 and 255 bytes (not characters) in length.
-	//
-	// k is a unique key used to associate engine state with the handler. The
-	// key SHOULD NOT change over the handler's lifetime. k MUST be an RFC 4122
-	// UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// Use of hard-coded literals for both values is RECOMMENDED.
-	Identity(n string, k string)
+	HandlerConfigurer
 
-	// Routes configures the engine to route certain message types to and from
-	// the handler.
+	// Routes declares the message types that the handler consumes and produces.
 	//
-	// Integration handlers support the HandlesCommand() and RecordsEvent()
-	// route types.
+	// It accepts routes created by [HandlesCommand] and [RecordsEvent].
 	Routes(...IntegrationRoute)
-
-	// Disable prevents the handler from receiving any messages.
-	//
-	// The engine MUST NOT call any methods other than Configure() on a disabled
-	// handler.
-	//
-	// Disabling a handler is useful when the handler's configuration prevents
-	// it from operating, such as when it's missing a required dependency,
-	// without requiring the user to conditionally register the handler with the
-	// application.
-	Disable(...DisableOption)
 }
 
-// IntegrationCommandScope performs engine operations within the context of a
-// call to the HandleCommand() method of an [IntegrationMessageHandler].
+// IntegrationCommandScope represents the context within which an
+// [IntegrationMessageHandler] handles a [Command] message.
 type IntegrationCommandScope interface {
-	// RecordEvent records the occurrence of an event.
-	RecordEvent(Event)
+	HandlerScope
 
-	// Now returns the current local time, according to the engine.
+	// RecordEvent records an [Event] that results from handling the [Command].
 	//
-	// Handlers should call this method instead of [time.Now]. It may return a
-	// time different to that returned by [time.Now] under some circumstances,
-	// such as when executing tests or when accounting for clock skew in a
-	// distributed system.
-	Now() time.Time
-
-	// Log records an informational message.
-	Log(format string, args ...any)
+	// The engine persists all events recorded within this scope in a single
+	// atomic operation after the [IntegrationMessageHandler] finishes handling
+	// the inbound command. If the handler returns a non-nil error, the engine
+	// discards the events.
+	RecordEvent(Event)
 }
 
-// IntegrationRoute describes a message type that's routed to or from a
-// [IntegrationMessageHandler].
+// IntegrationRoute is an interface for types that represent a relationship
+// between an [IntegrationMessageHandler] and a message type.
+//
+// Use [HandlesCommand] or [RecordsEvent] to create an IntegrationRoute.
 type IntegrationRoute interface {
 	MessageRoute
 	isIntegrationRoute()

@@ -1,141 +1,128 @@
 package dogma
 
-import "time"
-
-// A AggregateMessageHandler models business logic and state.
+// An AggregateMessageHandler encapsulates an application's "invariant" logic -
+// conditions that must always hold true.
 //
-// Aggregates are the primary building blocks of an application's domain logic.
-// They enforce the domain's strict invariants.
+// It handles [Command] messages and records [Event] messages that represent
+// changes to application state.
 //
-// Aggregates use [Command] messages to represent requests to perform some
-// specific business logic and change the state of the application
-// accordingly. [Event] messages represent those changes.
+// An "aggregate" is a collection of related business entities that behave as a
+// cohesive whole, such as a shopping cart and the items within it. The
+// aggregate message handler manages the behavior and state of such aggregates.
+// The term doesn't refer to data aggregation or summarization.
 //
-// Aggregates are stateful. An application typically uses multiple instances of
-// an aggregate, each with its own state. For example, a banking application may
-// use one instance of the "account" aggregate for each bank account.
+// Each aggregate message handler typically manages multiple instances, where
+// each instance represents a distinct occurrence of the aggregate. For example,
+// a shopping cart aggregate might use one instance per customer.
 //
-// The state of each instance is application-defined. Often it's a tree of
-// related entities and values. The [AggregateRoot] interface represents the
-// "root" entity through which the handler accesses the instance's state.
+// Aggregates enforce business rules that must always hold true for a specific
+// instance. For example, a shopping cart aggregate might prevent checkout if
+// the cart is empty, or limit the number of items to 10.
 type AggregateMessageHandler interface {
-	// Configure describes the handler's configuration to the engine.
-	Configure(AggregateConfigurer)
+	// Configure declares the handler's configuration by calling methods on c.
+	//
+	// The configuration includes the handler's identity and message routes.
+	//
+	// The engine calls this method at least once during startup. It must
+	// produce the same configuration each time it's called.
+	Configure(c AggregateConfigurer)
 
-	// New returns an aggregate root instance in its initial state.
+	// New returns a new [AggregateRoot] representing the initial state of an
+	// aggregate instance.
 	//
-	// The return value MUST NOT be nil. It MAY be the zero-value of the root's
-	// underlying type.
-	//
-	// Each call SHOULD return the same type and initial state.
+	// The engine calls this method to get a "blank slate" when handling the
+	// first [Command] for a new instance or when reconstructing an existing
+	// instance from its historical [Event] messages.
 	New() AggregateRoot
 
-	// RouteCommandToInstance returns the ID of the instance that handles a
-	// specific command.
+	// RouteCommandToInstance returns the ID of the aggregate instance that c
+	// targets.
 	//
-	// The return value MUST not be empty. RFC 4122 UUIDs are the RECOMMENDED
-	// format for instance IDs.
-	RouteCommandToInstance(Command) string
+	// The return value must be a non-empty string that uniquely identifies the
+	// target instance. For example, in a shopping cart aggregate, the instance
+	// ID might be the customer's ID. RFC 4122 UUIDs are the recommended format.
+	//
+	// Commands routed to the same instance operate on the same state. There's
+	// no need to create an instance in advance - it "exists" once the handler
+	// records an [Event] against it.
+	//
+	// The engine calls this method before handling the [Command]. The
+	// implementation must derive the ID from information within c.
+	RouteCommandToInstance(c Command) string
 
-	// HandleCommand executes business logic in response to a command.
+	// HandleCommand updates an aggregate instance's state by recording [Event]
+	// messages that represent the effects of a [Command].
 	//
-	// The handler inspects the root to determine which events to record, if
-	// any.
+	// r is the [AggregateRoot] for the instance that the command targets, as
+	// determined by [AggregateMessageHandler].RouteCommandToInstance. It
+	// reflects the state of the targeted instance after applying its historical
+	// events.
 	//
-	// The handler SHOULD NOT have any side-effects beyond recording events.
-	// Specifically, the implementation MUST NOT modify the root directly. Use
-	// [AggregateCommandScope.RecordEvent] to record an event that represents
-	// the state change. See also [AggregateRoot.ApplyEvent].
+	// The implementation must not cause external side-effects or modify r
+	// directly. Logic must depend only on information within r, s, and c.
 	//
-	// If this is the first command routed to this instance, the root is the
-	// return value of New(). Otherwise, it's the value of the root as it
-	// existed after handling the command.
-	//
-	// While the engine MAY call this method concurrently from separate
-	// goroutines or operating system processes, the state changes and events
-	// that represent them always appear to have occurred sequentially.
-	HandleCommand(AggregateRoot, AggregateCommandScope, Command)
+	// The engine atomically persists the events recorded by exactly one
+	// successful invocation of this method for each command message. It doesn't
+	// guarantee the order, number, or concurrency of those attempts. The
+	// implementation doesn't need to perform any synchronization or idempotency
+	// checks.
+	HandleCommand(
+		r AggregateRoot,
+		s AggregateCommandScope,
+		c Command,
+	)
 }
 
-// AggregateRoot is an interface for the domain-specific state of a specific
-// aggregate instance.
+// An AggregateRoot is an interface for an application's working representation
+// of an aggregate instance used within [AggregateMessageHandler]
+// implementations.
+//
+// It encapsulates business logic and provides a way to inspect the current
+// state when making decisions about which events to record. The recorded events
+// are the authoritative source of truth, not the AggregateRoot.
 type AggregateRoot interface {
-	// ApplyEvent updates aggregate instance to reflect the occurrence of an
+	// ApplyEvent updates the aggregate instance to reflect the occurrence of an
 	// event.
 	//
-	// This implementation of this method is the only code permitted to
-	// modify the instance's state.
-	//
-	// The method SHOULD accept historical events that are no longer routed to
-	// this aggregate type. This is typically required by event sourcing engines
-	// that sometimes load aggregates into memory by applying their entire
-	// history.
+	// The engine calls this method when loading the instance from historical
+	// events or recording a new event. It must handle all historical event
+	// types, including those no longer routed to this aggregate.
 	ApplyEvent(Event)
 }
 
-// An AggregateConfigurer configures the engine for use with a specific
-// aggregate message handler.
+// AggregateConfigurer is the interface an [AggregateMessageHandler] uses to
+// declare its configuration.
+//
+// The engine provides the implementation to
+// [AggregateMessageHandler].Configure during startup.
 type AggregateConfigurer interface {
-	// Identity configures the handler's identity.
-	//
-	// n is a short human-readable name. It MUST be unique within the
-	// application at any given time, but MAY change over the handler's
-	// lifetime. It MUST contain solely printable, non-space UTF-8 characters.
-	// It must be between 1 and 255 bytes (not characters) in length.
-	//
-	// k is a unique key used to associate engine state with the handler. The
-	// key SHOULD NOT change over the handler's lifetime. k MUST be an RFC 4122
-	// UUID, such as "5195fe85-eb3f-4121-84b0-be72cbc5722f".
-	//
-	// Use of hard-coded literals for both values is RECOMMENDED.
-	Identity(n string, k string)
+	HandlerConfigurer
 
-	// Routes configures the engine to route certain message types to and from
-	// the handler.
+	// Routes declares the message types that the handler consumes and produces.
 	//
-	// Aggregate handlers support the HandlesCommand() and RecordsEvent() route
-	// types.
+	// It accepts routes created by [HandlesCommand] and [RecordsEvent].
 	Routes(...AggregateRoute)
-
-	// Disable prevents the handler from receiving any messages.
-	//
-	// The engine MUST NOT call any methods other than Configure() on a disabled
-	// handler.
-	//
-	// Disabling a handler is useful when the handler's configuration prevents
-	// it from operating, such as when it's missing a required dependency,
-	// without requiring the user to conditionally register the handler with the
-	// application.
-	Disable(...DisableOption)
 }
 
-// AggregateCommandScope performs engine operations within the context of a call
-// to the HandleCommand() method of an [AggregateMessageHandler].
+// AggregateCommandScope represents the context within which an
+// [AggregateMessageHandler] handles a [Command] message.
 type AggregateCommandScope interface {
-	// InstanceID returns the ID of the aggregate instance.
+	HandlerScope
+
+	// InstanceID returns the ID of the aggregate instance that the [Command]
+	// targets, as returned by [AggregateMessageHandler].RouteCommandToInstance.
 	InstanceID() string
 
-	// RecordEvent records the occurrence of an event.
+	// RecordEvent records an [Event] that results from handling the [Command].
 	//
-	// It applies the event to the root such that the applied changes are
-	// visible to the handler after this method returns.
+	// It applies the event to the aggregate root by calling
+	// [AggregateRoot].ApplyEvent, making the state changes visible to the
+	// handler immediately.
+	//
+	// The engine persists all events recorded within this scope in a single
+	// atomic operation after the [AggregateMessageHandler] finishes handling
+	// the inbound command.
 	RecordEvent(Event)
-
-	// Now returns the current local time, according to the engine.
-	//
-	// Use of this method is discouraged. It is preferrable to use information
-	// contained within the message or the aggregate root, which provides
-	// consistent behavior when message delivery is delayed or retried.
-	//
-	// If access to the system clock is absolutely necessary, handlers should
-	// call this method instead of [time.Now]. It may return a time different to
-	// that returned by [time.Now] under some circumstances, such as when
-	// executing tests or when accounting for clock skew in a distributed
-	// system.
-	Now() time.Time
-
-	// Log records an informational message.
-	Log(format string, args ...any)
 }
 
 // AggregateRoute describes a message type that's routed to or from a
