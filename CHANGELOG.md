@@ -14,23 +14,30 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
-This releases introduces a `Routes()` method to the `ApplicationConfigurer`
-interface. Application developers must use `Routes()`. The existing
-`Register*()` methods have been removed.
+This release changes how handlers are added to an application. It introduces the
+`ApplicationConfigurer.Routes()` interface to replace the `RegisterAggregate()`,
+`RegisterProcess()`, `RegisterIntegration()`, and `RegisterProjection()` method,
+which have been removed.
 
-The `Routes()` API offers a more extensible interface that allows for future
-changes to handler configuration without introducing interface-level compilation
-errors.
+It also introduces a global message type registry. The application-defined types
+that implement `Command`, `Event`, and `Timeout` must now be added to the
+registry before they can be used in handler routes.
 
 ### Added
 
-- Added `ViaAggregate().`
-- Added `ViaProcess()`.
-- Added `ViaIntegration()`.
-- Added `ViaProjection()`.
+- Added `ViaAggregate()`, `ViaProcess()`, `ViaIntegration()`, and
+  `ViaProjection()` for use with `ApplicationConfigurer.Routes()`.
 - Added `HandlerRoute` and `MessageRoute` interfaces.
 - Added `ViaAggregateRoute`, `ViaProcessRoute`, `ViaIntegrationRoute` and
   `ViaProjectionRoute` types.
+- Added `RegisterCommand()`, `RegisterEvent()`, and `RegisterTimeout()` for
+  adding types to the message type registry. These functions panic if called
+  with a pointer to a type that uses non-pointer receivers to implement the
+  `Message` interface. If a type implements `Command`, `Event`, or `Timeout`
+  using pointer receivers then a pointer type must be used; otherwise, a
+  non-pointer type must be used.
+- Added `RegisteredMessageTypes()` and `RegisteredMessageTypeFor()` for querying
+  the message type registry.
 - Added `Now()` method to `AggregateCommandScope`, `ProcessEventScope`,
   `ProcessTimeoutScope`, `IntegrationCommandScope` and `ProjectionEventScope`.
 - **[ENGINE BC]** Added `Routes()` method to `ApplicationConfigurer`.
@@ -40,12 +47,11 @@ errors.
 
 ### Changed
 
-- **[BC]** `HandlesCommand()`, `RecordsEvent()`, `HandlesEvent()`,
-  `ExecutesCommand()` and `SchedulesTimeout()` now panic if the type parameter
-  uses non-pointer receivers to implement `Command`. It's no longer possible to
-  use a single message type as both a pointer and a non-pointer. If a type
-  implements `Command`, `Event`, or `Timeout` using pointer receivers then a
-  pointer type must be used; otherwise, a non-pointer type must be used.
+- **[BC]** `HandlesCommand()`,`ExecutesCommand()`, `HandlesEvent()`,
+  `RecordsEvent()` and `SchedulesTimeout()` now panic if the message type isn't
+  in the message registry.
+- **[ENGINE BC]** Message route types now use `RegisteredMessageType` instead of
+  `reflect.Type`.
 
 ### Removed
 
