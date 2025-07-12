@@ -36,6 +36,12 @@ type Message interface {
 	MessageDescription() string
 }
 
+// UnexpectedMessage is a panic value used by a message handler when it receives
+// a message of a type that it didn't expect.
+var UnexpectedMessage unexpectedMessage
+
+type unexpectedMessage struct{}
+
 // A Command is a [Message] that instructs an [Application] to perform a specific
 // action immediately.
 type Command interface {
@@ -50,6 +56,15 @@ type Command interface {
 	// The [CommandValidationScope] argument exists for forward-compatibility;
 	// the interface is currently empty.
 	Validate(CommandValidationScope) error
+}
+
+// CommandValidationScope provides context during [Command] validation.
+//
+// The engine provides the implementation to [Command].Validate.
+//
+// This type exists for forward-compatibility.
+type CommandValidationScope interface {
+	futureCommandValidationScope()
 }
 
 // An Event is a [Message] that represents an action that an [Application] has
@@ -72,6 +87,25 @@ type Event interface {
 	Validate(EventValidationScope) error
 }
 
+// EventValidationScope provides context during [Event] validation.
+//
+// The engine provides the implementation to [Event].Validate.
+type EventValidationScope interface {
+	// IsHistorical returns true if the event has already occurred, or false if
+	// the application is recording a new event.
+	IsHistorical() bool
+}
+
+// EventStreamPosition represents the position of an [Event] within an event
+// stream.
+type EventStreamPosition struct {
+	// StreamID is an RFC 4122 UUID that identifies the event stream.
+	StreamID string
+
+	// Offset is the zero-based position of the event within the stream.
+	Offset uint64
+}
+
 // A Timeout is a [Message] that notifies an [Application], specifically a
 // [ProcessMessageHandler] that some domain-relevant period of time has elapsed.
 type Timeout interface {
@@ -89,30 +123,6 @@ type Timeout interface {
 	Validate(TimeoutValidationScope) error
 }
 
-// UnexpectedMessage is a panic value used by a message handler when it receives
-// a message of a type that it didn't expect.
-var UnexpectedMessage unexpectedMessage
-
-type unexpectedMessage struct{}
-
-// CommandValidationScope provides context during [Command] validation.
-//
-// The engine provides the implementation to [Command].Validate.
-//
-// This type exists for forward-compatibility.
-type CommandValidationScope interface {
-	futureCommandValidationScope()
-}
-
-// EventValidationScope provides context during [Event] validation.
-//
-// The engine provides the implementation to [Event].Validate.
-type EventValidationScope interface {
-	// IsHistorical returns true if the event has already occurred, or false if
-	// the application is recording a new event.
-	IsHistorical() bool
-}
-
 // TimeoutValidationScope provides context during [Timeout] validation.
 //
 // The engine provides the implementation to [Timeout].Validate.
@@ -120,14 +130,4 @@ type TimeoutValidationScope interface {
 	// IsScheduled returns true if the timeout is already scheduled to occur, or
 	// false if the application is scheduling a new timeout.
 	IsScheduled() bool
-}
-
-// EventStreamPosition represents the position of an [Event] within an event
-// stream.
-type EventStreamPosition struct {
-	// StreamID is an RFC 4122 UUID that identifies the event stream.
-	StreamID string
-
-	// Offset is the zero-based position of the event within the stream.
-	Offset uint64
 }
