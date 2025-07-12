@@ -30,20 +30,23 @@ should do, or something it has already done.
 Dogma defines three **kinds** of message:
 
 - A **command** message is a request — it tells your application to do something
-  now.
+  immediately.
 
   For example, _add 10 widgets to Alex's shopping cart_.
 
 - An **event** message is a fact — it represents something your application has
   already done.
 
-  For example, _Alex added 10 widgets to their shopping cart_.
+  For example, _added 10 widgets to Alex's shopping cart_.
 
-- A **timeout** message is a delayed request — it tells your application to do
-  something later.
+- A **timeout** message is a delayed notification — it tells your application
+  that some relevant period of time has elapsed.
 
-  For example, _send Alex a reminder about their incomplete purchase after 24
-  hours_.
+  <!-- vale Google.Passive = NO -->
+
+  For example, _it's been 24 hours since the first item was added to Alex's cart_.
+
+  <!-- vale Google.Passive = YES -->
 
 Every distinct action — such as "add item to cart" or "complete purchase" —
 corresponds to a different **message type**, each represented by a Go type that
