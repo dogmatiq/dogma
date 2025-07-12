@@ -73,8 +73,8 @@ type ProjectionMessageHandler interface {
 	//
 	// s is the RFC 4122 UUID that identifies the event stream.
 	//
-	// The first event in a stream is always at offset 0. Accordingly, if no
-	// events from s have been handled, this method returns 0.
+	// The first event in any stream is at offset 0. Accordingly, if the handler
+	// hasn’t handled any events from s, this method returns 0.
 	StreamOffset(ctx context.Context, s string) (uint64, error)
 
 	// Compact reduces the projection's size by removing or consolidating data.
