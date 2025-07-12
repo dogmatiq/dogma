@@ -1,4 +1,6 @@
+(ADR|adr)s?
 [Dd]eduplication
+[Dd]enormalized
 [Dd]estroy
 [Dd]isable
 [Dd]isabled
@@ -22,14 +24,15 @@
 [Oo]nly
 [Oo]verspecified
 [Pp]urchase
+[Pp]urchase
 [Ss]harding
 [Tt]oolset
 [Uu]nderspecified
 [Vv]alidate
 [Ww]hitespace
-(ADR|adr)s?
 APIs?
 ASCII
+cannot
 CQRS
 CRUD
 DDD
