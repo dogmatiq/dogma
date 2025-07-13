@@ -125,21 +125,28 @@ func registeredMessageTypeFor[T Message]() RegisteredMessageType {
 	))
 }
 
+// RegisteredMessageTypeByID returns the [RegisteredMessageType] with the given
+// ID.
+//
+// The ID is a canonical RFC 4122 UUID string, such as
+// "65f9620a-65c1-434e-8292-60cd7938c4de", and is case-insensitive.
+func RegisteredMessageTypeByID(id string) (RegisteredMessageType, bool) {
+	id, err := normalizeUUID(id)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	t, ok := messageTypeRegistry.Load().ByID[id]
+	return t, ok
+}
+
 // RegisteredMessageTypes returns an iterator that yields information about each
 // message in the Dogma message registry.
 //
 // Use [RegisterCommand], [RegisterEvent], or [RegisterTimeout] to add messages
 // to the registry.
 func RegisteredMessageTypes() iter.Seq[RegisteredMessageType] {
-	return func(yield func(RegisteredMessageType) bool) {
-		if types := messageTypeRegistry.Load(); types != nil {
-			for _, t := range types.Slice {
-				if !yield(t) {
-					return
-				}
-			}
-		}
-	}
+	return slices.Values(messageTypeRegistry.Load().Slice)
 }
 
 // messageTypes encapsulates the Dogma message registry.
@@ -200,6 +207,9 @@ func registerMessageType[K, T Message](id string) {
 		}
 
 		t.new = func() Message {
+			// There's no way to get the elem's type statically while still
+			// supporting both pointer and non-pointer receivers, so the
+			// implementation must use reflection to construct new instances.
 			return reflect.New(elem).Interface().(Message)
 		}
 

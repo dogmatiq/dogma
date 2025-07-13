@@ -8,13 +8,115 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
+func TestRegisteredMessageTypeFor(t *testing.T) {
+	t.Run("it returns the type that represents T", func(t *testing.T) {
+		const id = "2d8ce56f-1983-44e3-a55d-f74d8dcb0adc"
+		type T struct{ Command }
+		RegisterCommand[T](id)
+
+		mt, ok := RegisteredMessageTypeFor[T]()
+		if !ok {
+			t.Fatal("expected message type to be registered")
+		}
+
+		if got, want := mt.GoType(), reflect.TypeFor[T](); got != want {
+			t.Fatalf("unexpected type: got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("it returns false when T is not in the registry", func(t *testing.T) {
+		type T struct{ Command }
+
+		_, ok := RegisteredMessageTypeFor[T]()
+		if ok {
+			t.Fatal("did not expect message type to be registered")
+		}
+	})
+}
+
+func TestRegisteredMessageTypeByID(t *testing.T) {
+	t.Run("it returns the type associated with the normalized ID", func(t *testing.T) {
+		const id = "37264B0D-4342-4708-8263-60D82DE78AD1"
+		type T struct{ Event }
+		RegisterEvent[T](id)
+
+		mt, ok := RegisteredMessageTypeByID(id)
+		if !ok {
+			t.Fatal("expected message type to be registered")
+		}
+
+		if got, want := mt.GoType(), reflect.TypeOf(T{}); got != want {
+			t.Fatalf("unexpected type: got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("it returns false when ID is not registered", func(t *testing.T) {
+		const id = "75285aae-f85a-435b-ad36-7471ab169348"
+
+		_, ok := RegisteredMessageTypeByID(id)
+		if ok {
+			t.Fatal("did not expect message type to be registered")
+		}
+	})
+
+	t.Run("panics when the ID is invalid", func(t *testing.T) {
+		expectPanic(
+			t,
+			`"<non-uuid>" is not a canonical RFC 4122 UUID: expected 36 characters`,
+			func() {
+				RegisteredMessageTypeByID("<non-uuid>")
+			},
+		)
+	})
+}
+
+func TestRegisteredMessageTypes(t *testing.T) {
+	t.Run("yields the registered message types", func(t *testing.T) {
+		type T struct{ Command }
+		type U struct{ Event }
+		type V struct{ Timeout }
+
+		RegisterCommand[T]("b3160ff8-f19a-4f79-b81c-0551c99aeac2")
+		RegisterEvent[U]("c3f856ba-0519-4335-ad84-313aa0fedc5e")
+		RegisterTimeout[V]("8ab13db4-33ff-4dde-862c-7c94a0477231")
+
+		var yieldedT, yieldedU, yieldedV bool
+
+		for mt := range RegisteredMessageTypes() {
+			switch mt.GoType() {
+			case reflect.TypeFor[T]():
+				yieldedT = true
+			case reflect.TypeFor[U]():
+				yieldedU = true
+			case reflect.TypeFor[V]():
+				yieldedV = true
+			}
+		}
+
+		if !yieldedT {
+			t.Fatal("command type was not yielded")
+		}
+
+		if !yieldedU {
+			t.Fatal("event type was not yielded")
+		}
+
+		if !yieldedV {
+			t.Fatal("timeout type was not yielded")
+		}
+	})
+}
+
 func TestMessageTypeRegistration(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		const id = "476497D0-2132-4EC5-90D4-21E2B6E6EB54"
 		type T struct{ Command }
 		RegisterCommand[T](id)
 
-		mt := RegisteredMessageTypeFor[T]()
+		mt, ok := RegisteredMessageTypeFor[T]()
+		if !ok {
+			t.Fatal("message type is not registered")
+		}
 
 		t.Run("normalizes the UUID", func(t *testing.T) {
 			if got, want := mt.ID(), strings.ToLower(id); got != want {
@@ -174,14 +276,53 @@ func TestMessageTypeRegistration(t *testing.T) {
 }
 
 func TestRegisteredMessageType(t *testing.T) {
-	t.Run("non-pointer implementation", func(t *testing.T) {
-		const id = "7c5724b3-bce9-413a-9777-94eff973539d"
-		type T struct{ Command }
-		RegisterCommand[T](id)
+	t.Run("func ID()", func(t *testing.T) {
+		t.Run("returns the normalized UUID", func(t *testing.T) {
+			const id = "5211A466-010A-4C89-BF36-9A95896BFE2B"
+			type T struct{ Command }
+			RegisterCommand[T](id)
 
-		mt := RegisteredMessageTypeFor[T]()
+			mt, ok := RegisteredMessageTypeFor[T]()
+			if !ok {
+				t.Fatal("message type is not registered")
+			}
 
-		t.Run("func New()", func(t *testing.T) {
+			if got, want := mt.ID(), strings.ToLower(id); got != want {
+				t.Fatalf("unexpected UUID: got %q, want %q", got, want)
+			}
+		})
+	})
+
+	t.Run("func GoType()", func(t *testing.T) {
+		t.Run("returns the reflect.Type of the message type", func(t *testing.T) {
+			type T struct{ Command }
+			RegisterCommand[T]("c1d2e3f4-5678-90ab-cdef-1234567890ab")
+
+			mt, ok := RegisteredMessageTypeFor[T]()
+			if !ok {
+				t.Fatal("message type is not registered")
+			}
+
+			got := mt.GoType()
+			want := reflect.TypeFor[T]()
+
+			if got != want {
+				t.Fatalf("unexpected message type: got %s, want %s", got, want)
+			}
+		})
+	})
+
+	t.Run("func New()", func(t *testing.T) {
+		t.Run("when the type uses non-pointer receivers", func(t *testing.T) {
+			const id = "7c5724b3-bce9-413a-9777-94eff973539d"
+			type T struct{ Command }
+			RegisterCommand[T](id)
+
+			mt, ok := RegisteredMessageTypeFor[T]()
+			if !ok {
+				t.Fatal("message type is not registered")
+			}
+
 			t.Run("it returns a zero-value", func(t *testing.T) {
 				m := mt.New()
 
@@ -194,19 +335,20 @@ func TestRegisteredMessageType(t *testing.T) {
 				}
 			})
 		})
-	})
 
-	t.Run("pointer implementation", func(t *testing.T) {
-		const id = "7da02018-2a02-44ec-aa1f-b68d66d4887d"
-		type T struct {
-			messageWithPointerRecievers[CommandValidationScope]
-		}
+		t.Run("when the type uses pointer receivers", func(t *testing.T) {
+			const id = "7da02018-2a02-44ec-aa1f-b68d66d4887d"
+			type T struct {
+				messageWithPointerRecievers[CommandValidationScope]
+			}
 
-		RegisterCommand[*T](id)
+			RegisterCommand[*T](id)
 
-		mt := RegisteredMessageTypeFor[*T]()
+			mt, ok := RegisteredMessageTypeFor[*T]()
+			if !ok {
+				t.Fatal("message type is not registered")
+			}
 
-		t.Run("func New()", func(t *testing.T) {
 			t.Run("it returns a pointer to a zero-value", func(t *testing.T) {
 				m := mt.New()
 
