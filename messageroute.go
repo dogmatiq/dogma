@@ -10,7 +10,7 @@ package dogma
 //
 // The engine panics if the application has multiple handlers that handle T.
 func HandlesCommand[T Command](...HandlesCommandOption) HandlesCommandRoute {
-	return HandlesCommandRoute{RegisteredMessageTypeFor[T]()}
+	return HandlesCommandRoute{registeredMessageTypeFor[T]()}
 }
 
 // ExecutesCommand configures a [ProcessMessageHandler] as a producer of
@@ -22,7 +22,7 @@ func HandlesCommand[T Command](...HandlesCommandOption) HandlesCommandRoute {
 //
 // The application may have multiple handlers that execute T.
 func ExecutesCommand[T Command](...ExecutesCommandOption) ExecutesCommandRoute {
-	return ExecutesCommandRoute{RegisteredMessageTypeFor[T]()}
+	return ExecutesCommandRoute{registeredMessageTypeFor[T]()}
 }
 
 // RecordsEvent configures an [AggregateMessageHandler] or
@@ -35,7 +35,7 @@ func ExecutesCommand[T Command](...ExecutesCommandOption) ExecutesCommandRoute {
 //
 // The engine panics if the application has multiple handlers that record T.
 func RecordsEvent[T Event](...RecordsEventOption) RecordsEventRoute {
-	return RecordsEventRoute{RegisteredMessageTypeFor[T]()}
+	return RecordsEventRoute{registeredMessageTypeFor[T]()}
 }
 
 // HandlesEvent configures a [ProcessMessageHandler] or [ProjectionMessageHandler] as a
@@ -48,7 +48,7 @@ func RecordsEvent[T Event](...RecordsEventOption) RecordsEventRoute {
 //
 // An application may have multiple handlers that handle T.
 func HandlesEvent[T Event](...HandlesEventOption) HandlesEventRoute {
-	return HandlesEventRoute{RegisteredMessageTypeFor[T]()}
+	return HandlesEventRoute{registeredMessageTypeFor[T]()}
 }
 
 // SchedulesTimeout configures a [ProcessMessageHandler] as a scheduler of
@@ -60,7 +60,7 @@ func HandlesEvent[T Event](...HandlesEventOption) HandlesEventRoute {
 //
 // The application may have multiple handlers that schedule T.
 func SchedulesTimeout[T Timeout](...SchedulesTimeoutOption) SchedulesTimeoutRoute {
-	return SchedulesTimeoutRoute{RegisteredMessageTypeFor[T]()}
+	return SchedulesTimeoutRoute{registeredMessageTypeFor[T]()}
 }
 
 type (

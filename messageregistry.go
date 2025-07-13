@@ -103,17 +103,24 @@ func (t RegisteredMessageType) New() Message {
 //
 // It panics if T isn't in the message type registry. See [RegisterCommand],
 // [RegisterEvent], and [RegisterTimeout].
-func RegisteredMessageTypeFor[T Message]() RegisteredMessageType {
+func RegisteredMessageTypeFor[T Message]() (RegisteredMessageType, bool) {
 	reg := messageTypeRegistry.Load()
 	key := reflect.TypeFor[T]()
 
-	if t, ok := reg.ByType[key]; ok {
+	t, ok := reg.ByType[key]
+	return t, ok
+}
+
+// registeredMessageTypeFor is a variant of [RegisteredMessageTypeFor] that
+// panics if T isn't in the message type registry.
+func registeredMessageTypeFor[T Message]() RegisteredMessageType {
+	if t, ok := RegisteredMessageTypeFor[T](); ok {
 		return t
 	}
 
 	panic(fmt.Sprintf(
 		"%s is not in the message type registry, use dogma.Register%s() to add it",
-		qualifiedNameOf(key),
+		qualifiedNameOf(reflect.TypeFor[T]()),
 		messageKindFor[T]().Name(),
 	))
 }
