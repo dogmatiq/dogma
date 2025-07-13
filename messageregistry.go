@@ -69,9 +69,13 @@ type RegisterTimeoutOption interface {
 
 // RegisteredMessageType contains information about an implementation of [Command],
 // [Event], or [Timeout] that's in Dogma's message registry.
+//
+// Use [RegisterCommand], [RegisterEvent], or [RegisterTimeout] to add messages
+// to the registry.
 type RegisteredMessageType struct {
 	id  string
 	typ reflect.Type
+	new func() Message
 }
 
 // ID returns an RFC 4122 UUID that uniquely identifies the message type. The
@@ -90,13 +94,7 @@ func (t RegisteredMessageType) GoType() reflect.Type {
 // If the message type uses pointer receivers, it returns a non-nil pointer to a
 // new zero-value of the underlying type.
 func (t RegisteredMessageType) New() Message {
-	var v reflect.Value
-	if t.typ.Kind() == reflect.Pointer {
-		v = reflect.New(t.typ.Elem())
-	} else {
-		v = reflect.Zero(t.typ)
-	}
-	return v.Interface().(Message)
+	return t.new()
 }
 
 // RegisteredMessageTypeFor returns the [RegisteredMessageType] for T.
@@ -168,12 +166,18 @@ func registerMessageType[K, T Message](id string) {
 		))
 	}
 
+	t := RegisteredMessageType{
+		id:  id,
+		typ: typ,
+	}
+
 	switch typ.Kind() {
 	case reflect.Interface:
 		panic(fmt.Sprintf(
 			"cannot register %s: message type is an interface, expected a concrete type",
 			qualifiedNameOf(typ),
 		))
+
 	case reflect.Pointer:
 		elem := typ.Elem()
 		kind := messageKindFor[T]()
@@ -185,12 +189,19 @@ func registerMessageType[K, T Message](id string) {
 				qualifiedNameOf(elem),
 			))
 		}
+
+		t.new = func() Message {
+			return reflect.New(elem).Interface().(Message)
+		}
+
+	default:
+		t.new = func() Message {
+			var zero T
+			return zero
+		}
 	}
 
-	mergeMessageType(RegisteredMessageType{
-		id:  id,
-		typ: typ,
-	})
+	mergeMessageType(t)
 }
 
 func mergeMessageType(t RegisteredMessageType) {

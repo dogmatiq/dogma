@@ -23,8 +23,9 @@ func TestNormalizeUUID(t *testing.T) {
 		const valid = "b917cba9-1fa2-4513-8bf5-67acc121299f"
 
 		cases := []string{
-			valid[:len(valid)-1], // too short
-			valid + "f",          // too long
+			"00000000-0000-0000-0000-000000000000", // "nil" UUID
+			valid[:len(valid)-1],                   // too short
+			valid + "f",                            // too long
 		}
 
 		// build cases for unexpected (but valid) character in each position
