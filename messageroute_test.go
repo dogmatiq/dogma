@@ -25,7 +25,7 @@ func TestHandlesCommand(t *testing.T) {
 	t.Run("it panics if the type is not in the registry", func(t *testing.T) {
 		expectPanic(
 			t,
-			"github.com/dogmatiq/dogma_test.T is not in the message type registry, use dogma.RegisterCommand() to add it",
+			"github.com/dogmatiq/dogma_test.T is not in the message type registry",
 			func() {
 				type T struct{ Command }
 				HandlesCommand[T]()
@@ -52,7 +52,7 @@ func TestExecutesCommand(t *testing.T) {
 	t.Run("it panics if the type is not in the registry", func(t *testing.T) {
 		expectPanic(
 			t,
-			"github.com/dogmatiq/dogma_test.T is not in the message type registry, use dogma.RegisterCommand() to add it",
+			"github.com/dogmatiq/dogma_test.T is not in the message type registry",
 			func() {
 				type T struct{ Command }
 				ExecutesCommand[T]()
@@ -79,7 +79,7 @@ func TestHandlesEvent(t *testing.T) {
 	t.Run("it panics if the type is not in the registry", func(t *testing.T) {
 		expectPanic(
 			t,
-			"github.com/dogmatiq/dogma_test.T is not in the message type registry, use dogma.RegisterEvent() to add it",
+			"github.com/dogmatiq/dogma_test.T is not in the message type registry",
 			func() {
 				type T struct{ Event }
 				HandlesEvent[T]()
@@ -106,7 +106,7 @@ func TestRecordsEvent(t *testing.T) {
 	t.Run("it panics if the type is not in the registry", func(t *testing.T) {
 		expectPanic(
 			t,
-			"github.com/dogmatiq/dogma_test.T is not in the message type registry, use dogma.RegisterEvent() to add it",
+			"github.com/dogmatiq/dogma_test.T is not in the message type registry",
 			func() {
 				type T struct{ Event }
 				RecordsEvent[T]()
@@ -133,7 +133,7 @@ func TestSchedulesTimeout(t *testing.T) {
 	t.Run("it panics if the type is not in the registry", func(t *testing.T) {
 		expectPanic(
 			t,
-			"github.com/dogmatiq/dogma_test.T is not in the message type registry, use dogma.RegisterTimeout() to add it",
+			"github.com/dogmatiq/dogma_test.T is not in the message type registry",
 			func() {
 				type T struct{ Timeout }
 				SchedulesTimeout[T]()

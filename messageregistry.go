@@ -119,9 +119,8 @@ func registeredMessageTypeFor[T Message]() RegisteredMessageType {
 	}
 
 	panic(fmt.Sprintf(
-		"%s is not in the message type registry, use dogma.Register%s() to add it",
+		"%s is not in the message type registry",
 		qualifiedNameOf(reflect.TypeFor[T]()),
-		messageKindFor[T]().Name(),
 	))
 }
 
@@ -196,9 +195,9 @@ func registerMessageType[K, T Message](id string) {
 
 	case reflect.Pointer:
 		elem := typ.Elem()
-		kind := messageKindFor[T]()
+		iface := reflect.TypeFor[K]()
 
-		if elem.Implements(kind) {
+		if elem.Implements(iface) {
 			panic(fmt.Sprintf(
 				"cannot register %s: message type uses non-pointer receivers, use %s (non-pointer) instead",
 				qualifiedNameOf(typ),
@@ -278,30 +277,6 @@ func mergeMessageType(t RegisteredMessageType) {
 
 		// The swap failed, which means that another goroutine has
 		// modified the registry since this goroutine loaded it.
-	}
-}
-
-var (
-	commandKind = reflect.TypeFor[Command]()
-	eventKind   = reflect.TypeFor[Event]()
-	timeoutKind = reflect.TypeFor[Timeout]()
-)
-
-func messageKindFor[T Message]() reflect.Type {
-	t := reflect.TypeFor[T]()
-
-	switch {
-	case t.Implements(commandKind):
-		return commandKind
-	case t.Implements(eventKind):
-		return eventKind
-	case t.Implements(timeoutKind):
-		return timeoutKind
-	default:
-		panic(fmt.Sprintf(
-			"%s does not implement dogma.Command, dogma.Event, or dogma.Timeout",
-			qualifiedNameOf(t),
-		))
 	}
 }
 
