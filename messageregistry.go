@@ -101,13 +101,12 @@ func (t RegisteredMessageType) New() Message {
 
 // RegisteredMessageTypeFor returns the [RegisteredMessageType] for T.
 //
-// It panics if T isn't in the message type registry. See [RegisterCommand],
-// [RegisterEvent], and [RegisterTimeout].
-func RegisteredMessageTypeFor[T Message]() (RegisteredMessageType, bool) {
+// ok is false if T isn't in the message type registry.
+func RegisteredMessageTypeFor[T Message]() (t RegisteredMessageType, ok bool) {
 	reg := messageTypeRegistry.Load()
 	key := reflect.TypeFor[T]()
 
-	t, ok := reg.ByType[key]
+	t, ok = reg.ByType[key]
 	return t, ok
 }
 
@@ -129,13 +128,15 @@ func registeredMessageTypeFor[T Message]() RegisteredMessageType {
 //
 // The ID is a canonical RFC 4122 UUID string, such as
 // "65f9620a-65c1-434e-8292-60cd7938c4de", and is case-insensitive.
-func RegisteredMessageTypeByID(id string) (RegisteredMessageType, bool) {
+//
+// ok is false if there is no such message type in the registry.
+func RegisteredMessageTypeByID(id string) (t RegisteredMessageType, ok bool) {
 	id, err := normalizeUUID(id)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	t, ok := messageTypeRegistry.Load().ByID[id]
+	t, ok = messageTypeRegistry.Load().ByID[id]
 	return t, ok
 }
 
