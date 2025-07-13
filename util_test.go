@@ -24,11 +24,16 @@ func expectPanic(t *testing.T, message string, fn func()) {
 	defer func() {
 		switch got := recover(); got {
 		case nil:
-			t.Fatal("expected panic")
+			t.Fatal("expected function to panic")
 		case message:
 			// ok
 		default:
-			t.Fatalf("unexpected panic message: got %q, want %q", got, message)
+			t.Fatalf(
+				"unexpected panic message:\n  got %q (%T),\n want %q",
+				got,
+				got,
+				message,
+			)
 		}
 	}()
 
