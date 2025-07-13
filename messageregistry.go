@@ -73,6 +73,8 @@ type RegisterTimeoutOption interface {
 // Use [RegisterCommand], [RegisterEvent], or [RegisterTimeout] to add messages
 // to the registry.
 type RegisteredMessageType struct {
+	nocmp
+
 	id  string
 	typ reflect.Type
 	new func() Message
