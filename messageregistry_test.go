@@ -339,7 +339,7 @@ func TestRegisteredMessageType(t *testing.T) {
 		t.Run("when the type uses pointer receivers", func(t *testing.T) {
 			const id = "7da02018-2a02-44ec-aa1f-b68d66d4887d"
 			type T struct {
-				messageWithPointerRecievers[CommandValidationScope]
+				messageWithPointerReceivers[CommandValidationScope]
 			}
 
 			RegisterCommand[*T](id)
