@@ -5,8 +5,7 @@ import (
 )
 
 // messageWithPointerReceivers is an implementation of [Message] that uses
-// pointer receivers, used to test reflection code that has pointer-specific
-// logic.
+// pointer receivers.
 //
 // S is the validation scope type accepted by the Validate() method, which lets
 // the implementation match any of the [Command], [Event], or [Timeout]

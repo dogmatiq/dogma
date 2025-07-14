@@ -10,9 +10,8 @@ import (
 
 func TestRegisteredMessageTypeFor(t *testing.T) {
 	t.Run("it returns the type that represents T", func(t *testing.T) {
-		const id = "2d8ce56f-1983-44e3-a55d-f74d8dcb0adc"
 		type T struct{ Command }
-		RegisterCommand[T](id)
+		RegisterCommand[T]("2d8ce56f-1983-44e3-a55d-f74d8dcb0adc")
 
 		mt, ok := RegisteredMessageTypeFor[T]()
 		if !ok {
@@ -51,9 +50,7 @@ func TestRegisteredMessageTypeByID(t *testing.T) {
 	})
 
 	t.Run("it returns false when ID is not registered", func(t *testing.T) {
-		const id = "75285aae-f85a-435b-ad36-7471ab169348"
-
-		_, ok := RegisteredMessageTypeByID(id)
+		_, ok := RegisteredMessageTypeByID("75285aae-f85a-435b-ad36-7471ab169348")
 		if ok {
 			t.Fatal("did not expect message type to be registered")
 		}
@@ -109,9 +106,8 @@ func TestRegisteredMessageTypes(t *testing.T) {
 
 func TestMessageTypeRegistration(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		const id = "476497D0-2132-4EC5-90D4-21E2B6E6EB54"
 		type T struct{ Command }
-		RegisterCommand[T](id)
+		RegisterCommand[T]("476497D0-2132-4EC5-90D4-21E2B6E6EB54")
 
 		mt, ok := RegisteredMessageTypeFor[T]()
 		if !ok {
@@ -278,9 +274,8 @@ func TestMessageTypeRegistration(t *testing.T) {
 func TestRegisteredMessageType(t *testing.T) {
 	t.Run("func ID()", func(t *testing.T) {
 		t.Run("returns the normalized UUID", func(t *testing.T) {
-			const id = "5211A466-010A-4C89-BF36-9A95896BFE2B"
 			type T struct{ Command }
-			RegisterCommand[T](id)
+			RegisterCommand[T]("5211A466-010A-4C89-BF36-9A95896BFE2B")
 
 			mt, ok := RegisteredMessageTypeFor[T]()
 			if !ok {
@@ -314,9 +309,8 @@ func TestRegisteredMessageType(t *testing.T) {
 
 	t.Run("func New()", func(t *testing.T) {
 		t.Run("when the type uses non-pointer receivers", func(t *testing.T) {
-			const id = "7c5724b3-bce9-413a-9777-94eff973539d"
 			type T struct{ Command }
-			RegisterCommand[T](id)
+			RegisterCommand[T]("7c5724b3-bce9-413a-9777-94eff973539d")
 
 			mt, ok := RegisteredMessageTypeFor[T]()
 			if !ok {
@@ -337,12 +331,11 @@ func TestRegisteredMessageType(t *testing.T) {
 		})
 
 		t.Run("when the type uses pointer receivers", func(t *testing.T) {
-			const id = "7da02018-2a02-44ec-aa1f-b68d66d4887d"
 			type T struct {
 				messageWithPointerReceivers[CommandValidationScope]
 			}
 
-			RegisterCommand[*T](id)
+			RegisterCommand[*T]("7da02018-2a02-44ec-aa1f-b68d66d4887d")
 
 			mt, ok := RegisteredMessageTypeFor[*T]()
 			if !ok {
