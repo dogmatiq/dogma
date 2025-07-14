@@ -106,8 +106,9 @@ func TestRegisteredMessageTypes(t *testing.T) {
 
 func TestMessageTypeRegistration(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
+		const id = "476497D0-2132-4EC5-90D4-21E2B6E6EB54"
 		type T struct{ Command }
-		RegisterCommand[T]("476497D0-2132-4EC5-90D4-21E2B6E6EB54")
+		RegisterCommand[T](id)
 
 		mt, ok := RegisteredMessageTypeFor[T]()
 		if !ok {
@@ -274,8 +275,9 @@ func TestMessageTypeRegistration(t *testing.T) {
 func TestRegisteredMessageType(t *testing.T) {
 	t.Run("func ID()", func(t *testing.T) {
 		t.Run("returns the normalized UUID", func(t *testing.T) {
+			const id = "5211A466-010A-4C89-BF36-9A95896BFE2B"
 			type T struct{ Command }
-			RegisterCommand[T]("5211A466-010A-4C89-BF36-9A95896BFE2B")
+			RegisterCommand[T](id)
 
 			mt, ok := RegisteredMessageTypeFor[T]()
 			if !ok {
