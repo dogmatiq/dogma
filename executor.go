@@ -9,15 +9,17 @@ import "context"
 type CommandExecutor interface {
 	// ExecuteCommand submits a [Command] for execution.
 	//
-	// The engine may invoke the associated handler more than once, but the
+	// It returns once the engine has taken ownership of the command. It doesn't
+	// wait for handling to finish.
+	//
+	// The engine may invoke the command's handler more than once, but the
 	// command's side-effects, such as the events it produces, occur exactly
-	// once. The engine attempts to execute the command immediately, but there
-	// is no guarantee that execution is complete by the time this method
-	// returns.
+	// once.
 	//
 	// If it returns a non-nil error, the engine may not have taken ownership of
-	// message delivery, and the application should retry execution. See
-	// [WithIdempotencyKey].
+	// message delivery, and the application should retry execution.
+	//
+	// See [WithIdempotencyKey].
 	ExecuteCommand(context.Context, Command, ...ExecuteCommandOption) error
 }
 
@@ -29,6 +31,9 @@ type ExecuteCommandOption interface {
 
 // WithIdempotencyKey returns an [ExecuteCommandOption] that sets a unique
 // identifier for the [Command].
+//
+// Use an idempotency key when retrying a failed [CommandExecutor].ExecuteCommand
+// call to ensure that the engine doesn't execute the command multiple times.
 func WithIdempotencyKey(key string) ExecuteCommandOption {
 	if key == "" {
 		panic("idempotency key cannot be empty")
