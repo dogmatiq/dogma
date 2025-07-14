@@ -1,61 +1,66 @@
 package dogma
 
-import (
-	"fmt"
-	"reflect"
-)
-
 // HandlesCommand configures an [AggregateMessageHandler] or
 // [IntegrationMessageHandler] as a consumer of [Command] messages of type T.
+//
+// It panics if T isn't in the message registry, see [RegisterCommand].
 //
 // Pass the returned [MessageRoute] to [AggregateConfigurer].Routes or
 // [IntegrationConfigurer].Routes.
 //
 // The engine panics if the application has multiple handlers that handle T.
 func HandlesCommand[T Command](...HandlesCommandOption) HandlesCommandRoute {
-	return HandlesCommandRoute{typeOf[Command, T]()}
+	return HandlesCommandRoute{registeredMessageTypeFor[T]()}
+}
+
+// ExecutesCommand configures a [ProcessMessageHandler] as a producer of
+// [Command] messages of type T.
+//
+// It panics if T isn't in the message registry, see [RegisterCommand].
+//
+// Pass the returned [MessageRoute] to [ProcessConfigurer].Routes.
+//
+// The application may have multiple handlers that execute T.
+func ExecutesCommand[T Command](...ExecutesCommandOption) ExecutesCommandRoute {
+	return ExecutesCommandRoute{registeredMessageTypeFor[T]()}
 }
 
 // RecordsEvent configures an [AggregateMessageHandler] or
 // [IntegrationMessageHandler] as a producer of [Event] messages of type T.
+//
+// It panics if T isn't in the message registry, see [RegisterEvent].
 //
 // Pass the returned [MessageRoute] to [AggregateConfigurer].Routes or
 // [IntegrationConfigurer].Routes.
 //
 // The engine panics if the application has multiple handlers that record T.
 func RecordsEvent[T Event](...RecordsEventOption) RecordsEventRoute {
-	return RecordsEventRoute{typeOf[Event, T]()}
+	return RecordsEventRoute{registeredMessageTypeFor[T]()}
 }
 
 // HandlesEvent configures a [ProcessMessageHandler] or [ProjectionMessageHandler] as a
 // consumer of [Event] messages of type T.
+//
+// It panics if T isn't in the message registry, see [RegisterEvent].
 //
 // Pass the returned [MessageRoute] to [ProcessConfigurer].Routes or
 // [ProjectionConfigurer].Routes.
 //
 // An application may have multiple handlers that handle T.
 func HandlesEvent[T Event](...HandlesEventOption) HandlesEventRoute {
-	return HandlesEventRoute{typeOf[Event, T]()}
-}
-
-// ExecutesCommand configures a [ProcessMessageHandler] as a producer of
-// [Command] messages of type T.
-//
-// Pass the returned [MessageRoute] to [ProcessConfigurer].Routes.
-//
-// The application may have multiple handlers that execute T.
-func ExecutesCommand[T Command](...ExecutesCommandOption) ExecutesCommandRoute {
-	return ExecutesCommandRoute{typeOf[Command, T]()}
+	return HandlesEventRoute{registeredMessageTypeFor[T]()}
 }
 
 // SchedulesTimeout configures a [ProcessMessageHandler] as a scheduler of
 // [Timeout] messages of type T.
 //
+// It panics if T isn't in the message registry, see [RegisterTimeout].
+//
 // Pass the returned [MessageRoute] to [ProcessConfigurer].Routes.
 //
 // The application may have multiple handlers that schedule T.
 func SchedulesTimeout[T Timeout](...SchedulesTimeoutOption) SchedulesTimeoutRoute {
-	return SchedulesTimeoutRoute{typeOf[Timeout, T]()}
+	return SchedulesTimeoutRoute{registeredMessageTypeFor[T]()}
 }
 
 type (
@@ -68,35 +73,35 @@ type (
 	//
 	// Avoid constructing values of this type directly; use [HandlesCommand]
 	// instead.
-	HandlesCommandRoute struct{ Type reflect.Type }
+	HandlesCommandRoute struct{ Type RegisteredMessageType }
 
 	// ExecutesCommandRoute is a [HandlerRoute] that represents a handler's
 	// ability to execute [Command] messages of a specific type.
 	//
 	// Avoid constructing values of this type directly; use [ExecutesCommand]
 	// instead.
-	ExecutesCommandRoute struct{ Type reflect.Type }
+	ExecutesCommandRoute struct{ Type RegisteredMessageType }
 
 	// HandlesEventRoute is a [HandlerRoute] that represents a handler's
 	// ability to handle [Event] messages of a specific type.
 	//
 	// Avoid constructing values of this type directly; use [HandlesEvent]
 	// instead.
-	HandlesEventRoute struct{ Type reflect.Type }
+	HandlesEventRoute struct{ Type RegisteredMessageType }
 
 	// RecordsEventRoute is a [HandlerRoute] that represents a handler's
 	// ability to record [Event] messages of a specific type.
 	//
 	// Avoid constructing values of this type directly; use [RecordsEvent]
 	// instead.
-	RecordsEventRoute struct{ Type reflect.Type }
+	RecordsEventRoute struct{ Type RegisteredMessageType }
 
 	// SchedulesTimeoutRoute is a [HandlerRoute] that represents a handler's
 	// ability to schedule [Timeout] messages of a specific type.
 	//
 	// Avoid constructing values of this type directly; use [SchedulesTimeout]
 	// instead.
-	SchedulesTimeoutRoute struct{ Type reflect.Type }
+	SchedulesTimeoutRoute struct{ Type RegisteredMessageType }
 )
 
 type (
@@ -140,25 +145,3 @@ type (
 		futureSchedulesTimeoutOption()
 	}
 )
-
-// typeOf returns the [reflect.Type] for C, which must be a concrete
-// implementation of the interface I.
-func typeOf[I, C Message]() reflect.Type {
-	concrete := reflect.TypeFor[C]()
-
-	if concrete.Kind() == reflect.Pointer {
-		iface := reflect.TypeFor[I]()
-		elem := concrete.Elem()
-
-		if elem.Implements(iface) {
-			panic(fmt.Sprintf(
-				"%s implements %s using non-pointer receivers, use %s instead",
-				concrete,
-				iface,
-				elem,
-			))
-		}
-	}
-
-	return concrete
-}

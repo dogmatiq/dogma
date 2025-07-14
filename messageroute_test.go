@@ -7,145 +7,137 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
-type nonPointerReceivers[S any] struct{}
-type pointerReceivers[S any] struct{}
-
-func (nonPointerReceivers[S]) MessageDescription() string { panic("not implemented") }
-func (nonPointerReceivers[S]) Validate(S) error           { panic("not implemented") }
-func (*pointerReceivers[S]) MessageDescription() string   { panic("not implemented") }
-func (*pointerReceivers[S]) Validate(S) error             { panic("not implemented") }
-
 func TestHandlesCommand(t *testing.T) {
-	type (
-		N = nonPointerReceivers[CommandValidationScope]
-		P = *pointerReceivers[CommandValidationScope]
-		X = *nonPointerReceivers[CommandValidationScope]
-	)
+	t.Run("it returns a route containing the registered message type", func(t *testing.T) {
+		type T struct{ Command }
+		RegisterCommand[T]("83c4a2d9-a728-49e6-83a3-6c670b99a173")
 
-	t.Run("it returns a route with the correct reflection type", func(t *testing.T) {
-		if HandlesCommand[N]().Type != reflect.TypeFor[N]() {
-			t.Fatal("unexpected message type")
-		}
+		route := HandlesCommand[T]()
 
-		if HandlesCommand[P]().Type != reflect.TypeFor[P]() {
-			t.Fatal("unexpected message type")
+		got := route.Type.GoType()
+		want := reflect.TypeFor[T]()
+
+		if got != want {
+			t.Fatalf("unexpected message type: got %s, want %s", got, want)
 		}
 	})
 
-	t.Run("it panics if the type is a pointer to an implementation that uses non-pointer receivers", func(t *testing.T) {
-		defer func() {
-			if r := recover(); r == nil {
-				t.Fatal("expected a panic")
-			}
-		}()
-		HandlesCommand[X]()
-	})
-}
-
-func TestRecordsEvent(t *testing.T) {
-	type (
-		N = nonPointerReceivers[EventValidationScope]
-		P = *pointerReceivers[EventValidationScope]
-		X = *nonPointerReceivers[EventValidationScope]
-	)
-
-	t.Run("it returns a route with the correct reflection type", func(t *testing.T) {
-		if RecordsEvent[N]().Type != reflect.TypeFor[N]() {
-			t.Fatal("unexpected message type")
-		}
-
-		if RecordsEvent[P]().Type != reflect.TypeFor[P]() {
-			t.Fatal("unexpected message type")
-		}
-	})
-
-	t.Run("it panics if the type is a pointer to an implementation that uses non-pointer receivers", func(t *testing.T) {
-		defer func() {
-			if r := recover(); r == nil {
-				t.Fatal("expected a panic")
-			}
-		}()
-		RecordsEvent[X]()
-	})
-}
-
-func TestHandlesEvent(t *testing.T) {
-	type (
-		N = nonPointerReceivers[EventValidationScope]
-		P = *pointerReceivers[EventValidationScope]
-		X = *nonPointerReceivers[EventValidationScope]
-	)
-
-	t.Run("it returns a route with the correct reflection type", func(t *testing.T) {
-		if HandlesEvent[N]().Type != reflect.TypeFor[N]() {
-			t.Fatal("unexpected message type")
-		}
-
-		if HandlesEvent[P]().Type != reflect.TypeFor[P]() {
-			t.Fatal("unexpected message type")
-		}
-	})
-
-	t.Run("it panics if the type is a pointer to an implementation that uses non-pointer receivers", func(t *testing.T) {
-		defer func() {
-			if r := recover(); r == nil {
-				t.Fatal("expected a panic")
-			}
-		}()
-		HandlesEvent[X]()
+	t.Run("it panics if the type is not in the registry", func(t *testing.T) {
+		expectPanic(
+			t,
+			"github.com/dogmatiq/dogma_test.T is not in the message type registry",
+			func() {
+				type T struct{ Command }
+				HandlesCommand[T]()
+			},
+		)
 	})
 }
 
 func TestExecutesCommand(t *testing.T) {
-	type (
-		N = nonPointerReceivers[CommandValidationScope]
-		P = *pointerReceivers[CommandValidationScope]
-		X = *nonPointerReceivers[CommandValidationScope]
-	)
+	t.Run("it returns a route containing the registered message type", func(t *testing.T) {
+		type T struct{ Command }
+		RegisterCommand[T]("7b8cf1fd-722e-4337-bc5c-9ce4f32ab9d4")
 
-	t.Run("it returns a route with the correct reflection type", func(t *testing.T) {
-		if ExecutesCommand[N]().Type != reflect.TypeFor[N]() {
-			t.Fatal("unexpected message type")
-		}
+		route := ExecutesCommand[T]()
 
-		if ExecutesCommand[P]().Type != reflect.TypeFor[P]() {
-			t.Fatal("unexpected message type")
+		got := route.Type.GoType()
+		want := reflect.TypeFor[T]()
+
+		if got != want {
+			t.Fatalf("unexpected message type: got %s, want %s", got, want)
 		}
 	})
 
-	t.Run("it panics if the type is a pointer to an implementation that uses non-pointer receivers", func(t *testing.T) {
-		defer func() {
-			if r := recover(); r == nil {
-				t.Fatal("expected a panic")
-			}
-		}()
-		ExecutesCommand[X]()
+	t.Run("it panics if the type is not in the registry", func(t *testing.T) {
+		expectPanic(
+			t,
+			"github.com/dogmatiq/dogma_test.T is not in the message type registry",
+			func() {
+				type T struct{ Command }
+				ExecutesCommand[T]()
+			},
+		)
+	})
+}
+
+func TestHandlesEvent(t *testing.T) {
+	t.Run("it returns a route containing the registered message type", func(t *testing.T) {
+		type T struct{ Event }
+		RegisterEvent[T]("bef3014a-fca1-4cb3-90a3-ee83f5ca56c8")
+
+		route := HandlesEvent[T]()
+
+		got := route.Type.GoType()
+		want := reflect.TypeFor[T]()
+
+		if got != want {
+			t.Fatalf("unexpected message type: got %s, want %s", got, want)
+		}
+	})
+
+	t.Run("it panics if the type is not in the registry", func(t *testing.T) {
+		expectPanic(
+			t,
+			"github.com/dogmatiq/dogma_test.T is not in the message type registry",
+			func() {
+				type T struct{ Event }
+				HandlesEvent[T]()
+			},
+		)
+	})
+}
+
+func TestRecordsEvent(t *testing.T) {
+	t.Run("it returns a route containing the registered message type", func(t *testing.T) {
+		type T struct{ Event }
+		RegisterEvent[T]("19d21601-7d10-4aaa-85b5-248cf873b3d3")
+
+		route := RecordsEvent[T]()
+
+		got := route.Type.GoType()
+		want := reflect.TypeFor[T]()
+
+		if got != want {
+			t.Fatalf("unexpected message type: got %s, want %s", got, want)
+		}
+	})
+
+	t.Run("it panics if the type is not in the registry", func(t *testing.T) {
+		expectPanic(
+			t,
+			"github.com/dogmatiq/dogma_test.T is not in the message type registry",
+			func() {
+				type T struct{ Event }
+				RecordsEvent[T]()
+			},
+		)
 	})
 }
 
 func TestSchedulesTimeout(t *testing.T) {
-	type (
-		N = nonPointerReceivers[TimeoutValidationScope]
-		P = *pointerReceivers[TimeoutValidationScope]
-		X = *nonPointerReceivers[TimeoutValidationScope]
-	)
+	t.Run("it returns a route containing the registered message type", func(t *testing.T) {
+		type T struct{ Timeout }
+		RegisterTimeout[T]("e11b5a92-e1ab-4a16-841a-9286b4e4d12f")
 
-	t.Run("it returns a route with the correct reflection type", func(t *testing.T) {
-		if SchedulesTimeout[N]().Type != reflect.TypeFor[N]() {
-			t.Fatal("unexpected message type")
-		}
+		route := SchedulesTimeout[T]()
 
-		if SchedulesTimeout[P]().Type != reflect.TypeFor[P]() {
-			t.Fatal("unexpected message type")
+		got := route.Type.GoType()
+		want := reflect.TypeFor[T]()
+
+		if got != want {
+			t.Fatalf("unexpected message type: got %s, want %s", got, want)
 		}
 	})
 
-	t.Run("it panics if the type is a pointer to an implementation that uses non-pointer receivers", func(t *testing.T) {
-		defer func() {
-			if r := recover(); r == nil {
-				t.Fatal("expected a panic")
-			}
-		}()
-		SchedulesTimeout[X]()
+	t.Run("it panics if the type is not in the registry", func(t *testing.T) {
+		expectPanic(
+			t,
+			"github.com/dogmatiq/dogma_test.T is not in the message type registry",
+			func() {
+				type T struct{ Timeout }
+				SchedulesTimeout[T]()
+			},
+		)
 	})
 }
