@@ -1,5 +1,7 @@
 package dogma
 
+import "time"
+
 // A Message is an application-defined unit of data that describes a [Command],
 // [Event], or [Timeout] within a message-based application.
 
@@ -42,6 +44,25 @@ var UnexpectedMessage unexpectedMessage
 
 type unexpectedMessage struct{}
 
+// MessageValidationScope provides context during [Message] validation.
+//
+// Each message type has a corresponding scope type that
+// extends this interface:
+//
+//   - [CommandValidationScope]
+//   - [EventValidationScope]
+//   - [TimeoutValidationScope]
+type MessageValidationScope interface {
+	// IsNew returns true when a handler or [CommandExecutor] is creating a new
+	// message, or false when the engine is re-validating a message that it has
+	// already accepted.
+	//
+	// Use the distinction to apply different validation rules for new messages
+	// versus existing messages while keeping all validation logic in one
+	// location.
+	IsNew() bool
+}
+
 // A Command is a [Message] that instructs an [Application] to perform a specific
 // action immediately.
 type Command interface {
@@ -64,7 +85,12 @@ type Command interface {
 //
 // This type exists for forward-compatibility.
 type CommandValidationScope interface {
-	futureCommandValidationScope()
+	MessageValidationScope
+
+	// ExecutedAt returns the time at which the application submitted the
+	// command for execution by calling ExecuteCommand() on a [CommandExecutor]
+	// or [ProcessScope].
+	ExecutedAt() time.Time
 }
 
 // An Event is a [Message] that represents an action that an [Application] has
@@ -91,9 +117,10 @@ type Event interface {
 //
 // The engine provides the implementation to [Event].Validate.
 type EventValidationScope interface {
-	// IsHistorical returns true if the event has already occurred, or false if
-	// the application is recording a new event.
-	IsHistorical() bool
+	MessageValidationScope
+
+	// RecordedAt returns the time at which the event occurred.
+	RecordedAt() time.Time
 }
 
 // EventStreamPosition represents the position of an [Event] within an event
@@ -127,7 +154,11 @@ type Timeout interface {
 //
 // The engine provides the implementation to [Timeout].Validate.
 type TimeoutValidationScope interface {
-	// IsScheduled returns true if the timeout is already scheduled to occur, or
-	// false if the application is scheduling a new timeout.
-	IsScheduled() bool
+	MessageValidationScope
+
+	// ScheduledAt returns the time at which the handler scheduled the timeout.
+	ScheduledAt() time.Time
+
+	// ScheduledFor returns the time at which the timeout occurs.
+	ScheduledFor() time.Time
 }
