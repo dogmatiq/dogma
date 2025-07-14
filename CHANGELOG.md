@@ -40,10 +40,14 @@ registry before they can be used in handler routes.
   the message type registry.
 - Added `Now()` method to `AggregateCommandScope`, `ProcessEventScope`,
   `ProcessTimeoutScope`, `IntegrationCommandScope` and `ProjectionEventScope`.
+- Added `WithIdempotencyKey()` option for `CommandExecutor`.
 - **[ENGINE BC]** Added `Routes()` method to `ApplicationConfigurer`.
-- **[ENGINE BC]** Added `IsHistorical()` method to `EventValidationScope`.
-- **[ENGINE BC]** Added `IsScheduled()` method to `TimeoutValidationScope`.
-- Added `WithIdempotencyKey()`.
+- **[ENGINE BC]** Added `MessageValidationScope` interface, which is embedded in
+  `CommandValidationScope`, `EventValidationScope` and `TimeoutValidationScope`.
+- **[ENGINE BC]** Added `MessageValidationScope.IsNew()` method.
+- **[ENGINE BC]** Added `RecordedAt()` method to `EventValidationScope`.
+- **[ENGINE BC]** Added `ScheduledAt()` and `ScheduledFor()` methods to
+  `TimeoutValidationScope`.
 
 ### Changed
 
