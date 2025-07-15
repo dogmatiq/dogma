@@ -14,7 +14,7 @@ K •
 L •
 [M](#m) •
 N •
-O •
+[O](#o) •
 [P](#p) •
 Q •
 R •
@@ -78,6 +78,11 @@ specific business domain.
 See [`dogma.Application`].
 
 ## C
+
+### Checkpoint offset
+
+The [offset] of the next [event] message that a [projection message handler]
+expects to consume from a specific [event stream].
 
 ### Command
 
@@ -236,6 +241,12 @@ A property of a [message] that identifies its specific meaning within the
 business domain. Typically represented as a distinct Go type, such as
 `AddItemToCart` or `OrderPlaced`.
 
+## O
+
+### Offset
+
+The zero-based position of an [event] message within an [event stream].
+
 ## P
 
 ### Process
@@ -360,6 +371,10 @@ Describes a [message handler] or other component that has [state].
 
 Describes a [message handler] or other component that doesn't have [state].
 
+### Stream
+
+See [event stream].
+
 ## T
 
 ### `testkit`
@@ -414,6 +429,7 @@ See [process].
 [configurer]: #configurer
 [domain-driven design]: #domain-driven-design
 [engine]: #engine
+[event stream]: #event-stream
 [event streams]: #event-stream
 [event]: #event
 [handler route]: #handler-route
@@ -429,6 +445,7 @@ See [process].
 [message type]: #message-type
 [message]: #message
 [messages]: #message
+[offset]: #offset
 [process instance]: #process-instance
 [process instances]: #process-instance
 [process message handler]: #process-message-handler
