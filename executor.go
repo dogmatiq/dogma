@@ -26,7 +26,7 @@ type CommandExecutor interface {
 // ExecuteCommandOption is an option that modifies the behavior of
 // [CommandExecutor].ExecuteCommand.
 type ExecuteCommandOption interface {
-	ApplyExecuteCommandOption(executeCommandOptionsBuilder)
+	isExecuteCommandOption()
 }
 
 // WithIdempotencyKey returns an [ExecuteCommandOption] that sets a unique
@@ -38,15 +38,20 @@ func WithIdempotencyKey(key string) ExecuteCommandOption {
 	if key == "" {
 		panic("idempotency key cannot be empty")
 	}
-	return idempotencyKey{key}
+
+	return IdempotencyKeyOption{key: key}
 }
 
-type executeCommandOptionsBuilder interface {
-	IdempotencyKey(string)
+// IdempotencyKeyOption is an [ExecuteCommandOption] that sets a unique
+// identifier for a [Command].
+//
+// Use [WithIdempotencyKey] to create values of this type.
+type IdempotencyKeyOption struct {
+	nocmp
+	key string
 }
 
-type idempotencyKey struct{ k string }
-
-func (k idempotencyKey) ApplyExecuteCommandOption(b executeCommandOptionsBuilder) {
-	b.IdempotencyKey(k.k)
+// Key returns the idempotency key.
+func (o IdempotencyKeyOption) Key() string {
+	return o.key
 }

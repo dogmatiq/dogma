@@ -15,9 +15,9 @@ The format is based on [Keep a Changelog], and this project adheres to
 ## [Unreleased]
 
 This release changes how handlers are added to an application. It introduces the
-`ApplicationConfigurer.Routes()` interface to replace the `RegisterAggregate()`,
-`RegisterProcess()`, `RegisterIntegration()`, and `RegisterProjection()` method,
-which have been removed.
+`ApplicationConfigurer.Routes()` method to replace the `RegisterAggregate()`,
+`RegisterProcess()`, `RegisterIntegration()`, and `RegisterProjection()`
+methods, which have been removed.
 
 It also introduces a global message type registry. The application-defined types
 that implement `Command`, `Event`, and `Timeout` must now be added to the
@@ -25,11 +25,11 @@ registry before they can be used in handler routes.
 
 ### Added
 
+- Added `HandlerRoute` and `MessageRoute` interfaces.
 - Added `ViaAggregate()`, `ViaProcess()`, `ViaIntegration()`, and
   `ViaProjection()` for use with `ApplicationConfigurer.Routes()`.
-- Added `HandlerRoute` and `MessageRoute` interfaces.
-- Added `ViaAggregateRoute`, `ViaProcessRoute`, `ViaIntegrationRoute` and
-  `ViaProjectionRoute` types.
+- Added `AggregateHandlerRoute`, `ProcessHandlerRoute`,
+  `IntegrationHandlerRoute` and `ProjectionHandlerRoute` types.
 - Added `RegisterCommand()`, `RegisterEvent()`, and `RegisterTimeout()` for
   adding types to the message type registry. These functions panic if called
   with a pointer to a type that uses non-pointer receivers to implement the
@@ -57,8 +57,8 @@ registry before they can be used in handler routes.
 - **[BC]** Changed `ProjectionMessageHandler.HandleEvent()` to explicitly use
   event stream IDs and event offsets for OCC, instead of abstract versioned
   resources.
-- **[ENGINE BC]** Message route types now use `RegisteredMessageType` instead of
-  `reflect.Type`.
+- **[ENGINE BC]** Implementations of `MessageRoute` now use
+  `RegisteredMessageType` instead of `reflect.Type`.
 
 ### Removed
 

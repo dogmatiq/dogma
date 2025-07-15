@@ -1,6 +1,7 @@
 package dogma_test
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -17,7 +18,7 @@ func (*messageWithPointerReceivers[S]) Validate(S) error           { panic("not 
 
 // expectPanic is a test helper that asserts that fn panics with a specific
 // message.
-func expectPanic(t *testing.T, message string, fn func()) {
+func expectPanic[T comparable](t *testing.T, message T, fn func()) {
 	t.Helper()
 
 	defer func() {
@@ -31,10 +32,25 @@ func expectPanic(t *testing.T, message string, fn func()) {
 				"unexpected panic message:\n  got %q (%T),\n want %q",
 				got,
 				got,
-				message,
+				fmt.Sprintf("%v", message),
 			)
 		}
 	}()
 
 	fn()
 }
+
+func expectType[T any](t *testing.T, v any) T {
+	t.Helper()
+
+	got, ok := v.(T)
+
+	if !ok {
+		var want T
+		t.Fatalf("unexpected type: got %T, want %T", got, want)
+	}
+
+	return got
+}
+
+func assertIsComparable[T comparable](T) {}

@@ -74,7 +74,6 @@ type RegisterTimeoutOption interface {
 // to the registry.
 type RegisteredMessageType struct {
 	nocmp
-
 	id  string
 	typ reflect.Type
 	new func() Message

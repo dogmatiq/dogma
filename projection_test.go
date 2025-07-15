@@ -16,3 +16,7 @@ func TestNoCompactBehavior_Compact_ReturnsNil(t *testing.T) {
 		t.Fatal("unexpected error returned")
 	}
 }
+
+func init() {
+	assertIsComparable(NoCompactBehavior{})
+}
