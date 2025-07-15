@@ -38,15 +38,15 @@ func WithIdempotencyKey(key string) ExecuteCommandOption {
 	if key == "" {
 		panic("idempotency key cannot be empty")
 	}
-	return idempotencyKey(key)
+	return idempotencyKey{key}
 }
 
 type executeCommandOptionsBuilder interface {
 	IdempotencyKey(string)
 }
 
-type idempotencyKey string
+type idempotencyKey struct{ k string }
 
-func (i idempotencyKey) ApplyExecuteCommandOption(v executeCommandOptionsBuilder) {
-	v.IdempotencyKey(string(i))
+func (k idempotencyKey) ApplyExecuteCommandOption(b executeCommandOptionsBuilder) {
+	b.IdempotencyKey(k.k)
 }

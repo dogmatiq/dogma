@@ -4,32 +4,32 @@ package dogma
 // [AggregateMessageHandler].
 //
 // Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
-func ViaAggregate(h AggregateMessageHandler, _ ...ViaAggregateOption) ViaAggregateRoute {
-	return ViaAggregateRoute{h}
+func ViaAggregate(h AggregateMessageHandler, _ ...ViaAggregateOption) HandlerRoute {
+	return ViaAggregateRoute{Handler: h}
 }
 
 // ViaProcess configures the [Application] to route messages to and from a
 // [ProcessMessageHandler].
 //
 // Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
-func ViaProcess(h ProcessMessageHandler, _ ...ViaProcessOption) ViaProcessRoute {
-	return ViaProcessRoute{h}
+func ViaProcess(h ProcessMessageHandler, _ ...ViaProcessOption) HandlerRoute {
+	return ViaProcessRoute{Handler: h}
 }
 
 // ViaIntegration configures the [Application] to route messages to and from an
 // [IntegrationMessageHandler].
 //
 // Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
-func ViaIntegration(h IntegrationMessageHandler, _ ...ViaIntegrationOption) ViaIntegrationRoute {
-	return ViaIntegrationRoute{h}
+func ViaIntegration(h IntegrationMessageHandler, _ ...ViaIntegrationOption) HandlerRoute {
+	return ViaIntegrationRoute{Handler: h}
 }
 
 // ViaProjection configures the [Application] to route messages to a
 // [ProjectionMessageHandler].
 //
 // Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
-func ViaProjection(h ProjectionMessageHandler, _ ...ViaProjectionOption) ViaProjectionRoute {
-	return ViaProjectionRoute{h}
+func ViaProjection(h ProjectionMessageHandler, _ ...ViaProjectionOption) HandlerRoute {
+	return ViaProjectionRoute{Handler: h}
 }
 
 type (
@@ -38,35 +38,49 @@ type (
 	//
 	// Use [ViaAggregate], [ViaProcess], [ViaIntegration], or [ViaProjection]
 	// to create a HandlerRoute.
-	HandlerRoute interface{ isHandlerRoute() }
+	HandlerRoute interface {
+		ApplyHandlerRoute(HandlerRoutesBuilder)
+	}
 
 	// ViaAggregateRoute is a [HandlerRoute] that represents a relationship
 	// between the [Application] and an [AggregateMessageHandler].
 	//
 	// Avoid constructing values of this type directly; use [ViaAggregate]
 	// instead.
-	ViaAggregateRoute struct{ Handler AggregateMessageHandler }
+	ViaAggregateRoute struct {
+		nocmp
+		Handler AggregateMessageHandler
+	}
 
 	// ViaProcessRoute is a [HandlerRoute] that represents a relationship
 	// between the [Application] and a [ProcessMessageHandler].
 	//
 	// Avoid constructing values of this type directly; use [ViaProcess]
 	// instead.
-	ViaProcessRoute struct{ Handler ProcessMessageHandler }
+	ViaProcessRoute struct {
+		nocmp
+		Handler ProcessMessageHandler
+	}
 
 	// ViaIntegrationRoute is a [HandlerRoute] that represents a relationship
 	// between the [Application] and an [IntegrationMessageHandler].
 	//
 	// Avoid constructing values of this type directly; use [ViaIntegration]
 	// instead.
-	ViaIntegrationRoute struct{ Handler IntegrationMessageHandler }
+	ViaIntegrationRoute struct {
+		nocmp
+		Handler IntegrationMessageHandler
+	}
 
 	// ViaProjectionRoute is a [HandlerRoute] that represents a relationship
 	// between the [Application] and a [ProjectionMessageHandler].
 	//
 	// Avoid constructing values of this type directly; use [ViaProjection]
 	// instead.
-	ViaProjectionRoute struct{ Handler ProjectionMessageHandler }
+	ViaProjectionRoute struct {
+		nocmp
+		Handler ProjectionMessageHandler
+	}
 )
 
 type (
@@ -102,3 +116,27 @@ type (
 		futureViaProjectionOption()
 	}
 )
+
+// HandlerRoutesBuilder is an interface for types that can build configuration
+// from [HandlerRoute] values.
+//
+// This type is part of the engine configuration API. It's not intended for
+// use during application development.
+type HandlerRoutesBuilder interface {
+	ViaAggregate(ViaAggregateRoute)
+	ViaProcess(ViaProcessRoute)
+	ViaIntegration(ViaIntegrationRoute)
+	ViaProjection(ViaProjectionRoute)
+}
+
+// ApplyHandlerRoute passes r to [HandlerRoutesBuilder].ViaAggregate.
+func (r ViaAggregateRoute) ApplyHandlerRoute(b HandlerRoutesBuilder) { b.ViaAggregate(r) }
+
+// ApplyHandlerRoute passes r to [HandlerRoutesBuilder].ViaProcess.
+func (r ViaProcessRoute) ApplyHandlerRoute(b HandlerRoutesBuilder) { b.ViaProcess(r) }
+
+// ApplyHandlerRoute passes r to [HandlerRoutesBuilder].ViaIntegration.
+func (r ViaIntegrationRoute) ApplyHandlerRoute(b HandlerRoutesBuilder) { b.ViaIntegration(r) }
+
+// ApplyHandlerRoute passes r to [HandlerRoutesBuilder].ViaProjection.
+func (r ViaProjectionRoute) ApplyHandlerRoute(b HandlerRoutesBuilder) { b.ViaProjection(r) }
