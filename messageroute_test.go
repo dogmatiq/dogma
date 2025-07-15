@@ -12,9 +12,10 @@ func TestHandlesCommand(t *testing.T) {
 		type T struct{ Command }
 		RegisterCommand[T]("83c4a2d9-a728-49e6-83a3-6c670b99a173")
 
-		route := HandlesCommand[T]()
+		r := HandlesCommand[T]()
+		expectType[HandlesCommandRoute](t, r)
 
-		got := route.Type.GoType()
+		got := r.Type().GoType()
 		want := reflect.TypeFor[T]()
 
 		if got != want {
@@ -39,9 +40,10 @@ func TestExecutesCommand(t *testing.T) {
 		type T struct{ Command }
 		RegisterCommand[T]("7b8cf1fd-722e-4337-bc5c-9ce4f32ab9d4")
 
-		route := ExecutesCommand[T]()
+		r := ExecutesCommand[T]()
+		expectType[ExecutesCommandRoute](t, r)
 
-		got := route.Type.GoType()
+		got := r.Type().GoType()
 		want := reflect.TypeFor[T]()
 
 		if got != want {
@@ -66,9 +68,10 @@ func TestHandlesEvent(t *testing.T) {
 		type T struct{ Event }
 		RegisterEvent[T]("bef3014a-fca1-4cb3-90a3-ee83f5ca56c8")
 
-		route := HandlesEvent[T]()
+		r := HandlesEvent[T]()
+		expectType[HandlesEventRoute](t, r)
 
-		got := route.Type.GoType()
+		got := r.Type().GoType()
 		want := reflect.TypeFor[T]()
 
 		if got != want {
@@ -93,9 +96,10 @@ func TestRecordsEvent(t *testing.T) {
 		type T struct{ Event }
 		RegisterEvent[T]("19d21601-7d10-4aaa-85b5-248cf873b3d3")
 
-		route := RecordsEvent[T]()
+		r := RecordsEvent[T]()
+		expectType[RecordsEventRoute](t, r)
 
-		got := route.Type.GoType()
+		got := r.Type().GoType()
 		want := reflect.TypeFor[T]()
 
 		if got != want {
@@ -120,9 +124,10 @@ func TestSchedulesTimeout(t *testing.T) {
 		type T struct{ Timeout }
 		RegisterTimeout[T]("e11b5a92-e1ab-4a16-841a-9286b4e4d12f")
 
-		route := SchedulesTimeout[T]()
+		r := SchedulesTimeout[T]()
+		expectType[SchedulesTimeoutRoute](t, r)
 
-		got := route.Type.GoType()
+		got := r.Type().GoType()
 		want := reflect.TypeFor[T]()
 
 		if got != want {

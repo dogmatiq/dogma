@@ -21,13 +21,16 @@ func TestNoTimeoutMessagesBehavior_HandleTimeout_Panics(t *testing.T) {
 	var v NoTimeoutMessagesBehavior
 	ctx := context.Background()
 
-	defer func() {
-		r := recover()
+	expectPanic(
+		t,
+		UnexpectedMessage,
+		func() {
+			v.HandleTimeout(ctx, nil, nil, nil)
+		},
+	)
+}
 
-		if r != UnexpectedMessage {
-			t.Fatal("expected panic did not occur")
-		}
-	}()
-
-	v.HandleTimeout(ctx, nil, nil, nil)
+func init() {
+	assertIsComparable(StatelessProcessBehavior{})
+	assertIsComparable(NoTimeoutMessagesBehavior{})
 }
