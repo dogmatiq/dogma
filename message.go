@@ -123,16 +123,6 @@ type EventValidationScope interface {
 	RecordedAt() time.Time
 }
 
-// EventStreamPosition represents the position of an [Event] within an event
-// stream.
-type EventStreamPosition struct {
-	// StreamID is an RFC 4122 UUID that identifies the event stream.
-	StreamID string
-
-	// Offset is the zero-based position of the event within the stream.
-	Offset uint64
-}
-
 // A Timeout is a [Message] that notifies an [Application], specifically a
 // [ProcessMessageHandler] that some domain-relevant period of time has elapsed.
 type Timeout interface {

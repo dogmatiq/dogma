@@ -37,47 +37,48 @@ type ProjectionMessageHandler interface {
 	// HandleEvent updates the projection to reflect the occurrence of an
 	// [Event].
 	//
-	// The handler must enforce exactly-once semantics by performing an
-	// optimistic concurrency check based on the event's [EventStreamPosition],
-	// available via [ProjectionEventScope].Position.
+	// The [ProjectionEventScope] s exposes the ID of the event stream to which
+	// the incoming event belongs, the event's offset within that stream, and
+	// the checkpoint offset at which the engine expects the handler to resume
+	// consuming from the stream.
 	//
-	// To do this, the handler must persist an offset for each stream from which
-	// it receives events. When handling an event, it compares the event’s
-	// offset to the offset of the next unhandled event for that stream. If they
-	// match, the handler applies the event and increments the stored offset in
-	// a single atomic operation. If they don’t match, an OCC conflict has
-	// occurred, and the handler must not apply the event.
+	// If the engine and handler agree on the checkpoint offset, the handler
+	// must atomically apply the event and update its checkpoint offset to one
+	// greater than the incoming event's offset. Otherwise, the handler must not
+	// modify any data.
 	//
-	// In either case, the return value n is the offset of the next unhandled
-	// event in the stream. If n is the offset immediately after that of the
-	// incoming event, the engine considers the event handled successfully.
-	// Otherwise, an OCC conflict has occurred, and the engine resumes
-	// delivering events from the stream starting at offset n.
+	// In either case, the method returns cp, the new checkpoint offset for this
+	// stream. If cp is one greater than the offset of the incoming event, the
+	// engine considers the event handled successfully. Otherwise, an OCC
+	// conflict has occurred, and the engine resumes delivering events starting
+	// at cp.
 	//
 	// A non-nil error indicates that the handler encountered a runtime problem
 	// other than an OCC conflict.
 	//
-	// The engine arranges events on streams such that it delivers all [Event]
-	// messages recorded within a single scope in the order they occurred. It
-	// also preserves the order of events from a single aggregate instance, even
-	// across scopes. It doesn't guarantee the relative delivery order of events
-	// from different handlers or aggregate instances.
+	// The engine arranges events on streams such that it delivers all events
+	// within a single scope in the order they occurred. It also preserves the
+	// order of events from a single aggregate instance, even across scopes. It
+	// doesn't guarantee the relative delivery order of events from different
+	// handlers or aggregate instances.
+	//
+	// See:
+	//  - [ProjectionEventScope].StreamID
+	//  - [ProjectionEventScope].Offset
+	//  - [ProjectionEventScope].CheckpointOffset
 	HandleEvent(
 		ctx context.Context,
 		s ProjectionEventScope,
 		e Event,
-	) (n uint64, err error)
+	) (cp uint64, err error)
 
-	// StreamOffset returns the offset of the next unhandled event in a specific
-	// event stream.
+	// CheckpointOffset returns the offset at which the handler expects to
+	// resume handling events from a specific stream.
 	//
-	// s is an RFC 4122 UUID that identifies the event stream, such as
+	// id is an RFC 4122 UUID that identifies the event stream, such as
 	// "c50b5804-8312-4c61-b32c-9fbf49688db3". UUIDs are case-insensitive, but
 	// the engine must use a lowercase representation.
-	//
-	// The first event in any stream is at offset 0. Accordingly, if the handler
-	// hasn’t handled any events from s, this method returns 0.
-	StreamOffset(ctx context.Context, s string) (uint64, error)
+	CheckpointOffset(ctx context.Context, id string) (uint64, error)
 
 	// Compact reduces the projection's size by removing or consolidating data.
 	//
@@ -112,11 +113,22 @@ type ProjectionConfigurer interface {
 type ProjectionEventScope interface {
 	HandlerScope
 
-	// Position returns the [EventStreamPosition] of the [Event].
-	Position() EventStreamPosition
-
 	// RecordedAt returns the time at which the [Event] occurred.
 	RecordedAt() time.Time
+
+	// StreamID returns the RFC 4122 UUID that identifies the event stream to
+	// which the [Event] belongs.
+	StreamID() string
+
+	// Offset returns the event's zero-based offset within the stream.
+	Offset() uint64
+
+	// CheckpointOffset returns the offset from which the handler should resume
+	// handling events from this stream, according to the engine.
+	//
+	// It may be lower than the incoming event's offset when the stream contains
+	// event types that the handler doesn't consume.
+	CheckpointOffset() uint64
 }
 
 // ProjectionCompactScope represents the context within which a

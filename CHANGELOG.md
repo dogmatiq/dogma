@@ -54,6 +54,9 @@ registry before they can be used in handler routes.
 - **[BC]** `HandlesCommand()`,`ExecutesCommand()`, `HandlesEvent()`,
   `RecordsEvent()` and `SchedulesTimeout()` now panic if the message type isn't
   in the message registry.
+- **[BC]** Changed `ProjectionMessageHandler.HandleEvent()` to explicitly use
+  event stream IDs and event offsets for OCC, instead of abstract versioned
+  resources.
 - **[ENGINE BC]** Message route types now use `RegisteredMessageType` instead of
   `reflect.Type`.
 
