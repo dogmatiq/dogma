@@ -102,10 +102,13 @@ func (t RegisteredMessageType) New() Message {
 //
 // ok is false if T isn't in the message type registry.
 func RegisteredMessageTypeFor[T Message]() (t RegisteredMessageType, ok bool) {
-	reg := messageTypeRegistry.Load()
-	key := reflect.TypeFor[T]()
+	queryMessageRegistry(
+		func(reg *messageTypes) {
+			key := reflect.TypeFor[T]()
+			t, ok = reg.ByType[key]
+		},
+	)
 
-	t, ok = reg.ByType[key]
 	return t, ok
 }
 
@@ -135,7 +138,12 @@ func RegisteredMessageTypeByID(id string) (t RegisteredMessageType, ok bool) {
 		panic(err.Error())
 	}
 
-	t, ok = messageTypeRegistry.Load().ByID[id]
+	queryMessageRegistry(
+		func(reg *messageTypes) {
+			t, ok = reg.ByID[id]
+		},
+	)
+
 	return t, ok
 }
 
@@ -145,7 +153,17 @@ func RegisteredMessageTypeByID(id string) (t RegisteredMessageType, ok bool) {
 // Use [RegisterCommand], [RegisterEvent], or [RegisterTimeout] to add messages
 // to the registry.
 func RegisteredMessageTypes() iter.Seq[RegisteredMessageType] {
-	return slices.Values(messageTypeRegistry.Load().Slice)
+	return func(yield func(RegisteredMessageType) bool) {
+		queryMessageRegistry(
+			func(reg *messageTypes) {
+				for _, t := range reg.Slice {
+					if !yield(t) {
+						return
+					}
+				}
+			},
+		)
+	}
 }
 
 // messageTypes encapsulates the Dogma message registry.
@@ -168,6 +186,14 @@ type messageTypes struct {
 // minor penalty during initialization due to repeated map and slice clones -
 // while still providing thread safety.
 var messageTypeRegistry atomic.Pointer[messageTypes]
+
+func queryMessageRegistry(fn func(*messageTypes)) {
+	reg := messageTypeRegistry.Load()
+	if reg == nil {
+		reg = &messageTypes{}
+	}
+	fn(reg)
+}
 
 func registerMessageType[K, T Message](id string) {
 	typ := reflect.TypeFor[T]()

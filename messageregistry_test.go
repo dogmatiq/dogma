@@ -102,6 +102,15 @@ func TestRegisteredMessageTypes(t *testing.T) {
 			t.Fatal("timeout type was not yielded")
 		}
 	})
+
+	t.Run("break early (coverage)", func(t *testing.T) {
+		type T struct{ Command }
+		RegisterCommand[T]("b61a3911-f987-476d-973c-16c343a59a17")
+
+		for range RegisteredMessageTypes() {
+			break
+		}
+	})
 }
 
 func TestMessageTypeRegistration(t *testing.T) {
