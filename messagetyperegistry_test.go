@@ -59,7 +59,7 @@ func TestRegisteredMessageTypeByID(t *testing.T) {
 	t.Run("panics when the ID is invalid", func(t *testing.T) {
 		expectPanic(
 			t,
-			`"<non-uuid>" is not a canonical RFC 4122 UUID: expected 36 characters`,
+			`"<non-uuid>" is not a canonical RFC 9562 UUID: expected 36 characters`,
 			func() {
 				RegisteredMessageTypeByID("<non-uuid>")
 			},
@@ -227,17 +227,17 @@ func TestMessageTypeRegistration(t *testing.T) {
 			},
 			{
 				"invalid UUID",
-				`cannot register github.com/dogmatiq/dogma_test.T: "<non-uuid>" is not a canonical RFC 4122 UUID: expected 36 characters`,
+				`cannot register github.com/dogmatiq/dogma_test.T: "<non-uuid>" is not a canonical RFC 9562 UUID: expected 36 characters`,
 				func() {
 					type T struct{ Command }
 					RegisterCommand[T]("<non-uuid>")
 				},
-				`cannot register github.com/dogmatiq/dogma_test.T: "<non-uuid>" is not a canonical RFC 4122 UUID: expected 36 characters`,
+				`cannot register github.com/dogmatiq/dogma_test.T: "<non-uuid>" is not a canonical RFC 9562 UUID: expected 36 characters`,
 				func() {
 					type T struct{ Event }
 					RegisterEvent[T]("<non-uuid>")
 				},
-				`cannot register github.com/dogmatiq/dogma_test.T: "<non-uuid>" is not a canonical RFC 4122 UUID: expected 36 characters`,
+				`cannot register github.com/dogmatiq/dogma_test.T: "<non-uuid>" is not a canonical RFC 9562 UUID: expected 36 characters`,
 				func() {
 					type T struct{ Timeout }
 					RegisterTimeout[T]("<non-uuid>")

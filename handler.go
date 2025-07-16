@@ -24,7 +24,7 @@ type HandlerConfigurer interface {
 	//
 	// k is a key that uniquely identifies the handler. The engine uses the key
 	// to associate handler state with the correct handler instance - it must
-	// not change. The value must be a canonical RFC 4122 UUID string, such as
+	// not change. The value must be a canonical RFC 9562 UUID string, such as
 	// "3a6da031-aa6c-406a-8453-73762f71f917", and is case-insensitive.
 	Identity(n string, k string)
 

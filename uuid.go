@@ -6,7 +6,7 @@ import (
 
 func normalizeUUID(id string) (string, error) {
 	if len(id) != 36 {
-		return "", fmt.Errorf("%q is not a canonical RFC 4122 UUID: expected 36 characters", id)
+		return "", fmt.Errorf("%q is not a canonical RFC 9562 UUID: expected 36 characters", id)
 	}
 
 	var normalized [36]byte
@@ -19,7 +19,7 @@ func normalizeUUID(id string) (string, error) {
 		switch i {
 		case 8, 13, 18, 23:
 			if c != '-' {
-				return "", fmt.Errorf("%q is not a canonical RFC 4122 UUID: expected hyphen at position %d", id, i)
+				return "", fmt.Errorf("%q is not a canonical RFC 9562 UUID: expected hyphen at position %d", id, i)
 			}
 		default:
 			switch {
@@ -33,13 +33,13 @@ func normalizeUUID(id string) (string, error) {
 				isNil = false
 				normalized[i] += 'a' - 'A' // convert to lowercase
 			default:
-				return "", fmt.Errorf("%q is not a canonical RFC 4122 UUID: expected hex digit at position %d", id, i)
+				return "", fmt.Errorf("%q is not a canonical RFC 9562 UUID: expected hex digit at position %d", id, i)
 			}
 		}
 	}
 
 	if isNil {
-		return "", fmt.Errorf(`%q is not a canonical RFC 4122 UUID: the "nil" UUID is not supported`, id)
+		return "", fmt.Errorf(`%q is not a canonical RFC 9562 UUID: the "nil" UUID is not supported`, id)
 	}
 
 	return string(normalized[:]), nil

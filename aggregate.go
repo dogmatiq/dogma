@@ -40,7 +40,7 @@ type AggregateMessageHandler interface {
 	//
 	// The return value must be a non-empty string that uniquely identifies the
 	// target instance. For example, in a shopping cart aggregate, the instance
-	// ID might be the customer's ID. RFC 4122 UUIDs are the recommended format.
+	// ID might be the customer's ID. RFC 9562 UUIDs are the recommended format.
 	//
 	// Commands routed to the same instance operate on the same state. There's
 	// no need to create an instance in advance - it "exists" once the handler

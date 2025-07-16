@@ -18,9 +18,9 @@ efficiently.
 
 ## Decision
 
-We will require all identifiers keys valid [RFC 4122] UUIDs. The `Identity()`
+We will require all identifiers keys valid [RFC 9562] UUIDs. The `Identity()`
 method on the "configurer" interfaces will continue to accept a string,
-but that string must be an [RFC 4122] UUID in the canonical format:
+but that string must be an [RFC 9562] UUID in the canonical format:
 `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`.
 
 We will also limit the maximum length of identifier names to 255 bytes. This
@@ -38,4 +38,4 @@ reject those that do not meet the requirements.
 
 <!-- references -->
 
-[rfc 4122]: https://rfc-editor.org/rfc/rfc4122.html
+[rfc 9562]: https://rfc-editor.org/rfc/rfc9562.html

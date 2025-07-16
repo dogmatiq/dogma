@@ -32,7 +32,7 @@ type ApplicationConfigurer interface {
 	//
 	// k is a key that uniquely identifies the application. The engine uses the
 	// key to associate application state with the correct application instance
-	// - it must not change. The value must be a canonical RFC 4122 UUID string,
+	// - it must not change. The value must be a canonical RFC 9562 UUID string,
 	// such as "5195fe85-eb3f-4121-84b0-be72cbc5722f", and is case-insensitive.
 	Identity(n, k string)
 

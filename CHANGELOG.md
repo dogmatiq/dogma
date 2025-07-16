@@ -208,7 +208,7 @@ the last release.
 breaking changes to applications that are already following these best
 practices.**
 
-- Use [RFC 4122] UUIDs for identity keys
+- Use [RFC 9562] UUIDs for identity keys
 - Implement `MessageDescription()` on message types
 - Implement `Validate()` methods on message types
 
@@ -222,7 +222,7 @@ message types. It also offers more extensible interface that allows future
 support for per-message routing configuration without further breaking changes.
 
 [type parameters]: https://go.dev/tour/generics/1
-[rfc 4122]: https://www.rfc-editor.org/rfc/rfc4122.html
+[rfc 9562]: https://www.rfc-editor.org/rfc/rfc9562.html
 
 ### Added
 
@@ -254,7 +254,7 @@ support for per-message routing configuration without further breaking changes.
 
 ### Changed
 
-- **[BC]** Handler and application identity keys must now be an RFC 4122 UUID string
+- **[BC]** Handler and application identity keys must now be an RFC 9562 UUID string
 
 ### Deprecated
 

@@ -31,7 +31,7 @@ solution to the following problems:
 We will introduce a global message type registry that requires explicit
 registration of all message types before they can be used in handler routes.
 
-Each registered message type is associated with an [RFC 4122] UUID, which
+Each registered message type is associated with an [RFC 9562] UUID, which
 uniquely identifies the type when serialized. Engines will use this UUID instead
 of the "portable name".
 
@@ -54,4 +54,4 @@ zero-value messages that arise due to Go's lack of static methods.
 
 <!-- references -->
 
-[RFC 4122]: https://datatracker.ietf.org/doc/html/rfc4122
+[RFC 9562]: https://datatracker.ietf.org/doc/html/rfc9562

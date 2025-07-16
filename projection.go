@@ -75,7 +75,7 @@ type ProjectionMessageHandler interface {
 	// CheckpointOffset returns the offset at which the handler expects to
 	// resume handling events from a specific stream.
 	//
-	// id is an RFC 4122 UUID that identifies the event stream, such as
+	// id is an RFC 9562 UUID that identifies the event stream, such as
 	// "c50b5804-8312-4c61-b32c-9fbf49688db3". UUIDs are case-insensitive, but
 	// the engine must use a lowercase representation.
 	CheckpointOffset(ctx context.Context, id string) (uint64, error)
@@ -116,7 +116,7 @@ type ProjectionEventScope interface {
 	// RecordedAt returns the time at which the [Event] occurred.
 	RecordedAt() time.Time
 
-	// StreamID returns the RFC 4122 UUID that identifies the event stream to
+	// StreamID returns the RFC 9562 UUID that identifies the event stream to
 	// which the [Event] belongs.
 	StreamID() string
 

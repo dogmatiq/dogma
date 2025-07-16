@@ -46,7 +46,7 @@ type ProcessMessageHandler interface {
 	// If ok is false, the handler ignores the event. Otherwise, the returned ID
 	// must be a non-empty string that uniquely identifies the target instance.
 	// For example, in a shopping cart checkout process, the instance ID might
-	// be the customer's ID. RFC 4122 UUIDs are the recommended format.
+	// be the customer's ID. RFC 9562 UUIDs are the recommended format.
 	//
 	// Events routed to the same instance operate on the same state. There's no
 	// need to create an instance in advance - it "exists" once the handler

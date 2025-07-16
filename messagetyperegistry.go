@@ -14,7 +14,7 @@ import (
 // making it eligible for use with [HandlesCommand] and [ExecutesCommand].
 //
 // id uniquely identifies the message type. The value must be a canonical RFC
-// 4122 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
+// 9562 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
 // case-insensitive. The engine uses the ID to associate message data with the
 // correct Go type.
 func RegisterCommand[T Command](id string, _ ...RegisterCommandOption) {
@@ -33,7 +33,7 @@ type RegisterCommandOption interface {
 // it eligible for use with [HandlesEvent] and [RecordsEvent].
 //
 // id uniquely identifies the message type. The value must be a canonical RFC
-// 4122 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
+// 9562 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
 // case-insensitive. The engine uses the ID to associate message data with the
 // correct Go type.
 func RegisterEvent[T Event](id string, _ ...RegisterEventOption) {
@@ -52,7 +52,7 @@ type RegisterEventOption interface {
 // making it eligible for use with [SchedulesTimeout].
 //
 // id uniquely identifies the message type. The value must be a canonical RFC
-// 4122 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
+// 9562 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
 // case-insensitive. The engine uses the ID to associate message data with the
 // correct Go type.
 func RegisterTimeout[T Timeout](id string, _ ...RegisterTimeoutOption) {
@@ -79,7 +79,7 @@ type RegisteredMessageType struct {
 	new func() Message
 }
 
-// ID returns an RFC 4122 UUID that uniquely identifies the message type. The
+// ID returns an RFC 9562 UUID that uniquely identifies the message type. The
 // engine uses the ID to associate message data with the correct Go type.
 func (t RegisteredMessageType) ID() string {
 	return t.id
@@ -128,7 +128,7 @@ func registeredMessageTypeFor[T Message]() RegisteredMessageType {
 // RegisteredMessageTypeByID returns the [RegisteredMessageType] with the given
 // ID.
 //
-// The ID is a canonical RFC 4122 UUID string, such as
+// The ID is a canonical RFC 9562 UUID string, such as
 // "65f9620a-65c1-434e-8292-60cd7938c4de", and is case-insensitive.
 //
 // ok is false if there is no such message type in the registry.
