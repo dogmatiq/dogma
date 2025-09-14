@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
-## [Unreleased]
+## [0.16.0] - 2025-09-14
 
 This release changes how handlers are added to an application. It introduces the
 `ApplicationConfigurer.Routes()` method to replace the `RegisterAggregate()`,
@@ -456,6 +456,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.14.2]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.2
 [0.14.3]: https://github.com/dogmatiq/dogma/releases/tag/v0.14.3
 [0.15.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.15.0
+[0.16.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.16.0
 
 <!-- adr references -->
 
