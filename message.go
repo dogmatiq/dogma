@@ -41,7 +41,9 @@ type Message interface {
 	// persistence or transmission over the network.
 	MarshalBinary() ([]byte, error)
 
-	// UnmarshalBinary decodes a message from its binary representation.
+	// UnmarshalBinary populates the message from its binary representation.
+	//
+	// The implementation must clone the data if it is used after returning.
 	UnmarshalBinary([]byte) error
 }
 
