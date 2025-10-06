@@ -21,23 +21,26 @@ func (*messageWithPointerReceivers[S]) Validate(S) error           { panic("not 
 func expectPanic[T comparable](t *testing.T, message T, fn func()) {
 	t.Helper()
 
-	defer func() {
-		switch got := recover(); got {
-		case nil:
-			t.Fatal("expected function to panic")
-		case message:
-			// ok
-		default:
-			t.Fatalf(
-				"unexpected panic message:\n  got %q (%T),\n want %q",
-				got,
-				got,
-				fmt.Sprintf("%v", message),
-			)
-		}
+	var got any
+
+	func() {
+		defer func() { got = recover() }()
+		fn()
 	}()
 
-	fn()
+	switch got {
+	case nil:
+		t.Fatal("expected function to panic")
+	case message:
+		// ok
+	default:
+		t.Fatalf(
+			"unexpected panic message:\n  got %q (%T),\n want %q",
+			got,
+			got,
+			fmt.Sprintf("%v", message),
+		)
+	}
 }
 
 func expectType[T any](t *testing.T, v any) T {
