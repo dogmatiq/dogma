@@ -91,6 +91,9 @@ type ProjectionMessageHandler interface {
 	//
 	// The engine may call this method at any time, including in parallel with
 	// handling an event.
+	//
+	// Not all projections need compaction. Embed [NoCompactBehavior] in the
+	// handler to indicate compaction not required..
 	Compact(ctx context.Context, s ProjectionCompactScope) error
 }
 

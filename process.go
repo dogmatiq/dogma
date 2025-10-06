@@ -38,6 +38,9 @@ type ProcessMessageHandler interface {
 	// The engine calls this method to get a "blank slate" when handling the
 	// first [Event] for a new instance. Unlike aggregates, the engine doesn't
 	// reconstruct process state from historical events.
+	//
+	// Not all processes maintain state. Embed [StatelessProcessBehavior] in the
+	// handler implementation to indicate that the process is stateless.
 	New() ProcessRoot
 
 	// RouteEventToInstance returns the ID of the process instance that e
@@ -119,6 +122,9 @@ type ProcessMessageHandler interface {
 	// It may deliver them later when recovering from downtime or retrying after
 	// a failure. It doesn't guarantee the relative delivery order of timeout
 	// messages with the same scheduled time.
+	//
+	// Not all processes use timeouts. Embed [NoTimeoutMessagesBehavior] in the
+	// handler implementation to indicate that timeout messages aren't used.
 	HandleTimeout(
 		ctx context.Context,
 		r ProcessRoot,
