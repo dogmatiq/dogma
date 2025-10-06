@@ -12,6 +12,20 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [Unreleased]
+
+### Added
+
+- **[BC]** Added `Message.MarshalBinary()` and `UnmarshalBinary()` methods.
+
+### Changed
+
+- **[BC]** Implementations of `Message` must now be implemented using pointer
+  receivers, as this is the only implementation pattern that makes sense with
+  the addition of the `Message.UnmarshalBinary()` method. Accordingly,
+  `RegisterCommand()`, `RegisterEvent()` and `RegisterTimeout()` now require a
+  type parameter that is a pointer.
+
 ## [0.16.0] - 2025-09-14
 
 This release changes how handlers are added to an application. It introduces the

@@ -36,6 +36,13 @@ type Message interface {
 	// relevant to [Event] messages, where each type should represent a specific
 	// state change regardless of who initiated it.
 	MessageDescription() string
+
+	// MarshalBinary returns the message's binary representation, suitable for
+	// persistence or transmission over the network.
+	MarshalBinary() ([]byte, error)
+
+	// UnmarshalBinary decodes a message from its binary representation.
+	UnmarshalBinary([]byte) error
 }
 
 // UnexpectedMessage is a panic value used by a message handler when it receives
