@@ -17,7 +17,13 @@ import (
 // 9562 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
 // case-insensitive. The engine uses the ID to associate message data with the
 // correct Go type.
-func RegisterCommand[T Command](id string, _ ...RegisterCommandOption) {
+func RegisterCommand[
+	T interface {
+		Command
+		*E
+	},
+	E any, // E is the "element" type of the pointer type T.
+](id string, _ ...RegisterCommandOption) {
 	registerMessageType[Command, T](id)
 }
 
@@ -36,7 +42,13 @@ type RegisterCommandOption interface {
 // 9562 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
 // case-insensitive. The engine uses the ID to associate message data with the
 // correct Go type.
-func RegisterEvent[T Event](id string, _ ...RegisterEventOption) {
+func RegisterEvent[
+	T interface {
+		*E
+		Event
+	},
+	E any, // E is the "element" type of the pointer type T.
+](id string, _ ...RegisterEventOption) {
 	registerMessageType[Event, T](id)
 }
 
@@ -55,7 +67,13 @@ type RegisterEventOption interface {
 // 9562 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
 // case-insensitive. The engine uses the ID to associate message data with the
 // correct Go type.
-func RegisterTimeout[T Timeout](id string, _ ...RegisterTimeoutOption) {
+func RegisterTimeout[
+	T interface {
+		*E
+		Timeout
+	},
+	E any, // E is the "element" type of the pointer type T.
+](id string, _ ...RegisterTimeoutOption) {
 	registerMessageType[Timeout, T](id)
 }
 
@@ -195,7 +213,14 @@ func queryMessageRegistry(fn func(*messageTypes)) {
 	fn(reg)
 }
 
-func registerMessageType[K, T Message](id string) {
+func registerMessageType[
+	K Message,
+	T interface {
+		Message
+		*E
+	},
+	E any,
+](id string) {
 	typ := reflect.TypeFor[T]()
 
 	id, err := normalizeUUID(id)
@@ -207,45 +232,13 @@ func registerMessageType[K, T Message](id string) {
 		))
 	}
 
-	t := RegisteredMessageType{
+	mergeMessageType(RegisteredMessageType{
 		id:  id,
 		typ: typ,
-	}
-
-	switch typ.Kind() {
-	case reflect.Interface:
-		panic(fmt.Sprintf(
-			"cannot register %s: message type is an interface, expected a concrete type",
-			qualifiedNameOf(typ),
-		))
-
-	case reflect.Pointer:
-		elem := typ.Elem()
-		iface := reflect.TypeFor[K]()
-
-		if elem.Implements(iface) {
-			panic(fmt.Sprintf(
-				"cannot register %s: message type uses non-pointer receivers, use %s (non-pointer) instead",
-				qualifiedNameOf(typ),
-				qualifiedNameOf(elem),
-			))
-		}
-
-		t.new = func() Message {
-			// There's no way to get the elem's type statically while still
-			// supporting both pointer and non-pointer receivers, so the
-			// implementation must use reflection to construct new instances.
-			return reflect.New(elem).Interface().(Message)
-		}
-
-	default:
-		t.new = func() Message {
-			var zero T
-			return zero
-		}
-	}
-
-	mergeMessageType(t)
+		new: func() Message {
+			return T(new(E))
+		},
+	})
 }
 
 func mergeMessageType(t RegisteredMessageType) {
