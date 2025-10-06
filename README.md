@@ -44,8 +44,8 @@ persistence.
   message delivery, persistence, and telemetry.
 
 - **Type-agnostic** — Dogma lets you represent messages and application state
-  using any Go types that you can marshal to a byte slice, with built-in support
-  for JSON and Protocol Buffers.
+  using any Go types that implement the standard [`BinaryMarshaler`] and
+  [`BinaryUnmarshaler`] interfaces.
 
 - **Flexible persistence** — Dogma supports a range of storage options including
   PostgreSQL and Amazon DynamoDB, enabling use across diverse environments.
@@ -112,3 +112,5 @@ For reference material, please see the [API documentation] and [glossary].
 [testkit]: https://github.com/dogmatiq/testkit
 [veracity]: https://github.com/dogmatiq/veracity
 [verity]: https://github.com/dogmatiq/verity
+[`BinaryMarshaler`]: https://pkg.go.dev/encoding#BinaryMarshaler
+[`BinaryUnmarshaler`]: https://pkg.go.dev/encoding#BinaryUnmarshaler
