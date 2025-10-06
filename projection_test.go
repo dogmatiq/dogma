@@ -7,13 +7,11 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
-func TestNoCompactBehavior_Compact_ReturnsNil(t *testing.T) {
+func TestNoCompactBehavior(t *testing.T) {
 	var v NoCompactBehavior
 
-	err := v.Compact(context.Background(), nil)
-
-	if err != nil {
-		t.Fatal("unexpected error returned")
+	if err := v.Compact(context.Background(), nil); err != nil {
+		t.Fatal(err)
 	}
 }
 

@@ -17,7 +17,7 @@ func TestStatelessProcessBehavior_New_ReturnsStatelessProcessRoot(t *testing.T) 
 	}
 }
 
-func TestNoTimeoutMessagesBehavior_HandleTimeout_Panics(t *testing.T) {
+func TestNoTimeoutMessagesBehavior(t *testing.T) {
 	var v NoTimeoutMessagesBehavior
 	ctx := context.Background()
 
