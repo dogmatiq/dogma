@@ -2,6 +2,7 @@ package dogma
 
 import (
 	"context"
+	"errors"
 	"time"
 )
 
@@ -142,7 +143,17 @@ type ProcessMessageHandler interface {
 //
 // This interface is currently equivalent to [any], but is a distinct type to
 // allow future extensions without breaking compatibility.
-type ProcessRoot any
+type ProcessRoot interface {
+	// MarshalBinary returns a binary representation of the process instsance's
+	// current state.
+	MarshalBinary() ([]byte, error)
+
+	// UnmarshalBinary populates the process instance's state from its binary
+	// representation.
+	//
+	// The implementation must clone the data if it is used after returning.
+	UnmarshalBinary(data []byte) error
+}
 
 // ProcessConfigurer is the interface that a [ProcessMessageHandler] uses to
 // declare its configuration.
@@ -278,3 +289,14 @@ func (StatelessProcessBehavior) New() ProcessRoot {
 var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
 
 type statelessProcessRoot struct{}
+
+func (statelessProcessRoot) MarshalBinary() ([]byte, error) {
+	return nil, nil
+}
+
+func (statelessProcessRoot) UnmarshalBinary(data []byte) error {
+	if len(data) != 0 {
+		return errors.New("cannot unmarshal non-empty data into stateless process")
+	}
+	return nil
+}

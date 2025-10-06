@@ -88,6 +88,21 @@ type AggregateRoot interface {
 	// events or recording a new event. It must handle all historical event
 	// types, including those no longer routed to this aggregate.
 	ApplyEvent(Event)
+
+	// MarshalBinary returns a binary representation of the aggregate instance's
+	// current state suitable for use as a snapshot.
+	//
+	// Snapshots are an optimization that reduces the number of events applied
+	// when loading an aggregate instance from its event history. Aggregates
+	// that produce few events over their instances lifetime may omit snapshot
+	// support by embedding [NoSnapshotBehavior] or returning [ErrNotSupported].
+	MarshalBinary() ([]byte, error)
+
+	// UnmarshalBinary populates the aggregate instance's state from its binary
+	// representation.
+	//
+	// The implementation must clone the data if it is used after returning.
+	UnmarshalBinary(data []byte) error
 }
 
 // AggregateConfigurer is the interface an [AggregateMessageHandler] uses to
@@ -130,4 +145,18 @@ type AggregateCommandScope interface {
 type AggregateRoute interface {
 	MessageRoute
 	isAggregateRoute()
+}
+
+// NoSnapshotBehavior is an embeddable type for [AggregateRoot]
+// implementations that don't support binary snapshots.
+type NoSnapshotBehavior struct{}
+
+// MarshalBinary always returns [ErrNotSupported].
+func (NoSnapshotBehavior) MarshalBinary() ([]byte, error) {
+	return nil, ErrNotSupported
+}
+
+// UnmarshalBinary always returns [ErrNotSupported].
+func (NoSnapshotBehavior) UnmarshalBinary([]byte) error {
+	return ErrNotSupported
 }
