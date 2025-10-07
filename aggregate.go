@@ -94,7 +94,7 @@ type AggregateRoot interface {
 	//
 	// Snapshots are an optimization that reduces the number of events applied
 	// when loading an aggregate instance from its event history. Aggregates
-	// that produce few events over their instances lifetime may omit snapshot
+	// that produce few events over their instances' lifetime may omit snapshot
 	// support by embedding [NoSnapshotBehavior] or returning [ErrNotSupported].
 	MarshalBinary() ([]byte, error)
 
