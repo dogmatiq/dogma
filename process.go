@@ -140,9 +140,6 @@ type ProcessMessageHandler interface {
 // It encapsulates process logic and provides a way to inspect the current state
 // when making decisions about which commands to execute and which timeouts to
 // schedule.
-//
-// This interface is currently equivalent to [any], but is a distinct type to
-// allow future extensions without breaking compatibility.
 type ProcessRoot interface {
 	// MarshalBinary returns a binary representation of the process instsance's
 	// current state.
