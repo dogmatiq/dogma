@@ -38,3 +38,4 @@ the ADR documents.
 * [25. Prevent reverting ended processes](0025-prevent-reverting-ended-processes.md)
 * [26. Event-stream based projection OCC](0026-event-stream-based-projection-occ.md)
 * [27. Message type registry](0027-message-type-registry.md)
+* [28. Self-marshaling types](0028-binary-marshaling.md)

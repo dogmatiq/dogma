@@ -17,6 +17,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 ### Added
 
 - **[BC]** Added `Message.MarshalBinary()` and `UnmarshalBinary()` methods.
+- **[BC]** Added `AggregateRoot.MarshalBinary()` and `UnmarshalBinary()` methods.
+- **[BC]** Added `ProcessRoot.MarshalBinary()` and `UnmarshalBinary()` methods.
+- Added `ErrNotSupported` to indicate that a feature is not supported. It is
+  currently allowed to be returned by the `AggregateRoot` marshaling methods.
+- Added `NoSnapshotBehavior` embeddable type for aggregates that don't support
+  binary snapshots.
 
 ### Changed
 
