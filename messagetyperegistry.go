@@ -130,6 +130,25 @@ func RegisteredMessageTypeFor[T Message]() (t RegisteredMessageType, ok bool) {
 	return t, ok
 }
 
+// RegisteredMessageTypeOf returns the [RegisteredMessageType] for the given
+// message instance.
+//
+// ok is false if the message's type isn't in the message type registry.
+func RegisteredMessageTypeOf(m Message) (t RegisteredMessageType, ok bool) {
+	if m == nil {
+		panic("message cannot be nil")
+	}
+
+	queryMessageRegistry(
+		func(reg *messageTypes) {
+			key := reflect.TypeOf(m)
+			t, ok = reg.ByType[key]
+		},
+	)
+
+	return t, ok
+}
+
 // registeredMessageTypeFor is a variant of [RegisteredMessageTypeFor] that
 // panics if T isn't in the message type registry.
 func registeredMessageTypeFor[T Message]() RegisteredMessageType {

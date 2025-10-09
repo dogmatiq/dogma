@@ -33,6 +33,45 @@ func TestRegisteredMessageTypeFor(t *testing.T) {
 	})
 }
 
+func TestRegisteredMessageTypeOf(t *testing.T) {
+	t.Run("it returns the type that represents the message's type", func(t *testing.T) {
+		type T struct{ Command }
+		RegisterCommand[*T]("5e1c3f4a-2f4b-4c3e-8f7a-1c2d3e4f5a6b")
+
+		var m Message = &T{}
+
+		mt, ok := RegisteredMessageTypeOf(m)
+		if !ok {
+			t.Fatal("expected message type to be registered")
+		}
+
+		if got, want := mt.GoType(), reflect.TypeFor[*T](); got != want {
+			t.Fatalf("unexpected type: got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("it returns false when the message's type is not in the registry", func(t *testing.T) {
+		type T struct{ Command }
+
+		var m Message = &T{}
+
+		_, ok := RegisteredMessageTypeOf(m)
+		if ok {
+			t.Fatal("did not expect message type to be registered")
+		}
+	})
+
+	t.Run("it panics if the message is nil", func(t *testing.T) {
+		expectPanic(
+			t,
+			"message cannot be nil",
+			func() {
+				RegisteredMessageTypeOf(nil)
+			},
+		)
+	})
+}
+
 func TestRegisteredMessageTypeByID(t *testing.T) {
 	t.Run("it returns the type associated with the normalized ID", func(t *testing.T) {
 		const id = "37264B0D-4342-4708-8263-60D82DE78AD1"
