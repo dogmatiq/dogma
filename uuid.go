@@ -5,19 +5,21 @@ import (
 )
 
 func normalizeUUID(id string) (string, error) {
-	if len(id) != 36 {
+	const size = 36
+
+	if len(id) != size {
 		return "", fmt.Errorf("%q is not a canonical RFC 9562 UUID: expected 36 characters", id)
 	}
 
-	var normalized [36]byte
+	var normalized [size]byte
 	isNil := true
 
-	for i := 0; i < 36; i++ {
+	for i := range size {
 		c := id[i]
 		normalized[i] = c
 
 		switch i {
-		case 8, 13, 18, 23:
+		case 8, 13, 18, 23: // indexes of hyphens
 			if c != '-' {
 				return "", fmt.Errorf("%q is not a canonical RFC 9562 UUID: expected hyphen at position %d", id, i)
 			}
