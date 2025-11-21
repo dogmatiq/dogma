@@ -95,6 +95,13 @@ type ProjectionMessageHandler interface {
 	// Not all projections need compaction. Embed [NoCompactBehavior] in the
 	// handler to indicate compaction not required..
 	Compact(ctx context.Context, s ProjectionCompactScope) error
+
+	// Reset clears all projection data and checkpoint offsets such that the
+	// projection data is from the beginning of each event stream.
+	//
+	// Not all projections can be reset. Embed [NoResetBehavior] in the handler
+	// to indicate that reset is not supported.
+	Reset(ctx context.Context, s ProjectionResetScope) error
 }
 
 // ProjectionConfigurer is the interface that a [ProjectionMessageHandler] uses
@@ -140,6 +147,12 @@ type ProjectionCompactScope interface {
 	HandlerScope
 }
 
+// ProjectionResetScope represents the context within which a
+// [ProjectionMessageHandler] resets its data.
+type ProjectionResetScope interface {
+	HandlerScope
+}
+
 // ProjectionRoute describes a message type that's routed to a
 // [ProjectionMessageHandler].
 type ProjectionRoute interface {
@@ -157,4 +170,16 @@ type NoCompactBehavior struct{}
 // Compact returns nil without performing any operations.
 func (NoCompactBehavior) Compact(context.Context, ProjectionCompactScope) error {
 	return nil
+}
+
+// NoResetBehavior is an embeddable type for [ProjectionMessageHandler]
+// implementations that don't support resetting their state.
+//
+// Embed this type in a [ProjectionMessageHandler] when resetting projection
+// data isn't feasible or required.
+type NoResetBehavior struct{}
+
+// Reset returns an error indicating that reset is not supported.
+func (NoResetBehavior) Reset(context.Context, ProjectionResetScope) error {
+	return ErrNotSupported
 }

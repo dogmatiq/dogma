@@ -9,5 +9,6 @@ var (
 	// It may be returned by:
 	//  - [AggregateRoot].MarshalBinary
 	//  - [AggregateRoot].UnmarshalBinary
+	//  - [ProjectionMessageHandler].Reset
 	ErrNotSupported = errors.New("not supported")
 )
