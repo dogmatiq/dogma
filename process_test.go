@@ -1,7 +1,6 @@
 package dogma_test
 
 import (
-	"context"
 	"testing"
 
 	. "github.com/dogmatiq/dogma"
@@ -51,13 +50,12 @@ func TestStatelessProcess(t *testing.T) {
 
 func TestNoTimeoutMessagesBehavior(t *testing.T) {
 	var v NoTimeoutMessagesBehavior
-	ctx := context.Background()
 
 	expectPanic(
 		t,
 		UnexpectedMessage,
 		func() {
-			v.HandleTimeout(ctx, nil, nil, nil)
+			v.HandleTimeout(t.Context(), nil, nil, nil)
 		},
 	)
 }

@@ -1,7 +1,6 @@
 package dogma_test
 
 import (
-	"context"
 	"testing"
 
 	. "github.com/dogmatiq/dogma"
@@ -10,15 +9,15 @@ import (
 func TestNoCompactBehavior(t *testing.T) {
 	var v NoCompactBehavior
 
-	if err := v.Compact(context.Background(), nil); err != nil {
+	if err := v.Compact(t.Context(), nil); err != nil {
 		t.Fatal(err)
 	}
 }
 
-func TestResetBehavior(t *testing.T) {
+func TestNoResetBehavior(t *testing.T) {
 	var v NoResetBehavior
 
-	err := v.Reset(context.Background(), nil)
+	err := v.Reset(t.Context(), nil)
 	if err != ErrNotSupported {
 		t.Fatalf("unexpected error: got %v, want %v", err, ErrNotSupported)
 	}

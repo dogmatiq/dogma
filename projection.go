@@ -93,11 +93,11 @@ type ProjectionMessageHandler interface {
 	// handling an event.
 	//
 	// Not all projections need compaction. Embed [NoCompactBehavior] in the
-	// handler to indicate compaction not required..
+	// handler to indicate compaction not required.
 	Compact(ctx context.Context, s ProjectionCompactScope) error
 
 	// Reset clears all projection data and checkpoint offsets such that the
-	// projection data is from the beginning of each event stream.
+	// projection data is rebuilt by handling all historical events.
 	//
 	// Not all projections can be reset. Embed [NoResetBehavior] in the handler
 	// to indicate that reset is not supported.
