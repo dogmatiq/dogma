@@ -117,11 +117,11 @@ type ProjectionConfigurer interface {
 	// It accepts routes created by [HandlesEvent].
 	Routes(...ProjectionRoute)
 
-	// Concurrency provides a hint to the engine as to the best way to handle
-	// concurrent messages for this handler.
+	// ConcurrencyPreference provides a hint to the engine as to the best way to
+	// handle concurrent messages for this handler.
 	//
 	// The default is [MaximizeConcurrency].
-	Concurrency(ProjectionConcurrencyPreference)
+	ConcurrencyPreference(ProjectionConcurrencyPreference)
 }
 
 // ProjectionEventScope represents the context within which a

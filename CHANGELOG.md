@@ -12,6 +12,15 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [0.18.1] - 2025-12-07
+
+### Added
+
+- **[ENGINE BC]** Added `IntegrationMessageConfigurer.ConcurrencyPreference()` method.
+- **[ENGINE BC]** Added `ProjectionMessageConfigurer.ConcurrencyPreference()` method.
+- Added `MaximizeConcurrency` and `MinimizeConcurrency` enumeration values for
+  use with the new `Concurrency()` methods.
+
 ## [0.18.0] - 2025-11-22
 
 ### Added
@@ -492,6 +501,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.17.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.17.0
 [0.17.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.17.1
 [0.18.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.18.0
+[0.18.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.18.1
 
 <!-- adr references -->
 

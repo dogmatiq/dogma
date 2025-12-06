@@ -56,11 +56,11 @@ type IntegrationConfigurer interface {
 	// It accepts routes created by [HandlesCommand] and [RecordsEvent].
 	Routes(...IntegrationRoute)
 
-	// Concurrency provides a hint to the engine as to the best way to handle
-	// concurrent messages for this handler.
+	// ConcurrencyPreference provides a hint to the engine as to the best way to
+	// handle concurrent messages for this handler.
 	//
 	// The default is [MaximizeConcurrency].
-	Concurrency(IntegrationConcurrencyPreference)
+	ConcurrencyPreference(IntegrationConcurrencyPreference)
 }
 
 // IntegrationCommandScope represents the context within which an
