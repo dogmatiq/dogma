@@ -12,6 +12,22 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [0.19.0] - 2025-12-08
+
+### Added
+
+- Added `ConcurrencyPreference` enumeration
+
+### Changed
+
+- Replaced use of `IntegrationConcurrencyPreference` and
+  `ProjectionConcurrencyPreference` with `ConcurrencyPreference`.
+
+### Removed
+
+- **[BC]** Removed `IntegrationConcurrencyPreference` type alias.
+- **[BC]** Removed `ProjectionConcurrencyPreference` type alias.
+
 ## [0.18.1] - 2025-12-07
 
 ### Added
@@ -502,6 +518,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.17.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.17.1
 [0.18.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.18.0
 [0.18.1]: https://github.com/dogmatiq/dogma/releases/tag/v0.18.1
+[0.19.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.19.0
 
 <!-- adr references -->
 

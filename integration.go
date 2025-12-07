@@ -60,7 +60,7 @@ type IntegrationConfigurer interface {
 	// handle concurrent messages for this handler.
 	//
 	// The default is [MaximizeConcurrency].
-	ConcurrencyPreference(IntegrationConcurrencyPreference)
+	ConcurrencyPreference(ConcurrencyPreference)
 }
 
 // IntegrationCommandScope represents the context within which an
@@ -85,7 +85,3 @@ type IntegrationRoute interface {
 	MessageRoute
 	isIntegrationRoute()
 }
-
-// IntegrationConcurrencyPreference is a hint to the engine as to the best way to
-// handle concurrent messages for an [IntegrationMessageHandler].
-type IntegrationConcurrencyPreference = concurrencyPreference

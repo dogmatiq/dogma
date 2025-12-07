@@ -121,7 +121,7 @@ type ProjectionConfigurer interface {
 	// handle concurrent messages for this handler.
 	//
 	// The default is [MaximizeConcurrency].
-	ConcurrencyPreference(ProjectionConcurrencyPreference)
+	ConcurrencyPreference(ConcurrencyPreference)
 }
 
 // ProjectionEventScope represents the context within which a
@@ -189,7 +189,3 @@ type NoResetBehavior struct{}
 func (NoResetBehavior) Reset(context.Context, ProjectionResetScope) error {
 	return ErrNotSupported
 }
-
-// ProjectionConcurrencyPreference is a hint to the engine as to the best way to
-// handle concurrent messages for a [ProjectionMessageHandler].
-type ProjectionConcurrencyPreference = concurrencyPreference
