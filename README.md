@@ -69,9 +69,9 @@ and the execution of application logic.
   in smaller deployments. While production-ready, it doesn't support scaling of
   a single application across multiple machines.
 
-- [veracity] — The next-generation Dogma engine built for
-  horizontal scalability and distributed workloads. The Dogma maintainers intend
-  for Veracity to fully replace Verity, becoming _the_ production Dogma engine.
+- [runkit] — The next-generation Dogma engine built for horizontal scalability
+  and distributed workloads. The Dogma maintainers intend for runkit to fully
+  replace Verity, becoming _the_ production Dogma engine.
 
 - [testkit] — A set of tools for testing Dogma applications. It includes an
   in-memory engine that allows inspection of application behavior without
@@ -108,9 +108,9 @@ For reference material, please see the [API documentation] and [glossary].
 [glossary]: docs/glossary.md
 [projectionkit]: https://github.com/dogmatiq/projectionkit
 [projections]: docs/concepts.md#handlers
+[runkit]: https://github.com/dogmatiq/runkit
 [testing]: https://pkg.go.dev/testing
 [testkit]: https://github.com/dogmatiq/testkit
-[veracity]: https://github.com/dogmatiq/veracity
 [verity]: https://github.com/dogmatiq/verity
 [`BinaryMarshaler`]: https://pkg.go.dev/encoding#BinaryMarshaler
 [`BinaryUnmarshaler`]: https://pkg.go.dev/encoding#BinaryUnmarshaler

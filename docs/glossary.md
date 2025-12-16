@@ -17,7 +17,7 @@ N •
 [O](#o) •
 [P](#p) •
 Q •
-R •
+[R](#r) •
 [S](#s) •
 [T](#t) •
 U •
@@ -341,6 +341,13 @@ See [projection].
 
 See [message route] or [handler route].
 
+### Runkit
+
+An upcoming [engine] implementation built for horizontal scalability and
+distributed workloads.
+
+See [`dogmatiq/runkit`].
+
 ## S
 
 ### Saga
@@ -395,13 +402,6 @@ See [`dogma.Timeout`].
 ### Validation scope
 
 The context within which a [message] executes its data validation logic.
-
-### Veracity
-
-An upcoming [engine] implementation built for horizontal scalability and
-distributed workloads.
-
-See [`dogmatiq/veracity`].
 
 ### Verity
 
@@ -462,8 +462,8 @@ See [process].
 <!-- go modules -->
 
 [`dogmatiq/projectionkit`]: https://pkg.go.dev/github.com/dogmatiq/projectionkit
+[`dogmatiq/runkit`]: https://pkg.go.dev/github.com/dogmatiq/runkit
 [`dogmatiq/testkit`]: https://pkg.go.dev/github.com/dogmatiq/testkit
-[`dogmatiq/veracity`]: https://pkg.go.dev/github.com/dogmatiq/veracity
 [`dogmatiq/verity`]: https://pkg.go.dev/github.com/dogmatiq/verity
 
 <!-- API references -->

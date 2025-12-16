@@ -167,9 +167,9 @@ The ecosystem currently offers three official engines:
   application loads in smaller deployments. While production-ready, it doesn't
   support scaling of a single application across multiple machines.
 
-- [`dogmatiq/veracity`] — The next-generation Dogma engine built for
-  horizontal scalability and distributed workloads. The Dogma maintainers intend
-  for Veracity to fully replace Verity, becoming _the_ production Dogma engine.
+- [`dogmatiq/runkit`] — The next-generation Dogma engine built for horizontal
+  scalability and distributed workloads. The Dogma maintainers intend for runkit
+  to fully replace Verity, becoming _the_ production Dogma engine.
 
 - [`dogmatiq/testkit`] — A set of tools for testing Dogma applications. It
   includes an in-memory engine that executes and inspects application behavior
@@ -204,8 +204,8 @@ explore the following resources:
 <!-- go modules -->
 
 [`dogmatiq/example`]: https://github.com/dogmatiq/example
+[`dogmatiq/runkit`]: https://github.com/dogmatiq/runkit
 [`dogmatiq/testkit`]: https://github.com/dogmatiq/testkit
-[`dogmatiq/veracity`]: https://github.com/dogmatiq/veracity
 [`dogmatiq/verity`]: https://github.com/dogmatiq/verity
 
 <!-- API references -->
