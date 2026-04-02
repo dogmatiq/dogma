@@ -18,8 +18,6 @@ type CommandExecutor interface {
 	//
 	// If it returns a non-nil error, the engine may not have taken ownership of
 	// message delivery, and the application should retry execution.
-	//
-	// See [WithIdempotencyKey].
 	ExecuteCommand(context.Context, Command, ...ExecuteCommandOption) error
 }
 
@@ -27,31 +25,4 @@ type CommandExecutor interface {
 // [CommandExecutor].ExecuteCommand.
 type ExecuteCommandOption interface {
 	isExecuteCommandOption()
-}
-
-// WithIdempotencyKey returns an [ExecuteCommandOption] that sets a unique
-// identifier for the [Command].
-//
-// Use an idempotency key when retrying a failed [CommandExecutor].ExecuteCommand
-// call to ensure that the engine doesn't execute the command multiple times.
-func WithIdempotencyKey(key string) ExecuteCommandOption {
-	if key == "" {
-		panic("idempotency key cannot be empty")
-	}
-
-	return IdempotencyKeyOption{key: key}
-}
-
-// IdempotencyKeyOption is an [ExecuteCommandOption] that sets a unique
-// identifier for a [Command].
-//
-// Use [WithIdempotencyKey] to create values of this type.
-type IdempotencyKeyOption struct {
-	nocmp
-	key string
-}
-
-// Key returns the idempotency key.
-func (o IdempotencyKeyOption) Key() string {
-	return o.key
 }

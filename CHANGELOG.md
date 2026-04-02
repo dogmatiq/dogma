@@ -12,6 +12,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [Unreleased]
+
+### Removed
+
+- **[BC]** Removed `WithIdempotencyKey()` and `IdempotencyKeyOption`.
+
 ## [0.19.0] - 2025-12-08
 
 ### Added
