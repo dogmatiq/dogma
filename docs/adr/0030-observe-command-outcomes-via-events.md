@@ -78,6 +78,6 @@ The ordering of observed events remains governed by
 
 If the engine determines that no further relevant events can occur and no
 observer returned `satisfied == true`, `ExecuteCommand()` returns
-`ErrObserverNotSatisfied`. This applies whether the engine reached that
+`ErrEventObserverNotSatisfied`. This applies whether the engine reached that
 conclusion dynamically, after draining the causal work, or statically, by
 inspecting the handler graph before any work runs.
