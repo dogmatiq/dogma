@@ -40,3 +40,4 @@ the ADR documents.
 * [27. Message type registry](0027-message-type-registry.md)
 * [28. Self-marshaling types](0028-binary-marshaling.md)
 * [29. Remove command idempotency keys](0029-remove-command-idempotency-keys.md)
+* [30. Observe command outcomes via events](0030-observe-command-outcomes-via-events.md)
