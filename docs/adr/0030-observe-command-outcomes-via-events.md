@@ -6,7 +6,7 @@ Date: 2026-04-03
 
 Accepted
 
-- References [23. Message order guarantees](0023-message-order-guarantees.md)
+- References [23. Message order guarantees]
 
 ## Context
 
@@ -54,6 +54,8 @@ following occurs:
 - The caller's context is canceled or reaches its deadline.
 - The engine determines that no further relevant events can occur.
 
+### Dismissed alternatives
+
 We considered modeling this feature explicitly as a projection, because the
 behavior is conceptually similar to building a temporary read model from events.
 However, existing projection APIs are about long-lived handlers and persistent
@@ -74,10 +76,13 @@ The command execution API remains unified. Callers choose whether to treat
 fundamental nature of what `ExecuteCommand()` does to the application's state.
 
 The ordering of observed events remains governed by
-[23. Message order guarantees](0023-message-order-guarantees.md).
+[23. Message order guarantees].
 
 If the engine determines that no further relevant events can occur and no
 observer returned `satisfied == true`, `ExecuteCommand()` returns
 `ErrEventObserverNotSatisfied`. This applies whether the engine reached that
 conclusion dynamically, after draining the causal work, or statically, by
 inspecting the handler graph before any work runs.
+
+<!-- references -->
+[23. Message order guarantees]: 0023-message-order-guarantees.md
