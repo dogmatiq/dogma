@@ -14,7 +14,7 @@ var (
 
 	// ErrEventObserverNotSatisfied is returned when [WithEventObserver] is used
 	// and the engine determines that no further relevant events can occur
-	// before any [EventObserver] returned satisfied == true.
+	// before any [EventObserver] returns satisfied == true.
 	//
 	// It may be returned by:
 	//  - [CommandExecutor].ExecuteCommand

@@ -9,8 +9,8 @@ import "context"
 type CommandExecutor interface {
 	// ExecuteCommand submits a [Command] for execution.
 	//
-	// It returns once the engine has taken ownership of the command. It doesn't
-	// wait for handling to finish.
+	// It returns once the engine has taken ownership of the command. By
+	// default, it doesn't wait for handling to finish.
 	//
 	// The engine may invoke the command's handler more than once, but the
 	// command's side-effects, such as the events it produces, occur exactly
@@ -22,10 +22,10 @@ type CommandExecutor interface {
 	// Pass [WithIdempotencyKey] when retrying submission of the same command to
 	// prevent duplicate execution.
 	//
-	// Pass [WithEventObserver] to block until the engine records a specific
-	// event during command execution. If the engine determines that no further
-	// relevant events can occur and none of the observers returned
-	// satisfied == true, ExecuteCommand returns [ErrEventObserverNotSatisfied].
+	// Pass [WithEventObserver] to wait until a specific event is recorded
+	// during command execution. If the engine determines that no further
+	// relevant events can occur and none of the observers returned satisfied ==
+	// true, ExecuteCommand returns [ErrEventObserverNotSatisfied].
 	ExecuteCommand(context.Context, Command, ...ExecuteCommandOption) error
 }
 

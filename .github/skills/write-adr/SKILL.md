@@ -2,7 +2,7 @@
 name: write-adr
 description:
   "Write, draft, review, or edit an Architecture Decision Record (ADR)
-  for the runkit project. Use when recording a new architectural decision, revising
+  for this repository. Use when recording a new architectural decision, revising
   an existing ADR, or checking an ADR against project style rules. Triggers: write
   ADR, draft ADR, new ADR, create ADR, review ADR, architecture decision record."
 argument-hint: "the decision to document, e.g., 'use gRPC for inter-service communication'"
@@ -11,7 +11,7 @@ argument-hint: "the decision to document, e.g., 'use gRPC for inter-service comm
 # Write ADR
 
 Guides drafting, reviewing, and editing Architecture Decision Records for the
-runkit project. All ADRs follow the Nygard format with the project-specific
+repository. All ADRs follow the Nygard format with the project-specific
 style rules defined in this skill.
 
 The reference exemplar for this project is
