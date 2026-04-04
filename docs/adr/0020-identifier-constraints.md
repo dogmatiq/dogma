@@ -6,7 +6,7 @@ Date: 2023-06-14
 
 Accepted
 
-- Amends [9. Immutable Application and Handler Keys](0009-immutable-keys.md)
+- Amends [9. Immutable application and handler keys](0009-immutable-keys.md)
 - Amends [12. Comparison of Identifiers](0012-identifier-comparison.md)
 
 ## Context

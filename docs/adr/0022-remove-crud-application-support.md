@@ -6,7 +6,8 @@ Date: 2025-06-13
 
 Accepted
 
-- Referenced By [23. Message Order Guarantees](0023-message-order-guarantees.md)
+- Referenced by [23. Message order guarantees](0023-message-order-guarantees.md)
+- Referenced by [26. Event-stream based projection OCC](0026-event-stream-based-projection-occ.md)
 
 ## Context
 
