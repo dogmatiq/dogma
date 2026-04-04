@@ -160,7 +160,8 @@ Wrap regular paragraph text at 80 characters per line.
 - Link external concepts to a well-regarded source on first use. Prefer
   Wikipedia for general concepts; use a more authoritative source (RFC, spec,
   official docs) when one exists.
-- Link code identifiers to pkg.go.dev.
+- Link code identifiers to pkg.go.dev only when they are defined in other
+  repositories.
 - Link RFCs to rfc-editor.org.
 - Use markdown reference-style links. Collect them at the bottom of the file
   inside a `<!-- references -->` comment block. Keep the list alphabetized.
@@ -217,7 +218,7 @@ breaks, and suggest a corrected version.
 ### References
 
 - [ ] External concepts linked to a well-regarded source on first use (Wikipedia, RFC, spec, or official docs)
-- [ ] Code identifiers linked to pkg.go.dev
+- [ ] Code identifiers from other repositories linked to pkg.go.dev
 - [ ] RFCs linked to rfc-editor.org
 - [ ] Reference-style links used throughout
 - [ ] References collected at the bottom in a `<!-- references -->` comment block
