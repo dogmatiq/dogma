@@ -4,7 +4,13 @@ Date: 2019-06-28
 
 ## Status
 
-Superseded by [21. Remove Handler Timeout Hints](0021-remove-handler-timeout-hints.md)
+Superseded
+
+- Superseded by [21. Remove handler timeout hints](0021-remove-handler-timeout-hints.md)
+
+> [!WARNING]
+> This decision has been superseded. Refer to the replacement ADR(s) listed
+> above.
 
 ## Context
 

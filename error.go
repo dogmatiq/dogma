@@ -11,4 +11,12 @@ var (
 	//  - [AggregateRoot].UnmarshalBinary
 	//  - [ProjectionMessageHandler].Reset
 	ErrNotSupported = errors.New("not supported")
+
+	// ErrEventObserverNotSatisfied is returned when [WithEventObserver] is used
+	// and the engine determines that no further relevant events can occur
+	// before any [EventObserver] returns satisfied == true.
+	//
+	// It may be returned by:
+	//  - [CommandExecutor].ExecuteCommand
+	ErrEventObserverNotSatisfied = errors.New("event observer not satisfied")
 )

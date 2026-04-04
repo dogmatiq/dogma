@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [Unreleased]
+
+### Added
+
+- Added `WithEventObserver()` to support observing events recorded by a specific
+  invocation of `ExecuteCommand()`.
+
 ## [0.19.0] - 2025-12-08
 
 ### Added

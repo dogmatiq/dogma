@@ -7,6 +7,7 @@ Date: 2025-06-14
 Accepted
 
 - References [22. Remove CRUD application support](0022-remove-crud-application-support.md)
+- Referenced by [30. Observe command outcomes via events](0030-observe-command-outcomes-via-events.md)
 
 ## Context
 
