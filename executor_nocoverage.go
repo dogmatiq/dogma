@@ -1,3 +1,4 @@
 package dogma
 
-func (EventObserverOption) isExecuteCommandOption() {}
+func (IdempotencyKeyOption) isExecuteCommandOption() {}
+func (EventObserverOption) isExecuteCommandOption()  {}

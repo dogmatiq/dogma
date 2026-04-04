@@ -9,6 +9,29 @@ import (
 	. "github.com/dogmatiq/dogma"
 )
 
+func TestWithIdempotencyKey(t *testing.T) {
+	t.Run("it returns an option with the specified idempotency key", func(t *testing.T) {
+		const want = "<key>"
+
+		o := WithIdempotencyKey(want)
+		x := expectType[IdempotencyKeyOption](t, o)
+
+		if x.Key() != want {
+			t.Fatalf("unexpected idempotency key: got %q, want %q", x.Key(), want)
+		}
+	})
+
+	t.Run("it panics if the key is empty", func(t *testing.T) {
+		expectPanic(
+			t,
+			`idempotency key cannot be empty`,
+			func() {
+				WithIdempotencyKey("")
+			},
+		)
+	})
+}
+
 func TestWithEventObserver(t *testing.T) {
 	t.Run("it returns an option with the registered event type", func(t *testing.T) {
 		type T struct{ Event }
@@ -36,6 +59,19 @@ func TestWithEventObserver(t *testing.T) {
 				WithEventObserver(func(_ context.Context, _ *T) (bool, error) {
 					return true, nil
 				})
+			},
+		)
+	})
+
+	t.Run("it panics if the observer is nil", func(t *testing.T) {
+		type T struct{ Event }
+		RegisterEvent[*T]("f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c")
+
+		expectPanic(
+			t,
+			"event observer cannot be nil",
+			func() {
+				WithEventObserver[*T](nil)
 			},
 		)
 	})
