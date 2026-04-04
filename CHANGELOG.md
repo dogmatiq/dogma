@@ -19,10 +19,6 @@ The format is based on [Keep a Changelog], and this project adheres to
 - Added `WithEventObserver()` to support observing events recorded by a specific
   invocation of `ExecuteCommand()`.
 
-### Removed
-
-- **[BC]** Removed `WithIdempotencyKey()` and `IdempotencyKeyOption`.
-
 ## [0.19.0] - 2025-12-08
 
 ### Added
