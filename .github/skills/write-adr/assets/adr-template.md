@@ -8,10 +8,10 @@ Proposed
 
 <!--
 Status values (one per ADR, no links):
-  Proposed    -- drafted, not yet accepted; transient state during review
-  Accepted    -- in force; includes explicit decisions not to do something
-  Deprecated  -- no longer applicable; no replacement exists
-  Superseded  -- no longer in force; replaced by one or more ADRs (use bullets below)
+  Proposed    - drafted, not yet accepted; transient state during review
+  Accepted    - in force; includes explicit decisions not to do something
+  Deprecated  - no longer applicable; no replacement exists
+  Superseded  - no longer in force; replaced by one or more ADRs (use bullets below)
 
 Relationship annotations (bullets below the status value; add the counterpart to each linked ADR):
   - Supersedes [N. Title](NNNN-title-with-dashes.md)     <-> - Superseded by [N. Title](NNNN-title-with-dashes.md)

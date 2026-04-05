@@ -19,11 +19,11 @@ The reference exemplar for this project is
 
 For voice and tone, refer to these ADRs from the dogma repository:
 
-- [0009-immutable-keys.md](https://github.com/dogmatiq/dogma/blob/main/docs/adr/0009-immutable-keys.md)
-- [0020-identifier-constraints.md](https://github.com/dogmatiq/dogma/blob/main/docs/adr/0020-identifier-constraints.md)
-- [0022-remove-crud-application-support.md](https://github.com/dogmatiq/dogma/blob/main/docs/adr/0022-remove-crud-application-support.md)
-- [0023-message-order-guarantees.md](https://github.com/dogmatiq/dogma/blob/main/docs/adr/0023-message-order-guarantees.md)
-- [0026-event-stream-based-projection-occ.md](https://github.com/dogmatiq/dogma/blob/main/docs/adr/0026-event-stream-based-projection-occ.md)
+- [0009-immutable-keys.md]
+- [0020-identifier-constraints.md]
+- [0022-remove-crud-application-support.md]
+- [0023-message-order-guarantees.md]
+- [0026-event-stream-based-projection-occ.md]
 
 ## When to Use
 
@@ -33,7 +33,7 @@ For voice and tone, refer to these ADRs from the dogma repository:
 
 ## Assets
 
-- [ADR template](./assets/adr-template.md)
+- [ADR template]
 
 ## ADR Status
 
@@ -86,11 +86,11 @@ otherwise:
 Always written as bullets. Always add the counterpart annotation to each linked
 ADR. Multiple annotations of the same kind are allowed.
 
-| This ADR                           | Linked ADR                            | Meaning                                                                        |
-| ---------------------------------- | ------------------------------------- | ------------------------------------------------------------------------------ |
-| `- Supersedes [N. Title](file.md)` | `- Superseded by [N. Title](file.md)` | This ADR replaces the linked one; the linked ADR's status becomes `Superseded` |
-| `- Amends [N. Title](file.md)`     | `- Amended by [N. Title](file.md)`    | This ADR modifies the linked one without replacing it; both remain `Accepted`  |
-| `- References [N. Title](file.md)` | `- Referenced by [N. Title](file.md)` | This ADR cites the linked one for context only; no status change               |
+| This ADR                         | Linked ADR                          | Meaning                                                                        |
+| -------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------ |
+| `- Supersedes [N. Title][ADR-N]` | `- Superseded by [N. Title][ADR-N]` | This ADR replaces the linked one; the linked ADR's status becomes `Superseded` |
+| `- Amends [N. Title][ADR-N]`     | `- Amended by [N. Title][ADR-N]`    | This ADR modifies the linked one without replacing it; both remain `Accepted`  |
+| `- References [N. Title][ADR-N]` | `- Referenced by [N. Title][ADR-N]` | This ADR cites the linked one for context only; no status change               |
 
 ## Drafting a New ADR
 
@@ -118,18 +118,19 @@ question.
 
 **Negative decisions:** If the team explicitly decides _not_ to do something,
 write and accept a normal ADR for it. The title is still a decision noun phrase:
-"No Redis use in cache-layer", "Avoid gRPC for inter-service communication". Context
-explains the reasoning; Consequences describe what not having X means going
-forward. Do not use a special status for this -- it is a first-class `Accepted`
-decision.
+"No Redis use in cache-layer", "Avoid gRPC for inter-service communication".
+Context explains the reasoning; Consequences describe what not having X means
+going forward. Do not use a special status for this — it is a first-class
+`Accepted` decision.
 
 ### 4. Draft the three sections
 
-Copy [adr-template.md](./assets/adr-template.md) and fill it in.
+Copy [ADR template] and fill it in.
 
-Wrap regular paragraph text at 80 characters per line.
+Follow `docs/style.md` for line wrapping, character, and reference link
+conventions.
 
-**Context** -- one to three paragraphs:
+**Context** — one to three paragraphs:
 
 - State the problem or constraint that motivates the decision.
 - Introduce every term that will appear in the Decision section as prose, woven
@@ -137,7 +138,7 @@ Wrap regular paragraph text at 80 characters per line.
   here first. Do not introduce terms as a glossary list or bullet definitions.
 - Do not propose or evaluate solutions in this section.
 
-**Decision** -- explain what we will do and why:
+**Decision** — explain what we will do and why:
 
 - Use first-person plural throughout: "We will...", "We need...",
   "We considered..."
@@ -146,7 +147,7 @@ Wrap regular paragraph text at 80 characters per line.
   rejected. Be specific about the reasons.
 - Any pseudocode must use the exact terms from the prose.
 
-**Consequences** -- inherent properties only:
+**Consequences** — inherent properties only:
 
 - Describe what is true as a result of the decision, not what we hope will be
   true.
@@ -165,10 +166,14 @@ Wrap regular paragraph text at 80 characters per line.
 - Link RFCs to rfc-editor.org.
 - Use markdown reference-style links. Collect them at the bottom of the file
   inside a `<!-- references -->` comment block. Keep the list alphabetized.
+- Label inter-ADR reference links as `[ADR-N]` with no zero-padding
+  (e.g. `[ADR-2]`, not `[ADR-0002]`). Use the two-part `[display text][ADR-N]`
+  form when the display text should be the full title, as in relationship
+  annotations.
 
 ### 6. Run the pre-flight checklist
 
-Work through every item in the [Style Checklist](#style-checklist).
+Work through every item in the [Style Checklist].
 
 ## Reviewing an Existing ADR
 
@@ -180,10 +185,14 @@ breaks, and suggest a corrected version.
 
 ### Structure
 
-- [ ] Status value is one of the four allowed values; no other text on the same line
-- [ ] Relationship annotations are bullets below the status value, using only the six allowed verbs
+- [ ] Status value is one of the four allowed values; no other text on
+      the same line
+- [ ] Relationship annotations are bullets below the status value,
+      using only the six allowed verbs
 - [ ] Every relationship annotation has its counterpart added to the linked ADR
-- [ ] `Proposed`, `Superseded`, and `Deprecated` ADRs include the exact required admonition after `## Status`, including whitespace and line breaks
+- [ ] `Proposed`, `Superseded`, and `Deprecated` ADRs include the
+      exact required admonition after `## Status`, including whitespace
+      and line breaks
 - [ ] Title is a decision noun phrase, not a question or problem statement
 - [ ] Exactly three top-level sections: Context, Decision, Consequences
 - [ ] No extra top-level sections (no "Options", "Alternatives", "Background")
@@ -193,12 +202,9 @@ breaks, and suggest a corrected version.
 
 ### Voice and characters
 
+- [ ] Follows `docs/style.md` (line wrapping, characters, reference links)
 - [ ] First-person plural throughout ("We will...", "We considered...")
 - [ ] Conversational tone, not academic
-- [ ] Regular paragraph text is wrapped at 80 characters per line
-- [ ] No non-ASCII characters in prose: no em dashes, en dashes, or curly quotes
-- [ ] ASCII punctuation only; hyphens, not dashes
-- [ ] Non-ASCII characters in code blocks and formulas are acceptable
 
 ### Terminology
 
@@ -217,12 +223,10 @@ breaks, and suggest a corrected version.
 
 ### References
 
-- [ ] External concepts linked to a well-regarded source on first use (Wikipedia, RFC, spec, or official docs)
+- [ ] External concepts linked to a well-regarded source on first use
+      (Wikipedia, RFC, spec, or official docs)
 - [ ] Code identifiers from other repositories linked to pkg.go.dev
 - [ ] RFCs linked to rfc-editor.org
-- [ ] Reference-style links used throughout
-- [ ] References collected at the bottom in a `<!-- references -->` comment block
-- [ ] Reference list alphabetized
 
 ### Scope boundaries
 
@@ -246,3 +250,13 @@ breaks, and suggest a corrected version.
 ### Glossary
 
 - [ ] Any new terms introduced by this ADR are called out in Consequences
+
+<!-- references -->
+
+[0009-immutable-keys.md]: https://github.com/dogmatiq/dogma/blob/main/docs/adr/0009-immutable-keys.md
+[0020-identifier-constraints.md]: https://github.com/dogmatiq/dogma/blob/main/docs/adr/0020-identifier-constraints.md
+[0022-remove-crud-application-support.md]: https://github.com/dogmatiq/dogma/blob/main/docs/adr/0022-remove-crud-application-support.md
+[0023-message-order-guarantees.md]: https://github.com/dogmatiq/dogma/blob/main/docs/adr/0023-message-order-guarantees.md
+[0026-event-stream-based-projection-occ.md]: https://github.com/dogmatiq/dogma/blob/main/docs/adr/0026-event-stream-based-projection-occ.md
+[ADR template]: ./assets/adr-template.md
+[Style Checklist]: #style-checklist
