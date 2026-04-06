@@ -170,6 +170,12 @@ See [`dogma.HandlerScope`].
 A human-readable name and machine-readable key (UUID), specified via a
 [configurer], that uniquely identifies each [application] and [message handler].
 
+### Idempotency key
+
+An application-defined value supplied when executing a [command] that uniquely
+identifies the command so it can be retried safely without duplicating
+side-effects.
+
 ### Instance
 
 See [aggregate instance] or [process instance].
@@ -436,7 +442,6 @@ See [process].
 [handler scope]: #handler-scope
 [identity]: #identity
 [integration message handler]: #integration-message-handler
-[integration message handlers]: #integration-message-handler
 [integrations]: #integration
 [message handler]: #message-handler
 [message handlers]: #message-handler
