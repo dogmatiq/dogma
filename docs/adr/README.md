@@ -41,3 +41,4 @@ the ADR documents.
 * [28. Self-marshaling types](0028-binary-marshaling.md)
 * [29. Retain command idempotency keys](0029-retain-command-idempotency-keys.md)
 * [30. Observe command outcomes via events](0030-observe-command-outcomes-via-events.md)
+* [31. Require retries for idempotency-keyed commands](0031-require-retries-for-idempotency-keyed-commands.md)

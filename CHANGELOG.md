@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [Unreleased]
+
+### Changed
+
+- **[BC]** Callers that use `WithIdempotencyKey()` must retry `ExecuteCommand()`
+  until it returns `nil`, or the command may be lost.
+
 ## [0.19.1] - 2025-12-09
 
 ### Added
