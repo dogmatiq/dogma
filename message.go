@@ -8,6 +8,8 @@ import "time"
 // A Message describes something an [Application] can do or has done.
 //
 // Each message type implements either [Command], [Event], or [Timeout].
+//
+// Implementations must be safe for concurrent use by multiple goroutines.
 type Message interface {
 	// MessageDescription returns a concise human-readable explanation of the
 	// message's meaning for use in contexts such as logging and telemetry.

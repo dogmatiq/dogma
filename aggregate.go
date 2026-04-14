@@ -18,6 +18,9 @@ package dogma
 // Aggregates enforce business rules that must always hold true for a specific
 // instance. For example, a shopping cart aggregate might prevent checkout if
 // the cart is empty, or limit the number of items to 10.
+//
+// The engine may call the handler's methods from multiple goroutines
+// concurrently.
 type AggregateMessageHandler interface {
 	// Configure declares the handler's configuration by calling methods on c.
 	//

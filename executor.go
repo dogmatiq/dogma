@@ -6,6 +6,9 @@ import "context"
 //
 // It's the primary way that code outside of the Dogma application interacts
 // with the engine.
+//
+// All methods on CommandExecutor are safe for concurrent use by multiple
+// goroutines.
 type CommandExecutor interface {
 	// ExecuteCommand submits a [Command] for execution.
 	//

@@ -15,6 +15,9 @@ import (
 // implement only the "glue code". For example, an integration with a payment
 // gateway might debit a customer's credit card, but shouldn't apply discounts
 // or calculate sales tax.
+//
+// The engine may call the handler's methods from multiple goroutines
+// concurrently.
 type IntegrationMessageHandler interface {
 	// Configure declares the handler's configuration by calling methods on c.
 	//

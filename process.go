@@ -24,6 +24,9 @@ import (
 // workflow logic. For example, a process might decide when to refund a
 // customer's purchase, but shouldn't calculate the refund amount or interact
 // directly with the payment processor.
+//
+// The engine may call the handler's methods from multiple goroutines
+// concurrently.
 type ProcessMessageHandler interface {
 	// Configure declares the handler's configuration by calling methods on c.
 	//

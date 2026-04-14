@@ -25,6 +25,9 @@ import (
 // event stream. The [github.com/dogmatiq/projectionkit] module provides
 // adapters for popular databases, like PostgreSQL and DynamoDB, that handle the
 // OCC details.
+//
+// The engine may call the handler's methods from multiple goroutines
+// concurrently.
 type ProjectionMessageHandler interface {
 	// Configure declares the handler's configuration by calling methods on c.
 	//
