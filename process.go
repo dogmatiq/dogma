@@ -144,6 +144,19 @@ type ProcessMessageHandler interface {
 // when making decisions about which commands to execute and which timeouts to
 // schedule.
 type ProcessRoot interface {
+	// ProcessInstanceDescription returns a human-readable description of the
+	// process instance's current state, for use in logging and telemetry.
+	//
+	// The description should be clear and relevant to developers and
+	// non-technical stakeholders familiar with the application's domain.
+	// It's not intended for display to end users.
+	//
+	// The description should not include the instance's identity.
+	//
+	// Use lowercase with no trailing punctuation. Omit sensitive
+	// information. For example: "awaiting seller response, offer placed".
+	ProcessInstanceDescription() string
+
 	// MarshalBinary returns a binary representation of the process instsance's
 	// current state.
 	MarshalBinary() ([]byte, error)
@@ -289,6 +302,10 @@ func (StatelessProcessBehavior) New() ProcessRoot {
 var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
 
 type statelessProcessRoot struct{}
+
+func (statelessProcessRoot) ProcessInstanceDescription() string {
+	return ""
+}
 
 func (statelessProcessRoot) MarshalBinary() ([]byte, error) {
 	return nil, nil

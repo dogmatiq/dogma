@@ -4,6 +4,7 @@
 [Aa]pp
 [Aa]pplication
 [Cc]onfigurer
-projectionkit
-testkit
 dogmavet
+projectionkit
+runkit
+testkit

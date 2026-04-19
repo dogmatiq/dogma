@@ -15,6 +15,14 @@ func TestStatelessProcess(t *testing.T) {
 		t.Fatal("unexpected value returned")
 	}
 
+	t.Run("func ProcessInstanceDescription()", func(t *testing.T) {
+		t.Run("it returns an empty string", func(t *testing.T) {
+			if got := root.ProcessInstanceDescription(); got != "" {
+				t.Fatalf("unexpected description: %q", got)
+			}
+		})
+	})
+
 	t.Run("func MarshalBinary()", func(t *testing.T) {
 		t.Run("it returns an empty slice", func(t *testing.T) {
 			data, err := root.MarshalBinary()

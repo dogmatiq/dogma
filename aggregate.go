@@ -84,6 +84,19 @@ type AggregateMessageHandler interface {
 // state when making decisions about which events to record. The recorded events
 // are the authoritative source of truth, not the AggregateRoot.
 type AggregateRoot interface {
+	// AggregateInstanceDescription returns a human-readable description of the
+	// aggregate instance's current state, for use in logging and telemetry.
+	//
+	// The description should be clear and relevant to developers and
+	// non-technical stakeholders familiar with the application's domain.
+	// It's not intended for display to end users.
+	//
+	// The description should not include the instance's identity.
+	//
+	// Use lowercase with no trailing punctuation. Omit sensitive
+	// information. For example: "3 items, awaiting payment".
+	AggregateInstanceDescription() string
+
 	// ApplyEvent updates the aggregate instance to reflect the occurrence of an
 	// event.
 	//

@@ -347,7 +347,7 @@ See [projection].
 
 See [message route] or [handler route].
 
-### Runkit
+### `runkit`
 
 An upcoming [engine] implementation built for horizontal scalability and
 distributed workloads.

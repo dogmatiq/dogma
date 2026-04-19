@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [Unreleased]
+
+### Added
+
+- **[BC]** Added `AggregateRoot.AggregateInstanceDescription()`.
+- **[BC]** Added `ProcessRoot.ProcessInstanceDescription()`.
+
 ## [0.20.0] - 2026-04-06
 
 ### Changed
