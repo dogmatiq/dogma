@@ -8,13 +8,16 @@ import (
 
 func TestViaAggregate(t *testing.T) {
 	t.Run("it returns a route with the specified handler", func(t *testing.T) {
-		type aggregate struct{ AggregateMessageHandler }
+		type aggregate struct {
+			AggregateMessageHandler[AggregateRoot]
+		}
 
 		h := &aggregate{}
 		r := ViaAggregate(h)
 		x := expectType[AggregateHandlerRoute](t, r)
+		got := UnwrapHandler(x.Handler())
 
-		if x.Handler() != h {
+		if got != h {
 			t.Fatal("unexpected handler")
 		}
 	})
@@ -24,7 +27,7 @@ func TestViaAggregate(t *testing.T) {
 			t,
 			`handler cannot be nil`,
 			func() {
-				ViaAggregate(nil)
+				ViaAggregate[AggregateRoot](nil)
 			},
 		)
 	})
@@ -32,13 +35,16 @@ func TestViaAggregate(t *testing.T) {
 
 func TestViaProcess(t *testing.T) {
 	t.Run("it returns a route with the specified handler", func(t *testing.T) {
-		type process struct{ ProcessMessageHandler }
+		type process struct {
+			ProcessMessageHandler[ProcessRoot]
+		}
 
 		h := &process{}
 		r := ViaProcess(h)
 		x := expectType[ProcessHandlerRoute](t, r)
+		got := UnwrapHandler(x.Handler())
 
-		if x.Handler() != h {
+		if got != h {
 			t.Fatal("unexpected handler")
 		}
 	})
@@ -48,7 +54,7 @@ func TestViaProcess(t *testing.T) {
 			t,
 			`handler cannot be nil`,
 			func() {
-				ViaProcess(nil)
+				ViaProcess[ProcessRoot](nil)
 			},
 		)
 	})

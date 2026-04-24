@@ -11,7 +11,7 @@ func TestStatelessProcess(t *testing.T) {
 
 	root := v.New()
 
-	if root != StatelessProcessRoot {
+	if root != (StatelessProcessRoot{}) {
 		t.Fatal("unexpected value returned")
 	}
 
@@ -63,7 +63,7 @@ func TestStatelessProcess(t *testing.T) {
 }
 
 func TestNoTimeoutMessagesBehavior(t *testing.T) {
-	var v NoTimeoutMessagesBehavior
+	var v NoTimeoutMessagesBehavior[ProcessRoot]
 
 	expectPanic(
 		t,
@@ -76,5 +76,6 @@ func TestNoTimeoutMessagesBehavior(t *testing.T) {
 
 func init() {
 	assertIsComparable(StatelessProcessBehavior{})
-	assertIsComparable(NoTimeoutMessagesBehavior{})
+	assertIsComparable(NoTimeoutMessagesBehavior[ProcessRoot]{})
+	assertIsComparable(StatelessProcessRoot{})
 }

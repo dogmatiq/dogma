@@ -23,7 +23,7 @@ import (
 // To ensure exactly-once event processing, the handler must implement
 // optimistic concurrency control (OCC) based on each event's position within an
 // event stream. The [github.com/dogmatiq/projectionkit] module provides
-// adapters for popular databases, like PostgreSQL and DynamoDB, that handle the
+// adaptors for popular databases, like PostgreSQL and DynamoDB, that handle the
 // OCC details.
 //
 // When a new event route is added to an existing projection, the engine does
