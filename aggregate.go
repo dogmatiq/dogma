@@ -95,6 +95,9 @@ type AggregateRoot interface {
 	//
 	// Use lowercase with no trailing punctuation. Omit sensitive
 	// information. For example: "3 items, awaiting payment".
+	//
+	// Return an empty string if the instance has no meaningful state to
+	// describe.
 	AggregateInstanceDescription() string
 
 	// ApplyEvent updates the aggregate instance to reflect the occurrence of an

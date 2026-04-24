@@ -17,7 +17,13 @@ func TestStatelessProcess(t *testing.T) {
 
 	t.Run("func ProcessInstanceDescription()", func(t *testing.T) {
 		t.Run("it returns an empty string", func(t *testing.T) {
-			if got := root.ProcessInstanceDescription(); got != "" {
+			if got := root.ProcessInstanceDescription(false); got != "" {
+				t.Fatalf("unexpected description: %q", got)
+			}
+		})
+
+		t.Run("it returns an empty string when the instance has ended", func(t *testing.T) {
+			if got := root.ProcessInstanceDescription(true); got != "" {
 				t.Fatalf("unexpected description: %q", got)
 			}
 		})

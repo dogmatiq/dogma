@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [Unreleased]
+
+### Changed
+
+- **[BC]** `ProcessRoot.ProcessInstanceDescription()` now accepts an `ended
+bool` parameter that is `true` if `ProcessScope.End()` has been called.
+
 ## [0.21.0] - 2026-04-19
 
 ### Added

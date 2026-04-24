@@ -153,9 +153,16 @@ type ProcessRoot interface {
 	//
 	// The description should not include the instance's identity.
 	//
+	// ended is true if [ProcessScope].End has been called for this instance;
+	// the description may reflect this, for example by using past tense to
+	// indicate that the process has completed.
+	//
 	// Use lowercase with no trailing punctuation. Omit sensitive
 	// information. For example: "awaiting seller response, offer placed".
-	ProcessInstanceDescription() string
+	//
+	// Return an empty string if the instance has no meaningful state to
+	// describe.
+	ProcessInstanceDescription(ended bool) string
 
 	// MarshalBinary returns a binary representation of the process instsance's
 	// current state.
@@ -303,7 +310,7 @@ var StatelessProcessRoot ProcessRoot = statelessProcessRoot{}
 
 type statelessProcessRoot struct{}
 
-func (statelessProcessRoot) ProcessInstanceDescription() string {
+func (statelessProcessRoot) ProcessInstanceDescription(bool) string {
 	return ""
 }
 
