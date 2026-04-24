@@ -192,11 +192,19 @@ func (NoSnapshotBehavior) UnmarshalBinary([]byte) error {
 // implements [AggregateMessageHandler] with [AggregateRoot] as the type
 // parameter.
 //
+// If h already has [AggregateRoot] as its type parameter, it is
+// returned unchanged.
+//
 // Use [UnwrapHandler] to recover the original handler from the returned value.
 func UntypedAggregateMessageHandler[R AggregateRoot](h AggregateMessageHandler[R]) AggregateMessageHandler[AggregateRoot] {
 	if h == nil {
 		panic("handler cannot be nil")
 	}
+
+	if u, ok := any(h).(AggregateMessageHandler[AggregateRoot]); ok {
+		return u
+	}
+
 	return &untypedAggregateMessageHandler[R]{h}
 }
 

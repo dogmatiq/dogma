@@ -11,6 +11,7 @@
 [Ee]ventually
 [Ee]xactly
 [Ee]xecute
+[Gg]enericize[sd]?
 [Ee]xecuted
 [Ee]xecution
 [Ee]xtensible
@@ -23,6 +24,7 @@
 [Mm]ultiple
 [Oo]nly
 [Oo]verspecified
+[Pp]arameteriz(e[sd]?|ing)
 [Pp]urchase
 [Pp]urchase
 [Ss]harding

@@ -43,3 +43,4 @@ the ADR documents.
 * [30. Observe command outcomes via events](0030-observe-command-outcomes-via-events.md)
 * [31. Require retries for idempotency-keyed commands](0031-require-retries-for-idempotency-keyed-commands.md)
 * [32. Message ownership](0032-message-ownership.md)
+* [33. Generic aggregate and process handlers](0033-generic-aggregate-and-process-handlers.md)

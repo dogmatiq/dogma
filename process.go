@@ -328,14 +328,19 @@ func (StatelessProcessBehavior) New() StatelessProcessRoot {
 // this type.
 type StatelessProcessRoot struct{}
 
+// ProcessInstanceDescription returns an empty string, as stateless processes
+// have no meaningful state to describe.
 func (StatelessProcessRoot) ProcessInstanceDescription(bool) string {
 	return ""
 }
 
+// MarshalBinary returns nil, as stateless processes have no state to persist.
 func (StatelessProcessRoot) MarshalBinary() ([]byte, error) {
 	return nil, nil
 }
 
+// UnmarshalBinary returns an error if data is non-empty, as stateless
+// processes have no state to restore.
 func (StatelessProcessRoot) UnmarshalBinary(data []byte) error {
 	if len(data) != 0 {
 		return errors.New("cannot unmarshal non-empty data into stateless process")
@@ -346,11 +351,19 @@ func (StatelessProcessRoot) UnmarshalBinary(data []byte) error {
 // UntypedProcessMessageHandler returns a type-erased adaptor for h that
 // implements [ProcessMessageHandler] with [ProcessRoot] as the type parameter.
 //
+// If h already has [ProcessRoot] as its type parameter, it is returned
+// unchanged.
+//
 // Use [UnwrapHandler] to recover the original handler from the returned value.
 func UntypedProcessMessageHandler[R ProcessRoot](h ProcessMessageHandler[R]) ProcessMessageHandler[ProcessRoot] {
 	if h == nil {
 		panic("handler cannot be nil")
 	}
+
+	if u, ok := any(h).(ProcessMessageHandler[ProcessRoot]); ok {
+		return u
+	}
+
 	return &untypedProcessMessageHandler[R]{h}
 }
 

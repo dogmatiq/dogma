@@ -36,6 +36,16 @@ func TestUntypedAggregateMessageHandler(t *testing.T) {
 		}
 	})
 
+	t.Run("it returns the handler unchanged if already untyped", func(t *testing.T) {
+		h := &aggregateHandlerStub{}
+		adaptor := UntypedAggregateMessageHandler(h)
+		again := UntypedAggregateMessageHandler(adaptor)
+
+		if again != adaptor {
+			t.Fatal("expected the same handler to be returned")
+		}
+	})
+
 	t.Run("it panics if the handler is nil", func(t *testing.T) {
 		expectPanic(
 			t,
