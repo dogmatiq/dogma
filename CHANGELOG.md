@@ -12,6 +12,27 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [Unreleased]
+
+This release genericizes `AggregateMessageHandler` and
+`ProcessMessageHandler` by their root type, providing compile-time type safety
+for aggregate roots and process roots.
+
+### Changed
+
+- **[BC]** `AggregateMessageHandler` is now parameterized by its `AggregateRoot` type.
+- **[BC]** `ProcessMessageHandler` is now parameterized by its `ProcessRoot` type.
+- **[BC]** `AggregateCommandScope` is now parameterized by the `AggregateRoot` type.
+- **[BC]** `ProcessScope`, `ProcessEventScope`, and `ProcessTimeoutScope` are now parameterized by the `ProcessRoot` type.
+- **[BC]** `NoTimeoutMessagesBehavior` is now parameterized by the `ProcessRoot` type.
+- **[BC]** `StatelessProcessRoot` is now an exported struct type (was a package-level variable).
+- **[BC]** `ViaAggregate()` and `ViaProcess()` are now generic functions.
+
+### Added
+
+- Added `UntypedAggregateMessageHandler()` and `UntypedProcessMessageHandler()`.
+- Added `UnwrapHandler()` for recursively unwrapping handler adaptors.
+
 ## [0.22.0] - 2026-04-24
 
 ### Changed

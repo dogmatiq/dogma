@@ -76,6 +76,27 @@ func TestNoTimeoutMessagesBehavior(t *testing.T) {
 }
 
 func TestUntypedProcessMessageHandler(t *testing.T) {
+	t.Run("it returns an adaptor that wraps the handler", func(t *testing.T) {
+		h := &processHandlerStub{}
+		adaptor := UntypedProcessMessageHandler(h)
+
+		if got := UnwrapHandler(adaptor); got != h {
+			t.Fatal("unexpected handler")
+		}
+	})
+
+	t.Run("it panics if the handler is nil", func(t *testing.T) {
+		expectPanic(
+			t,
+			"handler cannot be nil",
+			func() {
+				UntypedProcessMessageHandler[ProcessRoot](nil)
+			},
+		)
+	})
+}
+
+func TestProcessMessageHandlerAdaptor(t *testing.T) {
 	inner := &processHandlerStub{
 		routeID: "instance-001",
 		routeOK: true,

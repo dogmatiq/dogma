@@ -188,41 +188,21 @@ func (NoSnapshotBehavior) UnmarshalBinary([]byte) error {
 	return ErrNotSupported
 }
 
-// An UntypedAggregateMessageHandler is a type-erased version of
-// [AggregateMessageHandler] that the engine uses to interact with aggregate
-// message handlers without knowing the concrete [AggregateRoot] type.
-type UntypedAggregateMessageHandler interface {
-	Configure(c AggregateConfigurer)
-	New() AggregateRoot
-	RouteCommandToInstance(c Command) string
-	HandleCommand(AggregateRoot, UntypedAggregateCommandScope, Command)
+// UntypedAggregateMessageHandler returns a type-erased adaptor for h that
+// implements [AggregateMessageHandler] with [AggregateRoot] as the type
+// parameter.
+//
+// Use [UnwrapHandler] to recover the original handler from the returned value.
+func UntypedAggregateMessageHandler[R AggregateRoot](h AggregateMessageHandler[R]) AggregateMessageHandler[AggregateRoot] {
+	if h == nil {
+		panic("handler cannot be nil")
+	}
+	return &untypedAggregateMessageHandler[R]{h}
 }
 
-// UntypedAggregateCommandScope is a type-erased version of
-// [AggregateCommandScope] that the engine uses to provide the scope
-// implementation without knowing the concrete [AggregateRoot] type.
-type UntypedAggregateCommandScope interface {
-	HandlerScope
-
-	// InstanceID returns the ID of the aggregate instance that the [Command]
-	// targets, as returned by [AggregateMessageHandler].RouteCommandToInstance.
-	InstanceID() string
-
-	// RecordEvent records an [Event] that results from handling the [Command].
-	//
-	// It applies the event to the aggregate root by calling
-	// [AggregateRoot].ApplyEvent, making the state changes visible to the
-	// handler immediately.
-	//
-	// The engine persists all events recorded within this scope in a single
-	// atomic operation after the [AggregateMessageHandler] finishes handling
-	// the inbound command.
-	RecordEvent(Event)
-}
-
-// untypedAggregateMessageHandler adapts an [AggregateMessageHandler] to the
-// [UntypedAggregateMessageHandler] interface by performing type assertions on
-// the [AggregateRoot].
+// untypedAggregateMessageHandler adapts an [AggregateMessageHandler] to
+// [AggregateMessageHandler] with [AggregateRoot] as the type parameter by
+// performing type assertions on the [AggregateRoot].
 type untypedAggregateMessageHandler[R AggregateRoot] struct {
 	handler AggregateMessageHandler[R]
 }
@@ -241,7 +221,7 @@ func (a *untypedAggregateMessageHandler[R]) RouteCommandToInstance(c Command) st
 
 func (a *untypedAggregateMessageHandler[R]) HandleCommand(
 	r AggregateRoot,
-	s UntypedAggregateCommandScope,
+	s AggregateCommandScope[AggregateRoot],
 	c Command,
 ) {
 	a.handler.HandleCommand(r.(R), s, c)

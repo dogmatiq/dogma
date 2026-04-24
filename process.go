@@ -343,88 +343,20 @@ func (StatelessProcessRoot) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-// An UntypedProcessMessageHandler is a type-erased version of
-// [ProcessMessageHandler] that the engine uses to interact with process message
-// handlers without knowing the concrete [ProcessRoot] type.
-type UntypedProcessMessageHandler interface {
-	Configure(c ProcessConfigurer)
-	New() ProcessRoot
-	RouteEventToInstance(ctx context.Context, e Event) (string, bool, error)
-	HandleEvent(context.Context, ProcessRoot, UntypedProcessEventScope, Event) error
-	HandleTimeout(context.Context, ProcessRoot, UntypedProcessTimeoutScope, Timeout) error
+// UntypedProcessMessageHandler returns a type-erased adaptor for h that
+// implements [ProcessMessageHandler] with [ProcessRoot] as the type parameter.
+//
+// Use [UnwrapHandler] to recover the original handler from the returned value.
+func UntypedProcessMessageHandler[R ProcessRoot](h ProcessMessageHandler[R]) ProcessMessageHandler[ProcessRoot] {
+	if h == nil {
+		panic("handler cannot be nil")
+	}
+	return &untypedProcessMessageHandler[R]{h}
 }
 
-// UntypedProcessScope is a type-erased version of [ProcessScope] that the
-// engine uses to provide the scope implementation without knowing the concrete
-// [ProcessRoot] type.
-type UntypedProcessScope interface {
-	HandlerScope
-
-	// InstanceID returns the ID of the process instance that the message
-	// targets.
-	//
-	// When handling an [Event] message, it returns the ID produced by
-	// [ProcessMessageHandler].RouteEventToInstance during routing.
-	//
-	// When handling a [Timeout] message, it returns the ID of the instance that
-	// scheduled the timeout.
-	InstanceID() string
-
-	// End signals the end of a process.
-	//
-	// The engine discards the instance's state, cancels any pending [Timeout]
-	// messages. It ignores any future messages that target the ended instance.
-	End()
-
-	// ExecuteCommand submits a [Command] for execution.
-	//
-	// The engine persists all commands and timeouts produced within this scope
-	// in a single atomic operation after the [ProcessMessageHandler] finishes
-	// handling the inbound message. If the handler returns a non-nil error, the
-	// engine discards the messages.
-	//
-	// This method panics if the process instance has ended.
-	ExecuteCommand(Command)
-
-	// ScheduleTimeout schedules a [Timeout] message to occur at the specified
-	// time.
-	//
-	// The engine persists all commands and timeouts produced within this scope
-	// in a single atomic operation after the [ProcessMessageHandler] finishes
-	// handling the inbound message. If the handler returns a non-nil error, the
-	// engine discards the messages.
-	//
-	// This method panics if the process instance has ended.
-	ScheduleTimeout(Timeout, time.Time)
-}
-
-// UntypedProcessEventScope is a type-erased version of [ProcessEventScope]
-// that the engine uses to provide the scope implementation without knowing the
-// concrete [ProcessRoot] type.
-type UntypedProcessEventScope interface {
-	UntypedProcessScope
-
-	// RecordedAt returns the time at which the inbound [Event] occurred.
-	RecordedAt() time.Time
-}
-
-// UntypedProcessTimeoutScope is a type-erased version of
-// [ProcessTimeoutScope] that the engine uses to provide the scope
-// implementation without knowing the concrete [ProcessRoot] type.
-type UntypedProcessTimeoutScope interface {
-	UntypedProcessScope
-
-	// ScheduledFor returns the time at which the timeout occurred.
-	//
-	// Even though the engine attempts to deliver timeouts at their scheduled
-	// time, it may deliver them later when recovering from downtime or retrying
-	// after a failure.
-	ScheduledFor() time.Time
-}
-
-// untypedProcessMessageHandler adapts a [ProcessMessageHandler] to the
-// [UntypedProcessMessageHandler] interface by performing type assertions on
-// the [ProcessRoot].
+// untypedProcessMessageHandler adapts a [ProcessMessageHandler] to
+// [ProcessMessageHandler] with [ProcessRoot] as the type parameter by
+// performing type assertions on the [ProcessRoot].
 type untypedProcessMessageHandler[R ProcessRoot] struct {
 	handler ProcessMessageHandler[R]
 }
@@ -447,7 +379,7 @@ func (a *untypedProcessMessageHandler[R]) RouteEventToInstance(
 func (a *untypedProcessMessageHandler[R]) HandleEvent(
 	ctx context.Context,
 	r ProcessRoot,
-	s UntypedProcessEventScope,
+	s ProcessEventScope[ProcessRoot],
 	e Event,
 ) error {
 	return a.handler.HandleEvent(ctx, r.(R), s, e)
@@ -456,7 +388,7 @@ func (a *untypedProcessMessageHandler[R]) HandleEvent(
 func (a *untypedProcessMessageHandler[R]) HandleTimeout(
 	ctx context.Context,
 	r ProcessRoot,
-	s UntypedProcessTimeoutScope,
+	s ProcessTimeoutScope[ProcessRoot],
 	t Timeout,
 ) error {
 	return a.handler.HandleTimeout(ctx, r.(R), s, t)

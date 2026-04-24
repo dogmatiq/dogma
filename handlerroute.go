@@ -5,10 +5,7 @@ package dogma
 //
 // Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
 func ViaAggregate[R AggregateRoot](h AggregateMessageHandler[R], _ ...ViaAggregateOption) HandlerRoute {
-	if h == nil {
-		panic("handler cannot be nil")
-	}
-	return AggregateHandlerRoute{handler: &untypedAggregateMessageHandler[R]{h}}
+	return AggregateHandlerRoute{handler: UntypedAggregateMessageHandler(h)}
 }
 
 // ViaProcess configures the [Application] to route messages to and from a
@@ -16,10 +13,7 @@ func ViaAggregate[R AggregateRoot](h AggregateMessageHandler[R], _ ...ViaAggrega
 //
 // Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
 func ViaProcess[R ProcessRoot](h ProcessMessageHandler[R], _ ...ViaProcessOption) HandlerRoute {
-	if h == nil {
-		panic("handler cannot be nil")
-	}
-	return ProcessHandlerRoute{handler: &untypedProcessMessageHandler[R]{h}}
+	return ProcessHandlerRoute{handler: UntypedProcessMessageHandler(h)}
 }
 
 // ViaIntegration configures the [Application] to route messages to and from an
@@ -60,7 +54,7 @@ type (
 	// Use [ViaAggregate] to construct values of this type.
 	AggregateHandlerRoute struct {
 		nocmp
-		handler UntypedAggregateMessageHandler
+		handler AggregateMessageHandler[AggregateRoot]
 	}
 
 	// ProcessHandlerRoute is a [HandlerRoute] that represents a relationship
@@ -69,7 +63,7 @@ type (
 	// See [ViaProcess] to construct values of this type.
 	ProcessHandlerRoute struct {
 		nocmp
-		handler UntypedProcessMessageHandler
+		handler ProcessMessageHandler[ProcessRoot]
 	}
 
 	// IntegrationHandlerRoute is a [HandlerRoute] that represents a
@@ -126,13 +120,13 @@ type (
 	}
 )
 
-// Handler returns the [UntypedAggregateMessageHandler] for r.
-func (r AggregateHandlerRoute) Handler() UntypedAggregateMessageHandler {
+// Handler returns the [AggregateMessageHandler] for r.
+func (r AggregateHandlerRoute) Handler() AggregateMessageHandler[AggregateRoot] {
 	return r.handler
 }
 
-// Handler returns the [UntypedProcessMessageHandler] for r.
-func (r ProcessHandlerRoute) Handler() UntypedProcessMessageHandler {
+// Handler returns the [ProcessMessageHandler] for r.
+func (r ProcessHandlerRoute) Handler() ProcessMessageHandler[ProcessRoot] {
 	return r.handler
 }
 

@@ -27,6 +27,27 @@ func TestNoSnapshotBehavior(t *testing.T) {
 }
 
 func TestUntypedAggregateMessageHandler(t *testing.T) {
+	t.Run("it returns an adaptor that wraps the handler", func(t *testing.T) {
+		h := &aggregateHandlerStub{}
+		adaptor := UntypedAggregateMessageHandler(h)
+
+		if got := UnwrapHandler(adaptor); got != h {
+			t.Fatal("unexpected handler")
+		}
+	})
+
+	t.Run("it panics if the handler is nil", func(t *testing.T) {
+		expectPanic(
+			t,
+			"handler cannot be nil",
+			func() {
+				UntypedAggregateMessageHandler[AggregateRoot](nil)
+			},
+		)
+	})
+}
+
+func TestAggregateMessageHandlerAdaptor(t *testing.T) {
 	inner := &aggregateHandlerStub{
 		routeID: "instance-001",
 	}
