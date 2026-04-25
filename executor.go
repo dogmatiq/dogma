@@ -78,8 +78,10 @@ func (o IdempotencyKeyOption) Key() string {
 // recorded as a result of executing a command with
 // [CommandExecutor].ExecuteCommand.
 //
+// The observer may retain or mutate e and the values within it.
+//
 // See [WithEventObserver].
-type EventObserver[T Event] func(ctx context.Context, event T) (satisfied bool, err error)
+type EventObserver[T Event] func(ctx context.Context, e T) (satisfied bool, err error)
 
 // WithEventObserver returns an [ExecuteCommandOption] that observes events of
 // type T recorded while executing a command.

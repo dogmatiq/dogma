@@ -39,6 +39,8 @@ type IntegrationMessageHandler interface {
 	// guarantee the order, number, or concurrency of those attempts. The
 	// implementation must ensure that the command's external side-effects are
 	// idempotent and safe for concurrent execution.
+	//
+	// The handler may retain or mutate c and the values within it.
 	HandleCommand(
 		ctx context.Context,
 		s IntegrationCommandScope,
