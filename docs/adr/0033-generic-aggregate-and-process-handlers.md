@@ -4,12 +4,9 @@ Date: 2026-04-25
 
 ## Status
 
-Proposed
+Accepted
 
 - References [6. Stateless aggregates and processes][ADR-6]
-
-> [!NOTE]
-> This decision has not yet been accepted and is subject to change.
 
 ## Context
 
