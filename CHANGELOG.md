@@ -20,13 +20,19 @@ for aggregate roots and process roots.
 
 ### Changed
 
-- **[BC]** `AggregateMessageHandler` is now parameterized by its `AggregateRoot` type.
-- **[BC]** `ProcessMessageHandler` is now parameterized by its `ProcessRoot` type.
-- **[BC]** `AggregateCommandScope` is now parameterized by the `AggregateRoot` type.
-- **[BC]** `ProcessScope`, `ProcessEventScope`, and `ProcessTimeoutScope` are now parameterized by the `ProcessRoot` type.
-- **[BC]** `NoTimeoutMessagesBehavior` is now parameterized by the `ProcessRoot` type.
-- **[BC]** `StatelessProcessRoot` is now an exported struct type (was a package-level variable).
-- **[BC]** `ViaAggregate()` and `ViaProcess()` are now generic functions.
+- **[BC]** `StatelessProcessRoot` is now an exported struct type instead of a
+  package-level variable.
+- **[BC]** The following types and functions are now parameterized by their
+  concrete `AggregateRoot` or `ProcessRoot` type:
+  - `AggregateMessageHandler`
+  - `AggregateCommandScope`
+  - `ProcessMessageHandler`
+  - `ProcessScope`
+  - `ProcessEventScope`
+  - `ProcessTimeoutScope`
+  - `NoTimeoutMessagesBehavior`
+  - `ViaAggregate()`
+  - `ViaProcess()`
 
 ### Added
 
