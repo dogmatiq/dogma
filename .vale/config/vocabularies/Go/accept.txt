@@ -3,3 +3,4 @@ goroutines?
 ok
 exported
 unexported
+untyped

@@ -6,6 +6,8 @@ Date: 2018-12-11
 
 Accepted
 
+- Referenced by [33. Generic aggregate and process handlers](0033-generic-aggregate-and-process-handlers.md)
+
 ## Context
 
 We need to decide how to represent aggregates and processes that do not have

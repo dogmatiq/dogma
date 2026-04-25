@@ -21,7 +21,9 @@ package dogma
 //
 // The engine may call the handler's methods from multiple goroutines
 // concurrently.
-type AggregateMessageHandler interface {
+//
+// R is the application-defined [AggregateRoot] type for this handler.
+type AggregateMessageHandler[R AggregateRoot] interface {
 	// Configure declares the handler's configuration by calling methods on c.
 	//
 	// The configuration includes the handler's identity and message routes.
@@ -30,13 +32,13 @@ type AggregateMessageHandler interface {
 	// produce the same configuration each time it's called.
 	Configure(c AggregateConfigurer)
 
-	// New returns a new [AggregateRoot] representing the initial state of an
+	// New returns a new value of R representing the initial state of an
 	// aggregate instance.
 	//
 	// The engine calls this method to get a "blank slate" when handling the
 	// first [Command] for a new instance or when reconstructing an existing
 	// instance from its historical [Event] messages.
-	New() AggregateRoot
+	New() R
 
 	// RouteCommandToInstance returns the ID of the aggregate instance that c
 	// targets.
@@ -72,8 +74,8 @@ type AggregateMessageHandler interface {
 	//
 	// The handler may retain or mutate c and the values within it.
 	HandleCommand(
-		r AggregateRoot,
-		s AggregateCommandScope,
+		r R,
+		s AggregateCommandScope[R],
 		c Command,
 	)
 }
@@ -144,7 +146,9 @@ type AggregateConfigurer interface {
 
 // AggregateCommandScope represents the context within which an
 // [AggregateMessageHandler] handles a [Command] message.
-type AggregateCommandScope interface {
+//
+// R is the application-defined [AggregateRoot] type for this handler.
+type AggregateCommandScope[R AggregateRoot] interface {
 	HandlerScope
 
 	// InstanceID returns the ID of the aggregate instance that the [Command]
@@ -182,4 +186,55 @@ func (NoSnapshotBehavior) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary always returns [ErrNotSupported].
 func (NoSnapshotBehavior) UnmarshalBinary([]byte) error {
 	return ErrNotSupported
+}
+
+// UntypedAggregateMessageHandler returns a type-erased adaptor for h that
+// implements [AggregateMessageHandler] with [AggregateRoot] as the type
+// parameter.
+//
+// If h already has [AggregateRoot] as its type parameter, it is
+// returned unchanged.
+//
+// Use [UnwrapHandler] to recover the original handler from the returned value.
+func UntypedAggregateMessageHandler[R AggregateRoot](h AggregateMessageHandler[R]) AggregateMessageHandler[AggregateRoot] {
+	if h == nil {
+		panic("handler cannot be nil")
+	}
+
+	if u, ok := any(h).(AggregateMessageHandler[AggregateRoot]); ok {
+		return u
+	}
+
+	return &untypedAggregateMessageHandler[R]{h}
+}
+
+// untypedAggregateMessageHandler adapts an [AggregateMessageHandler] to
+// [AggregateMessageHandler] with [AggregateRoot] as the type parameter by
+// performing type assertions on the [AggregateRoot].
+type untypedAggregateMessageHandler[R AggregateRoot] struct {
+	handler AggregateMessageHandler[R]
+}
+
+func (a *untypedAggregateMessageHandler[R]) Configure(c AggregateConfigurer) {
+	a.handler.Configure(c)
+}
+
+func (a *untypedAggregateMessageHandler[R]) New() AggregateRoot {
+	return a.handler.New()
+}
+
+func (a *untypedAggregateMessageHandler[R]) RouteCommandToInstance(c Command) string {
+	return a.handler.RouteCommandToInstance(c)
+}
+
+func (a *untypedAggregateMessageHandler[R]) HandleCommand(
+	r AggregateRoot,
+	s AggregateCommandScope[AggregateRoot],
+	c Command,
+) {
+	a.handler.HandleCommand(r.(R), s, c)
+}
+
+func (a *untypedAggregateMessageHandler[R]) UnwrapHandler() any {
+	return a.handler
 }

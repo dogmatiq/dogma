@@ -89,3 +89,27 @@ type HandlerScope interface {
 	// #49412, it has already shipped”.
 	Log(format string, args ...any)
 }
+
+// UnwrapHandler returns the innermost handler wrapped by h.
+//
+// This follows the same convention as [errors.Unwrap]. A handler adaptor can
+// support unwrapping by providing an UnwrapHandler() method that returns the
+// wrapped handler.
+//
+// If h wraps multiple layers, it recurses until it reaches a handler that
+// doesn't implement UnwrapHandler(). It returns h itself if h doesn't wrap
+// another handler.
+func UnwrapHandler(h any) any {
+	type unwrapper interface {
+		UnwrapHandler() any
+	}
+
+	for {
+		u, ok := h.(unwrapper)
+		if !ok {
+			return h
+		}
+
+		h = u.UnwrapHandler()
+	}
+}

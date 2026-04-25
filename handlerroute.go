@@ -4,22 +4,16 @@ package dogma
 // [AggregateMessageHandler].
 //
 // Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
-func ViaAggregate(h AggregateMessageHandler, _ ...ViaAggregateOption) HandlerRoute {
-	if h == nil {
-		panic("handler cannot be nil")
-	}
-	return AggregateHandlerRoute{handler: h}
+func ViaAggregate[R AggregateRoot](h AggregateMessageHandler[R], _ ...ViaAggregateOption) HandlerRoute {
+	return AggregateHandlerRoute{handler: UntypedAggregateMessageHandler(h)}
 }
 
 // ViaProcess configures the [Application] to route messages to and from a
 // [ProcessMessageHandler].
 //
 // Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
-func ViaProcess(h ProcessMessageHandler, _ ...ViaProcessOption) HandlerRoute {
-	if h == nil {
-		panic("handler cannot be nil")
-	}
-	return ProcessHandlerRoute{handler: h}
+func ViaProcess[R ProcessRoot](h ProcessMessageHandler[R], _ ...ViaProcessOption) HandlerRoute {
+	return ProcessHandlerRoute{handler: UntypedProcessMessageHandler(h)}
 }
 
 // ViaIntegration configures the [Application] to route messages to and from an
@@ -60,7 +54,7 @@ type (
 	// Use [ViaAggregate] to construct values of this type.
 	AggregateHandlerRoute struct {
 		nocmp
-		handler AggregateMessageHandler
+		handler AggregateMessageHandler[AggregateRoot]
 	}
 
 	// ProcessHandlerRoute is a [HandlerRoute] that represents a relationship
@@ -69,7 +63,7 @@ type (
 	// See [ViaProcess] to construct values of this type.
 	ProcessHandlerRoute struct {
 		nocmp
-		handler ProcessMessageHandler
+		handler ProcessMessageHandler[ProcessRoot]
 	}
 
 	// IntegrationHandlerRoute is a [HandlerRoute] that represents a
@@ -127,12 +121,12 @@ type (
 )
 
 // Handler returns the [AggregateMessageHandler] for r.
-func (r AggregateHandlerRoute) Handler() AggregateMessageHandler {
+func (r AggregateHandlerRoute) Handler() AggregateMessageHandler[AggregateRoot] {
 	return r.handler
 }
 
 // Handler returns the [ProcessMessageHandler] for r.
-func (r ProcessHandlerRoute) Handler() ProcessMessageHandler {
+func (r ProcessHandlerRoute) Handler() ProcessMessageHandler[ProcessRoot] {
 	return r.handler
 }
 
