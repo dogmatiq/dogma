@@ -26,6 +26,12 @@ import (
 // adapters for popular databases, like PostgreSQL and DynamoDB, that handle the
 // OCC details.
 //
+// When a new event route is added to an existing projection, the engine does
+// not guarantee delivery of historical events of the new type. Some, all, or
+// none of the historical events may be delivered, depending on the engine's
+// consumption tracking. Call [ProjectionMessageHandler].Reset to clear all
+// checkpoint offsets and rebuild the projection from a complete event history.
+//
 // The engine may call the handler's methods from multiple goroutines
 // concurrently.
 type ProjectionMessageHandler interface {
@@ -64,6 +70,8 @@ type ProjectionMessageHandler interface {
 	// order of events from a single aggregate instance, even across scopes. It
 	// doesn't guarantee the relative delivery order of events from different
 	// handlers or aggregate instances.
+	//
+	// The handler may retain or mutate e and the values within it.
 	//
 	// See:
 	//  - [ProjectionEventScope].StreamID

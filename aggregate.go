@@ -69,6 +69,8 @@ type AggregateMessageHandler interface {
 	// guarantee the order, number, or concurrency of those attempts. The
 	// implementation doesn't need to perform any synchronization or idempotency
 	// checks.
+	//
+	// The handler may retain or mutate c and the values within it.
 	HandleCommand(
 		r AggregateRoot,
 		s AggregateCommandScope,
@@ -106,7 +108,9 @@ type AggregateRoot interface {
 	// The engine calls this method when loading the instance from historical
 	// events or recording a new event. It must handle all historical event
 	// types, including those no longer routed to this aggregate.
-	ApplyEvent(Event)
+	//
+	// The root may retain or mutate e and the values within it.
+	ApplyEvent(e Event)
 
 	// MarshalBinary returns a binary representation of the aggregate instance's
 	// current state suitable for use as a snapshot.
@@ -156,7 +160,7 @@ type AggregateCommandScope interface {
 	// The engine persists all events recorded within this scope in a single
 	// atomic operation after the [AggregateMessageHandler] finishes handling
 	// the inbound command.
-	RecordEvent(Event)
+	RecordEvent(e Event)
 }
 
 // AggregateRoute describes a message type that's routed to or from a

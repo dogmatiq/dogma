@@ -25,6 +25,12 @@ import (
 // customer's purchase, but shouldn't calculate the refund amount or interact
 // directly with the payment processor.
 //
+// When a new event route is added to an existing process, the engine does not
+// guarantee delivery of historical events of the new type. Some, all, or none
+// of the historical events may be delivered, depending on the engine's
+// consumption tracking. To ensure a process sees the complete event history for
+// all of its routes, deploy it as a new handler with a new identity.
+//
 // The engine may call the handler's methods from multiple goroutines
 // concurrently.
 type ProcessMessageHandler interface {
@@ -97,6 +103,8 @@ type ProcessMessageHandler interface {
 	// single aggregate instance, even across scopes. It doesn't guarantee the
 	// relative delivery order of events from different handlers or aggregate
 	// instances.
+	//
+	// The handler may retain or mutate e and the values within it.
 	HandleEvent(
 		ctx context.Context,
 		r ProcessRoot,
@@ -129,6 +137,8 @@ type ProcessMessageHandler interface {
 	//
 	// Not all processes use timeouts. Embed [NoTimeoutMessagesBehavior] in the
 	// handler implementation to indicate that timeout messages aren't used.
+	//
+	// The handler may retain or mutate t and the values within it.
 	HandleTimeout(
 		ctx context.Context,
 		r ProcessRoot,
