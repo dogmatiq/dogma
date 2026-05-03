@@ -35,7 +35,7 @@ engine an unambiguous signal that the aggregate instance's state has changed.
 ## Decision
 
 We will add a `Mutate()` method to `ProcessScope`. It accepts a single
-callback that is passed a mutable reference to the root:
+callback that receives the root to mutate:
 
 ```go
 Mutate(fn func(mut R))
@@ -96,5 +96,11 @@ the root's serialized state before and after each invocation.
 The relationship between `r` and `mut` is unspecified — they may be clones or
 refer to the same memory. Because `r` is off-limits while `fn` is executing, the
 engine may safely pass `r` to `fn`.
+
+For mutations inside `fn` to be visible outside it, `R` must be a pointer type.
+This was already an implicit requirement — `UnmarshalBinary()` must mutate its
+receiver, which requires a pointer receiver, so any concrete `ProcessRoot`
+implementation is already a pointer in practice. This ADR strengthens that
+requirement.
 
 <!-- references -->
