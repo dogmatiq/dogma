@@ -4,10 +4,7 @@ Date: 2026-05-03
 
 ## Status
 
-Proposed
-
-> [!NOTE]
-> This decision has not yet been accepted and is subject to change.
+Accepted
 
 ## Context
 
