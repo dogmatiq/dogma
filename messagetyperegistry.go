@@ -10,7 +10,7 @@ import (
 	"sync/atomic"
 )
 
-// RegisterCommand adds a [Command] message type to Dogma's message registry,
+// RegisterCommand adds a [Command] message type to the Dogma message registry,
 // making it eligible for use with [HandlesCommand] and [ExecutesCommand].
 //
 // id uniquely identifies the message type. The value must be a canonical RFC
@@ -35,8 +35,8 @@ type RegisterCommandOption interface {
 	futureRegisterCommandOption()
 }
 
-// RegisterEvent adds a [Event] message type to Dogma's message registry, making
-// it eligible for use with [HandlesEvent] and [RecordsEvent].
+// RegisterEvent adds a [Event] message type to the Dogma message registry,
+// making it eligible for use with [HandlesEvent] and [RecordsEvent].
 //
 // id uniquely identifies the message type. The value must be a canonical RFC
 // 9562 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
