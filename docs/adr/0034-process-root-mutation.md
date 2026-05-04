@@ -48,8 +48,8 @@ mutation against the `mut` parameter.
 
 The engine may elide the call to `fn` in some circumstances — for example, when
 the root is a `StatelessProcessRoot` and persistence is known to be a
-no-op. Because `fn` is not guaranteed to execute, it must not perform any side
-effects beyond mutating `mut`. In particular:
+no-op. Because `fn` is not guaranteed to execute, it must not perform any
+side-effects beyond mutating `mut`. In particular:
 
 - It must not call any methods on `s`, the `ProcessScope`.
 - It must not use `r`, even for read-only purposes.
