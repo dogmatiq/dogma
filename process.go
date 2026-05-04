@@ -147,12 +147,12 @@ type ProcessMessageHandler[R ProcessRoot] interface {
 	// the handler implementation to indicate that deadline messages aren't
 	// used.
 	//
-	// The handler may retain or mutate t and the values within it.
+	// The handler may retain or mutate d and the values within it.
 	HandleDeadline(
 		ctx context.Context,
 		r R,
 		s ProcessDeadlineScope[R],
-		t Deadline,
+		d Deadline,
 	) error
 }
 
@@ -432,13 +432,13 @@ func (a *untypedProcessMessageHandler[R]) HandleDeadline(
 	ctx context.Context,
 	r ProcessRoot,
 	s ProcessDeadlineScope[ProcessRoot],
-	t Deadline,
+	d Deadline,
 ) error {
 	return a.handler.HandleDeadline(
 		ctx,
 		r.(R),
 		untypedProcessDeadlineScope[R]{s},
-		t,
+		d,
 	)
 }
 
