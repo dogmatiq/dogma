@@ -35,7 +35,7 @@ type RegisterCommandOption interface {
 	futureRegisterCommandOption()
 }
 
-// RegisterEvent adds a [Event] message type to the Dogma message registry,
+// RegisterEvent adds an [Event] message type to the Dogma message registry,
 // making it eligible for use with [HandlesEvent] and [RecordsEvent].
 //
 // id uniquely identifies the message type. The value must be a canonical RFC

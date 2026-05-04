@@ -127,7 +127,7 @@ type ProcessMessageHandler[R ProcessRoot] interface {
 	// messages, schedule [Deadline] messages, or end the process. It may query
 	// external data - such as the application's projections - but this isn't
 	// recommended. Wherever possible, logic should depend solely on information
-	// within r, s, and t.
+	// within r, s, and d.
 	//
 	// The implementation must not modify r directly; use [ProcessScope].Mutate
 	// instead. The callback passed to Mutate must not use r or s.
