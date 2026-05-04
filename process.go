@@ -10,7 +10,7 @@ import (
 // stateful decision-making that spans multiple [Command] messages.
 //
 // It handles [Event] messages and executes [Command] to enact further
-// application state changes. It may also schedule [Timeout] messages to perform
+// application state changes. It may also schedule [Deadline] messages to perform
 // actions at specific times. For example, to send a reminder if a customer
 // hasn't completed the checkout process within one hour.
 //
@@ -66,7 +66,7 @@ type ProcessMessageHandler[R ProcessRoot] interface {
 	// Events routed to the same instance operate on the same state. There's no
 	// need to create an instance in advance - it "exists" once the handler
 	// modifies its [ProcessRoot], executes a [Command], or schedules a
-	// [Timeout] against it.
+	// [Deadline] against it.
 	//
 	// The engine calls this method before handling the [Event]. The
 	// implementation may query external data - such as the application's
@@ -86,10 +86,10 @@ type ProcessMessageHandler[R ProcessRoot] interface {
 	// r is the [ProcessRoot] for the instance that the event targets, as
 	// determined by [ProcessMessageHandler].RouteEventToInstance. It reflects
 	// the state of the targeted instance after handling any prior [Event] or
-	// [Timeout] messages.
+	// [Deadline] messages.
 	//
 	// The implementation may change the instance's state, execute [Command]
-	// messages, schedule [Timeout] messages, or end the process. It may query
+	// messages, schedule [Deadline] messages, or end the process. It may query
 	// external data - such as the application's projections - but this isn't
 	// recommended. Wherever possible, logic should depend solely on information
 	// within r, s, and e.
@@ -97,7 +97,7 @@ type ProcessMessageHandler[R ProcessRoot] interface {
 	// The implementation must not modify r directly; use [ProcessScope].Mutate
 	// instead. The callback passed to Mutate must not use r or s.
 	//
-	// The engine atomically persists the state changes, events, and timeouts
+	// The engine atomically persists the state changes, events, and deadlines
 	// produced by exactly one successful invocation of this method for each
 	// event message. It doesn't guarantee the order, number, or concurrency of
 	// those attempts. Generally, the implementation doesn't need to perform any
@@ -117,14 +117,14 @@ type ProcessMessageHandler[R ProcessRoot] interface {
 		e Event,
 	) error
 
-	// HandleTimeout advances a process in response to a [Timeout] message.
+	// HandleDeadline advances a process in response to a [Deadline] message.
 	//
-	// r is the [ProcessRoot] for the instance that scheduled the timeout. It
+	// r is the [ProcessRoot] for the instance that scheduled the deadline. It
 	// reflects the state of the targeted instance after handling any prior
-	// [Event] or [Timeout] messages.
+	// [Event] or [Deadline] messages.
 	//
 	// The implementation may change the instance's state, execute [Command]
-	// messages, schedule [Timeout] messages, or end the process. It may query
+	// messages, schedule [Deadline] messages, or end the process. It may query
 	// external data - such as the application's projections - but this isn't
 	// recommended. Wherever possible, logic should depend solely on information
 	// within r, s, and t.
@@ -132,26 +132,27 @@ type ProcessMessageHandler[R ProcessRoot] interface {
 	// The implementation must not modify r directly; use [ProcessScope].Mutate
 	// instead. The callback passed to Mutate must not use r or s.
 	//
-	// The engine atomically persists the state changes, events, and timeouts
+	// The engine atomically persists the state changes, events, and deadlines
 	// produced by exactly one successful invocation of this method for each
-	// timeout message. It doesn't guarantee the order, number, or concurrency
+	// deadline message. It doesn't guarantee the order, number, or concurrency
 	// of those attempts. Generally, the implementation doesn't need to perform
 	// any synchronization or idempotency checks.
 	//
-	// The engine attempts to deliver timeout messages at their scheduled time.
+	// The engine attempts to deliver deadline messages at their scheduled time.
 	// It may deliver them later when recovering from downtime or retrying after
-	// a failure. It doesn't guarantee the relative delivery order of timeout
+	// a failure. It doesn't guarantee the relative delivery order of deadline
 	// messages with the same scheduled time.
 	//
-	// Not all processes use timeouts. Embed [NoTimeoutMessagesBehavior] in the
-	// handler implementation to indicate that timeout messages aren't used.
+	// Not all processes use deadlines. Embed [NoDeadlineMessagesBehavior] in
+	// the handler implementation to indicate that deadline messages aren't
+	// used.
 	//
 	// The handler may retain or mutate t and the values within it.
-	HandleTimeout(
+	HandleDeadline(
 		ctx context.Context,
 		r R,
-		s ProcessTimeoutScope[R],
-		t Timeout,
+		s ProcessDeadlineScope[R],
+		t Deadline,
 	) error
 }
 
@@ -159,7 +160,7 @@ type ProcessMessageHandler[R ProcessRoot] interface {
 // process instance used within [ProcessMessageHandler] implementations.
 //
 // It encapsulates process logic and provides a way to inspect the current state
-// when making decisions about which commands to execute and which timeouts to
+// when making decisions about which commands to execute and which deadlines to
 // schedule.
 type ProcessRoot interface {
 	// ProcessInstanceDescription returns a human-readable description of the
@@ -204,7 +205,7 @@ type ProcessConfigurer interface {
 	// Routes declares the message types that the handler consumes and produces.
 	//
 	// It accepts routes created by [HandlesEvent], [ExecutesCommand], and
-	// [SchedulesTimeout].
+	// [SchedulesDeadline].
 	Routes(...ProcessRoute)
 }
 
@@ -215,7 +216,7 @@ type ProcessConfigurer interface {
 // scope type that extends this interface:
 //
 //   - [ProcessEventScope]
-//   - [ProcessTimeoutScope]
+//   - [ProcessDeadlineScope]
 //
 // R is the application-defined [ProcessRoot] type for this handler.
 type ProcessScope[R ProcessRoot] interface {
@@ -227,8 +228,8 @@ type ProcessScope[R ProcessRoot] interface {
 	// When handling an [Event] message, it returns the ID produced by
 	// [ProcessMessageHandler].RouteEventToInstance during routing.
 	//
-	// When handling a [Timeout] message, it returns the ID of the instance that
-	// scheduled the timeout.
+	// When handling a [Deadline] message, it returns the ID of the instance
+	// that scheduled the deadline.
 	InstanceID() string
 
 	// Mutate changes the process instance's state by calling fn with the
@@ -251,13 +252,13 @@ type ProcessScope[R ProcessRoot] interface {
 
 	// End signals the end of a process.
 	//
-	// The engine discards the instance's state, cancels any pending [Timeout]
+	// The engine discards the instance's state, cancels any pending [Deadline]
 	// messages. It ignores any future messages that target the ended instance.
 	End()
 
 	// ExecuteCommand submits a [Command] for execution.
 	//
-	// The engine persists all commands and timeouts produced within this scope
+	// The engine persists all commands and deadlines produced within this scope
 	// in a single atomic operation after the [ProcessMessageHandler] finishes
 	// handling the inbound message. If the handler returns a non-nil error, the
 	// engine discards the messages.
@@ -265,16 +266,15 @@ type ProcessScope[R ProcessRoot] interface {
 	// This method panics if the process instance has ended.
 	ExecuteCommand(Command)
 
-	// ScheduleTimeout schedules a [Timeout] message to occur at the specified
-	// time.
+	// ScheduleDeadline schedules a [Deadline] message for the specified time.
 	//
-	// The engine persists all commands and timeouts produced within this scope
+	// The engine persists all commands and deadlines produced within this scope
 	// in a single atomic operation after the [ProcessMessageHandler] finishes
 	// handling the inbound message. If the handler returns a non-nil error, the
 	// engine discards the messages.
 	//
 	// This method panics if the process instance has ended.
-	ScheduleTimeout(Timeout, time.Time)
+	ScheduleDeadline(Deadline, time.Time)
 }
 
 // ProcessEventScope represents the context within which a
@@ -288,18 +288,19 @@ type ProcessEventScope[R ProcessRoot] interface {
 	RecordedAt() time.Time
 }
 
-// ProcessTimeoutScope represents the context within which a
-// [ProcessMessageHandler] handles a [Timeout] message.
+// ProcessDeadlineScope represents the context within which a
+// [ProcessMessageHandler] handles a [Deadline] message.
 //
 // R is the application-defined [ProcessRoot] type for this handler.
-type ProcessTimeoutScope[R ProcessRoot] interface {
+type ProcessDeadlineScope[R ProcessRoot] interface {
 	ProcessScope[R]
 
-	// ScheduledFor returns the time at which the timeout occurred.
+	// ScheduledFor returns the time at which the deadline message is to be
+	// delivered.
 	//
-	// Even though the engine attempts to deliver timeouts at their scheduled
-	// time, it may deliver them later when recovering from downtime or retrying
-	// after a failure.
+	// Even though the engine attempts to deliver deadline messages at their
+	// scheduled time, it may deliver them later when recovering from downtime
+	// or retrying after a failure.
 	ScheduledFor() time.Time
 }
 
@@ -310,22 +311,22 @@ type ProcessRoute interface {
 	isProcessRoute()
 }
 
-// NoTimeoutMessagesBehavior is an embeddable type for [ProcessMessageHandler]
-// implementations that don't use [Timeout] messages.
+// NoDeadlineMessagesBehavior is an embeddable type for [ProcessMessageHandler]
+// implementations that don't use [Deadline] messages.
 //
 // Embed this type in a [ProcessMessageHandler] to signal that the handler
-// doesn't schedule timeouts and to avoid boilerplate code that's never
+// doesn't schedule deadlines and to avoid boilerplate code that's never
 // used.
 //
 // R is the application-defined [ProcessRoot] type for this handler.
-type NoTimeoutMessagesBehavior[R ProcessRoot] struct{}
+type NoDeadlineMessagesBehavior[R ProcessRoot] struct{}
 
-// HandleTimeout panics with the [UnexpectedMessage] value.
-func (NoTimeoutMessagesBehavior[R]) HandleTimeout(
+// HandleDeadline panics with the [UnexpectedMessage] value.
+func (NoDeadlineMessagesBehavior[R]) HandleDeadline(
 	context.Context,
 	R,
-	ProcessTimeoutScope[R],
-	Timeout,
+	ProcessDeadlineScope[R],
+	Deadline,
 ) error {
 	panic(UnexpectedMessage)
 }
@@ -427,16 +428,16 @@ func (a *untypedProcessMessageHandler[R]) HandleEvent(
 	)
 }
 
-func (a *untypedProcessMessageHandler[R]) HandleTimeout(
+func (a *untypedProcessMessageHandler[R]) HandleDeadline(
 	ctx context.Context,
 	r ProcessRoot,
-	s ProcessTimeoutScope[ProcessRoot],
-	t Timeout,
+	s ProcessDeadlineScope[ProcessRoot],
+	t Deadline,
 ) error {
-	return a.handler.HandleTimeout(
+	return a.handler.HandleDeadline(
 		ctx,
 		r.(R),
-		untypedProcessTimeoutScope[R]{s},
+		untypedProcessDeadlineScope[R]{s},
 		t,
 	)
 }
@@ -457,14 +458,14 @@ func (a untypedProcessEventScope[R]) Mutate(fn func(R)) {
 	})
 }
 
-// untypedProcessTimeoutScope adapts a [ProcessTimeoutScope][ProcessRoot] to
-// [ProcessTimeoutScope][R] by narrowing the Mutate callback type.
-type untypedProcessTimeoutScope[R ProcessRoot] struct {
-	ProcessTimeoutScope[ProcessRoot]
+// untypedProcessDeadlineScope adapts a [ProcessDeadlineScope][ProcessRoot] to
+// [ProcessDeadlineScope][R] by narrowing the Mutate callback type.
+type untypedProcessDeadlineScope[R ProcessRoot] struct {
+	ProcessDeadlineScope[ProcessRoot]
 }
 
-func (a untypedProcessTimeoutScope[R]) Mutate(fn func(R)) {
-	a.ProcessTimeoutScope.Mutate(func(r ProcessRoot) {
+func (a untypedProcessDeadlineScope[R]) Mutate(fn func(R)) {
+	a.ProcessDeadlineScope.Mutate(func(r ProcessRoot) {
 		fn(r.(R))
 	})
 }

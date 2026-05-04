@@ -39,8 +39,8 @@ Dogma defines three **kinds** of message:
 
   For example, _added 10 widgets to Alex's shopping cart_.
 
-- A **timeout** message is a delayed notification — it tells your application
-  that some relevant period of time has elapsed.
+- A **deadline** message is a scheduled notification — it tells your application
+  that a domain-relevant point in time has been reached.
 
   <!-- vale Google.Passive = NO -->
 
@@ -50,7 +50,7 @@ Dogma defines three **kinds** of message:
 
 Every distinct action — such as "add item to cart" or "complete purchase" —
 corresponds to a different **message type**, each represented by a Go type that
-implements one of the [`Command`], [`Event`], or [`Timeout`] interfaces.
+implements one of the [`Command`], [`Event`], or [`Deadline`] interfaces.
 
 > [!IMPORTANT]
 > Messages must not rely on information that may be unavailable when they're
@@ -75,7 +75,7 @@ Dogma defines four types of handler:
 
 - A **process message handler** coordinates a workflow that involves multiple
   aggregate instances or time-sensitive logic. It handles event messages by
-  executing commands and scheduling timeout messages to drive the workflow
+  executing commands and scheduling deadline messages to drive the workflow
   forward. Like aggregates, each process can have many instances.
 
 - A **projection message handler** builds a view of the application's state by
@@ -220,7 +220,7 @@ explore the following resources:
 [`IntegrationMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#IntegrationMessageHandler
 [`ProcessMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessMessageHandler
 [`ProjectionMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionMessageHandler
-[`Timeout`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Timeout
+[`Deadline`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Deadline
 
 <!-- external references -->
 

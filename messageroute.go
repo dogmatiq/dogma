@@ -62,18 +62,18 @@ func HandlesEvent[T Event](...HandlesEventOption) interface {
 	return HandlesEventRoute{typ: registeredMessageTypeFor[T]()}
 }
 
-// SchedulesTimeout configures a [ProcessMessageHandler] as a scheduler of
-// [Timeout] messages of type T.
+// SchedulesDeadline configures a [ProcessMessageHandler] as a scheduler of
+// [Deadline] messages of type T.
 //
-// It panics if T isn't in the message registry, see [RegisterTimeout].
+// It panics if T isn't in the message registry, see [RegisterDeadline].
 //
 // Pass the returned [MessageRoute] to [ProcessConfigurer].Routes.
 //
 // The application may have multiple handlers that schedule T.
-func SchedulesTimeout[T Timeout](...SchedulesTimeoutOption) interface {
+func SchedulesDeadline[T Deadline](...SchedulesDeadlineOption) interface {
 	ProcessRoute
 } {
-	return SchedulesTimeoutRoute{typ: registeredMessageTypeFor[T]()}
+	return SchedulesDeadlineRoute{typ: registeredMessageTypeFor[T]()}
 }
 
 type (
@@ -120,11 +120,11 @@ type (
 		typ RegisteredMessageType
 	}
 
-	// SchedulesTimeoutRoute is a [HandlerRoute] that represents a handler's
-	// ability to schedule [Timeout] messages of a specific type.
+	// SchedulesDeadlineRoute is a [HandlerRoute] that represents a handler's
+	// ability to schedule [Deadline] messages of a specific type.
 	//
-	// Use [SchedulesTimeout] to construct values of this type.
-	SchedulesTimeoutRoute struct {
+	// Use [SchedulesDeadline] to construct values of this type.
+	SchedulesDeadlineRoute struct {
 		nocmp
 		typ RegisteredMessageType
 	}
@@ -163,12 +163,12 @@ type (
 		futureRecordsEventOption()
 	}
 
-	// SchedulesTimeoutOption is an option that modifies the behavior of
-	// [SchedulesTimeout].
+	// SchedulesDeadlineOption is an option that modifies the behavior of
+	// [SchedulesDeadline].
 	//
 	// This type exists for forward-compatibility.
-	SchedulesTimeoutOption interface {
-		futureSchedulesTimeoutOption()
+	SchedulesDeadlineOption interface {
+		futureSchedulesDeadlineOption()
 	}
 )
 
@@ -193,6 +193,6 @@ func (r RecordsEventRoute) Type() RegisteredMessageType {
 }
 
 // Type returns the [RegisteredMessageType] for r.
-func (r SchedulesTimeoutRoute) Type() RegisteredMessageType {
+func (r SchedulesDeadlineRoute) Type() RegisteredMessageType {
 	return r.typ
 }

@@ -60,35 +60,35 @@ type RegisterEventOption interface {
 	futureRegisterEventOption()
 }
 
-// RegisterTimeout adds a [Timeout] message type to the Dogma message registry,
-// making it eligible for use with [SchedulesTimeout].
+// RegisterDeadline adds a [Deadline] message type to the Dogma message
+// registry, making it eligible for use with [SchedulesDeadline].
 //
 // id uniquely identifies the message type. The value must be a canonical RFC
 // 9562 UUID string, such as "65f9620a-65c1-434e-8292-60cd7938c4de", and is
 // case-insensitive. The engine uses the ID to associate message data with the
 // correct Go type.
-func RegisterTimeout[
+func RegisterDeadline[
 	T interface {
 		*E
-		Timeout
+		Deadline
 	},
 	E any, // E is the "element" type of the pointer type T.
-](id string, _ ...RegisterTimeoutOption) {
-	registerMessageType[Timeout, T](id)
+](id string, _ ...RegisterDeadlineOption) {
+	registerMessageType[Deadline, T](id)
 }
 
-// RegisterTimeoutOption is an option that modifies the behavior of
-// [RegisterTimeout].
+// RegisterDeadlineOption is an option that modifies the behavior of
+// [RegisterDeadline].
 //
 // This type exists for forward-compatibility.
-type RegisterTimeoutOption interface {
-	futureRegisterTimeoutOption()
+type RegisterDeadlineOption interface {
+	futureRegisterDeadlineOption()
 }
 
 // RegisteredMessageType contains information about an implementation of [Command],
-// [Event], or [Timeout] that's in Dogma's message registry.
+// [Event], or [Deadline] that's in Dogma's message registry.
 //
-// Use [RegisterCommand], [RegisterEvent], or [RegisterTimeout] to add messages
+// Use [RegisterCommand], [RegisterEvent], or [RegisterDeadline] to add messages
 // to the registry.
 type RegisteredMessageType struct {
 	nocmp
@@ -187,7 +187,7 @@ func RegisteredMessageTypeByID(id string) (t RegisteredMessageType, ok bool) {
 // RegisteredMessageTypes returns an iterator that yields information about each
 // message in the Dogma message registry.
 //
-// Use [RegisterCommand], [RegisterEvent], or [RegisterTimeout] to add messages
+// Use [RegisterCommand], [RegisterEvent], or [RegisterDeadline] to add messages
 // to the registry.
 func RegisteredMessageTypes() iter.Seq[RegisteredMessageType] {
 	return func(yield func(RegisteredMessageType) bool) {
@@ -211,7 +211,7 @@ type messageTypes struct {
 }
 
 // messageTypeRegistry is a global registry of types that implement [Command],
-// [Event], and [Timeout].
+// [Event], and [Deadline].
 //
 // The messageTypes value is immutable. Every addition to the registry creates a
 // new messageTypes value that atomically replaces the old value. The registry

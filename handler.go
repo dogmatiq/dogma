@@ -62,7 +62,7 @@ type DisableOption interface {
 //
 //   - [AggregateCommandScope]
 //   - [ProcessEventScope]
-//   - [ProcessTimeoutScope]
+//   - [ProcessDeadlineScope]
 //   - [IntegrationCommandScope]
 //   - [ProjectionEventScope]
 //   - [ProjectionCompactScope]

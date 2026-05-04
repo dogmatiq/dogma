@@ -12,6 +12,28 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [Unreleased]
+
+### Changed
+
+- **[BC]** Renamed `Timeout` interface to `Deadline`
+- **[BC]** Renamed `TimeoutValidationScope` interface to
+  `DeadlineValidationScope`
+- **[BC]** Renamed `ProcessMessageHandler.HandleTimeout()` method to
+  `HandleDeadline()`
+- **[BC]** Renamed `ProcessTimeoutScope` interface to `ProcessDeadlineScope`
+- **[BC]** Renamed `ProcessScope.ScheduleTimeout()` method to
+  `ScheduleDeadline()`
+- **[BC]** Renamed `NoTimeoutMessagesBehavior` type to
+  `NoDeadlineMessagesBehavior`
+- **[BC]** Renamed `SchedulesTimeout()` function to `SchedulesDeadline()`
+- **[BC]** Renamed `SchedulesTimeoutRoute` type to `SchedulesDeadlineRoute`
+- **[BC]** Renamed `SchedulesTimeoutOption` interface to
+  `SchedulesDeadlineOption`
+- **[BC]** Renamed `RegisterTimeout()` function to `RegisterDeadline()`
+- **[BC]** Renamed `RegisterTimeoutOption` interface to
+  `RegisterDeadlineOption`
+
 ## [0.23.0] - 2026-04-25
 
 This release genericizes `AggregateMessageHandler` and

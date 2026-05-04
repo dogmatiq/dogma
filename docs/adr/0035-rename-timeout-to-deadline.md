@@ -26,14 +26,14 @@ In practice, the term has three problems:
    `time.Duration`.
 
 2. "Timeout" carries connotations of failure or abandonment — an operation that
-   ran too long. While some Dogma uses fit this mold (e.g. canceling an
+   ran too long. While some Dogma uses fit this mold (for example, canceling an
    unpaid order), many do not. A process that schedules a reminder for 30 days
    before a contract renewal isn't "timing out" — it's reaching a deadline.
 
 3. When discussing process behavior with domain experts, "deadline" maps more
    naturally to business language. "When does this invoice become overdue? The
-   deadline for payment is January 7th" is a conversation that works. "The
-   timeout for payment is January 7th" is not.
+   deadline for payment is January seventh" is a conversation that works. "The
+   timeout for payment is January seventh" is not.
 
 ## Decision
 
@@ -84,8 +84,9 @@ document the rename under its own release.
 
 ## Consequences
 
-Every downstream consumer of the Dogma API — engine implementations, testkit,
-enginekit, and application code — will need a corresponding rename. Those
+Every downstream consumer of the Dogma API — engine implementations,
+`testkit`, `enginekit`, and application code — will need a corresponding
+rename. Those
 changes are planned separately, after this rename lands.
 
 The glossary gains a new "deadline" entry replacing "timeout", and "process

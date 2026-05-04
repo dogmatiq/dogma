@@ -3,11 +3,11 @@ package dogma
 import "time"
 
 // A Message is an application-defined unit of data that describes a [Command],
-// [Event], or [Timeout] within a message-based application.
+// [Event], or [Deadline] within a message-based application.
 
 // A Message describes something an [Application] can do or has done.
 //
-// Each message type implements either [Command], [Event], or [Timeout].
+// Each message type implements either [Command], [Event], or [Deadline].
 //
 // Implementations must be safe for concurrent use by multiple goroutines.
 type Message interface {
@@ -28,9 +28,9 @@ type Message interface {
 	// Descriptions of [Event] messages should use past tense. For example:
 	// "added 10 widgets to Alex's shopping cart".
 	//
-	// Descriptions of [Timeout] messages should read as though the timeout has
-	// just elapsed. For example: "Alex's cart is now inactive" or "24 hours
-	// elapsed since first item added to Alex's cart".
+	// Descriptions of [Deadline] messages should read as though the deadline
+	// has just been reached. For example: "Alex's cart is now inactive" or
+	// "24 hours elapsed since first item added to Alex's cart".
 	//
 	// Be wary of assuming a specific actor if the message doesn't explicitly
 	// encode that information. For example, prefer "Alex's purchase completed"
@@ -62,7 +62,7 @@ type unexpectedMessage struct{}
 //
 //   - [CommandValidationScope]
 //   - [EventValidationScope]
-//   - [TimeoutValidationScope]
+//   - [DeadlineValidationScope]
 type MessageValidationScope interface {
 	// IsNew returns true when a handler or [CommandExecutor] is creating a new
 	// message, or false when the engine is re-validating a message that it has
@@ -134,32 +134,35 @@ type EventValidationScope interface {
 	RecordedAt() time.Time
 }
 
-// A Timeout is a [Message] that notifies an [Application], specifically a
-// [ProcessMessageHandler] that some domain-relevant period of time has elapsed.
-type Timeout interface {
+// A Deadline is a [Message] that notifies an [Application], specifically a
+// [ProcessMessageHandler], that a domain-relevant point in time has been
+// reached.
+type Deadline interface {
 	Message
 
 	// Validate returns a non-nil error if the message isn't well-formed.
 	//
-	// A timeout is well-formed if all required information is present and
+	// A deadline is well-formed if all required information is present and
 	// correctly encoded such that it accurately represents an action that can
 	// occur within the process, if current state permits.
 	//
 	// Validation requirements may change over time. Use the
-	// [TimeoutValidationScope] to access context that may affect the strictness
+	// [DeadlineValidationScope] to access context that may affect the strictness
 	// or criteria of the validation logic.
-	Validate(TimeoutValidationScope) error
+	Validate(DeadlineValidationScope) error
 }
 
-// TimeoutValidationScope provides context during [Timeout] validation.
+// DeadlineValidationScope provides context during [Deadline] validation.
 //
-// The engine provides the implementation to [Timeout].Validate.
-type TimeoutValidationScope interface {
+// The engine provides the implementation to [Deadline].Validate.
+type DeadlineValidationScope interface {
 	MessageValidationScope
 
-	// ScheduledAt returns the time at which the handler scheduled the timeout.
+	// ScheduledAt returns the time at which
+	// [ProcessScope].ScheduleDeadline was called.
 	ScheduledAt() time.Time
 
-	// ScheduledFor returns the time at which the timeout occurs.
+	// ScheduledFor returns the time at which the deadline message is to be
+	// delivered.
 	ScheduledFor() time.Time
 }
