@@ -14,7 +14,7 @@ If you're new to Dogma, start by familiarising yourself with the key [concepts].
 | ---------------------- | :-------: | :------: | :---------: | :----------: |
 | Command messages       |     ↓     |    ↑     |      ↓      |              |
 | Event messages         |     ↑     |    ↓     |      ↑      |      ↓       |
-| Timeout messages       |           |    ⇅     |             |              |
+| Deadline messages      |           |    ⇅     |             |              |
 | [State]                |     ✓     |    ✓     |             |              |
 | [External data access] |           |    ~     |      ✓      |      ✓       |
 | [Isolation boundary]   | instance  | instance |   command   | event-stream |

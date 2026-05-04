@@ -119,13 +119,13 @@ func TestRecordsEvent(t *testing.T) {
 	})
 }
 
-func TestSchedulesTimeout(t *testing.T) {
+func TestSchedulesDeadline(t *testing.T) {
 	t.Run("it returns a route containing the registered message type", func(t *testing.T) {
-		type T struct{ Timeout }
-		RegisterTimeout[*T]("e11b5a92-e1ab-4a16-841a-9286b4e4d12f")
+		type T struct{ Deadline }
+		RegisterDeadline[*T]("e11b5a92-e1ab-4a16-841a-9286b4e4d12f")
 
-		r := SchedulesTimeout[*T]()
-		expectType[SchedulesTimeoutRoute](t, r)
+		r := SchedulesDeadline[*T]()
+		expectType[SchedulesDeadlineRoute](t, r)
 
 		got := r.Type().GoType()
 		want := reflect.TypeFor[*T]()
@@ -140,8 +140,8 @@ func TestSchedulesTimeout(t *testing.T) {
 			t,
 			"*github.com/dogmatiq/dogma_test.T is not in the message type registry",
 			func() {
-				type T struct{ Timeout }
-				SchedulesTimeout[*T]()
+				type T struct{ Deadline }
+				SchedulesDeadline[*T]()
 			},
 		)
 	})

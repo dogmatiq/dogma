@@ -63,14 +63,14 @@ func TestStatelessProcess(t *testing.T) {
 	})
 }
 
-func TestNoTimeoutMessagesBehavior(t *testing.T) {
-	var v NoTimeoutMessagesBehavior[ProcessRoot]
+func TestNoDeadlineMessagesBehavior(t *testing.T) {
+	var v NoDeadlineMessagesBehavior[ProcessRoot]
 
 	expectPanic(
 		t,
 		UnexpectedMessage,
 		func() {
-			v.HandleTimeout(t.Context(), nil, nil, nil)
+			v.HandleDeadline(t.Context(), nil, nil, nil)
 		},
 	)
 }
@@ -185,25 +185,25 @@ func TestUntypedProcessMessageHandler(t *testing.T) {
 		})
 	})
 
-	t.Run("func HandleTimeout()", func(t *testing.T) {
+	t.Run("func HandleDeadline()", func(t *testing.T) {
 		t.Run("it narrows the root type and delegates to the wrapped handler", func(t *testing.T) {
-			err := adaptor.HandleTimeout(t.Context(), &processRootStub{}, nil, nil)
+			err := adaptor.HandleDeadline(t.Context(), &processRootStub{}, nil, nil)
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !inner.handleTimeoutCalled {
-				t.Fatal("expected HandleTimeout to be called on the wrapped handler")
+			if !inner.handleDeadlineCalled {
+				t.Fatal("expected HandleDeadline to be called on the wrapped handler")
 			}
 		})
 
 		t.Run("it narrows the Mutate() callback type", func(t *testing.T) {
 			root := &processRootStub{}
-			scope := &processTimeoutScopeStub{root: root}
+			scope := &processDeadlineScopeStub{root: root}
 
 			h := &processHandlerStub{
 				routeID: "x",
 				routeOK: true,
-				handleTimeoutFunc: func(_ *processRootStub, s ProcessTimeoutScope[*processRootStub]) {
+				handleDeadlineFunc: func(_ *processRootStub, s ProcessDeadlineScope[*processRootStub]) {
 					s.Mutate(func(r *processRootStub) {
 						if r != root {
 							t.Fatalf("unexpected root: got %v, want %v", r, root)
@@ -214,7 +214,7 @@ func TestUntypedProcessMessageHandler(t *testing.T) {
 
 			expectType[ProcessHandlerRoute](t, ViaProcess(h)).
 				Handler().
-				HandleTimeout(t.Context(), root, scope, nil)
+				HandleDeadline(t.Context(), root, scope, nil)
 		})
 
 		t.Run("it panics if the root has an unexpected type", func(t *testing.T) {
@@ -223,7 +223,7 @@ func TestUntypedProcessMessageHandler(t *testing.T) {
 					t.Fatal("expected a panic")
 				}
 			}()
-			adaptor.HandleTimeout(t.Context(), nil, nil, nil)
+			adaptor.HandleDeadline(t.Context(), nil, nil, nil)
 		})
 	})
 }
@@ -235,13 +235,13 @@ func (*processRootStub) MarshalBinary() ([]byte, error)         { return nil, ni
 func (*processRootStub) UnmarshalBinary([]byte) error           { return nil }
 
 type processHandlerStub struct {
-	configured          bool
-	routeID             string
-	routeOK             bool
-	handleEventCalled   bool
-	handleTimeoutCalled bool
-	handleEventFunc     func(*processRootStub, ProcessEventScope[*processRootStub])
-	handleTimeoutFunc   func(*processRootStub, ProcessTimeoutScope[*processRootStub])
+	configured           bool
+	routeID              string
+	routeOK              bool
+	handleEventCalled    bool
+	handleDeadlineCalled bool
+	handleEventFunc      func(*processRootStub, ProcessEventScope[*processRootStub])
+	handleDeadlineFunc   func(*processRootStub, ProcessDeadlineScope[*processRootStub])
 }
 
 func (h *processHandlerStub) Configure(ProcessConfigurer) {
@@ -272,22 +272,22 @@ func (h *processHandlerStub) HandleEvent(
 	return nil
 }
 
-func (h *processHandlerStub) HandleTimeout(
+func (h *processHandlerStub) HandleDeadline(
 	_ context.Context,
 	r *processRootStub,
-	s ProcessTimeoutScope[*processRootStub],
-	_ Timeout,
+	s ProcessDeadlineScope[*processRootStub],
+	_ Deadline,
 ) error {
-	h.handleTimeoutCalled = true
-	if h.handleTimeoutFunc != nil {
-		h.handleTimeoutFunc(r, s)
+	h.handleDeadlineCalled = true
+	if h.handleDeadlineFunc != nil {
+		h.handleDeadlineFunc(r, s)
 	}
 	return nil
 }
 
 func init() {
 	assertIsComparable(StatelessProcessBehavior{})
-	assertIsComparable(NoTimeoutMessagesBehavior[ProcessRoot]{})
+	assertIsComparable(NoDeadlineMessagesBehavior[ProcessRoot]{})
 	assertIsComparable(StatelessProcessRoot{})
 }
 
@@ -298,9 +298,9 @@ type processEventScopeStub struct {
 
 func (s *processEventScopeStub) Mutate(fn func(ProcessRoot)) { fn(s.root) }
 
-type processTimeoutScopeStub struct {
-	ProcessTimeoutScope[ProcessRoot]
+type processDeadlineScopeStub struct {
+	ProcessDeadlineScope[ProcessRoot]
 	root ProcessRoot
 }
 
-func (s *processTimeoutScopeStub) Mutate(fn func(ProcessRoot)) { fn(s.root) }
+func (s *processDeadlineScopeStub) Mutate(fn func(ProcessRoot)) { fn(s.root) }

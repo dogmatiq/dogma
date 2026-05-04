@@ -110,11 +110,11 @@ func TestRegisteredMessageTypes(t *testing.T) {
 	t.Run("yields the registered message types", func(t *testing.T) {
 		type T struct{ Command }
 		type U struct{ Event }
-		type V struct{ Timeout }
+		type V struct{ Deadline }
 
 		RegisterCommand[*T]("b3160ff8-f19a-4f79-b81c-0551c99aeac2")
 		RegisterEvent[*U]("c3f856ba-0519-4335-ad84-313aa0fedc5e")
-		RegisterTimeout[*V]("8ab13db4-33ff-4dde-862c-7c94a0477231")
+		RegisterDeadline[*V]("8ab13db4-33ff-4dde-862c-7c94a0477231")
 
 		var yieldedT, yieldedU, yieldedV bool
 
@@ -138,7 +138,7 @@ func TestRegisteredMessageTypes(t *testing.T) {
 		}
 
 		if !yieldedV {
-			t.Fatal("timeout type was not yielded")
+			t.Fatal("deadline type was not yielded")
 		}
 	})
 
@@ -172,13 +172,13 @@ func TestMessageTypeRegistration(t *testing.T) {
 
 	t.Run("failure conditions", func(t *testing.T) {
 		cases := []struct {
-			Name         string
-			CommandError string
-			CommandFunc  func()
-			EventError   string
-			EventFunc    func()
-			TimeoutError string
-			TimeoutFunc  func()
+			Name          string
+			CommandError  string
+			CommandFunc   func()
+			EventError    string
+			EventFunc     func()
+			DeadlineError string
+			DeadlineFunc  func()
 		}{
 			{
 				"duplicate registration",
@@ -196,9 +196,9 @@ func TestMessageTypeRegistration(t *testing.T) {
 				},
 				`cannot register *github.com/dogmatiq/dogma_test.T: it is already registered`,
 				func() {
-					type T struct{ Timeout }
-					RegisterTimeout[*T]("6dfb9656-92b4-4cef-b51d-f808bf6403b2")
-					RegisterTimeout[*T]("6dfb9656-92b4-4cef-b51d-f808bf6403b2")
+					type T struct{ Deadline }
+					RegisterDeadline[*T]("6dfb9656-92b4-4cef-b51d-f808bf6403b2")
+					RegisterDeadline[*T]("6dfb9656-92b4-4cef-b51d-f808bf6403b2")
 				},
 			},
 			{
@@ -217,9 +217,9 @@ func TestMessageTypeRegistration(t *testing.T) {
 				},
 				`cannot register *github.com/dogmatiq/dogma_test.T: it is already registered as "2e4c3894-f76b-4ccb-a817-4422df36138e"`,
 				func() {
-					type T struct{ Timeout }
-					RegisterTimeout[*T]("2e4c3894-f76b-4ccb-a817-4422df36138e")
-					RegisterTimeout[*T]("3de60928-e9be-4a62-9fd8-60734f53cde5")
+					type T struct{ Deadline }
+					RegisterDeadline[*T]("2e4c3894-f76b-4ccb-a817-4422df36138e")
+					RegisterDeadline[*T]("3de60928-e9be-4a62-9fd8-60734f53cde5")
 				},
 			},
 			{
@@ -240,10 +240,10 @@ func TestMessageTypeRegistration(t *testing.T) {
 				},
 				`cannot register *github.com/dogmatiq/dogma_test.U: "66c69a42-ea81-4ca9-8587-bf88e8abaf34" is already associated with *github.com/dogmatiq/dogma_test.T`,
 				func() {
-					type T struct{ Timeout }
-					type U struct{ Timeout }
-					RegisterTimeout[*T]("66c69a42-ea81-4ca9-8587-bf88e8abaf34")
-					RegisterTimeout[*U]("66c69a42-ea81-4ca9-8587-bf88e8abaf34")
+					type T struct{ Deadline }
+					type U struct{ Deadline }
+					RegisterDeadline[*T]("66c69a42-ea81-4ca9-8587-bf88e8abaf34")
+					RegisterDeadline[*U]("66c69a42-ea81-4ca9-8587-bf88e8abaf34")
 				},
 			},
 			{
@@ -260,8 +260,8 @@ func TestMessageTypeRegistration(t *testing.T) {
 				},
 				`cannot register *github.com/dogmatiq/dogma_test.T: "<non-uuid>" is not a canonical RFC 9562 UUID: expected 36 characters`,
 				func() {
-					type T struct{ Timeout }
-					RegisterTimeout[*T]("<non-uuid>")
+					type T struct{ Deadline }
+					RegisterDeadline[*T]("<non-uuid>")
 				},
 			},
 		}
@@ -276,8 +276,8 @@ func TestMessageTypeRegistration(t *testing.T) {
 					expectPanic(t, c.EventError, c.EventFunc)
 				})
 
-				t.Run("timeout kind", func(t *testing.T) {
-					expectPanic(t, c.TimeoutError, c.TimeoutFunc)
+				t.Run("deadline kind", func(t *testing.T) {
+					expectPanic(t, c.DeadlineError, c.DeadlineFunc)
 				})
 			})
 		}

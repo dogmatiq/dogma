@@ -114,6 +114,13 @@ core concepts and behavior of the business domain it supports.
 See [domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design)
 for more information.
 
+### Deadline
+
+A [message] that notifies a [process] that a domain-relevant point in time has
+been reached.
+
+See [`dogma.Deadline`].
+
 ## E
 
 ### Engine
@@ -210,7 +217,7 @@ See:
 
 - [command]
 - [event]
-- [timeout]
+- [deadline]
 - [`dogma.Message`]
 
 ### Message handler
@@ -228,7 +235,7 @@ See:
 ### Message kind
 
 The category of a [message] that defines its role in the application, one of
-[command], [event], or [timeout].
+[command], [event], or [deadline].
 
 ### Message route
 
@@ -239,7 +246,7 @@ See:
 
 - [`dogma.HandlesCommand()`] and [`dogma.ExecutesCommand()`]
 - [`dogma.HandlesEvent()`] and [`dogma.RecordsEvent()`]
-- [`dogma.SchedulesTimeout()`]
+- [`dogma.SchedulesDeadline()`]
 
 ### Message type
 
@@ -267,7 +274,7 @@ logic.
 ### Process event scope
 
 The [handler scope] in which a [process message handler] handles an [event]
-message by updating [state], executing [command] messages, or scheduling [timeout]
+message by updating [state], executing [command] messages, or scheduling [deadline]
 messages to advance the [process instance]'s workflow.
 
 See [`dogma.ProcessEventScope`].
@@ -280,7 +287,7 @@ A unique occurrence of a [process] within an [application], encapsulating the
 ### Process message handler
 
 A [message handler] that orchestrates a [process] by handling [event] messages,
-executing [command] messages and scheduling [timeout] messages.
+executing [command] messages and scheduling [deadline] messages.
 
 See [`dogma.ProcessMessageHandler`].
 
@@ -291,14 +298,14 @@ Named by analogy to [aggregate root].
 
 See [`dogma.ProcessRoot`].
 
-### Process timeout scope
+### Process deadline scope
 
-The [handler scope] in which a [process message handler] handles a [timeout]
+The [handler scope] in which a [process message handler] handles a [deadline]
 message at its scheduled time, by updating [state], executing [command]
-messages, or scheduling more [timeout] messages to advance the [process instance]'s
+messages, or scheduling more [deadline] messages to advance the [process instance]'s
 workflow.
 
-See [`dogma.ProcessTimeoutScope`].
+See [`dogma.ProcessDeadlineScope`].
 
 ### Projection
 
@@ -396,13 +403,6 @@ A Go module that provides high-level tools for testing Dogma [applications].
 
 See [`dogmatiq/testkit`].
 
-### Timeout
-
-A [message] that describes an action that a [process] should take at a specific
-time in the future.
-
-See [`dogma.Timeout`].
-
 ## V
 
 ### Validation scope
@@ -462,7 +462,7 @@ See [process].
 [state]: #state
 [stateful]: #stateful
 [stateless]: #stateless
-[timeout]: #timeout
+[deadline]: #deadline
 
 <!-- go modules -->
 
@@ -493,14 +493,14 @@ See [process].
 [`dogma.ProcessEventScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessEventScope
 [`dogma.ProcessMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessMessageHandler
 [`dogma.ProcessRoot`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessRoot
-[`dogma.ProcessTimeoutScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessTimeoutScope
+[`dogma.ProcessDeadlineScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProcessDeadlineScope
 [`dogma.ProjectionCompactScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionCompactScope
 [`dogma.ProjectionConfigurer`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionConfigurer
 [`dogma.ProjectionEventScope`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionEventScope
 [`dogma.ProjectionMessageHandler`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ProjectionMessageHandler
 [`dogma.RecordsEvent()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#RecordsEvent
-[`dogma.SchedulesTimeout()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#SchedulesTimeout
-[`dogma.Timeout`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Timeout
+[`dogma.SchedulesDeadline()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#SchedulesDeadline
+[`dogma.Deadline`]: https://pkg.go.dev/github.com/dogmatiq/dogma#Deadline
 [`dogma.ViaAggregate()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ViaAggregate
 [`dogma.ViaIntegration()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ViaIntegration
 [`dogma.ViaProcess()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ViaProcess
