@@ -14,31 +14,38 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+This release introduces `ProcessScope.Mutate()`, which replaces direct
+mutation of the process root, giving the engine an explicit signal that state
+has changed. Existing process handlers that mutate their root directly are now
+incorrect but will still compile — review all process handlers carefully.
+
+It also renames the "timeout" concept to "deadline", aligning with Go's
+convention that a deadline is a specific point in time rather than a duration.
+The semantics are unchanged.
+
+### Added
+
+- **[BC]** Added `ProcessScope.Mutate()` method.
+
 ### Changed
 
-- **[BC]** Renamed `Timeout` interface to `Deadline`
-- **[BC]** Renamed `TimeoutValidationScope` interface to
-  `DeadlineValidationScope`
-- **[BC]** Renamed `ProcessMessageHandler.HandleTimeout()` method to
-  `HandleDeadline()`
-- **[BC]** Renamed `ProcessTimeoutScope` interface to `ProcessDeadlineScope`
-- **[BC]** Renamed `ProcessScope.ScheduleTimeout()` method to
-  `ScheduleDeadline()`
-- **[BC]** Renamed `NoTimeoutMessagesBehavior` type to
-  `NoDeadlineMessagesBehavior`
-- **[BC]** Renamed `SchedulesTimeout()` function to `SchedulesDeadline()`
-- **[BC]** Renamed `SchedulesTimeoutRoute` type to `SchedulesDeadlineRoute`
-- **[BC]** Renamed `SchedulesTimeoutOption` interface to
-  `SchedulesDeadlineOption`
-- **[BC]** Renamed `RegisterTimeout()` function to `RegisterDeadline()`
-- **[BC]** Renamed `RegisterTimeoutOption` interface to
-  `RegisterDeadlineOption`
+- **[BC]** Renamed `Timeout` to `Deadline`.
+- **[BC]** Renamed `TimeoutValidationScope` to `DeadlineValidationScope`.
+- **[BC]** Renamed `ProcessMessageHandler.HandleTimeout()` to `HandleDeadline()`.
+- **[BC]** Renamed `ProcessTimeoutScope` to `ProcessDeadlineScope`.
+- **[BC]** Renamed `ProcessScope.ScheduleTimeout()` to `ScheduleDeadline()`.
+- **[BC]** Renamed `NoTimeoutMessagesBehavior` to `NoDeadlineMessagesBehavior`.
+- **[BC]** Renamed `SchedulesTimeout()` to `SchedulesDeadline()`.
+- **[BC]** Renamed `SchedulesTimeoutRoute` to `SchedulesDeadlineRoute`.
+- **[BC]** Renamed `SchedulesTimeoutOption` to `SchedulesDeadlineOption`.
+- **[BC]** Renamed `RegisterTimeout()` to `RegisterDeadline()`.
+- **[BC]** Renamed `RegisterTimeoutOption` to `RegisterDeadlineOption`.
 
 ## [0.23.0] - 2026-04-25
 
-This release genericizes `AggregateMessageHandler` and
-`ProcessMessageHandler` by their root type, providing compile-time type safety
-for aggregate roots and process roots.
+This release genericizes `AggregateMessageHandler` and `ProcessMessageHandler`
+by their root type, providing compile-time type safety for aggregate roots and
+process roots.
 
 ### Changed
 
