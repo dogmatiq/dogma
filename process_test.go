@@ -104,9 +104,7 @@ func TestUntypedProcessMessageHandler(t *testing.T) {
 			},
 		)
 	})
-}
 
-func TestProcessMessageHandlerAdaptor(t *testing.T) {
 	inner := &processHandlerStub{
 		routeID: "instance-001",
 		routeOK: true,
@@ -126,7 +124,7 @@ func TestProcessMessageHandlerAdaptor(t *testing.T) {
 	t.Run("func New()", func(t *testing.T) {
 		t.Run("it returns the root from the wrapped handler", func(t *testing.T) {
 			got := adaptor.New()
-			expectType[processRootStub](t, got)
+			expectType[*processRootStub](t, got)
 		})
 	})
 
@@ -147,13 +145,34 @@ func TestProcessMessageHandlerAdaptor(t *testing.T) {
 
 	t.Run("func HandleEvent()", func(t *testing.T) {
 		t.Run("it narrows the root type and delegates to the wrapped handler", func(t *testing.T) {
-			err := adaptor.HandleEvent(t.Context(), processRootStub{}, nil, nil)
+			err := adaptor.HandleEvent(t.Context(), &processRootStub{}, nil, nil)
 			if err != nil {
 				t.Fatal(err)
 			}
 			if !inner.handleEventCalled {
 				t.Fatal("expected HandleEvent to be called on the wrapped handler")
 			}
+		})
+
+		t.Run("it narrows the Mutate() callback type", func(t *testing.T) {
+			root := &processRootStub{}
+			scope := &processEventScopeStub{root: root}
+
+			h := &processHandlerStub{
+				routeID: "x",
+				routeOK: true,
+				handleEventFunc: func(_ *processRootStub, s ProcessEventScope[*processRootStub]) {
+					s.Mutate(func(r *processRootStub) {
+						if r != root {
+							t.Fatalf("unexpected root: got %v, want %v", r, root)
+						}
+					})
+				},
+			}
+
+			expectType[ProcessHandlerRoute](t, ViaProcess(h)).
+				Handler().
+				HandleEvent(t.Context(), root, scope, nil)
 		})
 
 		t.Run("it panics if the root has an unexpected type", func(t *testing.T) {
@@ -168,13 +187,34 @@ func TestProcessMessageHandlerAdaptor(t *testing.T) {
 
 	t.Run("func HandleTimeout()", func(t *testing.T) {
 		t.Run("it narrows the root type and delegates to the wrapped handler", func(t *testing.T) {
-			err := adaptor.HandleTimeout(t.Context(), processRootStub{}, nil, nil)
+			err := adaptor.HandleTimeout(t.Context(), &processRootStub{}, nil, nil)
 			if err != nil {
 				t.Fatal(err)
 			}
 			if !inner.handleTimeoutCalled {
 				t.Fatal("expected HandleTimeout to be called on the wrapped handler")
 			}
+		})
+
+		t.Run("it narrows the Mutate() callback type", func(t *testing.T) {
+			root := &processRootStub{}
+			scope := &processTimeoutScopeStub{root: root}
+
+			h := &processHandlerStub{
+				routeID: "x",
+				routeOK: true,
+				handleTimeoutFunc: func(_ *processRootStub, s ProcessTimeoutScope[*processRootStub]) {
+					s.Mutate(func(r *processRootStub) {
+						if r != root {
+							t.Fatalf("unexpected root: got %v, want %v", r, root)
+						}
+					})
+				},
+			}
+
+			expectType[ProcessHandlerRoute](t, ViaProcess(h)).
+				Handler().
+				HandleTimeout(t.Context(), root, scope, nil)
 		})
 
 		t.Run("it panics if the root has an unexpected type", func(t *testing.T) {
@@ -190,9 +230,9 @@ func TestProcessMessageHandlerAdaptor(t *testing.T) {
 
 type processRootStub struct{}
 
-func (processRootStub) ProcessInstanceDescription(bool) string { return "" }
-func (processRootStub) MarshalBinary() ([]byte, error)         { return nil, nil }
-func (processRootStub) UnmarshalBinary([]byte) error           { return nil }
+func (*processRootStub) ProcessInstanceDescription(bool) string { return "" }
+func (*processRootStub) MarshalBinary() ([]byte, error)         { return nil, nil }
+func (*processRootStub) UnmarshalBinary([]byte) error           { return nil }
 
 type processHandlerStub struct {
 	configured          bool
@@ -200,16 +240,16 @@ type processHandlerStub struct {
 	routeOK             bool
 	handleEventCalled   bool
 	handleTimeoutCalled bool
+	handleEventFunc     func(*processRootStub, ProcessEventScope[*processRootStub])
+	handleTimeoutFunc   func(*processRootStub, ProcessTimeoutScope[*processRootStub])
 }
-
-var _ ProcessMessageHandler[processRootStub] = &processHandlerStub{}
 
 func (h *processHandlerStub) Configure(ProcessConfigurer) {
 	h.configured = true
 }
 
-func (h *processHandlerStub) New() processRootStub {
-	return processRootStub{}
+func (h *processHandlerStub) New() *processRootStub {
+	return &processRootStub{}
 }
 
 func (h *processHandlerStub) RouteEventToInstance(
@@ -221,21 +261,27 @@ func (h *processHandlerStub) RouteEventToInstance(
 
 func (h *processHandlerStub) HandleEvent(
 	_ context.Context,
-	_ processRootStub,
-	_ ProcessEventScope[processRootStub],
+	r *processRootStub,
+	s ProcessEventScope[*processRootStub],
 	_ Event,
 ) error {
 	h.handleEventCalled = true
+	if h.handleEventFunc != nil {
+		h.handleEventFunc(r, s)
+	}
 	return nil
 }
 
 func (h *processHandlerStub) HandleTimeout(
 	_ context.Context,
-	_ processRootStub,
-	_ ProcessTimeoutScope[processRootStub],
+	r *processRootStub,
+	s ProcessTimeoutScope[*processRootStub],
 	_ Timeout,
 ) error {
 	h.handleTimeoutCalled = true
+	if h.handleTimeoutFunc != nil {
+		h.handleTimeoutFunc(r, s)
+	}
 	return nil
 }
 
@@ -244,3 +290,17 @@ func init() {
 	assertIsComparable(NoTimeoutMessagesBehavior[ProcessRoot]{})
 	assertIsComparable(StatelessProcessRoot{})
 }
+
+type processEventScopeStub struct {
+	ProcessEventScope[ProcessRoot]
+	root ProcessRoot
+}
+
+func (s *processEventScopeStub) Mutate(fn func(ProcessRoot)) { fn(s.root) }
+
+type processTimeoutScopeStub struct {
+	ProcessTimeoutScope[ProcessRoot]
+	root ProcessRoot
+}
+
+func (s *processTimeoutScopeStub) Mutate(fn func(ProcessRoot)) { fn(s.root) }
