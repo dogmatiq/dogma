@@ -88,11 +88,14 @@ type ProcessMessageHandler[R ProcessRoot] interface {
 	// the state of the targeted instance after handling any prior [Event] or
 	// [Timeout] messages.
 	//
-	// The implementation may update r directly, execute [Command] messages,
-	// schedule [Timeout] messages, or end the process. It may query external
-	// data - such as the application's projections - but this isn't
+	// The implementation may change the instance's state, execute [Command]
+	// messages, schedule [Timeout] messages, or end the process. It may query
+	// external data - such as the application's projections - but this isn't
 	// recommended. Wherever possible, logic should depend solely on information
 	// within r, s, and e.
+	//
+	// The implementation must not modify r directly; use [ProcessScope].Mutate
+	// instead. The callback passed to Mutate must not use r or s.
 	//
 	// The engine atomically persists the state changes, events, and timeouts
 	// produced by exactly one successful invocation of this method for each
@@ -120,11 +123,14 @@ type ProcessMessageHandler[R ProcessRoot] interface {
 	// reflects the state of the targeted instance after handling any prior
 	// [Event] or [Timeout] messages.
 	//
-	// The implementation may update r directly, execute [Command] messages,
-	// schedule [Timeout] messages, or end the process. It may query external
-	// data - such as the application's projections - but this isn't
+	// The implementation may change the instance's state, execute [Command]
+	// messages, schedule [Timeout] messages, or end the process. It may query
+	// external data - such as the application's projections - but this isn't
 	// recommended. Wherever possible, logic should depend solely on information
 	// within r, s, and t.
+	//
+	// The implementation must not modify r directly; use [ProcessScope].Mutate
+	// instead. The callback passed to Mutate must not use r or s.
 	//
 	// The engine atomically persists the state changes, events, and timeouts
 	// produced by exactly one successful invocation of this method for each
@@ -224,6 +230,24 @@ type ProcessScope[R ProcessRoot] interface {
 	// When handling a [Timeout] message, it returns the ID of the instance that
 	// scheduled the timeout.
 	InstanceID() string
+
+	// Mutate changes the process instance's state by calling fn with the
+	// current root, making the state changes visible to the handler
+	// immediately.
+	//
+	// The callback must not call any methods on the scope.
+	//
+	// The engine may elide the call to fn - for example, when the root is a
+	// [StatelessProcessRoot]. Because fn may not execute, it must not perform
+	// side-effects beyond mutating the root.
+	//
+	// It is acceptable for the net effect of fn to be a no-op - for example,
+	// setting a field to the value it already holds.
+	//
+	// Mutate may be called more than once.
+	//
+	// This method panics if the process instance has ended.
+	Mutate(fn func(r R))
 
 	// End signals the end of a process.
 	//
@@ -395,7 +419,12 @@ func (a *untypedProcessMessageHandler[R]) HandleEvent(
 	s ProcessEventScope[ProcessRoot],
 	e Event,
 ) error {
-	return a.handler.HandleEvent(ctx, r.(R), s, e)
+	return a.handler.HandleEvent(
+		ctx,
+		r.(R),
+		untypedProcessEventScope[R]{s},
+		e,
+	)
 }
 
 func (a *untypedProcessMessageHandler[R]) HandleTimeout(
@@ -404,9 +433,38 @@ func (a *untypedProcessMessageHandler[R]) HandleTimeout(
 	s ProcessTimeoutScope[ProcessRoot],
 	t Timeout,
 ) error {
-	return a.handler.HandleTimeout(ctx, r.(R), s, t)
+	return a.handler.HandleTimeout(
+		ctx,
+		r.(R),
+		untypedProcessTimeoutScope[R]{s},
+		t,
+	)
 }
 
 func (a *untypedProcessMessageHandler[R]) UnwrapHandler() any {
 	return a.handler
+}
+
+// untypedProcessEventScope adapts a [ProcessEventScope][ProcessRoot] to
+// [ProcessEventScope][R] by narrowing the Mutate callback type.
+type untypedProcessEventScope[R ProcessRoot] struct {
+	ProcessEventScope[ProcessRoot]
+}
+
+func (a untypedProcessEventScope[R]) Mutate(fn func(R)) {
+	a.ProcessEventScope.Mutate(func(r ProcessRoot) {
+		fn(r.(R))
+	})
+}
+
+// untypedProcessTimeoutScope adapts a [ProcessTimeoutScope][ProcessRoot] to
+// [ProcessTimeoutScope][R] by narrowing the Mutate callback type.
+type untypedProcessTimeoutScope[R ProcessRoot] struct {
+	ProcessTimeoutScope[ProcessRoot]
+}
+
+func (a untypedProcessTimeoutScope[R]) Mutate(fn func(R)) {
+	a.ProcessTimeoutScope.Mutate(func(r ProcessRoot) {
+		fn(r.(R))
+	})
 }

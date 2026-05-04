@@ -44,3 +44,4 @@ the ADR documents.
 * [31. Require retries for idempotency-keyed commands](0031-require-retries-for-idempotency-keyed-commands.md)
 * [32. Message ownership](0032-message-ownership.md)
 * [33. Generic aggregate and process handlers](0033-generic-aggregate-and-process-handlers.md)
+* [34. Process root mutation](0034-process-root-mutation.md)

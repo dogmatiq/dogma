@@ -55,9 +55,7 @@ func TestUntypedAggregateMessageHandler(t *testing.T) {
 			},
 		)
 	})
-}
 
-func TestAggregateMessageHandlerAdaptor(t *testing.T) {
 	inner := &aggregateHandlerStub{
 		routeID: "instance-001",
 	}
@@ -76,7 +74,7 @@ func TestAggregateMessageHandlerAdaptor(t *testing.T) {
 	t.Run("func New()", func(t *testing.T) {
 		t.Run("it returns the root from the wrapped handler", func(t *testing.T) {
 			got := adaptor.New()
-			expectType[aggregateRootStub](t, got)
+			expectType[*aggregateRootStub](t, got)
 		})
 	})
 
@@ -91,7 +89,7 @@ func TestAggregateMessageHandlerAdaptor(t *testing.T) {
 
 	t.Run("func HandleCommand()", func(t *testing.T) {
 		t.Run("it narrows the root type and delegates to the wrapped handler", func(t *testing.T) {
-			adaptor.HandleCommand(aggregateRootStub{}, nil, nil)
+			adaptor.HandleCommand(&aggregateRootStub{}, nil, nil)
 			if !inner.handleCalled {
 				t.Fatal("expected HandleCommand to be called on the wrapped handler")
 			}
@@ -112,8 +110,8 @@ type aggregateRootStub struct {
 	NoSnapshotBehavior
 }
 
-func (aggregateRootStub) AggregateInstanceDescription() string { return "" }
-func (aggregateRootStub) ApplyEvent(Event)                     {}
+func (*aggregateRootStub) AggregateInstanceDescription() string { return "" }
+func (*aggregateRootStub) ApplyEvent(Event)                     {}
 
 type aggregateHandlerStub struct {
 	configured   bool
@@ -121,14 +119,12 @@ type aggregateHandlerStub struct {
 	handleCalled bool
 }
 
-var _ AggregateMessageHandler[aggregateRootStub] = &aggregateHandlerStub{}
-
 func (h *aggregateHandlerStub) Configure(AggregateConfigurer) {
 	h.configured = true
 }
 
-func (h *aggregateHandlerStub) New() aggregateRootStub {
-	return aggregateRootStub{}
+func (h *aggregateHandlerStub) New() *aggregateRootStub {
+	return &aggregateRootStub{}
 }
 
 func (h *aggregateHandlerStub) RouteCommandToInstance(Command) string {
@@ -136,8 +132,8 @@ func (h *aggregateHandlerStub) RouteCommandToInstance(Command) string {
 }
 
 func (h *aggregateHandlerStub) HandleCommand(
-	_ aggregateRootStub,
-	_ AggregateCommandScope[aggregateRootStub],
+	_ *aggregateRootStub,
+	_ AggregateCommandScope[*aggregateRootStub],
 	_ Command,
 ) {
 	h.handleCalled = true
