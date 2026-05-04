@@ -42,19 +42,19 @@ This is a purely terminological change — it has no effect on runtime behavior.
 
 The complete set of symbol renames is:
 
-| Old                           | New                            |
-| ----------------------------- | ------------------------------ |
-| `Timeout`                     | `Deadline`                     |
-| `TimeoutValidationScope`      | `DeadlineValidationScope`      |
-| `HandleTimeout()`             | `HandleDeadline()`             |
-| `ScheduleTimeout()`           | `ScheduleDeadline()`           |
-| `ProcessTimeoutScope`         | `ProcessDeadlineScope`         |
-| `NoTimeoutMessagesBehavior`   | `NoDeadlineMessagesBehavior`   |
-| `SchedulesTimeout()`          | `SchedulesDeadline()`          |
-| `SchedulesTimeoutRoute`       | `SchedulesDeadlineRoute`       |
-| `SchedulesTimeoutOption`      | `SchedulesDeadlineOption`      |
-| `RegisterTimeout()`           | `RegisterDeadline()`           |
-| `RegisterTimeoutOption`       | `RegisterDeadlineOption`       |
+| Old                         | New                          |
+| --------------------------- | ---------------------------- |
+| `Timeout`                   | `Deadline`                   |
+| `TimeoutValidationScope`    | `DeadlineValidationScope`    |
+| `HandleTimeout()`           | `HandleDeadline()`           |
+| `ScheduleTimeout()`         | `ScheduleDeadline()`         |
+| `ProcessTimeoutScope`       | `ProcessDeadlineScope`       |
+| `NoTimeoutMessagesBehavior` | `NoDeadlineMessagesBehavior` |
+| `SchedulesTimeout()`        | `SchedulesDeadline()`        |
+| `SchedulesTimeoutRoute`     | `SchedulesDeadlineRoute`     |
+| `SchedulesTimeoutOption`    | `SchedulesDeadlineOption`    |
+| `RegisterTimeout()`         | `RegisterDeadline()`         |
+| `RegisterTimeoutOption`     | `RegisterDeadlineOption`     |
 
 We considered `SetDeadline` instead of `ScheduleDeadline` for the
 `ProcessScope` method. `SetDeadline` is more idiomatic English and matches
@@ -79,15 +79,12 @@ In addition to the symbol renames, we will adopt these conventions for how
 ### Historical records
 
 Existing ADRs and CHANGELOG entries are left unchanged. They are point-in-time
-records that used the vocabulary of their era. A new CHANGELOG entry will
-document the rename under its own release.
+records that used the vocabulary of their era.
 
 ## Consequences
 
-Every downstream consumer of the Dogma API — engine implementations,
-`testkit`, `enginekit`, and application code — will need a corresponding
-rename. Those
-changes are planned separately, after this rename lands.
+Every downstream consumer of the Dogma API — engine implementations, `testkit`,
+`enginekit`, and application code — will need a corresponding rename.
 
 The glossary gains a new "deadline" entry replacing "timeout", and "process
 deadline scope" replacing "process timeout scope".
