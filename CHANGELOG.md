@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
-## [Unreleased]
+## [0.24.0] - 2026-05-05
 
 This release introduces `ProcessScope.Mutate()`, which replaces direct
 mutation of the process root, giving the engine an explicit signal that state
@@ -608,6 +608,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.21.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.21.0
 [0.22.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.22.0
 [0.23.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.23.0
+[0.24.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.24.0
 
 <!-- adr references -->
 
