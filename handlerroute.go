@@ -3,16 +3,27 @@ package dogma
 // ViaAggregate configures the [Application] to route messages to and from an
 // [AggregateMessageHandler].
 //
+// The root type R must be a pointer to a struct that implements
+// [AggregateRoot].
+//
 // Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
-func ViaAggregate[R AggregateRoot](h AggregateMessageHandler[R], _ ...ViaAggregateOption) HandlerRoute {
+func ViaAggregate[R interface {
+	AggregateRoot
+	*E
+}, E any](h AggregateMessageHandler[R], _ ...ViaAggregateOption) HandlerRoute {
 	return AggregateHandlerRoute{handler: UntypedAggregateMessageHandler(h)}
 }
 
 // ViaProcess configures the [Application] to route messages to and from a
 // [ProcessMessageHandler].
 //
+// The root type R must be a pointer to a struct that implements [ProcessRoot].
+//
 // Pass the returned [HandlerRoute] to [ApplicationConfigurer].Routes.
-func ViaProcess[R ProcessRoot](h ProcessMessageHandler[R], _ ...ViaProcessOption) HandlerRoute {
+func ViaProcess[R interface {
+	ProcessRoot
+	*E
+}, E any](h ProcessMessageHandler[R], _ ...ViaProcessOption) HandlerRoute {
 	return ProcessHandlerRoute{handler: UntypedProcessMessageHandler(h)}
 }
 

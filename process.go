@@ -338,9 +338,11 @@ func (NoDeadlineMessagesBehavior[R]) HandleDeadline(
 // stateless and to avoid boilerplate code that's never used.
 type StatelessProcessBehavior struct{}
 
-// New returns a zero-value [StatelessProcessRoot].
-func (StatelessProcessBehavior) New() StatelessProcessRoot {
-	return StatelessProcessRoot{}
+var statelessProcessRoot StatelessProcessRoot
+
+// New returns a pointer to a shared [StatelessProcessRoot].
+func (StatelessProcessBehavior) New() *StatelessProcessRoot {
+	return &statelessProcessRoot
 }
 
 // StatelessProcessRoot is an empty [ProcessRoot] for processes that don't
@@ -355,18 +357,18 @@ type StatelessProcessRoot struct{}
 
 // ProcessInstanceDescription returns an empty string, as stateless processes
 // have no meaningful state to describe.
-func (StatelessProcessRoot) ProcessInstanceDescription(bool) string {
+func (*StatelessProcessRoot) ProcessInstanceDescription(bool) string {
 	return ""
 }
 
 // MarshalBinary returns nil, as stateless processes have no state to persist.
-func (StatelessProcessRoot) MarshalBinary() ([]byte, error) {
+func (*StatelessProcessRoot) MarshalBinary() ([]byte, error) {
 	return nil, nil
 }
 
 // UnmarshalBinary returns an error if data is non-empty, as stateless
 // processes have no state to restore.
-func (StatelessProcessRoot) UnmarshalBinary(data []byte) error {
+func (*StatelessProcessRoot) UnmarshalBinary(data []byte) error {
 	if len(data) != 0 {
 		return errors.New("cannot unmarshal non-empty data into stateless process")
 	}

@@ -12,6 +12,14 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [Unreleased]
+
+### Changed
+
+- **[BC]** `ViaAggregate()` and `ViaProcess()` now require the root type to be
+  a pointer, enforced via type constraints.
+- **[BC]** `StatelessProcessRoot` methods now use pointer receivers.
+
 ## [0.24.0] - 2026-05-05
 
 This release introduces `ProcessScope.Mutate()`, which replaces direct

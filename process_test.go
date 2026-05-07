@@ -12,8 +12,8 @@ func TestStatelessProcess(t *testing.T) {
 
 	root := v.New()
 
-	if root != (StatelessProcessRoot{}) {
-		t.Fatal("unexpected value returned")
+	if root == nil {
+		t.Fatal("unexpected nil value")
 	}
 
 	t.Run("func ProcessInstanceDescription()", func(t *testing.T) {
