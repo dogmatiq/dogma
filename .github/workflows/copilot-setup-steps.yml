@@ -32,4 +32,4 @@ jobs:
         run: git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
 
       - name: "Install Vale"
-        uses: errata-ai/vale-action@v2.1.1
+        uses: errata-ai/vale-action@2.1.2
