@@ -148,6 +148,12 @@ type ProjectionEventScope interface {
 	StreamID() string
 
 	// Offset returns the event's zero-based offset within the stream.
+	//
+	// The offset is required for the projection handler to implement optimistic
+	// concurrency control (OCC). Avoid depending on the offset for application
+	// logic, such as row ordering, because offsets reflect how the engine
+	// organizes events into streams, not the application's domain. Derive
+	// ordering from event content instead.
 	Offset() uint64
 
 	// CheckpointOffset returns the offset from which the handler should resume
