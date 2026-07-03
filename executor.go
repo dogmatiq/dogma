@@ -100,6 +100,7 @@ func WithEventObserver[T Event](fn EventObserver[T]) ExecuteCommandOption {
 	}
 
 	typ := registeredMessageTypeFor[T]()
+
 	return EventObserverOption{
 		eventType: typ,
 		observer: func(ctx context.Context, e Event) (bool, error) {
