@@ -161,11 +161,7 @@ Engines aren't part of the [`dogmatiq/dogma`] Go module, they're separate
 modules that implement the runtime behaviour described by Dogma's interfaces.
 You can choose an engine that suits your environment, or build your own.
 
-The ecosystem currently offers three official engines:
-
-- [`dogmatiq/verity`] — The original Dogma engine, designed for typical
-  application loads in smaller deployments. While production-ready, it doesn't
-  support scaling of a single application across multiple machines.
+The ecosystem currently offers two official engines:
 
 - [`dogmatiq/runkit`] — A reference implementation of a Dogma engine built on
   PostgreSQL, supporting scaling of a single application across multiple
@@ -206,7 +202,6 @@ explore the following resources:
 [`dogmatiq/example`]: https://github.com/dogmatiq/example
 [`dogmatiq/runkit`]: https://github.com/dogmatiq/runkit
 [`dogmatiq/testkit`]: https://github.com/dogmatiq/testkit
-[`dogmatiq/verity`]: https://github.com/dogmatiq/verity
 
 <!-- API references -->
 

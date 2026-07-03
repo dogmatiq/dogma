@@ -408,12 +408,6 @@ See [`dogmatiq/testkit`].
 
 The context within which a [message] executes its data validation logic.
 
-### Verity
-
-An [engine] designed for typical application loads in smaller deployments.
-
-See [`dogmatiq/verity`].
-
 ## W
 
 ### Workflow
@@ -468,7 +462,6 @@ See [process].
 [`dogmatiq/projectionkit`]: https://pkg.go.dev/github.com/dogmatiq/projectionkit
 [`dogmatiq/runkit`]: https://pkg.go.dev/github.com/dogmatiq/runkit
 [`dogmatiq/testkit`]: https://pkg.go.dev/github.com/dogmatiq/testkit
-[`dogmatiq/verity`]: https://pkg.go.dev/github.com/dogmatiq/verity
 
 <!-- API references -->
 

@@ -65,10 +65,6 @@ An important Dogma concept is that of the [engine] — a Go module embedded with
 your application binary that orchestrates message delivery, state persistence,
 and the execution of application logic.
 
-- [verity] — The original Dogma engine, designed for typical application loads
-  in smaller deployments. While production-ready, it doesn't support scaling of
-  a single application across multiple machines.
-
 - [runkit] — A reference implementation of a Dogma engine built on PostgreSQL,
   supporting scaling of a single application across multiple machines.
 
@@ -110,6 +106,5 @@ For reference material, please see the [API documentation] and [glossary].
 [runkit]: https://github.com/dogmatiq/runkit
 [testing]: https://pkg.go.dev/testing
 [testkit]: https://github.com/dogmatiq/testkit
-[verity]: https://github.com/dogmatiq/verity
 [`BinaryMarshaler`]: https://pkg.go.dev/encoding#BinaryMarshaler
 [`BinaryUnmarshaler`]: https://pkg.go.dev/encoding#BinaryUnmarshaler
