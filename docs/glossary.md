@@ -356,8 +356,7 @@ See [message route] or [handler route].
 
 ### `runkit`
 
-An upcoming [engine] implementation built for horizontal scalability and
-distributed workloads.
+A reference implementation of an [engine].
 
 See [`dogmatiq/runkit`].
 

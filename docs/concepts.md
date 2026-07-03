@@ -167,9 +167,9 @@ The ecosystem currently offers three official engines:
   application loads in smaller deployments. While production-ready, it doesn't
   support scaling of a single application across multiple machines.
 
-- [`dogmatiq/runkit`] — The next-generation Dogma engine built for horizontal
-  scalability and distributed workloads. The Dogma maintainers intend for runkit
-  to fully replace Verity, becoming _the_ production Dogma engine.
+- [`dogmatiq/runkit`] — A reference implementation of a Dogma engine built on
+  PostgreSQL, supporting scaling of a single application across multiple
+  machines.
 
 - [`dogmatiq/testkit`] — A set of tools for testing Dogma applications. It
   includes an in-memory engine that executes and inspects application behavior
