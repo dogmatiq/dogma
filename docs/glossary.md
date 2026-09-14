@@ -147,6 +147,13 @@ more information.
 
 An immutable, ordered sequence of [event] messages.
 
+### Event stream binding
+
+The strategy that determines which [event stream] receives each [event]
+message that a [message handler] records. [Aggregate message handlers] bind
+per [aggregate instance] and [integration message handlers] bind per
+[command], ensuring that related events share a stream and arrive in order.
+
 ## H
 
 ### Handler route
@@ -435,6 +442,7 @@ See [process].
 [handler scope]: #handler-scope
 [identity]: #identity
 [integration message handler]: #integration-message-handler
+[integration message handlers]: #integration-message-handler
 [integrations]: #integration
 [message handler]: #message-handler
 [message handlers]: #message-handler
