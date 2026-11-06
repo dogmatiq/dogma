@@ -4,6 +4,9 @@
 # See https://github.com/dogmatiq/repos.
 
 version: 2
+# APM is a beta ecosystem in Dependabot, which fails to update it without this
+# setting.
+enable-beta-ecosystems: true
 updates:
   - package-ecosystem: github-actions
     directory: "/"
