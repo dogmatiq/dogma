@@ -18,8 +18,20 @@ updates:
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    # Our own packages are exempt from the default 3-day cooldown, since there is
+    # nothing to wait out for a release we made ourselves.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "github.com/dogmatiq/*"
   - package-ecosystem: apm
     directory: "/"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
+    # Our own packages are exempt from the default 3-day cooldown, since there is
+    # nothing to wait out for a release we made ourselves.
+    cooldown:
+      default-days: 3
+      exclude:
+        - "dogmatiq/*"
