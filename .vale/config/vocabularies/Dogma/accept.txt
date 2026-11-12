@@ -5,6 +5,7 @@
 [Aa]pplication
 [Cc]onfigurer
 dogmavet
+enginekit
 projectionkit
 runkit
 testkit

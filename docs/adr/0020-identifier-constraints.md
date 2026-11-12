@@ -8,6 +8,7 @@ Accepted
 
 - Amends [9. Immutable application and handler keys](0009-immutable-keys.md)
 - Amends [12. Comparison of Identifiers](0012-identifier-comparison.md)
+- Referenced by [36. Native UUID type][ADR-36]
 
 ## Context
 
@@ -38,4 +39,5 @@ reject those that do not meet the requirements.
 
 <!-- references -->
 
+[ADR-36]: 0036-native-uuid-type.md
 [rfc 9562]: https://rfc-editor.org/rfc/rfc9562.html

@@ -6,6 +6,8 @@ Date: 2025-07-13
 
 Accepted
 
+- Referenced by [36. Native UUID type][ADR-36]
+
 ## Context
 
 The concept of a global message type registry was proposed as a possible
@@ -54,4 +56,5 @@ zero-value messages that arise due to Go's lack of static methods.
 
 <!-- references -->
 
+[ADR-36]: 0036-native-uuid-type.md
 [RFC 9562]: https://datatracker.ietf.org/doc/html/rfc9562

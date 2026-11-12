@@ -121,6 +121,8 @@ been reached.
 
 See [`dogma.Deadline`].
 
+See [ADR-35].
+
 ## E
 
 ### Engine
@@ -239,6 +241,14 @@ See:
 - [projection message handler]
 - [integration message handler]
 
+### Message ID
+
+A UUID that uniquely identifies a [message]. The [engine] gives each message its
+ID, and a [message handler] can read the ID of the message that it's handling
+from its [handler scope].
+
+See [ADR-37].
+
 ### Message kind
 
 The category of a [message] that defines its role in the application, one of
@@ -313,6 +323,8 @@ messages, or scheduling more [deadline] messages to advance the [process instanc
 workflow.
 
 See [`dogma.ProcessDeadlineScope`].
+
+See [ADR-35].
 
 ### Projection
 
@@ -464,6 +476,11 @@ See [process].
 [stateful]: #stateful
 [stateless]: #stateless
 [deadline]: #deadline
+
+<!-- ADRs -->
+
+[ADR-35]: adr/0035-rename-timeout-to-deadline.md
+[ADR-37]: adr/0037-expose-message-ids.md
 
 <!-- go modules -->
 
