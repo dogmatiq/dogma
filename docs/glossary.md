@@ -188,9 +188,11 @@ A human-readable name and machine-readable key (UUID), specified via a
 
 ### Idempotency key
 
-An application-defined value supplied when executing a [command] that uniquely
-identifies the command so it can be retried safely without duplicating
-side-effects.
+A non-empty string that the code executing a [command] chooses, and passes on
+the first attempt and on every retry of the same command, so that the [engine]
+doesn't execute the command more than once.
+
+See [`dogma.WithIdempotencyKey()`].
 
 ### Instance
 
@@ -522,3 +524,4 @@ See [process].
 [`dogma.ViaIntegration()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ViaIntegration
 [`dogma.ViaProcess()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ViaProcess
 [`dogma.ViaProjection()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#ViaProjection
+[`dogma.WithIdempotencyKey()`]: https://pkg.go.dev/github.com/dogmatiq/dogma#WithIdempotencyKey
