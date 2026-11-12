@@ -8,6 +8,7 @@ import (
 	"slices"
 	"strings"
 	"sync/atomic"
+	"uuid"
 )
 
 // RegisterCommand adds a [Command] message type to the Dogma message registry,
@@ -92,14 +93,14 @@ type RegisterDeadlineOption interface {
 // to the registry.
 type RegisteredMessageType struct {
 	nocmp
-	id  string
+	id  uuid.UUID
 	typ reflect.Type
 	new func() Message
 }
 
-// ID returns an RFC 9562 UUID that uniquely identifies the message type. The
+// ID returns the RFC 9562 UUID that uniquely identifies the message type. The
 // engine uses the ID to associate message data with the correct Go type.
-func (t RegisteredMessageType) ID() string {
+func (t RegisteredMessageType) ID() uuid.UUID {
 	return t.id
 }
 
@@ -165,16 +166,8 @@ func registeredMessageTypeFor[T Message]() RegisteredMessageType {
 // RegisteredMessageTypeByID returns the [RegisteredMessageType] with the given
 // ID.
 //
-// The ID is a canonical RFC 9562 UUID string, such as
-// "65f9620a-65c1-434e-8292-60cd7938c4de", and is case-insensitive.
-//
 // ok is false if there is no such message type in the registry.
-func RegisteredMessageTypeByID(id string) (t RegisteredMessageType, ok bool) {
-	id, err := normalizeUUID(id)
-	if err != nil {
-		panic(err.Error())
-	}
-
+func RegisteredMessageTypeByID(id uuid.UUID) (t RegisteredMessageType, ok bool) {
 	queryMessageRegistry(
 		func(reg *messageTypes) {
 			t, ok = reg.ByID[id]
@@ -205,7 +198,7 @@ func RegisteredMessageTypes() iter.Seq[RegisteredMessageType] {
 
 // messageTypes encapsulates the Dogma message registry.
 type messageTypes struct {
-	ByID   map[string]RegisteredMessageType
+	ByID   map[uuid.UUID]RegisteredMessageType
 	ByType map[reflect.Type]RegisteredMessageType
 	Slice  []RegisteredMessageType
 }
@@ -239,10 +232,10 @@ func registerMessageType[
 		*E
 	},
 	E any,
-](id string) {
+](s string) {
 	typ := reflect.TypeFor[T]()
 
-	id, err := normalizeUUID(id)
+	id, err := parseUUID(s)
 	if err != nil {
 		panic(fmt.Sprintf(
 			"cannot register %s: %s",
@@ -268,7 +261,7 @@ func mergeMessageType(t RegisteredMessageType) {
 
 		if existing == nil {
 			// The registry is empty, create new data structures.
-			replacement.ByID = map[string]RegisteredMessageType{}
+			replacement.ByID = map[uuid.UUID]RegisteredMessageType{}
 			replacement.ByType = map[reflect.Type]RegisteredMessageType{}
 		} else {
 			// The registry has messages. Check for existing registrations with the

@@ -1,9 +1,10 @@
 package dogma_test
 
 import (
+	"fmt"
 	"reflect"
-	"strings"
 	"testing"
+	"uuid"
 
 	. "github.com/dogmatiq/dogma"
 )
@@ -73,12 +74,12 @@ func TestRegisteredMessageTypeOf(t *testing.T) {
 }
 
 func TestRegisteredMessageTypeByID(t *testing.T) {
-	t.Run("it returns the type associated with the normalized ID", func(t *testing.T) {
+	t.Run("it returns the type associated with the ID", func(t *testing.T) {
 		const id = "37264B0D-4342-4708-8263-60D82DE78AD1"
 		type T struct{ Event }
 		RegisterEvent[*T](id)
 
-		mt, ok := RegisteredMessageTypeByID(id)
+		mt, ok := RegisteredMessageTypeByID(uuid.MustParse(id))
 		if !ok {
 			t.Fatal("expected message type to be registered")
 		}
@@ -89,20 +90,10 @@ func TestRegisteredMessageTypeByID(t *testing.T) {
 	})
 
 	t.Run("it returns false when ID is not registered", func(t *testing.T) {
-		_, ok := RegisteredMessageTypeByID("75285aae-f85a-435b-ad36-7471ab169348")
+		_, ok := RegisteredMessageTypeByID(uuid.MustParse("75285aae-f85a-435b-ad36-7471ab169348"))
 		if ok {
 			t.Fatal("did not expect message type to be registered")
 		}
-	})
-
-	t.Run("panics when the ID is invalid", func(t *testing.T) {
-		expectPanic(
-			t,
-			`"<non-uuid>" is not a canonical RFC 9562 UUID: expected 36 characters`,
-			func() {
-				RegisteredMessageTypeByID("<non-uuid>")
-			},
-		)
 	})
 }
 
@@ -163,9 +154,9 @@ func TestMessageTypeRegistration(t *testing.T) {
 			t.Fatal("message type is not registered")
 		}
 
-		t.Run("normalizes the UUID", func(t *testing.T) {
-			if got, want := mt.ID(), strings.ToLower(id); got != want {
-				t.Fatalf("non-normalized UUID: got %q, want %q", got, want)
+		t.Run("it parses the UUID", func(t *testing.T) {
+			if got, want := mt.ID(), uuid.MustParse(id); got != want {
+				t.Fatalf("unexpected UUID: got %s, want %s", got, want)
 			}
 		})
 	})
@@ -246,24 +237,6 @@ func TestMessageTypeRegistration(t *testing.T) {
 					RegisterDeadline[*U]("66c69a42-ea81-4ca9-8587-bf88e8abaf34")
 				},
 			},
-			{
-				"invalid UUID",
-				`cannot register *github.com/dogmatiq/dogma_test.T: "<non-uuid>" is not a canonical RFC 9562 UUID: expected 36 characters`,
-				func() {
-					type T struct{ Command }
-					RegisterCommand[*T]("<non-uuid>")
-				},
-				`cannot register *github.com/dogmatiq/dogma_test.T: "<non-uuid>" is not a canonical RFC 9562 UUID: expected 36 characters`,
-				func() {
-					type T struct{ Event }
-					RegisterEvent[*T]("<non-uuid>")
-				},
-				`cannot register *github.com/dogmatiq/dogma_test.T: "<non-uuid>" is not a canonical RFC 9562 UUID: expected 36 characters`,
-				func() {
-					type T struct{ Deadline }
-					RegisterDeadline[*T]("<non-uuid>")
-				},
-			},
 		}
 
 		for _, c := range cases {
@@ -282,11 +255,52 @@ func TestMessageTypeRegistration(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("invalid ID", func(t *testing.T) {
+		cases := []struct {
+			Name   string
+			ID     string
+			Reason string
+		}{
+			{"not a UUID", "<non-uuid>", "expected 36 characters"},
+			{"URN form", "urn:uuid:b917cba9-1fa2-4513-8bf5-67acc121299f", "expected 36 characters"},
+			{"braced form", "{b917cba9-1fa2-4513-8bf5-67acc121299f}", "expected 36 characters"},
+			{"unhyphenated form", "b917cba91fa245138bf567acc121299f", "expected 36 characters"},
+			{"missing hyphen", "b917cba9f1fa2-4513-8bf5-67acc121299f", "expected hyphens and hexadecimal digits"},
+			{"non-hexadecimal digit", "b917cba9-1fa2-4513-8bf5-67acc121299g", "expected hyphens and hexadecimal digits"},
+			{"nil UUID", "00000000-0000-0000-0000-000000000000", `the "nil" UUID is not supported`},
+		}
+
+		for _, c := range cases {
+			t.Run(c.Name, func(t *testing.T) {
+				want := fmt.Sprintf(
+					"cannot register *github.com/dogmatiq/dogma_test.T: %q is not a canonical RFC 9562 UUID: %s",
+					c.ID,
+					c.Reason,
+				)
+
+				t.Run("command kind", func(t *testing.T) {
+					type T struct{ Command }
+					expectPanic(t, want, func() { RegisterCommand[*T](c.ID) })
+				})
+
+				t.Run("event kind", func(t *testing.T) {
+					type T struct{ Event }
+					expectPanic(t, want, func() { RegisterEvent[*T](c.ID) })
+				})
+
+				t.Run("deadline kind", func(t *testing.T) {
+					type T struct{ Deadline }
+					expectPanic(t, want, func() { RegisterDeadline[*T](c.ID) })
+				})
+			})
+		}
+	})
 }
 
 func TestRegisteredMessageType(t *testing.T) {
 	t.Run("func ID()", func(t *testing.T) {
-		t.Run("returns the normalized UUID", func(t *testing.T) {
+		t.Run("it returns the UUID", func(t *testing.T) {
 			const id = "5211A466-010A-4C89-BF36-9A95896BFE2B"
 			type T struct{ Command }
 			RegisterCommand[*T](id)
@@ -296,8 +310,8 @@ func TestRegisteredMessageType(t *testing.T) {
 				t.Fatal("message type is not registered")
 			}
 
-			if got, want := mt.ID(), strings.ToLower(id); got != want {
-				t.Fatalf("unexpected UUID: got %q, want %q", got, want)
+			if got, want := mt.ID(), uuid.MustParse(id); got != want {
+				t.Fatalf("unexpected UUID: got %s, want %s", got, want)
 			}
 		})
 	})

@@ -3,6 +3,7 @@ package dogma
 import (
 	"context"
 	"time"
+	"uuid"
 )
 
 // A ProjectionMessageHandler builds a denormalized view of the application's
@@ -86,10 +87,8 @@ type ProjectionMessageHandler interface {
 	// CheckpointOffset returns the offset at which the handler expects to
 	// resume handling events from a specific stream.
 	//
-	// id is an RFC 9562 UUID that identifies the event stream, such as
-	// "c50b5804-8312-4c61-b32c-9fbf49688db3". UUIDs are case-insensitive, but
-	// the engine must use a lowercase representation.
-	CheckpointOffset(ctx context.Context, id string) (uint64, error)
+	// id is the RFC 9562 UUID that identifies the event stream.
+	CheckpointOffset(ctx context.Context, id uuid.UUID) (uint64, error)
 
 	// Compact reduces the projection's size by removing or consolidating data.
 	//
@@ -145,7 +144,7 @@ type ProjectionEventScope interface {
 
 	// StreamID returns the RFC 9562 UUID that identifies the event stream to
 	// which the [Event] belongs.
-	StreamID() string
+	StreamID() uuid.UUID
 
 	// Offset returns the event's zero-based offset within the stream.
 	//
