@@ -12,6 +12,24 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
+## [Unreleased]
+
+### Added
+
+- **[ENGINE BC]** Added `MessageID()` method to `AggregateCommandScope`,
+  `ProcessEventScope`, `ProcessDeadlineScope`, `IntegrationCommandScope` and
+  `ProjectionEventScope`.
+
+### Changed
+
+- **[BC]** Bumped minimum Go version to v1.27.
+- **[BC]** `ProjectionEventScope.StreamID()` now returns a `uuid.UUID`.
+- **[BC]** `ProjectionMessageHandler.CheckpointOffset()` now takes the stream
+  ID as a `uuid.UUID`.
+- **[BC]** `RegisteredMessageType.ID()` now returns a `uuid.UUID`.
+- **[BC]** `RegisteredMessageTypeByID()` now takes the message type ID as a
+  `uuid.UUID`.
+
 ## [0.25.0] - 2026-05-07
 
 ### Changed

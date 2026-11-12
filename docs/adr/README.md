@@ -46,3 +46,5 @@ the ADR documents.
 * [33. Generic aggregate and process handlers](0033-generic-aggregate-and-process-handlers.md)
 * [34. Process root mutation](0034-process-root-mutation.md)
 * [35. Rename timeout to deadline](0035-rename-timeout-to-deadline.md)
+* [36. Native UUID type](0036-native-uuid-type.md)
+* [37. Expose message IDs](0037-expose-message-ids.md)
