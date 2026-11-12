@@ -14,6 +14,12 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- **[ENGINE BC]** Added `MessageID()` method to `AggregateCommandScope`,
+  `ProcessEventScope`, `ProcessDeadlineScope`, `IntegrationCommandScope` and
+  `ProjectionEventScope`.
+
 ### Changed
 
 - **[BC]** Bumped minimum Go version to v1.27.

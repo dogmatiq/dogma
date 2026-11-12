@@ -2,6 +2,7 @@ package dogma
 
 import (
 	"context"
+	"uuid"
 )
 
 // An IntegrationMessageHandler connects a Dogma application to an external
@@ -72,6 +73,10 @@ type IntegrationConfigurer interface {
 // [IntegrationMessageHandler] handles a [Command] message.
 type IntegrationCommandScope interface {
 	HandlerScope
+
+	// MessageID returns the RFC 9562 UUID that uniquely identifies the
+	// [Command]. It's the same every time the engine delivers the command.
+	MessageID() uuid.UUID
 
 	// RecordEvent records an [Event] that results from handling the [Command].
 	//

@@ -1,5 +1,7 @@
 package dogma
 
+import "uuid"
+
 // An AggregateMessageHandler encapsulates an application's "invariant" logic -
 // conditions that must always hold true.
 //
@@ -150,6 +152,10 @@ type AggregateConfigurer interface {
 // R is the application-defined [AggregateRoot] type for this handler.
 type AggregateCommandScope[R AggregateRoot] interface {
 	HandlerScope
+
+	// MessageID returns the RFC 9562 UUID that uniquely identifies the
+	// [Command]. It's the same every time the engine delivers the command.
+	MessageID() uuid.UUID
 
 	// InstanceID returns the ID of the aggregate instance that the [Command]
 	// targets, as returned by [AggregateMessageHandler].RouteCommandToInstance.

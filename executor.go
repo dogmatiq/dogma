@@ -42,12 +42,13 @@ type ExecuteCommandOption interface {
 	isExecuteCommandOption()
 }
 
-// WithIdempotencyKey returns an [ExecuteCommandOption] that sets a stable
-// identifier for the [Command].
+// WithIdempotencyKey returns an [ExecuteCommandOption] that sets the
+// [Command]'s idempotency key.
 //
-// Pass the idempotency key on the initial [CommandExecutor].ExecuteCommand call
-// and reuse the same key on every retry to ensure that the engine doesn't
-// execute the command multiple times.
+// An idempotency key is a non-empty string that the caller chooses, and passes
+// on the initial [CommandExecutor].ExecuteCommand call and on every retry of
+// the same command, so that the engine doesn't execute the command more than
+// once.
 //
 // By using an idempotency key, the caller accepts responsibility for retrying
 // until [CommandExecutor].ExecuteCommand returns nil. Otherwise, the command
@@ -60,8 +61,8 @@ func WithIdempotencyKey(key string) ExecuteCommandOption {
 	return IdempotencyKeyOption{key: key}
 }
 
-// IdempotencyKeyOption is an [ExecuteCommandOption] that sets a unique
-// identifier for a [Command].
+// IdempotencyKeyOption is an [ExecuteCommandOption] that holds a [Command]'s
+// idempotency key, as described by [WithIdempotencyKey].
 //
 // Use [WithIdempotencyKey] to create values of this type.
 type IdempotencyKeyOption struct {

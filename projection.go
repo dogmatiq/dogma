@@ -139,6 +139,11 @@ type ProjectionConfigurer interface {
 type ProjectionEventScope interface {
 	HandlerScope
 
+	// MessageID returns the RFC 9562 UUID that uniquely identifies the
+	// [Event]. It's the same every time the engine delivers the event, to any
+	// handler.
+	MessageID() uuid.UUID
+
 	// RecordedAt returns the time at which the [Event] occurred.
 	RecordedAt() time.Time
 

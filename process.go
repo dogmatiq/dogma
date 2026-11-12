@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"time"
+	"uuid"
 )
 
 // A ProcessMessageHandler encapsulates an application's "workflow" logic -
@@ -284,6 +285,11 @@ type ProcessScope[R ProcessRoot] interface {
 type ProcessEventScope[R ProcessRoot] interface {
 	ProcessScope[R]
 
+	// MessageID returns the RFC 9562 UUID that uniquely identifies the inbound
+	// [Event]. It's the same every time the engine delivers the event, to any
+	// handler.
+	MessageID() uuid.UUID
+
 	// RecordedAt returns the time at which the inbound [Event] occurred.
 	RecordedAt() time.Time
 }
@@ -294,6 +300,11 @@ type ProcessEventScope[R ProcessRoot] interface {
 // R is the application-defined [ProcessRoot] type for this handler.
 type ProcessDeadlineScope[R ProcessRoot] interface {
 	ProcessScope[R]
+
+	// MessageID returns the RFC 9562 UUID that uniquely identifies the
+	// [Deadline] message. It's the same every time the engine delivers the
+	// deadline message.
+	MessageID() uuid.UUID
 
 	// ScheduledFor returns the time at which the deadline message is to be
 	// delivered.
