@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog], and this project adheres to
 [bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 [engine bc]: https://github.com/dogmatiq/.github/blob/main/VERSIONING.md#changelogs
 
-## [Unreleased]
+## [0.26.0] - 2026-11-13
 
 ### Added
 
@@ -636,6 +636,7 @@ No engines except [testkit] are able to provide a meaningful implementation of
 [0.23.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.23.0
 [0.24.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.24.0
 [0.25.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.25.0
+[0.26.0]: https://github.com/dogmatiq/dogma/releases/tag/v0.26.0
 
 <!-- adr references -->
 
