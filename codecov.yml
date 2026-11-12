@@ -4,6 +4,11 @@
 # See https://github.com/dogmatiq/repos.
 
 comment: false
+coverage:
+  status:
+    project:
+      default:
+        threshold: 1%
 ignore:
   - "**/fixtures"
   - "**/*_nocoverage.go"

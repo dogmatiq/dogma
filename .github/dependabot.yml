@@ -24,6 +24,44 @@ updates:
       default-days: 3
       exclude:
         - "github.com/dogmatiq/*"
+    # Minor and patch updates to pre-approved dependencies are grouped into a
+    # single pull request (one for version updates, one for security updates),
+    # which is merged automatically.
+    groups:
+      pre-approved:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+        patterns:
+          - "github.com/aws/*"
+          - "github.com/dogmatiq/*"
+          - "github.com/jackc/pgx/*"
+          - "github.com/mattn/go-sqlite3"
+          - "github.com/onsi/*"
+          - "github.com/testcontainers/*"
+          - "go.etcd.io/*"
+          - "go.opentelemetry.io/*"
+          - "golang.org/x/*"
+          - "google.golang.org/*"
+          - "k8s.io/*"
+      pre-approved-security:
+        applies-to: security-updates
+        update-types:
+          - minor
+          - patch
+        patterns:
+          - "github.com/aws/*"
+          - "github.com/dogmatiq/*"
+          - "github.com/jackc/pgx/*"
+          - "github.com/mattn/go-sqlite3"
+          - "github.com/onsi/*"
+          - "github.com/testcontainers/*"
+          - "go.etcd.io/*"
+          - "go.opentelemetry.io/*"
+          - "golang.org/x/*"
+          - "google.golang.org/*"
+          - "k8s.io/*"
   - package-ecosystem: apm
     directory: "/"
     schedule:
@@ -35,3 +73,21 @@ updates:
       default-days: 3
       exclude:
         - "dogmatiq/*"
+    # Minor and patch updates to pre-approved dependencies are grouped into a
+    # single pull request (one for version updates, one for security updates),
+    # which is merged automatically.
+    groups:
+      pre-approved:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+        patterns:
+          - "dogmatiq/*"
+      pre-approved-security:
+        applies-to: security-updates
+        update-types:
+          - minor
+          - patch
+        patterns:
+          - "dogmatiq/*"
