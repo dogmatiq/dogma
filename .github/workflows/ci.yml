@@ -12,6 +12,31 @@ on:
   schedule:
     - cron: 0 14 * * 0
 
+# By default, each run attempt can proceed independently. This includes pushes
+# to the default branch, tag pushes, scheduled runs, manual runs, and reruns.
+#
+# First attempts for the same pull request share a group, so a new run can
+# cancel an older one. First attempts for pushes to the same non-default branch
+# work the same way. Push runs and pull request runs use separate groups.
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{
+      (
+        github.run_attempt == 1 &&
+        (
+          github.event_name == 'pull_request' ||
+          (
+            github.event_name == 'push' &&
+            github.ref_type == 'branch' &&
+            github.ref_name != github.event.repository.default_branch
+          )
+        ) &&
+        github.ref
+      ) ||
+      format('run-{0}-{1}', github.run_id, github.run_attempt)
+    }}
+  cancel-in-progress: true
+
 jobs:
   ci:
     name: Shared
