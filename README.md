@@ -7,10 +7,10 @@
 
 Build message-driven, event-sourced applications in Go.
 
-[![Documentation](https://img.shields.io/badge/go.dev-documentation-007d9c?&style=for-the-badge)](https://pkg.go.dev/github.com/dogmatiq/dogma)
-[![Latest Version](https://img.shields.io/github/tag/dogmatiq/dogma.svg?&style=for-the-badge&label=semver)](https://github.com/dogmatiq/dogma/releases)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/dogmatiq/dogma/ci.yml?style=for-the-badge&branch=main)](https://github.com/dogmatiq/dogma/actions/workflows/ci.yml)
-[![Code Coverage](https://img.shields.io/codecov/c/github/dogmatiq/dogma/main.svg?style=for-the-badge)](https://codecov.io/github/dogmatiq/dogma)
+[![API reference](https://dogmatiq.io/res/img/dynamic/repo/dogma/badge/docs.svg)](https://pkg.go.dev/github.com/dogmatiq/dogma)
+[![Latest version](https://dogmatiq.io/res/img/dynamic/repo/dogma/badge/semver.svg)](https://github.com/dogmatiq/dogma/releases)
+[![Build status](https://dogmatiq.io/res/img/dynamic/repo/dogma/badge/build.svg)](https://github.com/dogmatiq/dogma/actions/workflows/ci.yml)
+[![Code coverage](https://dogmatiq.io/res/img/dynamic/repo/dogma/badge/coverage.svg)](https://codecov.io/github/dogmatiq/dogma)
 
 </div>
 
