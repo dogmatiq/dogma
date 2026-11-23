@@ -1,6 +1,9 @@
 <div align="center">
 
-# Dogma
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://dogmatiq.io/res/img/dynamic/repo/dogma/banner/dark.svg">
+  <img alt="Dogmatiq dogma" src="https://dogmatiq.io/res/img/dynamic/repo/dogma/banner/light.svg" height="44">
+</picture>
 
 Build message-driven, event-sourced applications in Go.
 
